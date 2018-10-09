@@ -11,8 +11,8 @@ stages:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
-  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/api:latest
+  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/api:latest
 before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
