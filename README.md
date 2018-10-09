@@ -4,6 +4,10 @@
 
 ### Objectifs:
 
+## Objectifs premier Spint
+
+### Objectifs:
+
 - Avoir créé les mockups de chaque page du site
 - Avoir appris ReactJS (Antoine et Jérémie) et Express (Benoît et James)
 - Maitriser GitLab et ses pipeline (tout le monde!)

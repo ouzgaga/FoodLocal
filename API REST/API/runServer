@@ -1,0 +1,9 @@
+#kill all running container
+echo "kill all running containers"
+docker rm $(docker ps -a -q)
+
+echo "build of Dockerfile"
+docker build -t food_local_api .
+
+echo "run image food_local_api"
+docker run -p 4040:4040 food_local_api
