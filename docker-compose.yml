@@ -1,0 +1,6 @@
+version: 1
+services:
+  api:
+    build: ./API REST/
+    ports:
+      - "4040:4040"
