@@ -2,9 +2,9 @@
 
 
 
-##Objectifs premier Spint
+## Objectifs premier Spint
 
-###Objectifs:
+### Objectifs:
 
 - Avoir créé les mockups de chaque page du site
 - Avoir appris ReactJS (Antoine et Jérémie) et Express (Benoît et James)
@@ -21,7 +21,7 @@
 
 
 
-###Use-case que nous souhaitons obtenir pour la démo 1 :
+### Use-case que nous souhaitons obtenir pour la démo 1 :
 
 Pour la démo 1, on souhaite avoir un site internet accessible en ligne et proposant les fonctionnalités suivantes:
 
@@ -35,7 +35,7 @@ Une page affichera des informations à propos de notre projet et des fonctionnal
 
 
 
-###Tâches prévues et répartition des tâches :
+### Tâches prévues et répartition des tâches :
 
 Nous avons décidé de nous répartir en 2 équipes de 2. Antoine et Jérémie seront chargés du front-end tandis que James et Benoît se chargeront du back-end.
 
