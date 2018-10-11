@@ -13,6 +13,7 @@ variables:
   CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
 
 before_script:
+  - apk add docker
   - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
 
 build:
