@@ -4,6 +4,7 @@ metadata:
   name: api-deployment
 spec:
   type: LoadBalancer
+   loadBalancerIP: "35.207.181.187"
   ports:
     - port: 80
       targetPort: api-deployment
