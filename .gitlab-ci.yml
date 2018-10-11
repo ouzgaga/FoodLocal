@@ -1,6 +1,3 @@
-image: docker:stable
-services:
-  - docker:dind
 
 stages:
   - build
@@ -12,13 +9,14 @@ variables:
   CONTAINER_TEST_IMAGE: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
 
-before_script:
-  - apk add docker
-  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-
 build:
   stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+
   script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
     - docker push $CONTAINER_TEST_IMAGE
   only:
@@ -26,7 +24,11 @@ build:
 
 release-image:
   stage: release
+  image: docker:stable
+  services:
+    - docker:dind
   script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
