@@ -19,7 +19,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE ./API REST/API/
+    - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
     - docker push $CONTAINER_TEST_IMAGE
 
 release-image:
