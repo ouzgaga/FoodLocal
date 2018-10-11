@@ -9,17 +9,15 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
   CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/api:latest
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  - docker login -u $LOGIN_REGISTERY -p $LOGIN_TOKEN_REGISTERY registry.gitlab.com
 
 build:
   stage: build
   script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker build --pull -t $CONTAINER_TEST_IMAGE ./API REST/API/
     - docker push $CONTAINER_TEST_IMAGE
 
 release-image:
