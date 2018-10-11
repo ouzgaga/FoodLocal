@@ -12,7 +12,7 @@ variables:
   CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/api:latest
 before_script:
-  - docker login -u $LOGIN_REGISTERY -p $LOGIN_TOKEN_REGISTERY registry.gitlab.com
+  - docker login -u $LOGIN_REGISTERY --password-stdin $LOGIN_TOKEN_REGISTERY registry.gitlab.com
 
 build:
   stage: build
