@@ -2,8 +2,8 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
-const Products = require('../products/products.model');
-const SalesPoints = require('../salespoints/salespoints.model');
+const Products = require('../models/products');
+const SalesPoints = require('./salespoints');
 
 /**
  * Producer Schema
