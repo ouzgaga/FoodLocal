@@ -1,6 +1,5 @@
-image: docker:stable
-services:
-  - docker:dind
+
+
 
 stages:
   - build
@@ -16,6 +15,9 @@ before_script:
 
 build:
   stage: build
+  image: docker:stable
+  services:
+    - docker:dind
   script:
     - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
     - docker push $CONTAINER_TEST_IMAGE
@@ -31,7 +33,11 @@ release-image:
 
 deploy:
   stage: deploy
+  image: google/cloud-sdk:alpine
   script:
-    - ./deploy.sh
+    - gcloud components install kubectl
+    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+    - gcloud docker -- push $CONTAINER_RELEASE_IMAGE
   only:
     - prod
