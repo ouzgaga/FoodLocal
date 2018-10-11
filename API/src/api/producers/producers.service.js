@@ -2,7 +2,9 @@
  * @param {Object} options
  * @param {Array} options.tags Tags à utiliser pour filtrer les résultats.
  * @param {Integer} options.limit Nombre maximum de producteurs à retourner.
- * @param {Integer} options.page Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
+ * @param {Integer} options.page Numéro de la page à retourner. Permet par
+ *   exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs
+ *   41 à 60.
  * @throws {Error}
  * @return {Promise}
  */
@@ -23,6 +25,8 @@ module.exports.getProducer = async (options) => {
   //   status: 500, // Or another error code.
   //   error: 'Server Error' // Or another error message.
   // });
+
+  //return res.json(req.user);
 
   return {
     status: 200,
@@ -55,7 +59,7 @@ module.exports.addProducer = async (options) => {
 
   return {
     status: 200,
-    data: 'addProducer ok!'
+    data  : 'addProducer ok!'
   };
 };
 
@@ -85,7 +89,7 @@ module.exports.getProducerById = async (options) => {
 
   return {
     status: 200,
-    data: 'getProducerById ok!'
+    data  : 'getProducerById ok!'
   };
 };
 
@@ -115,7 +119,7 @@ module.exports.updateProducer = async (options) => {
 
   return {
     status: 200,
-    data: 'updateProducer ok!'
+    data  : 'updateProducer ok!'
   };
 };
 
@@ -145,7 +149,7 @@ module.exports.deleteProducer = async (options) => {
 
   return {
     status: 200,
-    data: 'deleteProducer ok!'
+    data  : 'deleteProducer ok!'
   };
 };
 
