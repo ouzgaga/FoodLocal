@@ -9,11 +9,9 @@ stages:
   - deploy
 
 variables:
-  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/API REST/API/api:latest
+  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/api/:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/api/api:latest
 before_script:
-  - echo "testing gitlab ci/cd"
-  - echo $CI_JOB_TOKEN
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
 build:
