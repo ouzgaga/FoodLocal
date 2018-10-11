@@ -35,7 +35,7 @@ deploy:
   stage: deploy
   image: google/cloud-sdk:alpine
   before_script:
-    - apt-get install docker
+    - apk add docker
   script:
     - gcloud components install kubectl
     - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
