@@ -34,7 +34,7 @@ release-image:
 deploy:
   stage: deploy
   image: google/cloud-sdk:alpine
-  before-script:
+  before_script:
     - apt-get install docker
   script:
     - gcloud components install kubectl
