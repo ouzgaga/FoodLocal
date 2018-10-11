@@ -48,6 +48,27 @@ https://serverless-stack.com/chapters/add-the-session-to-the-state.html
 
 https://www.npmjs.com/package/redux-react-session
 
+## Redux
+
+https://www.valentinog.com/blog/react-redux-tutorial-beginners/
+
+Redux en quelques lignes:
+
+- C'est une sorte de wrapper qui sert à contenir des datas
+- C'est util pour manager/chercher les états (**states**) de composants JS (React dans notre cas).
+  - Il fournit l'état voulu de chacun des composants.
+  - Centralisation des états en un point.
+  - Permet de lier des états entre des composants qui n'ont pas de liens parents/enfants
+- Simplifie la transmission de données par les props (Plus de props avec trop d'attributs)
+
+
+
+### Composants
+
+**Store**: il contient tous les états de l'application (ou les états voulus)
+
+**Reducer**: Il produisent, créée un état.
+
 ## Mobile
 
 Nous pensons utiliser ReactNativ pour faire l'application mobile. Cela nous permettera de réutiliser certains composants de l'application web.	
