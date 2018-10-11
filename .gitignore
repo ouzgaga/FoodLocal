@@ -1,8 +1,5 @@
+node_modules
 
-API REST/express-mongoose-es6-rest-api/
+.DS_Store
 
-API REST/test/
-
-API REST/API/\.idea/
-
-API REST/API/node_modules/
+.idea
