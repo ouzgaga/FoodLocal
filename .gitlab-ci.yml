@@ -7,7 +7,7 @@ stages:
 
 variables:
   CONTAINER_TEST_IMAGE: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
+  CONTAINER_RELEASE_IMAGE: gcr.io/foodlocal/api:latest
 
 build:
   stage: build
