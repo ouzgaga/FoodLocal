@@ -19,8 +19,6 @@ build:
     - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
     - docker push $CONTAINER_TEST_IMAGE
-  only:
-    - master
 
 release-image:
   stage: release
