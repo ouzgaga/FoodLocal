@@ -37,13 +37,17 @@ Nous l'avons choisit car:
 
 ## Carte
 
-Nous utilisons l'**API  googleMap** de *google*. Nous avons fait ce choix suivant les critères suivants:
+Nous utilisons l'**API  leaflet**. Nous avons fait ce choix suivant les critères suivants:
 
+- Elle est ibre de droits et d'utilisations. 
 - Elle est érgonomique est facile à comprendre/utiliser.
-- Nous supposons que les uilisateurs sont déjà familier avec l'interface, donc ça facilitera l'utilisation de notre application.
-- Nous utilisons trouvons logique de continuer sur des composants *google* (avec *Material UI*).
-- Nous utilisons googleCloud qui nous met à disposition un crédit mensuel d'au moins 200.-, avec les-quelles on peut payer (si besoin, en fonction de la game tarifaire) l'utilisation de l'API googleMap
+
+## Session
+
+https://serverless-stack.com/chapters/add-the-session-to-the-state.html
+
+https://www.npmjs.com/package/redux-react-session
 
 ## Mobile
 
-Nous pensons utiliser ReactNativ pour faire l'application mobile. Cela nous permettera de réutiliser certains composants de l'application web.
+Nous pensons utiliser ReactNativ pour faire l'application mobile. Cela nous permettera de réutiliser certains composants de l'application web.	
