@@ -5,10 +5,10 @@ stages:
   - deploy
 
 variables:
-  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/api/api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/api/api:latest
+  CONTAINER_TEST_IMAGE: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
 
 build:
   stage: build
@@ -34,13 +34,11 @@ release-image:
 deploy:
   stage: deploy
   image: google/cloud-sdk:alpine
-  before_script:
-    - apk add docker
   script:
     - gcloud components install kubectl
     - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
     - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
-    - gcloud auth configure-docker
-    - gcloud docker -- push $CONTAINER_RELEASE_IMAGE
+    - kubectl apply -f api-loadbalancer-service.yml
+    - kubectl apply -f api-deployment.yml
   only:
     - prod

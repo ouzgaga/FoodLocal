@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api-deployment
+          image: ejoreo/sample-app:v1 #this is where to make your changes
+          ports:
+            - containerPort: 4040
+              name: api-deployment
