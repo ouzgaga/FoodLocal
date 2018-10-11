@@ -40,6 +40,7 @@ deploy:
     - gcloud components install kubectl
     - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
     - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+    - gcloud auth configure-docker
     - gcloud docker -- push $CONTAINER_RELEASE_IMAGE
   only:
     - prod
