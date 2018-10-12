@@ -4,10 +4,10 @@ metadata:
   name: api-service
 spec:
   type: LoadBalancer
-  loadBalancerIP: 35.207.181.187
+  loadBalancerIP: 35.207.121.66
   ports:
     - port: 80
       protocol: TCP
       targetPort: 4040
   selector:
-    app: api
+    app: api-deployment
