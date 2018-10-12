@@ -3,13 +3,13 @@ kind: Deployment
 metadata:
   name: api-deployment
   labels:
-    component: api-deployment
+    app: api-deployment
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        component: api-deployment
+        app: api-deployment
     spec:
       containers:
         - name: api-deployment

@@ -9,4 +9,4 @@ spec:
     - port: 80
       targetPort: 4040
   selector:
-    component: api-deployment
+    app: api-deployment
