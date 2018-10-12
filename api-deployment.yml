@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-deployment
   labels:
-    app: api-deployment
+    component: api-deployment
 spec:
   replicas: 1
   template:
