@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-        app: api-deployment
+        component: api-deployment
     spec:
       containers:
         - name: api-deployment
