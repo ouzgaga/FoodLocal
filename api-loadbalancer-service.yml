@@ -6,7 +6,7 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 35.207.181.187
   ports:
-    - port: 80
+    port: 80
     targetPort: 4040
   selector:
     app: api-deployment
