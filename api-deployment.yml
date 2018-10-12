@@ -3,16 +3,19 @@ kind: Deployment
 metadata:
   name: api-deployment
   labels:
-    app: api-deployment
+    app: api
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: api
   template:
     metadata:
-      matchLabels:
-        app: api-deployment
+      labels:
+        app: api
     spec:
       containers:
-        - name: api-deployment
+        - name: api
           image: gcr.io/food-local/api:latest
           ports:
             - containerPort: 4040
