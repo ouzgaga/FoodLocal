@@ -4,9 +4,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-
+import {Link} from 'react-router-dom';
 
 import logo from '../img/LogoCarrote.png';
+
+import {
+  PageAbout,
+  PageMap,
+  PageError404,
+} from '../pages/Pages.js'; 
 
 import LoginDialog from './LoginDialog';
 
@@ -31,17 +37,21 @@ class MenuAppBar extends React.Component  {
     sConnected: null,
     connectEmail: '',
     open: false,
+    a: 1,
   };
 
 
   handleClickLogin = () => {
     this.setState({
       open: true,
-    });
+    }); 
   };
 
   handleCloseLogin = value => {
-    this.setState({ connectEmail: value, open: false });
+    let b = this.state.a +1;
+    this.setState({ connectEmail: 'Helloooa', open: false, a: b});
+
+    console.info('Close' + this.state.a);
   };
 
 
@@ -60,8 +70,12 @@ class MenuAppBar extends React.Component  {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               News
             </Typography>
-            <Button color="inherit">Inscription</Button>
             
+            <Link to="/" className={classes.Link}> Home </Link>
+            <Link to="/about" className={classes.Link}>About</Link>
+            <Link to="/map" className={classes.Link}>Map</Link>
+            
+            <Button color="inherit">Inscription</Button>
             <Button 
             color="inherit"
             onClick={this.handleClickLogin}>
@@ -72,7 +86,9 @@ class MenuAppBar extends React.Component  {
               classes = {this.props}
               selectedValue={this.state.connectEmail}
               open={this.state.open}
+              //onClose={this.handleCloseLogin.bind(this)}
               onClose={this.handleCloseLogin}
+              
             />
           </Toolbar>
 

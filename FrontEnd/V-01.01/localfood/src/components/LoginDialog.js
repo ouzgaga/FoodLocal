@@ -30,17 +30,20 @@ class LoginDialog extends React.Component {
 
   render() {
     const { classes, onClose, selectedValue, ...other } = this.props;
-    //console.info(this.props);
+          console.log('Dialog: ');
+      console.log(this.props);
     
     return (
+
       <Dialog
-        onClose={this.handleClose}
+        //onClose={this.handleClose}
         aria-labelledby="Login"
         {...other}
       >
-        <Login
+        <MyLogin
           classes= {this.classes}
           selectedValue = {this.selectedValue}
+          onClose = {onClose}
         />
           
       </Dialog>

@@ -6,14 +6,10 @@ import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+
 import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
@@ -50,14 +46,25 @@ const styles = theme => ({
 
 class MyLogin extends React.Component {
 
+    
+  state = {
+
+    a: 0,
+  };
+
+
+
     handleLogin = () => {
-        this.props.state.setState({
-            selectedValue: 'hello',
-            onClose: true
-        })
+        this.props.onClose();
     }
 
     render(){
+
+        //this.setState(this.state.a + 1);
+
+ 
+
+        console.log('MyLogin:' + this.state.a);
 
         const {classes, onClose, selectedValue, ...other } = this.props;
         return (
@@ -70,12 +77,11 @@ class MyLogin extends React.Component {
                         </Avatar>
                     </Paper>
                     <Button
-                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick = {this.handleLogin}
+                        onClick = {onClose}
                     >
                         Sign in
                     </Button>
@@ -86,5 +92,11 @@ class MyLogin extends React.Component {
 
 
 }
+
+MyLogin.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onClose: PropTypes.func,
+    selectedValue: PropTypes.string,
+  };
 
 export default withStyles(styles)(MyLogin);

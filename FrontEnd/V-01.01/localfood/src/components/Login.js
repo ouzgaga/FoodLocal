@@ -46,7 +46,7 @@ const styles = theme => ({
 });
 
 function Login(props) {
-  const { classes } = props;
+  const { classes, onClose } = props;
   console.info(props);
   return (
     <React.Fragment>
@@ -84,7 +84,18 @@ function Login(props) {
               color="primary"
               className={classes.submit}
             >
+
+            
               Sign in
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick = {onClose}              
+            >
+            
+              Test
             </Button>
           </form>
         </Paper>
@@ -95,6 +106,7 @@ function Login(props) {
 
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
+  onClose: PropTypes.func,
 };
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Login); 
