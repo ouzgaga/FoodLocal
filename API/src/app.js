@@ -1,5 +1,5 @@
+require('dotenv').config();
 const express = require('express');
-const glob = require('glob');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('./app/helpers/APIError');
