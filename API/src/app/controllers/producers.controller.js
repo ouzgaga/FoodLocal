@@ -16,14 +16,16 @@ router.get('/', (req, res, next) => {
    * @param {Integer} req .page Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
    */
   const requestOptions = {
-    tags : req.query.tags,
+    tags: req.query.tags,
     limit: req.query.limit,
-    page : req.query.page
+    page: req.query.page
   };
 
   const p = producersServices.getProducer(requestOptions);
 
-  p.then((err, result) => {
+  p.then((result) => {
+    console.log(result);
+  }).catch((err) => {
     console.log(err);
   });
   /*
@@ -43,15 +45,16 @@ router.get('/', (req, res, next) => {
  * Crée un nouveau producteur dans la base de données. Doublons
  * autorisés!
  */
-router.post('/', (req, res, next) => producersServices.addProducer(req.body).then((result) => {
-  res.status(result.status || httpStatus.OK).send(result.data);
-}).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-  {
+router.post('/', (req, res, next) => producersServices
+  .addProducer(req.body)
+  .then((result) => {
+    res.status(result.status || httpStatus.OK).send(result.data);
+  })
+  .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
     status: httpStatus.INTERNAL_SERVER_ERROR,
-    title : 'Server error',
-    error : err.message
-  }
-)));
+    title: 'Server error',
+    error: err.message
+  })));
 
 /**
  * Retourne le producteur correspondant à l'id reçu.
@@ -66,15 +69,16 @@ router.get('/:id', (req, res, next) => {
     id: req.params.id
   };
 
-  return producersServices.getProducerById(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
+  return producersServices
+    .getProducerById(requestOptions)
+    .then((result) => {
+      res.status(result.status || httpStatus.OK).send(result.data);
+    })
+    .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
-    }
-  ));
+      title: 'Server error',
+      error: err.message
+    }));
 });
 
 /**
@@ -90,15 +94,16 @@ router.put('/:id', (req, res, next) => {
     id: req.params.id
   };
 
-  return producersServices.updateProducer(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
+  return producersServices
+    .updateProducer(requestOptions)
+    .then((result) => {
+      res.status(result.status || httpStatus.OK).send(result.data);
+    })
+    .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
-    }
-  ));
+      title: 'Server error',
+      error: err.message
+    }));
 });
 
 /**
@@ -114,15 +119,16 @@ router.delete('/:id', (req, res, next) => {
     id: req.params.id
   };
 
-  return producersServices.deleteProducer(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
+  return producersServices
+    .deleteProducer(requestOptions)
+    .then((result) => {
+      res.status(result.status || httpStatus.OK).send(result.data);
+    })
+    .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
-    }
-  ));
+      title: 'Server error',
+      error: err.message
+    }));
 });
 
 module.exports = router;

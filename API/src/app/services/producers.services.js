@@ -1,4 +1,7 @@
-const Producer = require('../models/producers.model');
+const mongoose = require('mongoose');
+require('../models/producers.model');
+
+const Producer = mongoose.model('Producer');
 
 /**
  * Retourne tous les producteurs de la base de données.
