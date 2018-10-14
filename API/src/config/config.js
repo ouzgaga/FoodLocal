@@ -10,7 +10,7 @@ const config = {
       name: 'express'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/express-development'
+    db: 'mongodb://localhost:27017/express-development'
   },
 
   test: {
@@ -19,7 +19,7 @@ const config = {
       name: 'express'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/express-test'
+    db: 'mongodb://localhost:27017/express-test'
   },
 
   production: {
@@ -28,7 +28,7 @@ const config = {
       name: 'express'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/express-production'
+    db: 'mongodb://localhost:27017/express-production'
   }
 };
 
