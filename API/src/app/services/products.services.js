@@ -1,11 +1,14 @@
-const productsModel = require('../models/products.model');
+const mongoose = require('mongoose');
+require('../models/products.model');
+
+const products = mongoose.model('Products');
 
 
 /**
  * Retourne tous les produits de la base de données.
  */
 function getProducts(requestOptions) {
-  return productsModel.getProducts(requestOptions);
+  return products.getProducts(requestOptions);
 }
 
 
@@ -14,7 +17,7 @@ function getProducts(requestOptions) {
  * autorisés!
  */
 function addProduct(requestOptions) {
-  return productsModel.addProduct(requestOptions);
+  return products.addProduct(requestOptions);
 }
 
 
@@ -22,7 +25,7 @@ function addProduct(requestOptions) {
  * Retourne le produit correspondant à l'id reçu.
  */
 function getProductById(requestOptions) {
-  return productsModel.getProductById(requestOptions);
+  return products.getProductById(requestOptions);
 }
 
 
@@ -30,7 +33,7 @@ function getProductById(requestOptions) {
  * Met à jour le produit possédant l'id reçu.
  */
 function updateProduct(requestOptions) {
-  return productsModel.updateProduct(requestOptions);
+  return products.updateProduct(requestOptions);
 }
 
 
@@ -38,7 +41,7 @@ function updateProduct(requestOptions) {
  * Supprime le produit correspondant à l'id reçu.
  */
 function deleteProduct(requestOptions) {
-  return productsModel.deleteProduct(requestOptions);
+  return products.deleteProduct(requestOptions);
 }
 
 

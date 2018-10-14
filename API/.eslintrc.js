@@ -1,7 +1,7 @@
 module.exports = {
   'extends': 'airbnb-base',
   'rules'  : {
-    'comma-dangle': 'off',
-    'key-spacing' : 'off'
+    'comma-dangle'               : 'off',
+    'space-before-function-paren': 'off'
   }
 };
