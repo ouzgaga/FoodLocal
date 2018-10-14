@@ -37,11 +37,11 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Date,
       required: false
     },
-    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producer' }],
+    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }],
   }
 );
 
 /**
  * @typedef Product
  */
-mongoose.model('Product', productSchema);
+mongoose.model('Products', productSchema);

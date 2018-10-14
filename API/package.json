@@ -2,6 +2,7 @@
 	"name": "local-food",
 	"version": "0.0.1",
 	"description": "Une API pour le site internet foodlocal.ch crée avec la spécification OpenAPI 3.0.",
+	"repository": "git@gitlab.com:Nooka10/local-food.git",
 	"main": "src/app.js",
 	"scripts": {
 		"start": "nodemon",

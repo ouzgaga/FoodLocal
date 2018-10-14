@@ -1,7 +1,7 @@
 const express = require('express');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
-const salespointsServices = require('../services/salespoints.services');
+const salesPointsServices = require('../services/salesPoints.services');
 
 const router = new express.Router();
 
@@ -16,14 +16,13 @@ router.get('/', (req, res, next) => {
    * @param {Integer} req .page Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 points de ventes, soit les points de vente 41
    *   à 60.
    */
-
   const requestOptions = {
     tags : req.query.tags,
     limit: req.query.limit,
     page : req.query.page
   };
 
-  return salespointsServices.getSalesPoints(requestOptions).then((result) => {
+  salesPointsServices.getsalesPoints(requestOptions).then((result) => {
     res.status(result.status || httpStatus.OK).send(result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
@@ -42,10 +41,9 @@ router.post('/', (req, res, next) => {
   /**
    * @param {Object} req
    */
-
   const requestOptions = {};
 
-  return salespointsServices.addSalesPoints(requestOptions).then((result) => {
+  salesPointsServices.addsalesPoints(requestOptions).then((result) => {
     res.status(result.status || httpStatus.OK).send(result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
@@ -64,12 +62,11 @@ router.get('/:id', (req, res, next) => {
    * @param {Object} req
    * @param {Integer} req .id L&#x27;id du point de vente à récupérer.
    */
-
   const requestOptions = {
     id: req.params.id
   };
 
-  return salespointsServices.getSalesPointById(requestOptions).then((result) => {
+  salesPointsServices.getsalesPointById(requestOptions).then((result) => {
     res.status(result.status || httpStatus.OK).send(result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
@@ -89,12 +86,11 @@ router.put('/:id', (req, res, next) => {
    * @param {Object} req
    * @param {Integer} req .id l&#x27;id du point de vente à mettre à jour.
    */
-
   const requestOptions = {
     id: req.params.id
   };
 
-  return salespointsServices.updateSalesPoint(requestOptions).then((result) => {
+  salesPointsServices.updatesalesPoint(requestOptions).then((result) => {
     res.status(result.status || httpStatus.OK).send(result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
@@ -113,12 +109,11 @@ router.delete('/:id', (req, res, next) => {
    * @param {Object} req
    * @param {Integer} req .id L&#x27;id du point de vente à supprimer.
    */
-
   const requestOptions = {
     id: req.params.id
   };
 
-  return salespointsServices.deleteSalesPoint(requestOptions).then((result) => {
+  salesPointsServices.deletesalesPoint(requestOptions).then((result) => {
     res.status(result.status || httpStatus.OK).send(result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {

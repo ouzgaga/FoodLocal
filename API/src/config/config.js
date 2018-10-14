@@ -6,29 +6,29 @@ const env = process.env.NODE_ENV || 'development';
 const config = {
   development: {
     root: rootPath,
-    app: {
-      name: 'express'
+    app : {
+      name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost:27017/express-development'
+    db  : `mongodb://${process.env.mongoDB_host}:${process.env.mongoDB_port}/${process.env.mongoDB_dbName_dev}`
   },
 
   test: {
     root: rootPath,
-    app: {
-      name: 'express'
+    app : {
+      name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost:27017/express-test'
+    db  : `mongodb://${process.env.mongoDB_host}:${process.env.mongoDB_port}/${process.env.mongoDB_dbName_test}`
   },
 
   production: {
     root: rootPath,
-    app: {
-      name: 'express'
+    app : {
+      name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost:27017/express-production'
+    db  : `mongodb://${process.env.mongoDB_host}:${process.env.mongoDB_port}/${process.env.mongoDB_dbName_prod}`
   }
 };
 

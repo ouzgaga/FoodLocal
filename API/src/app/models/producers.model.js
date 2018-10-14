@@ -32,10 +32,10 @@ const producerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: true
   },
-  salesPoints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SalesPoint' }]
+  salesPoints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'salesPoints' }]
 });
 
 /**
  * @typedef Producer
  */
-mongoose.model('Producer', producerSchema);
+mongoose.model('Producers', producerSchema);

@@ -36,7 +36,7 @@ const dailySchedule = new mongoose.Schema(
 );
 
 /**
- * SalesPoint Schema
+ * salesPoint Schema
  */
 const salesPointSchema = new mongoose.Schema(
   {
@@ -92,11 +92,11 @@ const salesPointSchema = new mongoose.Schema(
       maxItems: 7,
       required: false
     },
-    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producer' }]
+    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }]
   }
 );
 
 /**
- * @typedef SalesPoint
+ * @typedef Producer
  */
-module.exports = mongoose.model('SalesPoint', salesPointSchema);
+mongoose.model('salesPoints', salesPointSchema);
