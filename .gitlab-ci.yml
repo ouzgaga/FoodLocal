@@ -1,6 +1,3 @@
-image: docker:stable
-services:
-  - docker:dind
 
 stages:
   - build
@@ -9,20 +6,27 @@ stages:
   - deploy
 
 variables:
-  CONTAINER_TEST_IMAGE: registry.gitlab.com/nooka10/local-food/api/api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: registry.gitlab.com/nooka10/local-food/api/api:latest
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  CONTAINER_TEST_IMAGE: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
 
 build:
   stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+
   script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
     - docker push $CONTAINER_TEST_IMAGE
 
 release-image:
   stage: release
+  image: docker:stable
+  services:
+    - docker:dind
   script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
@@ -31,7 +35,12 @@ release-image:
 
 deploy:
   stage: deploy
+  image: google/cloud-sdk:alpine
   script:
-    - ./deploy.sh
+    - gcloud components install kubectl
+    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+    - kubectl apply -f api-service.yml
+    - kubectl apply -f api-deployment.yml
   only:
     - prod
