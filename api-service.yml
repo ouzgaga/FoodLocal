@@ -4,7 +4,7 @@ metadata:
   name: api-service
 spec:
   type: LoadBalancer
-  loadBalancerIP: 35.207.121.66
+  loadBalancerIP: 35.241.173.64
   ports:
     - port: 80
       protocol: TCP

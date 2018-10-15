@@ -40,7 +40,7 @@ deploy:
     - gcloud components install kubectl
     - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
     - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
-    - kubectl apply -f api-loadbalancer-service.yml
+    - kubectl apply -f api-service.yml
     - kubectl apply -f api-deployment.yml
   only:
     - prod
