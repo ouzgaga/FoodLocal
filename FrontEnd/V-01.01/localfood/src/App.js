@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component, Fragment } from 'react';
 import './App.css';
-import Header from './components/Header'
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'; 
-import Theme from './components/Theme';
-import Login from './components/Login.js';
 import { Grid, Paper } from '@material-ui/core';
-import MyMap from './components/MyMap'
+import MyMap from './components/Map'
+import Search from './components/LoadFilms'
+import Header from './components/Header'
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import Theme from './components/Theme';
+import Footer from './components/Footer'
 
 const tileData = [
   {
@@ -75,25 +75,29 @@ const tileData = [
   }
 ];
 
+
 class App extends Component {
+
   render() {
     return (
-      <MuiThemeProvider  theme={Theme}>
+      <MuiThemeProvider theme={Theme}>
         <div className="App" >
-        
-          <Header theme={Theme } />
-          <div className="container"></div>
-          <div className="map">
-            <MyMap listProducers={tileData} />
-          </div>
-          <div className="listProducer">
-           
+
+          <Header theme={Theme} />
+          <div className="container">
+            <div className="map">
+              <MyMap listProducers={tileData} />
+            </div>
+            <div className="listProducer">
+              <Search />
+            </div>
           </div>
 
+        <Footer/>
+
         </div>
-        <div className="footer">
-        </div>
-        
+
+
       </MuiThemeProvider>
     );
   }

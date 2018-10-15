@@ -1,4 +1,15 @@
 import React from 'react';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+class Footer extends React.Component  { 
+  
+    render() {
+     
+      return (
+        <div style={{height:100, backgroundColor:"lightgrey"}}>
+            Footer en devenir
+        </div>
+      );
+    }
+  }
+
+  export default Footer
