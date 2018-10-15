@@ -1,5 +1,5 @@
 # Use latest node version
-FROM node:8.12.0
+FROM node:8.12.0-alpine
 
 MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch>
 
