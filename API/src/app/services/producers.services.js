@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const httpStatus = require('http-status');
 require('../models/producers.model');
 
 const Producers = mongoose.model('Producers');
@@ -30,15 +31,16 @@ function getProducerById ({id}) {
 /**
  * Met à jour le producteur possédant l'id reçu.
  */
-function updateProducer (requestOptions) {
-  return Producers.updateProducer(requestOptions);
+function updateProducer (producerInfos) {
+  return Producers.findByIdAndUpdate(producerInfos); // retourne l'objet modifié
+  // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
 }
 
 /**
  * Supprime le producteur correspondant à l'id reçu.
  */
-function deleteProducer (requestOptions) {
-  return Producers.deleteProducer(requestOptions);
+function deleteProducer (idProducerToDelete) {
+  return Producers.findByIdAndRemove(idProducerToDelete);
 }
 
 module.exports = {
