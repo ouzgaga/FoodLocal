@@ -28,7 +28,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db  : `mongodb://${process.env.mongoDB_host_prod}:${process.env.mongoDB_port_prod}/${process.env.mongoDB_dbName_prod}`
+    db  : `mongodb://${process.env.mongoDB_host_prod}.${process.env.mongoDB_port_prod}/${process.env.mongoDB_dbName_prod}`
   }
 };
 
