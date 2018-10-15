@@ -3,15 +3,15 @@ FROM node:8.12.0-alpine
 
 MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch>
 
-# create app directory in container
-RUN mkdir -p /app
+# create api directory in container
+RUN mkdir -p /api
 
-# set /app directory as default working directory
-WORKDIR /app
+# set /api directory as default working directory
+WORKDIR /api
 
-# only copy package.json initially so that `RUN yarn` layer is recreated only
+# only copy package.json initially so that it's recreated only
 # if there are changes in package.json
-ADD package.json /app/
+ADD package.json ./
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -22,8 +22,8 @@ COPY package*.json ./
 # If you are building your code for production
 RUN npm install --only=production
 
-# copy all file from current dir to /app in container
-COPY . /app/
+# copy all file from current dir to /api in container
+COPY . /api/
 
 # expose port 4040
 EXPOSE 4040
