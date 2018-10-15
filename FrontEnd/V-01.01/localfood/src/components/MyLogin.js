@@ -11,6 +11,7 @@ import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/core';
+import UserContext from './UserContext';
 
 const styles = theme => ({
     layout: {
@@ -55,6 +56,7 @@ class MyLogin extends React.Component {
 
 
     handleLogin = () => {
+        UserContext.Provider.name = "UserIsLog"
         this.props.onClose();
     }
 
@@ -81,7 +83,7 @@ class MyLogin extends React.Component {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick = {onClose}
+                        onClick = {this.handleLogin}
                     >
                         Sign in
                     </Button>

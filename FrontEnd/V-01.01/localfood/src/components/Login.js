@@ -13,6 +13,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 
+import UserContext from './UserContext';
+
 const styles = theme => ({
   layout: {
     width: 'auto',
@@ -92,7 +94,7 @@ function Login(props) {
               fullWidth
               variant="contained"
               color="primary"
-              onClick = {onClose}              
+              onClick = {UserContext.Provider.name = "Hello"}              
             >
             
               Test

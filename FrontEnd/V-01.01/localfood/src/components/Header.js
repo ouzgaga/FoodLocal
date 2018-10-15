@@ -7,7 +7,8 @@ import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 
 import logo from '../img/LogoCarrote.png';
-
+import UserContext from './UserContext';
+  
 import {
   PageAbout,
   PageMap,
@@ -29,6 +30,10 @@ const styles = {
     marginRight: 20,
     height: 60, 
   },
+  LinkButton:{
+    textDecoration: 'none',
+    color: 'inherit'
+  }
 };
 
 class MenuAppBar extends React.Component  {
@@ -71,25 +76,37 @@ class MenuAppBar extends React.Component  {
               News
             </Typography>
             
-            <Link to="/" className={classes.Link}> Home </Link>
-            <Link to="/about" className={classes.Link}>About</Link>
-            <Link to="/map" className={classes.Link}>Map</Link>
+            <Link to="/" className={classes.LinkButton} > <Button  >Home</Button> </Link>
+            <Link to="/about" className={classes.LinkButton}><Button >About</Button></Link>
+            <Link to="/map" className={classes.LinkButton}><Button >Map</Button></Link>
             
             <Button color="inherit">Inscription</Button>
+            
+
+
+
+          {UserContext.Provider.name == null ? 
             <Button 
             color="inherit"
             onClick={this.handleClickLogin}>
               Login
             </Button>
-
-            <LoginDialog
-              classes = {this.props}
-              selectedValue={this.state.connectEmail}
-              open={this.state.open}
-              //onClose={this.handleCloseLogin.bind(this)}
-              onClose={this.handleCloseLogin}
-              
-            />
+            :
+            <Button 
+            color="inherit"
+            //onClick={this.handleClickLogin}
+            >
+              Hellofd
+              {UserContext.Provider.name}
+            </Button>
+          }
+          <LoginDialog
+            classes = {this.props}
+            selectedValue={this.state.connectEmail}
+            open={this.state.open}
+            //onClose={this.handleCloseLogin.bind(this)}
+            onClose={this.handleCloseLogin} />
+            
           </Toolbar>
 
           <Typography variant="h6" color="inherit" className={classes.grow}>

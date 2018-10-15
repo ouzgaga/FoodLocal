@@ -26,6 +26,7 @@ class LoginDialog extends React.Component {
 
     handleListItemClick = value => {
       this.props.onClose(value);
+      
     };
 
   render() {
