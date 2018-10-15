@@ -37,7 +37,7 @@ class LoginDialog extends React.Component {
     return (
 
       <Dialog
-        //onClose={this.handleClose}
+        onClose={this.handleClose}
         aria-labelledby="Login"
         {...other}
       >
