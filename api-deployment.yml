@@ -20,3 +20,8 @@ spec:
           ports:
             - containerPort: 4040
               name: api-deployment
+          env:
+            - name: PORT
+              value: "4040"
+            - name: NODE_ENV
+              value: "production"
