@@ -14,9 +14,9 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
- name: mongo-service
+ name: mongo
  labels:
-   name: mongo-service
+   name: mongo
 spec:
  ports:
  - port: 27017
