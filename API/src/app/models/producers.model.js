@@ -31,11 +31,10 @@ const producerSchema = new mongoose.Schema({
   password: {
     type: mongoose.Schema.Types.String,
     required: true
-  },
-  salesPoints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'salesPoints' }]
+  }
 });
 
 /**
  * @typedef Producer
  */
-mongoose.model('Producers', producerSchema);
+mongoose.model('producers', producerSchema);

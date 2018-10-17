@@ -1,7 +1,4 @@
-const Promise = require('bluebird');
 const mongoose = require('mongoose');
-const httpStatus = require('http-status');
-const APIError = require('../helpers/APIError');
 
 /**
  * DailySchedule Schema
@@ -42,7 +39,6 @@ const salesPointSchema = new mongoose.Schema(
   {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true
     },
     name: {
       type: mongoose.Schema.Types.String,
@@ -99,4 +95,4 @@ const salesPointSchema = new mongoose.Schema(
 /**
  * @typedef Producer
  */
-mongoose.model('salesPoints', salesPointSchema);
+mongoose.model('salespoints', salesPointSchema);

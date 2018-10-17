@@ -9,7 +9,7 @@ const APIError = require('../app/helpers/APIError');
 
 const productsController = require('../app/controllers/products.controller');
 const producersController = require('../app/controllers/producers.controller');
-const salesPointsController = require('../app/controllers/salesPoints.controller');
+const salesPointsController = require('../app/controllers/salespoints.controller');
 
 module.exports = (app, config) => {
   const env = process.env.NODE_ENV || 'development';
