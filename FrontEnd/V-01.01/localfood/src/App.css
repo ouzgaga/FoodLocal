@@ -8,16 +8,6 @@ body {
   height: 100%;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-areas:
-    'header header header header header header'
-    'menu main main main right right'
-    'menu footer footer footer footer footer';
-  grid-gap: 10px;
-  background-color: #2196F3;
-  padding: 10px;
-}
 
 @media only screen and (min-width: 600px){
 .container {
@@ -26,21 +16,22 @@ body {
   display: grid;
   grid-template-columns: 8fr 4fr;
 }
- 
-  .map {
-    background-color: #CCCCCC;
-    position: sticky;
-    top:0;
-    left: 0;
-    right: 0;
-    height: 90vh;
-  }
-}
-
 .listProducer{
   height: 90vh;
   overflow-y: scroll;
 }
+  
+}
+
+.map {
+  background-color: #CCCCCC;
+  position: sticky;
+  top:0;
+  left: 0;
+  right: 0;
+  height: 90vh;
+}
+
 
 .footer{
   height: 200;
