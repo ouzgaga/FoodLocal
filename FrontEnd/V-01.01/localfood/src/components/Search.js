@@ -18,6 +18,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import SearchBar from 'material-ui-search-bar'
 
 const styles = theme => ({
   card: {
@@ -142,10 +143,19 @@ class Search extends React.Component {
     return (
       <Fragment>
         <Divider />
+        <SearchBar
+      onChange={() => console.log('onChange')}
+      onRequestSearch={() => console.log('onRequestSearch')}
+      style={{
+        margin: '0 auto',
+        maxWidth: 800
+      }}
+    />
         <List >
 
           {tileData.map(tile => (
-            <Fragment><ListItem key={tile.id}>
+            <Fragment>
+            <ListItem key={tile.id} style={{height:200}}>
 
               <ListItemText primary={tile.title} />
             </ListItem>
@@ -154,7 +164,7 @@ class Search extends React.Component {
           ))
           }
 
-      </List>
+        </List>
       </Fragment>
     )
   }

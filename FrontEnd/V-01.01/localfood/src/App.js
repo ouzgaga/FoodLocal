@@ -16,7 +16,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import './App.css';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
-import MyMap from './components/Map';
+import MyMap from './components/MyMap';
 import Search from './components/Search';
 import Header from './components/Header';
 import Theme from './components/Theme';
@@ -96,7 +96,7 @@ const tileData = [
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: `100vh`,
+    height: `100%`,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -189,7 +189,7 @@ class App extends React.Component {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden smDown implementation="css">
+        <Hidden smDown >
           <Drawer
             variant="permanent"
             open
