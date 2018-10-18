@@ -44,18 +44,18 @@ release-image-api:
   only:
     - prod
 
-realease-image-frontend:
+release-image-frontend:
   stage: release
-    image: docker:stable
-    services:
-      - docker:dind
-    script:
-      - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-      - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
-      - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
-      - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
-    only:
-      - prod
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+    - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
+    - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
+    - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
+  only:
+    - prod
 
 deploy-api:
   stage: deploy
