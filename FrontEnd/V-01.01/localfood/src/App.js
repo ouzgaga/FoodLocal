@@ -22,6 +22,21 @@ import Header from './components/Header';
 import Theme from './components/Theme';
 import Footer from './components/Footer';
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from 'react-router-dom';
+
+import {
+  PageAbout,
+  PageMap,
+  PageNewAccount,
+  PageError404,
+} from './pages/Pages.js'; 
+
 
 const drawerWidth = 400;
 
@@ -36,60 +51,6 @@ const tileData = [
     }
 
   },
-  {
-
-    "id": 2,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.781,
-      "lng": 6.53
-    }
-
-  },
-  {
-
-    "id": 3,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.77,
-      "lng": 6.58
-    }
-
-  },
-  {
-
-    "id": 4,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.789,
-      "lng": 6.69
-    }
-
-  },
-  {
-    "id": 5,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.795,
-      "lng": 6.63
-    }
-  },
-  {
-    "id": 6,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.70,
-      "lng": 6.47
-    }
-  },
-  {
-    "id": 7,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.74,
-      "lng": 6.77
-    }
-  }
 ];
 
 
@@ -105,7 +66,7 @@ const styles = theme => ({
   },
   appBar: {
     position: 'absolute',
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: 1900,
     [theme.breakpoints.up('md')]: {
       width: `100%`,
     },
@@ -152,6 +113,7 @@ class App extends React.Component {
     return (
       <div className={classes.root}>
         <div>
+        {/*
           <AppBar className={classes.appBar}>
             <Toolbar>
               
@@ -168,38 +130,26 @@ class App extends React.Component {
               </IconButton>
             </Toolbar>
           </AppBar>
+*/}
+<Router>
+          <MuiThemeProvider  theme={Theme}>
+            <Header/>
+            
+            <div  className={classes.page} center="xs">
+              <Switch>
+                <Route default path="/about" exact component={PageAbout} classes={classes}/>
+                <Route path="/newAccount" component={PageNewAccount} classes={classes}/>
+                <Route path="/" component={PageMap} classes={classes}/>
+                <Route path="*" component={PageError404} classes={classes}/> 
+              </Switch> 
+            </div>
+              
+            
+          </MuiThemeProvider>
+        </Router>
+
         </div>
-        <div className={classes.content}>
-          <div className={classes.toolbar} />
-          <MyMap listProducers={tileData} />
-          </div>
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            anchor={theme.direction = 'right'}
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown >
-          <Drawer
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+        
       </div>
     );
   }
