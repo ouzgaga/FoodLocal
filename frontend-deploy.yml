@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: frontend-deploy
   labels:
-    app: frontend-deployment
+    app: frontend-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend-deployment
+      app: frontend-deploy
   template:
     metadata:
       labels:
-        app: frontend-deployment
+        app: frontend-deploy
     spec:
       containers:
-        - name: frontend-deployment
+        - name: frontend-deploy
           image: gcr.io/foodlocal-218406/frontend:latest
           ports:
             - containerPort: 80
-              name: frontend-deployment
+              name: frontend-deploy
