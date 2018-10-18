@@ -13,7 +13,10 @@ import logo from '../img/LogoCarrote.png';
 const styles = theme => ({
   about: {
     
-    flex: 1,
+    width: '80%',
+    marginLeft: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
     
   },
   content:{
@@ -26,8 +29,16 @@ const styles = theme => ({
        
   },
   image: {
+    flex: 2,
+    
+    marginRight: '50%',
+    transform: 'translateY(-50%)',
+    
+  
     width: 128,
     height: 128,
+
+    border: 1,
   },
   
   img: {
@@ -46,6 +57,25 @@ const styles = theme => ({
   },
 });
 
+/*
+<div className={classes.about}>    
+        <Grid container className={classes.root} spacing={16}>
+        <div>
+          <Grid container className={classes.box}>
+              <Grid item xs="6" >
+                <img className={classes.img} alt="complex" src={logo}/>
+              </Grid>
+              <Grid item xs="6">
+              <Typography gutterBottom variant="title">
+                Qu'est-ce food local?
+              </Typography>
+              <Typography gutterBottom>C'est un application web qui a pour but de référencer de petits producteurs locaux. Elle leur fournit un </Typography>            
+              </Grid>
+          </Grid>
+          </div>
+      </Grid>
+    </div>
+    */
 
 class PageAbout extends Component {
   
@@ -54,27 +84,29 @@ class PageAbout extends Component {
     const { classes } = this.props;
 
     return (
-    <div className={classes.about}>    
-        <Grid container className={classes.root} spacing={16}>
-        
-          <Grid container >
-              
-              <Grid item xs="12">
-              <div className={classes.image}>
-                <img className={classes.img} alt="complex" src={logo}/>
-              </div>
-              <Typography gutterBottom variant="title">
-                Qu'est-ce food local?
-              </Typography>
-              <Typography gutterBottom>C'est un application web qui a pour but de référencer de petits producteurs locaux. Elle leur fournit un </Typography>            
-              </Grid>
-              
+   
+   
+    
 
-          </Grid>
-          
-          
+    <div className={classes.about}>
+      <div className={classes.imgage}>
+        <img className={classes.img} alt="complex" src={logo}/> 
+      </div>
+
+      <div>
+        <h5>
+          Qu'est-ce localFood?
+        </h5>
         
-      </Grid>
+        at Module.load (module.js:566:32)
+        at tryModuleLoad (module.js:506:12)
+        at Function.Module._load (module.js:498:3)
+        at Function.Module.runMain (module.js:694:10)
+        at startup (bootstrap_node.js:204:16)
+        at bootstrap_node.js:625:3
+
+        
+      </div>
     </div>
       
       
