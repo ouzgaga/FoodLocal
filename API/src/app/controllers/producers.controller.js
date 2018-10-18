@@ -6,99 +6,104 @@ const producersServices = require('../services/producers.services');
 const router = new express.Router();
 
 /**
- * Retourne tous les producteurs de la base de données.
+ * Retourne "limit" producteurs de la base de données, fitlrés
+ * selon les tags "tags" reçus à partir de la page "page". Sans
+ * paramètres, retourne tous les producteurs de la base de
+ * données.
+ *
+ * @param  req.query.tags, Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
+ * @param  req.query.limit, Nombre maximum de producteurs à retourner.
+ * @param  req.query.page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par
+ *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
+ * @param  req.query.lat, La latitude de l'utilisateur
+ * @param  req.query.long, La longitude de l'utilisateur
+ * @param  req.query.zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
+ *   producteurs retourner pour l'affichage.
  */
 router.get('/', (req, res, next) => {
-  /**
-   * @param {Object} req
-   * @param {Array} req .tags Tags à utiliser pour filtrer les résultats.
-   * @param {Integer} req .limit Nombre maximum de producteurs à retourner.
-   * @param {Integer} req .page Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-   */
-  const requestOptions = {
-    tags: req.query.tags,
-    limit: req.query.limit,
-    page: req.query.page
-  };
-
-  producersServices.getProducer(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result); // result.data);
+  producersServices.getProducer(req.query).then((result) => {
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title: 'Server error',
-      error: err.message
+      title : err.title,
+      error : err.message
     }
   ));
 });
 
 /**
- * Crée un nouveau producteur dans la base de données. Doublons
- * autorisés!
+ * Ajoute un nouveau producteur dans la base de données.
+ * Doublons autorisés!
+ *
+ * @param {Integer} req.body, Les informations du producteur à ajouter.
  */
 router.post('/', (req, res, next) => {
   producersServices.addProducer(req.body).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+    res.status(httpStatus.OK).send(result);// result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
     status: httpStatus.INTERNAL_SERVER_ERROR,
-    title: 'Server error',
-    error: err.message
+    title : err.title,
+    error : err.message
   }));
 });
 
 /**
  * Retourne le producteur correspondant à l'id reçu.
+ *
+ * @param {Integer} req.params.id, L'id du producteur à récupérer.
  */
 router.get('/:id', (req, res, next) => {
-  /**
-   * @param {Object} req
-   * @param {Integer} req .id L&#x27;id du producteur à récupérer.
-   */
-  const requestOptions = {
-    id: req.params.id
-  };
-
-  producersServices.getProducerById(requestOptions).then((result) => {
-    res.status(httpStatus.OK).send(
-      {
-        content: result == null ? 'null' : result
-      }
-    );// result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
-      status: httpStatus.INTERNAL_SERVER_ERROR,
-      title: 'Server error',
-      error: err.message
+  producersServices.getProducerById(req.params).then((result) => {
+    if (!res) {
+      res.status(httpStatus.OK).send(result);// result.data);
+    } else {
+      res.status(httpStatus.NO_CONTENT).send();
     }
-  ));
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
+      {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        title : err.title,
+        error : err.message
+      }
+    );
+  });
 });
 
 /**
- * Met à jour le producteur possédant l'id reçu.
+ * Met à jour le producteur possédant l'id reçu avec les
+ * données reçues. Remplace toutes les données du producteur
+ * dans la base de données par celles reçues!
+ *
+ * @param {Integer} req.params.id, L'id du producteur à mettre à jour.
+ * @param {Integer} req.body, Les informations du producteur à mettre à jour.
  */
 router.put('/:id', (req, res, next) => {
-  producersServices.updateProducer(req.body).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+  producersServices.updateProducer(req.params.id, req.body).then((result) => {
+    res.status(httpStatus.OK).send(result);// result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title: 'Server error',
-      error: err.message
+      title : err.title,
+      error : err.message
     }
   ));
 });
 
 /**
  * Supprime le producteur correspondant à l'id reçu.
+ *
+ * @param {Integer} req.params.id, L'id du producteur à supprimer.
  */
 router.delete('/:id', (req, res, next) => {
   producersServices.deleteProducer(req.params.id).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+    res.status(httpStatus.OK).send(result);// result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title: 'Server error',
-      error: err.message
+      title : err.title,
+      error : err.message
     }
   ));
 });

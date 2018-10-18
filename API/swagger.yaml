@@ -1,34 +1,32 @@
 openapi: "3.0.1"
 info:
-  version: 0.0.1
+  version: "0.0.2"
   title: Local Food
   description: Une API pour le site internet foodlocal.ch crée avec la spécification OpenAPI 3.0.
   termsOfService: http://swagger.io/terms/
   contact:
     name: Local Food Team
-    email: apiteam@swagger.io
-    url: http://swagger.io
+    email: info@foodlocal.ch
+    url: http://foodlocal.ch/contact
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-- url: http://foodlocal.ch/api/v1/
+- url: http://api.foodlocal.ch/v1
   description: Serveur de production.
-- url: http://beta.foodlocal.ch/api/v1/
-  description: Serveur de Beta.
-- url: http://tests.foodlocal.ch/api/v1/
+- url: http://api.tests.foodlocal.ch/v1
   description: Serveur de tests.
 paths:
   /products:
     get:
       tags: [products, producer]
       summary: Retourne tous les produits de la base de données.
-      description: Retourne tous les produits de la base de données.
+      description: Retourne "limit" produits de la base de données, fitlrés selon les tags "tags" reçus à partir de la page "page". Sans paramètres, retourne tous les produits de la base de données.
       operationId: getProducts
       parameters:
         - name: tags
           in: query
-          description: Tags à utiliser pour filtrer les résultats.
+          description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
           required: false
           allowEmptyValue: false
           style: form
@@ -41,14 +39,13 @@ paths:
           description: Nombre maximum de produits à retourner.
           required: false
           allowEmptyValue: false
-          deprecated: false
           style: form
           schema:
             type: integer
             format: int32
         - name: page
           in: query
-          description: Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 produits, soit les produits 41 à 60.
+          description: Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
           required: false
           allowEmptyValue: false
           deprecated: false
@@ -58,7 +55,7 @@ paths:
             format: int32
       responses:
         '200':
-          description: Réponses contenant tous les produits de la base de données.
+          description: Réponses contenant "limit" produits de la base de données fitlrés selon les tags "tags" reçus à partir de la page "page".
           content:
             application/json:
               schema:
@@ -66,7 +63,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/product'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de récupérer les produits de la base de données.
           content:
             application/json:
               schema:
@@ -74,10 +71,10 @@ paths:
     post:
       tags: [products]
       summary: Ajoute un nouveau produit dans la base de données.
-      description: Ajoute un nouveau produit dans la base de données. Doublons autorisés!
+      description: Ajoute un nouveau produit dans la base de données. Attention, doublons autorisés!
       operationId: addProduct
       requestBody:
-        description: Produit à ajouter à la base de données.
+        description: Les données du produit à ajouter à la base de données.
         required: true
         content:
           application/json:
@@ -85,13 +82,13 @@ paths:
               $ref: '#/components/schemas/product'
       responses:
         '200':
-          description: Réponse à l'ajout du produit.
+          description: Le produit a bien été ajouté à la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/product'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible d'ajouter le produit à la base de données.
           content:
             application/json:
               schema:
@@ -105,7 +102,7 @@ paths:
       parameters:
       - name: id
         in: path
-        description: l'id du produit à récupérer
+        description: L'id du produit à récupérer.
         required: true
         allowEmptyValue: false
         schema:
@@ -113,13 +110,13 @@ paths:
           format: int64
       responses:
         '200':
-          description: Réponse contenant le produit recherché.
+          description: Réponse contenant le produit correspondant à l'id recherché.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/product'
         default:
-          description: Unexpected error.
+          description:  Erreur! Impossible de récupérer le produit correspondant à l'id reçu dans la base de données.
           content:
             application/json:
               schema:
@@ -127,19 +124,19 @@ paths:
     put:
       tags: [products]
       summary: Met à jour le produit possédant l'id reçu.
-      description: Met à jour le produit possédant l'id reçu.
+      description: Met à jour le produit possédant l'id reçu avec les données reçues. Remplace toutes les données du produit dans la base de données par celles reçues!
       operationId: updateProduct
       parameters:
       - name: id
         in: path
-        description: l'id du produit à mettre à jour.
+        description: L'id du produit à mettre à jour.
         required: true
         allowEmptyValue: false
         schema:
           type: integer
           format: int64
       requestBody:
-        description: Produit à mettre à jour dans la base de données.
+        description: Données du produit à mettre à jour dans la base de données. Attention, l'ensemble des informations de ce produit stoquées dans la base de données seront remplacées par celles-ci!
         required: true
         content:
           application/json:
@@ -147,13 +144,13 @@ paths:
               $ref: '#/components/schemas/product'
       responses:
         '200':
-          description: Réponse à l'ajout du produit.
+          description: Le produit a bien été mis à jour à la base de données
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/product'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de mettre à jour le produit reçu.
           content:
             application/json:
               schema:
@@ -166,7 +163,7 @@ paths:
       parameters:
       - name: id
         in: path
-        description: l'id du produit à supprimer
+        description: L'id du produit à supprimer
         required: true
         allowEmptyValue: false
         schema:
@@ -174,9 +171,9 @@ paths:
           format: int64
       responses:
         '204':
-          description: Produit supprimé
+          description: Le produit correspondant à l'id reçu a bien été supprimé de la base de données.
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de supprimer de la base de données le produit correspondant à l'id reçu.
           content:
             application/json:
               schema:
@@ -186,12 +183,12 @@ paths:
     get:
       tags: [producer]
       summary: Retourne tous les producteurs de la base de données.
-      description: Retourne tous les producteurs de la base de données.
+      description: Retourne "limit" producteurs de la base de données, fitlrés selon les tags "tags" reçus à partir de la page "page". Sans paramètres, retourne tous les producteurs de la base de données.
       operationId: getProducer
       parameters:
       - name: tags
         in: query
-        description: Tags à utiliser pour filtrer les résultats.
+        description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
         required: false
         allowEmptyValue: false
         style: form
@@ -211,7 +208,7 @@ paths:
           format: int32
       - name: page
         in: query
-        description: Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
+        description: Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
         required: false
         allowEmptyValue: false
         deprecated: false
@@ -219,42 +216,69 @@ paths:
         schema:
           type: integer
           format: int32
+      - name: lat
+        in: query
+        description: La latitude de l'utilisateur
+        required: false
+        allowEmptyValue: false
+        style: form
+        schema:
+          type: number
+          format: double
+      - name: long
+        in: query
+        description: La longitude de l'utilisateur
+        required: false
+        allowEmptyValue: false
+        style: form
+        schema:
+          type: number
+          format: double
+      - name: zoom
+        in: query
+        description: Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
+        required: false
+        allowEmptyValue: false
+        style: form
+        schema:
+          type: integer
+          format: int32
       responses:
         '200':
-          description: Réponses contenant tous les producteurs de la base de données.
+          description: Réponses contenant "limit" producteurs de la base de données fitlrés selon les tags "tags" reçus à partir de la page "page".
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/producerWithProducts'
+                  $ref: '#/components/schemas/producer'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de récupérer les producteurs de la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
     post:
       tags: [producer]
-      summary: Crée un nouveau producteur dans la base de données.
-      description: Crée un nouveau producteur dans la base de données. Doublons autorisés!
+      summary: Ajoute un nouveau producteur dans la base de données.
+      description: Ajoute un nouveau producteur dans la base de données. Doublons autorisés!
       operationId: addProducer
       requestBody:
-        description: producteur à ajouter à la base de données.
+        description: Les données du producteur à ajouter à la base de données.
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/producerWithProducts'
+              $ref: '#/components/schemas/producer'
       responses:
         '200':
-          description: Réponse à l'ajout du producteur.
+          description: Le producteur a bien été ajouté à la base de données.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/producerWithProducts'
+                $ref: '#/components/schemas/producer'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible d'ajouter le producteur à la base de données.
           content:
             application/json:
               schema:
@@ -276,13 +300,13 @@ paths:
           format: int64
       responses:
         '200':
-          description: Réponse contenant le producteur recherché.
+          description: Réponse contenant le producteur correspondant à l'id recherché.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/producerWithProducts'
+                $ref: '#/components/schemas/producer'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de récupérer le producteur correspondant à l'id reçu dans la base de données.
           content:
             application/json:
               schema:
@@ -290,33 +314,33 @@ paths:
     put:
       tags: [producer]
       summary: Met à jour le producteur possédant l'id reçu.
-      description: Met à jour le producteur possédant l'id reçu.
+      description: Met à jour le producteur possédant l'id reçu avec les données reçues. Remplace toutes les données du producteur dans la base de données par celles reçues!
       operationId: updateProducer
       parameters:
       - name: id
         in: path
-        description: l'id du producteur à mettre à jour.
+        description: L'id du producteur à mettre à jour.
         required: true
         allowEmptyValue: false
         schema:
           type: integer
           format: int64
       requestBody:
-        description: producteur à mettre à jour dans la base de données.
+        description: Données du producteur à mettre à jour dans la base de données. Attention, l'ensemble des informations de ce producteur stoquées dans la base de données seront remplacées par celles-ci!
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/producerWithProducts'
+              $ref: '#/components/schemas/producer'
       responses:
         '200':
-          description: Réponse à l'ajout du producteur.
+          description: Le producteur a bien été mis à jour.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/producerWithProducts'
+                $ref: '#/components/schemas/producer'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de mettre à jour le producteur reçu.
           content:
             application/json:
               schema:
@@ -337,25 +361,25 @@ paths:
           format: int64
       responses:
         '204':
-          description: producteur supprimé.
+          description: Le producteur correspondant à l'id reçu a bien été supprimé de la base de données.
 
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de supprimer de la base de données le producteur correspondant à l'id reçu.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
 
-  /salesPoints:
+  /salespoints:
     get:
-      tags: [producer, salesPoints]
+      tags: [producer, salespoints]
       summary: Retourne tous les points de vente de la base de données.
-      description: Retourne tous les points de vente de la base de données.
-      operationId: getsalesPoints
+      description: Retourne "limit" points de vente de la base de données, fitlrés selon les tags "tags" reçus à partir de la page "page". Sans paramètres, retourne tous les points de vente de la base de données.
+      operationId: getSalesPoints
       parameters:
       - name: tags
         in: query
-        description: Tags à utiliser pour filtrer les résultats.
+        description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
         required: false
         allowEmptyValue: false
         style: form
@@ -375,7 +399,7 @@ paths:
           format: int32
       - name: page
         in: query
-        description: Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 points de ventes, soit les points de vente 41 à 60.
+        description: Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
         required: false
         allowEmptyValue: false
         deprecated: false
@@ -385,7 +409,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Réponses contenant tous les points de ventes de la base de données.
+          description: Réponses contenant "limit" points de vente de la base de données fitlrés selon les tags "tags" reçus à partir de la page "page".
           content:
             application/json:
               schema:
@@ -393,18 +417,18 @@ paths:
                 items:
                   $ref: '#/components/schemas/salesPoint'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de récupérer les points de vente de la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
     post:
-      tags: [producer, salesPoints]
-      summary: Crée un nouveau point de vente dans la base de données.
-      description: Crée un nouveau point de vente dans la base de données. Doublons autorisés!
-      operationId: addsalesPoints
+      tags: [producer, salespoints]
+      summary: Ajoute un nouveau point de vente dans la base de données.
+      description: Ajoute un nouveau point de vente dans la base de données. Doublons autorisés!
+      operationId: addSalesPoints
       requestBody:
-        description: Point de vente à ajouter à la base de données.
+        description: Les données du point de vente à ajouter à la base de données.
         required: true
         content:
           application/json:
@@ -412,24 +436,23 @@ paths:
               $ref: '#/components/schemas/salesPoint'
       responses:
         '200':
-          description: Réponse à l'ajout du point de vente.
+          description: Le point de vente a bien été ajouté à la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/salesPoint'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible d'ajouter le point de vente à la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-  /salesPoints/{id}:
+  /salespoints/{id}:
     get:
-      tags: [producer, salesPoints]
+      tags: [producer, salespoints]
       summary: Retourne le points de vente correspondant à l'id reçu.
       description: Retourne le point de vente correspondant à l'id reçu.
-      operationId: getsalesPointById
+      operationId: getSalesPointById
       parameters:
       - name: id
         in: path
@@ -441,33 +464,33 @@ paths:
           format: int64
       responses:
         '200':
-          description: Réponse contenant le point de vente recherché.
+          description: Réponse contenant le point de vente correspondant à l'id recherché.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/salesPoint'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de récupérer le point de vente correspondant à l'id reçu dans la base de données.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
     put:
-      tags: [producer, salesPoints]
+      tags: [producer, salespoints]
       summary: Met à jour le point de vente possédant l'id reçu avec les données reçues.
-      description: Met à jour le point de vente possédant l'id reçu avec les données reçues.
-      operationId: updatesalesPoint
+      description: Met à jour le point de vente possédant l'id reçu avec les données reçues. Remplace toutes les données du point de vente dans la base de données par celles reçues!
+      operationId: updateSalesPoint
       parameters:
       - name: id
         in: path
-        description: l'id du point de vente à mettre à jour.
+        description: L'id du point de vente à mettre à jour.
         required: true
         allowEmptyValue: false
         schema:
           type: integer
           format: int64
       requestBody:
-        description: point de vente à mettre à jour dans la base de données. Attention, l'ensemble des informations de ce point de vente seront remplacées par celles reçues!
+        description: Données du point de vente à mettre à jour dans la base de données. Attention, l'ensemble des informations de ce point de vente stoquées dans la base de données seront remplacées par celles-ci!
         required: true
         content:
           application/json:
@@ -475,22 +498,22 @@ paths:
               $ref: '#/components/schemas/salesPoint'
       responses:
         '200':
-          description: Réponse à la modification du point de vente.
+          description: Le point de vente a bien été mis à jour.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/salesPoint'
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de mettre à jour le point de vente reçu.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
     delete:
-      tags: [producer, salesPoints]
+      tags: [producer, salespoints]
       summary: Supprime le point de vente correspondant à l'id reçu.
       description: Supprime le point de vente correspondant à l'id reçu.
-      operationId: deletesalesPoint
+      operationId: deleteSalesPoint
       parameters:
       - name: id
         in: path
@@ -502,15 +525,15 @@ paths:
           format: int64
       responses:
         '204':
-          description: point de vente supprimé.
+          description: Le point de vente correspondant à l'id reçu a bien été supprimé de la base de données.
 
         default:
-          description: Unexpected error.
+          description: Erreur! Impossible de supprimer de la base de données le point de vente correspondant à l'id reçu.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
+ 
 components:
   schemas:
     product:
@@ -528,18 +551,24 @@ components:
           format: binary
         category:
           type: string
-          description: Exemples de catégories':' fruits, légumes, viande, fromages,...
+          description: Exemples de catégories':' fruits, légumes, viande, fromages, ...
         type:
           type: string
-          description: Exemples de types':' pomme, tomate, boeuf, Gruyère,...
+          description: Exemples de types':' pomme, tomate, boeuf, Gruyère, ...
         availableFrom:
           type: string
           format: date
         availableUntil:
           type: string
           format: date
-
-    producerWithoutProducts:
+        producers:
+          type: array
+          description: Tableau contenant les ids de tous les producteurs proposant ce produit.
+          items:
+            type: integer
+            format: int32
+          
+    producer:
       type: object
       properties:
         id:
@@ -561,50 +590,7 @@ components:
         password:
           type: string
           format: password
-        products:
-          type: array
-          description: Tableau contenant les informations complètes de tous les produits vendus par ce producteur.
-          items:
-            $ref: '#/components/schemas/product'
-        salesPoints:
-          type: array
-          description: Tableau contenant les informations complètes de tous les points de vente de ce producteur.
-          items:
-            $ref: '#/components/schemas/salesPoint'
-
-    producerWithProducts:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        name:
-          type: string
-        description:
-          type: string
-        image:
-          type: string
-          format: binary
-        phoneNumber:
-          type: string
-        email:
-          type: string
-        isValidated:
-          type: boolean
-        password:
-          type: string
-          format: password
-        products:
-          type: array
-          description: Tableau contenant les informations complètes de tous les produits vendus par ce producteur.
-          items:
-            $ref: '#/components/schemas/product'
-        salesPoints:
-          type: array
-          description: Tableau contenant les informations complètes de tous les points de vente de ce producteur.
-          items:
-            $ref: '#/components/schemas/salesPoint'
-
+    
     salesPoint:
       type: object
       description: Lieu où les produits du producteurs sont vendus.
@@ -618,28 +604,17 @@ components:
           type: string
         type:
           type: string
-        number:
-          type: string
-        street:
-          type: string
-        city:
-          type: string
-        postalCode:
-          type: integer
-          format: int32
-        country:
-          type: string
-        longitude:
-          type: number
-          format: double
-        latitude:
-          type: number
-          format: double
+        address:
+          $ref: '#/components/schemas/address'
         schedule:
+          $ref: '#/components/schemas/schedule'
+        producers:
           type: array
+          description: Tableau contenant les ids de tous les producteurs vendant des produits depuis ce point de vente.
           items:
-            $ref: '#/components/schemas/schedule'
-
+            type: integer
+            format: int32
+            
     schedule:
       type: object
       description: Horaires complets du point de vente.
@@ -654,7 +629,7 @@ components:
           maxItems: 7
           items:
             $ref: '#/components/schemas/dailySchedule'
-
+            
     dailySchedule:
       type: object
       description: Horaires effectués pour ce 'weekday'.
@@ -676,14 +651,39 @@ components:
         closingHourPM:
           type: string
           format: date-time
-
+          
+    address:
+      type: object
+      description: Adresse d'un point de vente.
+      properties:
+        number:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: integer
+          format: int32
+        country:
+          type: string
+        longitude:
+          type: number
+          format: double
+        latitude:
+          type: number
+          format: double
+          
     error:
       required:
       - code
       - message
+      - title
       properties:
         code:
           type: integer
           format: int32
         message:
+          type: string
+        titre:
           type: string
