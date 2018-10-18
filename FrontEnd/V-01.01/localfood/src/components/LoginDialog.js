@@ -21,7 +21,7 @@ import MyLogin from './MyLogin.js';
 
 class LoginDialog extends React.Component {
   handleClose = () => { 
-    this.props.onClose(this.props.selectedValue);
+    
   };
 
     handleListItemClick = value => {
@@ -30,7 +30,7 @@ class LoginDialog extends React.Component {
     };
 
   render() {
-    const { classes, onClose, selectedValue, ...other } = this.props;
+    const { classes, onClose,  ...other } = this.props;
           console.log('Dialog: ');
       console.log(this.props);
     
@@ -43,7 +43,7 @@ class LoginDialog extends React.Component {
       >
         <MyLogin
           classes= {this.classes}
-          selectedValue = {this.selectedValue}
+
           onClose = {onClose}
         />
           
@@ -55,7 +55,6 @@ class LoginDialog extends React.Component {
 LoginDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   onClose: PropTypes.func,
-  selectedValue: PropTypes.string,
 };
 
 export default (LoginDialog);

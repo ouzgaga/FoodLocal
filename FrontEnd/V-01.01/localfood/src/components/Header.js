@@ -9,17 +9,16 @@ import {Link} from 'react-router-dom';
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
   
-import {
-  PageAbout,
-  PageMap,
-  PageError404,
-} from '../pages/Pages.js'; 
+ 
 
 import LoginDialog from './LoginDialog';
 
 const styles = {
   root: {
     flexGrow: 1,
+    position: 'fixed',
+    weight: '100%',
+    top: 0,
     
   },
   grow: {
@@ -33,14 +32,13 @@ const styles = {
   LinkButton:{
     textDecoration: 'none',
     color: 'inherit'
-  }
+  },
 };
 
 class MenuAppBar extends React.Component  {
 
   state = {
     sConnected: null,
-    connectEmail: '',
     open: false,
     a: 1,
   };
@@ -55,7 +53,7 @@ class MenuAppBar extends React.Component  {
 
   handleCloseLogin = value => {
     let b = this.state.a +1;
-    this.setState({ connectEmail: 'Helloooa', open: false, a: b});
+    this.setState({open: false, a: b});
 
     console.info('Close' + this.state.a);
   };
@@ -64,46 +62,45 @@ class MenuAppBar extends React.Component  {
 
   render() {
     const { classes } = this.props;
-    const connected = Boolean(this,this.state.sConnected);
-    const connectEmail = String(this.state.connectEmail);
+    const connected = Boolean(this.state.sConnected);
 
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
+      <div >
+        <AppBar position="static" className={classes.root}>
           <Toolbar>
           
           <img src={logo} className={classes.menuButton} alt="logo" />
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              News
-            </Typography>
             
-            <Link to="/" className={classes.LinkButton} > <Button  >Home</Button> </Link>
-            <Link to="/about" className={classes.LinkButton}><Button >About</Button></Link>
-            <Link to="/map" className={classes.LinkButton}><Button >Map</Button></Link>
+              
+            <div className={classes.grow}></div>
+            <Link to="/" className={classes.LinkButton} readonly tabindex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
+            <Link to="/about" className={classes.LinkButton} readonly tabindex="-1"><Button >About</Button></Link>
+            <Link to="/map" className={classes.LinkButton} readonly tabindex="-1"><Button >Map</Button></Link>
             
-            <Button color="inherit">Inscription</Button>
+            
             
 
 
 
-          {UserContext.Provider.name == null ? 
+          {UserContext.Provider.name == null ?
+          <> 
+            <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1" ><Button >New account</Button></Link>
             <Button 
             color="inherit"
             onClick={this.handleClickLogin}>
               Login
             </Button>
+          </>
             :
             <Button 
             color="inherit"
             //onClick={this.handleClickLogin}
             >
-              Hellofd
               {UserContext.Provider.name}
             </Button>
           }
           <LoginDialog
             classes = {this.props}
-            selectedValue={this.state.connectEmail}
             open={this.state.open}
             //onClose={this.handleCloseLogin.bind(this)}
             onClose={this.handleCloseLogin} />
