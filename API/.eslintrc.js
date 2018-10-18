@@ -5,5 +5,8 @@ module.exports = {
     'space-before-function-paren': 'off',
     'key-spacing'                : 'off',
     'max-len'                    : 'off'
+  },
+  'env'    : {
+    'mocha': true
   }
 };
