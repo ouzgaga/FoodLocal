@@ -17,14 +17,8 @@ const router = new express.Router();
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
 router.get('/', (req, res, next) => {
-  const requestOptions = {
-    tags : req.query.tags,
-    limit: req.query.limit,
-    page : req.query.page
-  };
-
-  productsServices.getProducts(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+  productsServices.getProducts(req.query).then((result) => {
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -42,7 +36,7 @@ router.get('/', (req, res, next) => {
  */
 router.post('/', (req, res, next) => {
   productsServices.addProduct(req.body).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -59,7 +53,7 @@ router.post('/', (req, res, next) => {
  */
 router.get('/:id', (req, res, next) => {
   productsServices.getProductById(req.params).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -74,11 +68,12 @@ router.get('/:id', (req, res, next) => {
  * reçues. Remplace toutes les données du produit dans la base
  * de données par celles reçues!
  *
- * @param {Integer} req.params, Les informations du produit à mettre à jour.
+ * @param {Integer} req.params.id, L'id du produit à mettre à jour.
+ * @param {Integer} req.body, Les informations du produit à mettre à jour.
  */
 router.put('/:id', (req, res, next) => {
-  productsServices.updateProduct(req.params).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+  productsServices.updateProduct(req.params.id, req.params).then((result) => {
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -95,7 +90,7 @@ router.put('/:id', (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   productsServices.deleteProduct(req.params).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result);// result.data);
+    res.status(httpStatus.OK).send(result);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,

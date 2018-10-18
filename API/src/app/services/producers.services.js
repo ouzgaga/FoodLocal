@@ -19,7 +19,7 @@ const Producers = mongoose.model('producers');
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducer ({tags = undefined, limit = 50, page = 0, lat, long, zoom} = {}) { // FIXME: ça fait quoi le = {} ?
+function getProducer ({tags = undefined, limit = 50, page = 0, lat, long, zoom}) {
   const skip = page * limit;
   return Producers.find({tags}).sort({id: -1}).skip(+skip).limit(+limit).exec(); // FIXME: Comment faire pour retourner un objet et non pas une promise?
 }
@@ -48,10 +48,11 @@ function getProducerById ({id}) {
  * données reçues. Remplace toutes les données du producteur
  * dans la base de données par celles reçues!
  *
+ * @param {Integer} id, L'id du producteur à mettre à jour.
  * @param {Integer} producerInfos, Les informations du producteur à mettre à jour.
  */
-function updateProducer (producerInfos) {
-  return Producers.findByIdAndUpdate(producerInfos); // retourne l'objet modifié
+function updateProducer (id, producerInfos) {
+  return Producers.findByIdAndUpdate(id, producerInfos, {new: true}); // retourne l'objet modifié
   // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
 }
 
