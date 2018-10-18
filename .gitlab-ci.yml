@@ -31,7 +31,7 @@ build-frontend:
     - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
     - docker push $CONTAINER_TEST_IMAGE_FRONTEND
 
-release-image:
+release-image-api:
   stage: release
   image: docker:stable
   services:
@@ -44,7 +44,20 @@ release-image:
   only:
     - prod
 
-deploy:
+realease-imgae-frontend:
+  stage: release
+    image: docker:stable
+    services:
+      - docker:dind
+    script:
+      - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+      - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
+      - docker tag $CONTAINER_TEST_IMAGE_API $CONTAINER_RELEASE_IMAGE_FRONTEND
+      - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
+    only:
+      - prod
+
+deploy-api:
   stage: deploy
   image: google/cloud-sdk:alpine
   script:
@@ -53,5 +66,17 @@ deploy:
     - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
     - kubectl apply -f api-service.yml
     - kubectl apply -f api-deployment.yml
+  only:
+    - prod
+
+deploy-frontend:
+  stage: deploy
+  image: google/cloud-sdk:alpine
+  script:
+    - gcloud components install kubectl
+    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+    - kubectl apply -f frontend-service.yml
+    - kubectl apply -f frontend-deployment.yml
   only:
     - prod
