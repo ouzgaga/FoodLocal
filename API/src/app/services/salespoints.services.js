@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('../models/salesPoints.model');
+require('../models/salespoints.model');
 
 const salesPoints = mongoose.model('salesPoints');
 

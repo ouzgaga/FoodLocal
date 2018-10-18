@@ -1,7 +1,7 @@
 const express = require('express');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
-const salesPointsServices = require('../services/salesPoints.services');
+const salesPointsServices = require('../services/salespoints.services');
 
 const router = new express.Router();
 

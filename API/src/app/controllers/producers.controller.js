@@ -16,18 +16,18 @@ router.get('/', (req, res, next) => {
    * @param {Integer} req .page Numéro de la page à retourner. Permet par exemple de récupérer la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
    */
   const requestOptions = {
-    tags : req.query.tags,
+    tags: req.query.tags,
     limit: req.query.limit,
-    page : req.query.page
+    page: req.query.page
   };
 
   producersServices.getProducer(requestOptions).then((result) => {
-    res.status(result.status || httpStatus.OK).send(result); //result.data);
+    res.status(result.status || httpStatus.OK).send(result); // result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
+      title: 'Server error',
+      error: err.message
     }
   ));
 });
@@ -40,10 +40,10 @@ router.post('/', (req, res, next) => {
   producersServices.addProducer(req.body).then((result) => {
     res.status(result.status || httpStatus.OK).send(result);// result.data);
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
-                                                                      status: httpStatus.INTERNAL_SERVER_ERROR,
-                                                                      title : 'Server error',
-                                                                      error : err.message
-                                                                    }));
+    status: httpStatus.INTERNAL_SERVER_ERROR,
+    title: 'Server error',
+    error: err.message
+  }));
 });
 
 /**
@@ -67,8 +67,8 @@ router.get('/:id', (req, res, next) => {
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
+      title: 'Server error',
+      error: err.message
     }
   ));
 });
@@ -82,8 +82,8 @@ router.put('/:id', (req, res, next) => {
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
+      title: 'Server error',
+      error: err.message
     }
   ));
 });
@@ -97,8 +97,8 @@ router.delete('/:id', (req, res, next) => {
   }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
     {
       status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : 'Server error',
-      error : err.message
+      title: 'Server error',
+      error: err.message
     }
   ));
 });

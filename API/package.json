@@ -1,11 +1,12 @@
 {
 	"name": "local-food",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Une API pour le site internet foodlocal.ch crée avec la spécification OpenAPI 3.0.",
 	"repository": "git@gitlab.com:Nooka10/local-food.git",
 	"main": "src/app.js",
 	"scripts": {
-		"start": "nodemon",
+		"start": "node ./src/app.js",
+		"dev": "nodemon",
 		"test": "NODE_ENV=test mocha --recursive test",
 		"test:coverage": "nyc npm test",
 		"test:unit": "mocha --recursive test/middleware test/models test/routes",
