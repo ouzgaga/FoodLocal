@@ -1,7 +1,4 @@
-const Promise = require('bluebird');
 const mongoose = require('mongoose');
-const httpStatus = require('http-status');
-const APIError = require('../helpers/APIError');
 
 /**
  * Product Schema
@@ -10,7 +7,6 @@ const productSchema = new mongoose.Schema(
   {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true
     },
     name: {
       type: mongoose.Schema.Types.String,
@@ -21,10 +17,12 @@ const productSchema = new mongoose.Schema(
       required: true
     },
     // TODO: il faut ajouter la gestion de l'image!
+    // Category = fruits, légumes, viande, fromage, ....
     category: {
       type: mongoose.Schema.Types.String,
       required: true
     },
+    // Type = pomme, tomate, boeuf, Gruyère, ...
     type: {
       type: mongoose.Schema.Types.String,
       required: true
@@ -44,4 +42,4 @@ const productSchema = new mongoose.Schema(
 /**
  * @typedef Product
  */
-mongoose.model('Products', productSchema);
+mongoose.model('products', productSchema);
