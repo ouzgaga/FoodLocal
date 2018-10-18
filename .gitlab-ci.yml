@@ -44,7 +44,7 @@ release-image-api:
   only:
     - prod
 
-realease-imgae-frontend:
+realease-image-frontend:
   stage: release
     image: docker:stable
     services:
@@ -52,7 +52,7 @@ realease-imgae-frontend:
     script:
       - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
       - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
-      - docker tag $CONTAINER_TEST_IMAGE_API $CONTAINER_RELEASE_IMAGE_FRONTEND
+      - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
       - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
     only:
       - prod
