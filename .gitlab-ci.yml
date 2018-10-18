@@ -27,7 +27,7 @@ build-frontend:
   services:
     - docker:dind
   script:
-    - docker docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
     - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
     - docker push $CONTAINER_TEST_IMAGE_FRONTEND
 
