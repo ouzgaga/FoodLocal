@@ -12,9 +12,9 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-- url: http://api.foodlocal.ch/v1/
+- url: http://api.foodlocal.ch/v1
   description: Serveur de production.
-- url: http://api.tests.foodlocal.ch/v1/
+- url: http://api.tests.foodlocal.ch/v1
   description: Serveur de tests.
 paths:
   /products:
@@ -374,7 +374,7 @@ paths:
     get:
       tags: [producer, salespoints]
       summary: Retourne tous les points de vente de la base de données.
-      description: Retourne tous les points de vente de la base de données.
+      description: Retourne "limit" points de vente de la base de données, fitlrés selon les tags "tags" reçus à partir de la page "page". Sans paramètres, retourne tous les points de vente de la base de données.
       operationId: getSalesPoints
       parameters:
       - name: tags
@@ -604,27 +604,10 @@ components:
           type: string
         type:
           type: string
-        number:
-          type: string
-        street:
-          type: string
-        city:
-          type: string
-        postalCode:
-          type: integer
-          format: int32
-        country:
-          type: string
-        longitude:
-          type: number
-          format: double
-        latitude:
-          type: number
-          format: double
+        address:
+          $ref: '#/components/schemas/address'
         schedule:
-          type: array
-          items:
-            $ref: '#/components/schemas/schedule'
+          $ref: '#/components/schemas/schedule'
         producers:
           type: array
           description: Tableau contenant les ids de tous les producteurs vendant des produits depuis ce point de vente.
@@ -668,7 +651,29 @@ components:
         closingHourPM:
           type: string
           format: date-time
-        
+          
+    address:
+      type: object
+      description: Adresse d'un point de vente.
+      properties:
+        number:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: integer
+          format: int32
+        country:
+          type: string
+        longitude:
+          type: number
+          format: double
+        latitude:
+          type: number
+          format: double
+          
     error:
       required:
       - code
