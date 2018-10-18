@@ -3,8 +3,6 @@ import { withStyles } from '@material-ui/core';
 import './App.css';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
-import MyMap from './components/MyMap';
-import Search from './components/Search';
 import Header from './components/Header';
 import Theme from './components/Theme';
 
@@ -50,7 +48,7 @@ class App extends Component {
               <Switch>
                 <Route default path="/about" exact component={PageAbout} classes={classes}/>
                 <Route path="/newAccount" component={PageNewAccount} classes={classes}/>
-                <Route path="/map" component={PageMap} classes={classes}/>
+                <Route path="/" component={PageMap} classes={classes}/>
                 <Route path="*" component={PageError404} classes={classes}/> 
               </Switch> 
             </div>
@@ -65,4 +63,3 @@ class App extends Component {
 
 export default withStyles(styles)(App);
 
-*/

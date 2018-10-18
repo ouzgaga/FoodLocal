@@ -1,42 +1,30 @@
-.App {
-  text-align: justify;
-  background-color: aliceblue;
-  
+body {
+  margin : 0px;
+  width: 100vw;
+  height: 100vh;
 }
 
 #root{
   height: 100%;
 }
 
-.page {
-  padding-top: 64;
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@media only screen and (min-width: 600px){
+.container {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 8fr 4fr;
 }
 .listProducer{
   height: 90vh;
   overflow-y: scroll;
 }
   
+
 }
 
-.map {
-  background-color: #CCCCCC;
-  position: sticky;
-  top:0;
-  left: 0;
-  right: 0;
-  height: 90vh;
-}
+
 
 
 .footer{
