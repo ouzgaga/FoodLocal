@@ -29,7 +29,7 @@ const config = {
     },
     port: process.env.PORT || 3000,
     // db  : `mongodb://${process.env.mongoDB_host_prod}:${process.env.mongoDB_port_prod}/${process.env.mongoDB_dbName_prod}`
-    db: 'mongodb://mongo-0.mongo-service:27017/api_foodlocal_production'
+    db: 'mongodb://mongo:27017/api_foodlocal_production'
   }
 };
 
