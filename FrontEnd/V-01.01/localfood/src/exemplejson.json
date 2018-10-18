@@ -1,0 +1,51 @@
+{
+    "web-app": {
+        "prod": [
+            {
+                "Guidoux Fruits": {
+                    "title": "Guidoux Fruits",
+                    "position": {
+                        "lat": 46.783,
+                        "lng": 6.65
+                    }
+                }
+            },
+            {
+                "Guidoux Fruits": {
+                    "title": "Guidoux Fruits",
+                    "position": {
+                        "lat": 46.783,
+                        "lng": 6.65
+                    }
+                }
+            },
+            {
+                "Guidoux Fruits": {
+                    "title": "Guidoux Fruits",
+                    "position": {
+                        "lat": 46.783,
+                        "lng": 6.65
+                    }
+                }
+            },
+            {
+                "Guidoux Fruits": {
+                    "title": "Guidoux Fruits",
+                    "position": {
+                        "lat": 46.783,
+                        "lng": 6.65
+                    }
+                }
+            },
+            {
+                "Guidoux Fruits": {
+                    "title": "Guidoux Fruits",
+                    "position": {
+                        "lat": 46.783,
+                        "lng": 6.65
+                    }
+                }
+            }
+        ]
+    }
+}

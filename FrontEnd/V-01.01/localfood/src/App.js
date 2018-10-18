@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import './App.css';
-import Header from './components/Header'
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'; 
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+
+import Header from './components/Header';
 import Theme from './components/Theme';
 
 
@@ -33,6 +34,7 @@ const styles = theme =>({
 });
 
 class App extends Component {
+
   render() {
     const classes = this.props.classes;
 
@@ -46,7 +48,7 @@ class App extends Component {
               <Switch>
                 <Route default path="/about" exact component={PageAbout} classes={classes}/>
                 <Route path="/newAccount" component={PageNewAccount} classes={classes}/>
-                <Route path="/map" component={PageMap} classes={classes}/>
+                <Route path="/" component={PageMap} classes={classes}/>
                 <Route path="*" component={PageError404} classes={classes}/> 
               </Switch> 
             </div>
@@ -60,3 +62,4 @@ class App extends Component {
 }
 
 export default withStyles(styles)(App);
+
