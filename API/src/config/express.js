@@ -6,7 +6,6 @@ const methodOverride = require('method-override');
 const httpStatus = require('http-status');
 const APIError = require('../app/helpers/APIError');
 
-
 const productsController = require('../app/controllers/products.controller');
 const producersController = require('../app/controllers/producers.controller');
 const salesPointsController = require('../app/controllers/salespoints.controller');
@@ -19,7 +18,7 @@ module.exports = (app, config) => {
   app.use(logger('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
-    extended: true,
+    extended: true
   }));
   app.use(cookieParser());
   app.use(compress());
@@ -32,6 +31,10 @@ module.exports = (app, config) => {
   app.use('/producers', producersController);
   app.use('/salesPoints', salesPointsController);
 
+  app.use('/', (req, res, next) => {
+    res.status(httpStatus.OK).send('Hey mon ami! T\'aime ça manger des patates?!');
+  });
+
   app.use((req, res, next) => {
     const err = new APIError('Not Found', httpStatus.NOT_FOUND);
     err.status = httpStatus.NOT_FOUND;
@@ -43,8 +46,8 @@ module.exports = (app, config) => {
       res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR);
       res.send({
         message: err.message,
-        error: err,
-        title: 'error',
+        error  : err,
+        title  : 'error'
       });
     });
   }
@@ -53,8 +56,8 @@ module.exports = (app, config) => {
     res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR);
     res.send({
       message: err.message,
-      error: {},
-      title: 'error',
+      error  : {},
+      title  : 'error'
     });
   });
 

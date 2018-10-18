@@ -7,10 +7,7 @@
 	"scripts": {
 		"start": "node ./src/app.js",
 		"dev": "nodemon",
-		"test": "NODE_ENV=test mocha --recursive test",
-		"test:coverage": "nyc npm test",
-		"test:unit": "mocha --recursive test/middleware test/models test/routes",
-		"test:integration": "mocha --recursive test/integration"
+		"test": "NODE_ENV=test mocha --recursive test"
 	},
 	"dependencies": {
 		"bluebird": "^3.5.2",
@@ -26,7 +23,9 @@
 	},
 	"devDependencies": {
 		"chai": "^3.5.0",
+		"chai-http": "^4.2.0",
 		"debug": "^2.2.0",
+		"dirty-chai": "^2.0.1",
 		"eslint": "^5.6.1",
 		"eslint-config-airbnb-base": "^13.1.0",
 		"eslint-plugin-import": "^2.14.0",
