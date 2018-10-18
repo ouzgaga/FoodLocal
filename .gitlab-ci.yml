@@ -23,7 +23,7 @@ build-api:
 
 build-frontend:
   stage: build
-  image: doker:stable
+  image: docker:stable
   services:
     - docker:dind
   script:
