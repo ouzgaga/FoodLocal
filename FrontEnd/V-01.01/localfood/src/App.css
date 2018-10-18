@@ -1,20 +1,26 @@
-body {
-  margin : 0px;
-  width: 100vw;
-  height: 100vh;
+.App {
+  text-align: justify;
+  background-color: aliceblue;
+  
 }
 
 #root{
   height: 100%;
 }
 
+.page {
+  padding-top: 64;
+}
 
-@media only screen and (min-width: 600px){
-.container {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 8fr 4fr;
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 .listProducer{
   height: 90vh;
