@@ -19,14 +19,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchBar from 'material-ui-search-bar'
+import CardActionArea from "@material-ui/core/CardActionArea";
+import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
   card: {
-    maxWidth: 400,
+    width: '100%'
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
+    height: 140
   },
   actions: {
     display: 'flex',
@@ -144,21 +145,33 @@ class Search extends React.Component {
       <Fragment>
         <Divider />
         <SearchBar
-      onChange={() => console.log('onChange')}
-      onRequestSearch={() => console.log('onRequestSearch')}
-      style={{
-        margin: '0 auto',
-        maxWidth: 800
-      }}
-    />
+          onChange={() => console.log('onChange')}
+          onRequestSearch={() => console.log('onRequestSearch')}
+          style={{
+            margin: '0 auto',
+            maxWidth: 800
+          }}
+        />
         <List >
 
           {tileData.map(tile => (
             <Fragment>
-            <ListItem key={tile.id} style={{height:200}}>
+              <ListItem key={tile.id} style={{ height: 200 }}>
 
-              <ListItemText primary={tile.title} />
-            </ListItem>
+                <Card className={styles.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Lizard
+          </Typography>
+                      <Typography component="p">
+                        Lizards are a widespread group of squamate reptiles, with over 6,000
+                        species, ranging across all continents except Antarctica
+          </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </ListItem>
               <Divider />
             </Fragment>
           ))
