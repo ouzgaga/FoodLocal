@@ -1,5 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
+import Divider from '@material-ui/core/Divider';
+import MenuIcon from '@material-ui/icons/Menu';
 import MyMap from '../components/MyMap';
+import Search from '../components/Search'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import classnames from 'classnames';
+
+const drawerWidth = 400;
 
 const tileData = [
   {
@@ -68,12 +85,114 @@ const tileData = [
   }
 ];
 
-class PageMap extends Component {
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    height: '100vh',
+    width: '100vw',
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+  },
+
+  navIconHide: {
+    position: 'absolute',
+    top: 75,
+    right: 16,
+    zIndex: 2000,
+    rotate: 90,
+
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  expandMoreIcon: {
+    transform: 'rotate(90deg)',
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
+    },
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+  },
+});
+
+class ResponsiveDrawer extends React.Component {
+  state = {
+    mobileOpen: false,
+  };
+
+  handleDrawerToggle = () => {
+    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+  };
+
   render() {
+    const { classes, theme } = this.props;
+
+    const drawer = (
+      <div>
+        <div className={classes.toolbar} />
+        <Search />
+      </div>
+    );
+
     return (
-      <MyMap listProducers={tileData} />
+      <div className={classes.root}>
+
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+
+          <Button variant="fab" color="inherit" aria-label="Add" className={classes.navIconHide}
+            onClick={this.handleDrawerToggle}>
+            <ExpandMoreIcon className={classes.expandMoreIcon} />
+          </Button>
+
+          <MyMap listProducers={tileData} />
+
+        </main>
+
+        <Hidden mdUp>
+          <Drawer
+            variant="temporary"
+            anchor={theme.direction = 'right'}
+            open={this.state.mobileOpen}
+            onClose={this.handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden smDown >
+          <Drawer
+            variant="permanent"
+            open
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+
+      </div>
     );
   }
 }
 
-export default PageMap;
+ResponsiveDrawer.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);

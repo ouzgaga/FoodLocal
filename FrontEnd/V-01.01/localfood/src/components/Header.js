@@ -4,11 +4,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
   
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from 'react-router-dom';
  
 
 import LoginDialog from './LoginDialog';
@@ -19,7 +25,7 @@ const styles = {
     position: 'fixed',
     weight: '100%',
     top: 0,
-    
+    zIndex:1900,
   },
   grow: {
     flexGrow: 1,
@@ -66,6 +72,7 @@ class MenuAppBar extends React.Component  {
 
     return (
       <div >
+      
         <AppBar position="static" className={classes.root}>
           <Toolbar>
           

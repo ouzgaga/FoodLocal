@@ -13,8 +13,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import UserContext from './UserContext';
-
 const styles = theme => ({
   layout: {
     width: 'auto',
@@ -48,7 +46,7 @@ const styles = theme => ({
 });
 
 function Login(props) {
-  const { classes, onClose } = props;
+  const { classes } = props;
   console.info(props);
   return (
     <React.Fragment>
@@ -86,18 +84,7 @@ function Login(props) {
               color="primary"
               className={classes.submit}
             >
-
-            
               Sign in
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick = {UserContext.Provider.name = "Hello"}              
-            >
-            
-              Test
             </Button>
           </form>
         </Paper>
@@ -108,7 +95,6 @@ function Login(props) {
 
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
-  onClose: PropTypes.func,
 };
 
-export default withStyles(styles)(Login); 
+export default withStyles(styles)(Login);

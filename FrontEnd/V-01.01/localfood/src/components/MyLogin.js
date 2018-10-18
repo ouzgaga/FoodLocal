@@ -6,19 +6,15 @@ import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import {Link} from 'react-router-dom';
-
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
-
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
-import UserContext from './UserContext';
 
 const styles = theme => ({
     layout: {
@@ -33,7 +29,7 @@ const styles = theme => ({
       },
     },
     paper: {
-      
+      //marginTop: theme.spacing.unit * 8,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -50,104 +46,39 @@ const styles = theme => ({
     submit: {
       marginTop: theme.spacing.unit * 3,
     },
-    LinkButton:{
-        textDecoration: 'none',
-        color: 'inherit'
-      },
   });
 
 class MyLogin extends React.Component {
 
-    
-  state = {
-
-    a: 0,
-  };
-
-
-
     handleLogin = () => {
-        console.info("OK men")
-        UserContext.Provider.name = "UserIsLog"
-    }
-
-    handleNewAccount = () => {
-        
-        this.props.onClose();
+        this.props.state.setState({
+            selectedValue: 'hello',
+            onClose: true
+        })
     }
 
     render(){
 
-        //this.setState(this.state.a + 1);
-
- 
-
-        console.log('MyLogin:' + this.state.a);
-
-        const {classes, onClose, ...other } = this.props;
+        const {classes, onClose, selectedValue, ...other } = this.props;
         return (
             <React.Fragment>
                 <CssBaseline />
                 <main className={classes.layout}>
                     <Paper className={classes.paper}>
                         <Avatar className={classes.avatar}>
-                            <LockIcon cplor= "secondary"/>
+                            <LockIcon />
                         </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign in
-                        </Typography>
-                        <form className={classes.form}>
-                        <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="email">Email Address</InputLabel>
-                        <Input id="email" name="email" autoComplete="email" autoFocus />
-                        </FormControl>
-                        <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="password">Password</InputLabel>
-                        <Input
-                            name="password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        </FormControl>
-                        <FormControlLabel
-                        control={
-                            <Checkbox
-
-                            color="primary" 
-                            value="remember"
-                            />
-                        }
-                        label="remember"
-                        />
-                        
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick = {this.handleLogin}
-                        >
-                            Sign in
-                        </Button>
-
-                    
-                    
-                        <Button
+                    </Paper>
+                    <Button
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick = {this.handleNewAccount}  >
-                        <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1">
-                            Creat new account
-                        </Link>
-                        </Button> 
-                    
-                    
-                    </form>
-                    </Paper>
+                        onClick = {this.handleLogin}
+                    >
+                        Sign in
+                    </Button>
                 </main>
             </React.Fragment>
         );
@@ -155,11 +86,5 @@ class MyLogin extends React.Component {
 
 
 }
-
-MyLogin.propTypes = {
-    classes: PropTypes.object.isRequired,
-    onClose: PropTypes.func,
-
-  };
 
 export default withStyles(styles)(MyLogin);

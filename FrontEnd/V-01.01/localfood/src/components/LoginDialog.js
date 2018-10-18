@@ -20,30 +20,26 @@ import MyLogin from './MyLogin.js';
 
 class LoginDialog extends React.Component {
   handleClose = () => { 
-    
+    this.props.onClose(this.props.selectedValue);
   };
 
     handleListItemClick = value => {
       this.props.onClose(value);
-      
     };
 
   render() {
-    const { classes, onClose,  ...other } = this.props;
-          console.log('Dialog: ');
-      console.log(this.props);
+    const { classes, onClose, selectedValue, ...other } = this.props;
+    //console.info(this.props);
     
     return (
-
       <Dialog
         onClose={this.handleClose}
         aria-labelledby="Login"
         {...other}
       >
-        <MyLogin
+        <Login
           classes= {this.classes}
-
-          onClose = {onClose}
+          selectedValue = {this.selectedValue}
         />
           
       </Dialog>
@@ -54,6 +50,7 @@ class LoginDialog extends React.Component {
 LoginDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   onClose: PropTypes.func,
+  selectedValue: PropTypes.string,
 };
 
 export default (LoginDialog);

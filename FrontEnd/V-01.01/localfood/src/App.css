@@ -21,10 +21,16 @@ body {
   overflow-y: scroll;
 }
   
-
 }
 
-
+.map {
+  background-color: #CCCCCC;
+  position: sticky;
+  top:0;
+  left: 0;
+  right: 0;
+  height: 90vh;
+}
 
 
 .footer{

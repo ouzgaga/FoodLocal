@@ -24,7 +24,7 @@ import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
   card: {
-    width: '100%'
+    width: '100px'
   },
   media: {
     height: 140
