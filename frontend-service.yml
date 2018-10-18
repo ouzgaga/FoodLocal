@@ -4,6 +4,7 @@ metadata:
   name: frontend-service
 spec:
   type: LoadBalancer
+  loadBalancerIP: None
   ports:
     - port: 80
       protocol: TCP
