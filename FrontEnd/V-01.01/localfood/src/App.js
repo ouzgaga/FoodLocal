@@ -26,10 +26,6 @@ import {
 const styles = theme =>({
   page:{
     marginTop: 64,
-    flex: 1,
-    flexGrow: 1,
-    backgroundColor:'#ebeef0',
-    display: 'flexbox'
   },
 });
 
