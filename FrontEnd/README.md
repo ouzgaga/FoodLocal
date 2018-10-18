@@ -69,6 +69,10 @@ Redux en quelques lignes:
 
 **Reducer**: Il produisent, créée un état.
 
+## Tests:
+
+https://jestjs.io/docs/en/tutorial-react
+
 ## Mobile
 
 Nous pensons utiliser ReactNativ pour faire l'application mobile. Cela nous permettera de réutiliser certains composants de l'application web.	
