@@ -1,41 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Hidden from '@material-ui/core/Hidden';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
 
 
 
 import './App.css';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
-import MyMap from './components/MyMap';
-import Search from './components/Search';
-import Header from './components/Header';
-import Theme from './components/Theme';
-import Footer from './components/Footer';
-
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch,
-  Redirect
 } from 'react-router-dom';
+
+import Search from './components/Search';
+import Header from './components/Header';
+import Theme from './components/Theme';
 
 import {
   PageAbout,
   PageMap,
   PageNewAccount,
   PageError404,
-} from './pages/Pages.js'; 
+} from './pages/Pages.js';
 
 
 const drawerWidth = 400;
@@ -43,12 +30,12 @@ const drawerWidth = 400;
 const tileData = [
   {
 
-    "id": 1,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.783,
-      "lng": 6.7
-    }
+    id: 1,
+    'title': 'Guidoux Fruits',
+    position: {
+      lat: 46.783,
+      lng: 6.7,
+    },
 
   },
 ];
@@ -57,7 +44,7 @@ const tileData = [
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: `100%`,
+    height: '100%',
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -68,7 +55,7 @@ const styles = theme => ({
     position: 'absolute',
     zIndex: 1900,
     [theme.breakpoints.up('md')]: {
-      width: `100%`,
+      width: '100%',
     },
   },
   navIconHide: {
@@ -86,7 +73,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    height:`100%`,
+    height: '100%',
   },
 });
 
@@ -105,18 +92,18 @@ class App extends React.Component {
     const drawer = (
       <div>
         <div className={classes.toolbar} />
-        
-        <Search/>
+
+        <Search />
       </div>
     );
 
     return (
       <div className={classes.root}>
         <div>
-        {/*
+          {/*
           <AppBar className={classes.appBar}>
             <Toolbar>
-              
+
               <Typography variant="h6" color="inherit" noWrap>
                 Responsive drawer
             </Typography>
@@ -131,25 +118,25 @@ class App extends React.Component {
             </Toolbar>
           </AppBar>
 */}
-<Router>
-          <MuiThemeProvider  theme={Theme}>
-            <Header/>
-            
-            <div  className={classes.page} center="xs">
+          <Router>
+  <MuiThemeProvider theme={Theme}>
+            <Header />
+
+            <div className={classes.page} center="xs">
               <Switch>
-                <Route default path="/about" exact component={PageAbout} classes={classes}/>
-                <Route path="/newAccount" component={PageNewAccount} classes={classes}/>
-                <Route path="/" component={PageMap} classes={classes}/>
-                <Route path="*" component={PageError404} classes={classes}/> 
-              </Switch> 
+                <Route default path="/about" exact component={PageAbout} classes={classes} />
+                <Route path="/newAccount" component={PageNewAccount} classes={classes} />
+                <Route path="/" component={PageMap} classes={classes} />
+                <Route path="*" component={PageError404} classes={classes} />
+              </Switch>
             </div>
-              
-            
+
+
           </MuiThemeProvider>
-        </Router>
+</Router>
 
         </div>
-        
+
       </div>
     );
   }
@@ -161,8 +148,6 @@ App.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(App);
-
-
 
 
 /*

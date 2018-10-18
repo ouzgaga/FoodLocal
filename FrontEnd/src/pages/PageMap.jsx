@@ -2,87 +2,79 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
-import MyMap from '../components/MyMap';
-import Search from '../components/Search'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import IconButton from '@material-ui/core/IconButton';
-import classnames from 'classnames';
+import Search from '../components/Search';
+import MyMap from '../components/MyMap';
 
 const drawerWidth = 400;
 
 const tileData = [
   {
 
-    "id": 1,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.783,
-      "lng": 6.7
-    }
+    id: 1,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.783,
+      lng: 6.7,
+    },
 
   },
   {
 
-    "id": 2,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.781,
-      "lng": 6.53
-    }
+    id: 2,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.781,
+      lng: 6.53,
+    },
 
   },
   {
 
-    "id": 3,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.77,
-      "lng": 6.58
-    }
+    id: 3,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.77,
+      lng: 6.58,
+    },
 
   },
   {
 
-    "id": 4,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.789,
-      "lng": 6.69
-    }
+    id: 4,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.789,
+      lng: 6.69,
+    },
 
   },
   {
-    "id": 5,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.795,
-      "lng": 6.63
-    }
+    id: 5,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.795,
+      lng: 6.63,
+    },
   },
   {
-    "id": 6,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.70,
-      "lng": 6.47
-    }
+    id: 6,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.70,
+      lng: 6.47,
+    },
   },
   {
-    "id": 7,
-    "title": "Guidoux Fruits",
-    "position": {
-      "lat": 46.74,
-      "lng": 6.77
-    }
-  }
+    id: 7,
+    title: 'Guidoux Fruits',
+    position: {
+      lat: 46.74,
+      lng: 6.77,
+    },
+  },
 ];
 
 const styles = theme => ({
@@ -148,8 +140,13 @@ class ResponsiveDrawer extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-          <Button variant="fab" color="inherit" aria-label="Add" className={classes.navIconHide}
-            onClick={this.handleDrawerToggle}>
+          <Button
+            variant="fab"
+            color="inherit"
+            aria-label="Add"
+            className={classes.navIconHide}
+            onClick={this.handleDrawerToggle}
+          >
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
@@ -173,7 +170,7 @@ class ResponsiveDrawer extends React.Component {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden smDown >
+        <Hidden smDown>
           <Drawer
             variant="permanent"
             open
