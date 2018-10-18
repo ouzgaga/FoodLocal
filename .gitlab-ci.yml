@@ -5,8 +5,10 @@ stages:
   - deploy
 
 variables:
-  CONTAINER_TEST_IMAGE: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: gcr.io/${GC_PROJECT_ID}/api:latest
+  CONTAINER_TEST_IMAGE_API: gcr.io/${GC_PROJECT_ID}/api:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE_API: gcr.io/${GC_PROJECT_ID}/api:latest
+  CONTAINER_TEST_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:latest
 
 build-api:
   stage: build
@@ -16,23 +18,46 @@ build-api:
 
   script:
     - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker build --pull -t $CONTAINER_TEST_IMAGE ./API/
-    - docker push $CONTAINER_TEST_IMAGE
+    - docker build --pull -t $CONTAINER_TEST_IMAGE_API ./API/
+    - docker push $CONTAINER_TEST_IMAGE_API
 
-release-image:
+build-frontend:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+    - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
+    - docker push $CONTAINER_TEST_IMAGE_FRONTEND
+
+release-image-api:
   stage: release
   image: docker:stable
   services:
     - docker:dind
   script:
     - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker pull $CONTAINER_TEST_IMAGE_API
+    - docker tag $CONTAINER_TEST_IMAGE_API $CONTAINER_RELEASE_IMAGE_API
+    - docker push $CONTAINER_RELEASE_IMAGE_API
   only:
     - prod
 
-deploy:
+release-image-frontend:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+    - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
+    - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
+    - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
+  only:
+    - prod
+
+deploy-api:
   stage: deploy
   image: google/cloud-sdk:alpine
   script:
@@ -41,5 +66,17 @@ deploy:
     - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
     - kubectl apply -f api-service.yml
     - kubectl apply -f api-deployment.yml
+  only:
+    - prod
+
+deploy-frontend:
+  stage: deploy
+  image: google/cloud-sdk:alpine
+  script:
+    - gcloud components install kubectl
+    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+    - kubectl apply -f frontend-service.yml
+    - kubectl apply -f frontend-deployment.yml
   only:
     - prod
