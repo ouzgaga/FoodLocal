@@ -1,4 +1,0 @@
-endto end e2e -> 
-selenium ->API pour controller les navigteurs interagire directement avec le DOM
-mock -> js communique restAPI -> objet qui simule un autre
-puppetter -> -+ = selenuim
