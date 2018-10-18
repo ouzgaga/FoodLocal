@@ -19,7 +19,7 @@ const Producers = mongoose.model('producers');
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducer ({tags = undefined, limit = 50, page = 0, lat, long, zoom}) {
+function getProducer ({tags = undefined, limit = 50, page = 0, lat, long, zoom} = {}) {
   const skip = page * limit;
   return Producers.find({tags}).sort({id: -1}).skip(+skip).limit(+limit).exec(); // FIXME: Comment faire pour retourner un objet et non pas une promise?
 }
