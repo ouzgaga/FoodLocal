@@ -1,10 +1,7 @@
 require('../src/app/models/producers.model');
-
-const chai = require('chai');
+require('./chai-config');
 const mongoose = require('mongoose');
 const producersServices = require('../src/app/services/producers.services');
-
-const expect = chai.expect;
 
 const Producers = mongoose.model('producers');
 

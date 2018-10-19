@@ -1,7 +1,9 @@
 require('dotenv').config();
 const chai = require('chai');
+const chaiHttp = require('chai-http');
 const dirty = require('dirty-chai');
 
+chai.use(chaiHttp);
 chai.should();
 
 const mongoose = require('mongoose');
