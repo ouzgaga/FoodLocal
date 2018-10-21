@@ -3,80 +3,118 @@ import { withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card'; 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import YouTube from 'react-youtube';
+import blueGrey from '@material-ui/core/colors/blueGrey'
 
 import About from '../components/About.js';
 import PropTypes from 'prop-types';
 import LoginDialog from '../components/LoginDialog.js';
 
+import team from '../img/teamAntoine.jpg';
+import leefDecoration from '../img/leefDecoration.jpg';
 import logo from '../img/LogoCarrote.png';
 
 const styles = theme => ({
   about: {
-    
-    width: '50%',
+    display: 'flex',
+    width: '90%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    display: 'flex',
-    height: 'auto',
+    //display: 'flex',
+    //height: '70%',
+    justifyContent: 'center',
     
   },
+  video: {
+    /*
+    marginTop: 10,
+    marginBottom: 10,
+
+    height: '100%',
+    width: '100%',
+    maxHeight: '340px',
+    maxWidth: 640,
+    maxHeight: 360,
+
+
+    display: 'flex',
+    alignItems: 'middle',
+
+    marginLeft: '50%',
+    transform: 'translateX(-50%)',
+*/
+    display: 'flex',
+    width: '90%',
+    marginLeft: '50%',
+    transform: 'translateX(-50%)',
+    //display: 'flex',
+    //height: '70%',
+    justifyContent: 'center',
+    //display: 'flex',
+    //height: '70%',
+    
+  },
+  vid:{
+    height:640,
+    width: 360,
+  },
   content:{
-    justifyContent: 'center', 
-    alignItems: 'center' ,
-    justify: 'center',
+    flex: 1,
+    display: 'flex',
+    backgroundColor: "#FFFFF0",
+    //justifyContent: 'center',
+  },
+  text:{
+    display: 'flex',
+    //flex: 2,
+    justifyContent: 'center',
+    textAlign:'justify',
+    flexDirection: 'column',
+    marginLeft: '2%',
+
+    width: "80%",
+
+  },
+  tx:{
+    alignItems: 'left',
+    marginLeft: 20,
+    marginBottom: 0,
   },
   card: {
     maxWidth: 400,
-       
+    justifyContent: 'center',
   },
   image: {
-    flex: 2,
+    width: "20%",
+    //justifyContent: 'center',
+    display: 'flex', justifyContent: 'center', alignItems: 'center', width: 200, height: '..',
     
-    marginRight: '50%',
-    transform: 'translateY(-50%)',
+    //marginTop: '50%',
+    //transform: 'translateY(-50%)',
     
-  
-    width: 128,
-    height: 128,
+    //height: 200,
+    //width: 200,
+    
 
-    border: 1,
+
   },
-  
+  imgRonde: {
+    marginLeft: 15,
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+
+    borderRadius: "50%",
+  },
   img: {
     margin: 'auto',
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-  },
-
-  root: {
-    backgroundColor: 'aliceblue',
-    direction: 'column',
-  },
-  box: {
-    alignItems: 'center',
+    borderColor: '#fffff'
+    
   },
 });
-
-/*
-<div className={classes.about}>    
-        <Grid container className={classes.root} spacing={16}>
-        <div>
-          <Grid container className={classes.box}>
-              <Grid item xs="6" >
-                <img className={classes.img} alt="complex" src={logo}/>
-              </Grid>
-              <Grid item xs="6">
-              <Typography gutterBottom variant="title">
-                Qu'est-ce food local?
-              </Typography>
-              <Typography gutterBottom>C'est un application web qui a pour but de référencer de petits producteurs locaux. Elle leur fournit un </Typography>            
-              </Grid>
-          </Grid>
-          </div>
-      </Grid>
-    </div>
-    */
 
 class PageAbout extends Component {
   
@@ -85,30 +123,58 @@ class PageAbout extends Component {
     const { classes } = this.props;
 
     return (
-   
-   
+      <div>
+      <div className={classes.about}>
+        <div className={classes.content}>
+          <div className={classes.image}>
+            <img className={classes.img} alt="complex" src={logo}/> 
+          </div>
+          <div className = {classes.text} >
+            <h3  className = {classes.tx}>
+              Qu'est-ce localFood?
+            </h3 >
+            <p >
+            LocalFood est une application web servant à referancer de petits producteurs locaux. Cela vous permet de retrouver facilement des produitsde la région et de contribuer à l'économie local.
+            </p> 
+          </div>
+          </div>
+      </div>
+      
+     
+      <div className={classes.video}>
+        <YouTube 
+          className={classes.vid}
+          videoId="EE7eXkFQf6A"
+        />
+      </div>
+        
+
+      
+
+     
     
 
-    <div className={classes.about}>
-      <div className={classes.imgage}>
-        <img className={classes.img} alt="complex" src={logo}/> 
+      <div className={classes.about}>
+        <div className={classes.content}>
+          
+          <div className = {classes.text} >
+            <h3  className = {classes.tx}>
+              La team
+            </h3 >
+            <p >
+            LocalFood est une application web servant à referancer de petits producteurs locaux. Cela vous permet de retrouver facilement des produitsde la région et de contribuer à l'économie local.
+            </p> 
+          </div>
+          <div className={classes.image}>
+            <img className={classes.imgRonde} alt="complex" src={team}/> 
+          </div>
+          </div>
+        </div>
       </div>
+    
+    
 
-      <div>
-        <h5>
-          Qu'est-ce localFood?
-        </h5>
-        
-        at Module.load (module.js:566:32)
-        at tryModuleLoad (module.js:506:12)
-        at Function.Module._load (module.js:498:3)
-        at Function.Module.runMain (module.js:694:10)
-        at startup (bootstrap_node.js:204:16)
-        at bootstrap_node.js:625:3
-
-        
-      </div>
-    </div>
+    
       
       
     );

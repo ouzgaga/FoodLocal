@@ -6,6 +6,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-image: url('./img/242.jpg');
+  background-repeat: repeat;
+  background-size: 250px, 250px;
+  background-attachment: fixed;
 }
 
 code {

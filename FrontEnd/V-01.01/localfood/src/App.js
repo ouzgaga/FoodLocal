@@ -25,7 +25,7 @@ import {
 
 const styles = theme =>({
   page:{
-    marginTop: 64,
+    paddingTop: 64,
   },
 });
 
@@ -35,6 +35,7 @@ class App extends Component {
     const classes = this.props.classes;
 
     return (
+      
       <div className="App" >
         <Router>
           <MuiThemeProvider  theme={Theme}>
@@ -42,10 +43,11 @@ class App extends Component {
             
             <div  className={classes.page} center="xs">
               <Switch>
-                <Route default path="/about" exact component={PageAbout} classes={classes}/>
+                <Route default path="/about"  component={PageAbout} classes={classes}/>
                 <Route path="/newAccount" component={PageNewAccount} classes={classes}/>
-                <Route path="/" component={PageMap} classes={classes}/>
+                <Route path="/" exact component={PageMap} classes={classes}/>
                 <Route path="*" component={PageError404} classes={classes}/> 
+                <Route component={PageError404}/>
               </Switch> 
             </div>
               
