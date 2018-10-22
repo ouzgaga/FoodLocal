@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import {isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
@@ -59,52 +60,56 @@ class MenuAppBar extends React.Component  {
   };
 
 
-
   render() {
     const { classes } = this.props;
     const connected = Boolean(this.state.sConnected);
 
+
+    const menuLarge= (
+      <div className={classes.grow}>
+      <div className={classes.grow}></div>
+      <Link to="/" className={classes.LinkButton} readonly tabindex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
+      <Link to="/about" className={classes.LinkButton} readonly tabindex="-1"><Button >About</Button></Link>
+      <Link to="/map" className={classes.LinkButton} readonly tabindex="-1"><Button >Map</Button></Link>     
+
+
+
+      {UserContext.Provider.name == null ?
+      <> 
+        <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1" ><Button >New account</Button></Link>
+        <Button 
+        color="inherit"
+        onClick={this.handleClickLogin}>
+          Login
+        </Button>
+      </>
+        :
+        <Button 
+        color="inherit"
+        //onClick={this.handleClickLogin}
+        >
+          {UserContext.Provider.name}
+        </Button>
+      }
+      <LoginDialog
+        classes = {this.props}
+        open={this.state.open}
+        //onClose={this.handleCloseLogin.bind(this)}
+        onClose={this.handleCloseLogin} />   
+      </div>   
+    );
+
+
     return (
+      
       <div >
         <AppBar position="static" className={classes.root}>
           <Toolbar>
           
           <img src={logo} className={classes.menuButton} alt="logo" />
-            <MenuDrawer/>
-              
-            <div className={classes.grow}></div>
-            <Link to="/" className={classes.LinkButton} readonly tabindex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
-            <Link to="/about" className={classes.LinkButton} readonly tabindex="-1"><Button >About</Button></Link>
-            <Link to="/map" className={classes.LinkButton} readonly tabindex="-1"><Button >Map</Button></Link>
             
-            
-            
-
-
-
-          {UserContext.Provider.name == null ?
-          <> 
-            <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1" ><Button >New account</Button></Link>
-            <Button 
-            color="inherit"
-            onClick={this.handleClickLogin}>
-              Login
-            </Button>
-          </>
-            :
-            <Button 
-            color="inherit"
-            //onClick={this.handleClickLogin}
-            >
-              {UserContext.Provider.name}
-            </Button>
-          }
-          <LoginDialog
-            classes = {this.props}
-            open={this.state.open}
-            //onClose={this.handleCloseLogin.bind(this)}
-            onClose={this.handleCloseLogin} />
-            
+            {isWidthDown('xs', this.props.width)? <MenuDrawer/> : menuLarge}
+            {console.info(this.props.width)}
           </Toolbar>
 
           <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -117,4 +122,4 @@ class MenuAppBar extends React.Component  {
 }
   
   
-  export default withStyles(styles)(MenuAppBar);
+  export default withStyles(styles)(isWidthUp()(MenuAppBar));

@@ -14,6 +14,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+
+// Pour éviter des lags pour les supports ne supportant pas 60fps
+//https://material-ui.com/demos/drawers/
+const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 const styles = {
   list: {
     width: 250,
@@ -65,22 +70,24 @@ class SwipeableTemporaryDrawer extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.toggleDrawer(true)}>Open Left</Button>
-        <SwipeableDrawer
-          open={this.state.isOpen}
-          onClose={this.toggleDrawer(false)}
-          onOpen={this.toggleDrawer(true)}
-        >
-            <IconButton
+        <IconButton
               color="inherit"
               aria-label="Open menu"
               onClick={this.handleDrawerOpen}
               className={classes.menuButton}
-              onClick={this.toggleDrawer(false)}
+              onClick={this.toggleDrawer(true)}
               onKeyDown={this.toggleDrawer(false)}
             >
               <MenuIcon />
-            </IconButton>
+        </IconButton>
+        <SwipeableDrawer
+          disableBackdropTransition={!iOS}
+          disableDiscovery={iOS}
+          open={this.state.isOpen}
+          onClose={this.toggleDrawer(false)}
+          onOpen={this.toggleDrawer(true)}
+        >
+            
           
             {sideList}
           
