@@ -108,7 +108,7 @@ class MenuAppBar extends React.Component  {
           
           <img src={logo} className={classes.menuButton} alt="logo" />
             
-            {isWidthDown('xs', this.props.width)? <MenuDrawer/> : menuLarge}
+            {isWidthDown('xm', this.props.width)? menuLarge : <MenuDrawer/>}
             {console.info(this.props.width)}
           </Toolbar>
 
@@ -122,4 +122,5 @@ class MenuAppBar extends React.Component  {
 }
   
   
-  export default withStyles(styles)(isWidthUp()(MenuAppBar));
+  export default withStyles(styles)(MenuAppBar);
+  
