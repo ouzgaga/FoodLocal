@@ -17,13 +17,27 @@ import logo from '../img/LogoCarrote.png';
 const styles = theme => ({
   about: {
     display: 'flex',
+<<<<<<< HEAD
     width: '90%',
+=======
+    
+    width: '100%',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     marginLeft: '50%',
     transform: 'translateX(-50%)',
     //display: 'flex',
     //height: '70%',
+<<<<<<< HEAD
     justifyContent: 'center',
     
+=======
+    padding: 0,
+    marginRight:0,
+    backgroundColor: 'rgba(255, 255, 240, 0.9)',
+    
+    
+
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
   video: {
     /*
@@ -47,21 +61,52 @@ const styles = theme => ({
     width: '90%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
+<<<<<<< HEAD
     //display: 'flex',
     //height: '70%',
     justifyContent: 'center',
+=======
+    justifyContent: 'center',
+    
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     //display: 'flex',
     //height: '70%',
     
   },
   vid:{
+<<<<<<< HEAD
     height:640,
     width: 360,
+=======
+
+    maxHeight: 720,
+    height:360,
+    width: "100%",
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
   content:{
     flex: 1,
     display: 'flex',
+<<<<<<< HEAD
     backgroundColor: "#FFFFF0",
+=======
+    //backgroundColor: "#FFFFF0",
+
+    
+
+    margin: 'auto',
+    maxWidth: 900,
+    width: '100%', 
+     
+    
+    paddingTop: 10,
+    paddingBot: 5,
+    paddingLeft: '1%',
+    paddingRight: '1%',
+    
+
+
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     //justifyContent: 'center',
   },
   text:{
@@ -87,7 +132,11 @@ const styles = theme => ({
   image: {
     width: "20%",
     //justifyContent: 'center',
+<<<<<<< HEAD
     display: 'flex', justifyContent: 'center', alignItems: 'center', width: 200, height: '..',
+=======
+    display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 200, height: '..',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     
     //marginTop: '50%',
     //transform: 'translateY(-50%)',
@@ -99,7 +148,11 @@ const styles = theme => ({
 
   },
   imgRonde: {
+<<<<<<< HEAD
     marginLeft: 15,
+=======
+    marginLeft: 'auto',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
@@ -112,7 +165,10 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
     borderColor: '#fffff'
+<<<<<<< HEAD
     
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
 });
 
@@ -123,7 +179,11 @@ class PageAbout extends Component {
     const { classes } = this.props;
 
     return (
+<<<<<<< HEAD
       <div>
+=======
+    <div>
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
       <div className={classes.about}>
         <div className={classes.content}>
           <div className={classes.image}>
@@ -140,14 +200,22 @@ class PageAbout extends Component {
           </div>
       </div>
       
+<<<<<<< HEAD
      
+=======
+ 
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
       <div className={classes.video}>
         <YouTube 
           className={classes.vid}
           videoId="EE7eXkFQf6A"
         />
       </div>
+<<<<<<< HEAD
         
+=======
+  
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 
       
 
@@ -170,6 +238,27 @@ class PageAbout extends Component {
           </div>
           </div>
         </div>
+<<<<<<< HEAD
+=======
+
+        <div className={classes.about}>
+        <div className={classes.content}>
+          
+          <div className = {classes.text} >
+            <h3  className = {classes.tx}>
+              Local Local, mais pourquoi local?
+            </h3 >
+            <p >
+            de noius
+            </p> 
+          </div>
+          <div className={classes.image}>
+            <img className={classes.imgRonde} alt="complex" src={team}/> 
+          </div>
+          </div>
+        </div>
+        
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
       </div>
     
     

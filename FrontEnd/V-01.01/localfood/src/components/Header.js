@@ -20,7 +20,13 @@ const styles = {
     flexGrow: 1,
     position: 'fixed',
     weight: '100%',
+<<<<<<< HEAD
     top: 0,
+=======
+    height: 64,
+    top: 0,
+    shadow: 'none',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     
   },
   grow: {
@@ -121,7 +127,12 @@ class MenuAppBar extends React.Component  {
 export default compose(
   withWidth(),
   withStyles(styles),
+<<<<<<< HEAD
   
 )(MenuAppBar);
   
+=======
+)(MenuAppBar);
+  
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 
