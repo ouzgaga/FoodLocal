@@ -18,7 +18,12 @@ const styles = theme => ({
   about: {
     display: 'flex',
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: '90%',
+=======
+    
+    width: '100%',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     
     width: '100%',
@@ -28,15 +33,21 @@ const styles = theme => ({
     //display: 'flex',
     //height: '70%',
 <<<<<<< HEAD
+<<<<<<< HEAD
     justifyContent: 'center',
     
 =======
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     padding: 0,
     marginRight:0,
     backgroundColor: 'rgba(255, 255, 240, 0.9)',
     
     
 
+<<<<<<< HEAD
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
+=======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
   video: {
@@ -62,9 +73,14 @@ const styles = theme => ({
     marginLeft: '50%',
     transform: 'translateX(-50%)',
 <<<<<<< HEAD
+<<<<<<< HEAD
     //display: 'flex',
     //height: '70%',
     justifyContent: 'center',
+=======
+    justifyContent: 'center',
+    
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     justifyContent: 'center',
     
@@ -75,21 +91,30 @@ const styles = theme => ({
   },
   vid:{
 <<<<<<< HEAD
+<<<<<<< HEAD
     height:640,
     width: 360,
 =======
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 
     maxHeight: 720,
     height:360,
     width: "100%",
+<<<<<<< HEAD
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
+=======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
   content:{
     flex: 1,
     display: 'flex',
 <<<<<<< HEAD
+<<<<<<< HEAD
     backgroundColor: "#FFFFF0",
 =======
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     //backgroundColor: "#FFFFF0",
 
     
@@ -106,6 +131,9 @@ const styles = theme => ({
     
 
 
+<<<<<<< HEAD
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
+=======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
     //justifyContent: 'center',
   },
@@ -133,7 +161,11 @@ const styles = theme => ({
     width: "20%",
     //justifyContent: 'center',
 <<<<<<< HEAD
+<<<<<<< HEAD
     display: 'flex', justifyContent: 'center', alignItems: 'center', width: 200, height: '..',
+=======
+    display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 200, height: '..',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 200, height: '..',
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
@@ -149,7 +181,11 @@ const styles = theme => ({
   },
   imgRonde: {
 <<<<<<< HEAD
+<<<<<<< HEAD
     marginLeft: 15,
+=======
+    marginLeft: 'auto',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     marginLeft: 'auto',
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
@@ -166,7 +202,10 @@ const styles = theme => ({
     maxHeight: '100%',
     borderColor: '#fffff'
 <<<<<<< HEAD
+<<<<<<< HEAD
     
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   },
@@ -180,7 +219,11 @@ class PageAbout extends Component {
 
     return (
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div>
+=======
+    <div>
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     <div>
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
@@ -201,7 +244,11 @@ class PageAbout extends Component {
       </div>
       
 <<<<<<< HEAD
+<<<<<<< HEAD
      
+=======
+ 
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
  
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
@@ -212,7 +259,11 @@ class PageAbout extends Component {
         />
       </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         
+=======
+  
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
   
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
@@ -239,7 +290,10 @@ class PageAbout extends Component {
           </div>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 
         <div className={classes.about}>
         <div className={classes.content}>
@@ -258,6 +312,9 @@ class PageAbout extends Component {
           </div>
         </div>
         
+<<<<<<< HEAD
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
+=======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
       </div>
     

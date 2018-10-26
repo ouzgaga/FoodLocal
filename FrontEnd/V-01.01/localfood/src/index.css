@@ -8,12 +8,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
   background-image: url('./img/backgroundImage-contry.jpg'); 
   background-repeat: no-repeat;
 
   
+=======
+
+  background-image: url('./img/backgroundImage-contry.jpg'); 
+  background-repeat: no-repeat;
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   background-attachment: fixed;
   background-position: center;  
   -webkit-background-size: cover;
@@ -24,6 +30,9 @@ body {
 
 .bodyOld {
   
+<<<<<<< HEAD
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
+=======
 >>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
   background-image: url('./img/242.jpg');
   background-repeat: repeat;

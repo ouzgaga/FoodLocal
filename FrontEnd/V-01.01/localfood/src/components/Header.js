@@ -21,7 +21,13 @@ const styles = {
     position: 'fixed',
     weight: '100%',
 <<<<<<< HEAD
+<<<<<<< HEAD
     top: 0,
+=======
+    height: 64,
+    top: 0,
+    shadow: 'none',
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
     height: 64,
     top: 0,
@@ -128,9 +134,14 @@ export default compose(
   withWidth(),
   withStyles(styles),
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 )(MenuAppBar);
   
+=======
+)(MenuAppBar);
+  
+>>>>>>> 12-site-web-creation-des-pages-principales-infos-projet-2
 =======
 )(MenuAppBar);
   
