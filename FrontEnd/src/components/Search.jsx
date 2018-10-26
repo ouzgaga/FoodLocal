@@ -57,6 +57,9 @@ const styles = theme => ({
     background:
       'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
   },
+  list: {
+    backgroundColor: 'transparent',
+  },
 });
 
 const tileData = [
@@ -124,13 +127,14 @@ const tileData = [
       lng: 6.65,
     },
   },
+
 ];
 
 function Search(props) {
   const { classes } = props;
 
   return (
-    <Fragment>
+    <Fragment  className={classes.list}>
       <Divider />
       <SearchBar
         onChange={() => console.log('onChange')}
@@ -140,7 +144,7 @@ function Search(props) {
           maxWidth: 800,
         }}
       />
-      <List>
+      <List className={classes.list}>
 
         {tileData.map(tile => (
 

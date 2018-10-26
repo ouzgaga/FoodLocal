@@ -90,7 +90,7 @@ const styles = theme => ({
 
   navIconHide: {
     position: 'absolute',
-    top: 75,
+    top: 25,
     right: 16,
     zIndex: 2000,
     rotate: 90,
@@ -129,7 +129,6 @@ class ResponsiveDrawer extends React.Component {
 
     const drawer = (
       <div>
-        <div className={classes.toolbar} />
         <Search />
       </div>
     );
@@ -138,7 +137,6 @@ class ResponsiveDrawer extends React.Component {
       <div className={classes.root}>
 
         <main className={classes.content}>
-          <div className={classes.toolbar} />
 
           <Button
             variant="fab"
