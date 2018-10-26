@@ -37,7 +37,7 @@ const styles = {
   },
   LinkButton:{
     textDecoration: 'none',
-    color: 'inherit'
+    color: 'secondary'
   },
 };
 
@@ -80,9 +80,9 @@ class MenuAppBar extends React.Component  {
             
               
             <div className={classes.grow}></div>
-            <Link to="/" className={classes.LinkButton} readonly tabindex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
-            <Link to="/about" className={classes.LinkButton} readonly tabindex="-1"><Button >About</Button></Link>
-            <Link to="/map" className={classes.LinkButton} readonly tabindex="-1"><Button >Map</Button></Link>
+            <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
+            <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button >About</Button></Link>
+            <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button >Map</Button></Link>
             
             
             
@@ -91,7 +91,7 @@ class MenuAppBar extends React.Component  {
 
           {UserContext.Provider.name == null ?
           <> 
-            <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1" ><Button >New account</Button></Link>
+            <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1" ><Button >New account</Button></Link>
             <Button 
             color="inherit"
             onClick={this.handleClickLogin}>

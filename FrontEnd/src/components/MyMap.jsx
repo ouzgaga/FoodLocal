@@ -16,7 +16,6 @@ class MyMap extends Component {
     super(props);
 
     this.state = {
-
       location: {
         // par défaut, position de Lausanne
         latitude: 46.5333,
@@ -77,7 +76,7 @@ class MyMap extends Component {
 
           <TileLayer
             attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
           />
 
           {
@@ -86,9 +85,7 @@ class MyMap extends Component {
             && (
               <CircleMarker center={[latitude, longitude]} />
             )
-
           }
-
           {
             this.loadProducer()
           }
