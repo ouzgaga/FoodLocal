@@ -20,7 +20,9 @@ const styles = {
     flexGrow: 1,
     position: 'fixed',
     weight: '100%',
+    height: 64,
     top: 0,
+    shadow: 'none',
     
   },
   grow: {
@@ -121,7 +123,6 @@ class MenuAppBar extends React.Component  {
 export default compose(
   withWidth(),
   withStyles(styles),
-  
 )(MenuAppBar);
   
 

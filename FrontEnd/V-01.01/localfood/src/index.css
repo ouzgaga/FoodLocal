@@ -7,6 +7,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+
+  background-image: url('./img/backgroundImage-contry.jpg'); 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;  
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.bodyOld {
+  
   background-image: url('./img/242.jpg');
   background-repeat: repeat;
   background-size: 250px, 250px;
