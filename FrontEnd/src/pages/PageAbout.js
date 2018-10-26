@@ -160,7 +160,7 @@ class PageAbout extends Component {
           </div>
       </div>
       
- 
+ {/*
       <div className={classes.video}>
         <YouTube 
           className={classes.vid}
@@ -169,7 +169,7 @@ class PageAbout extends Component {
       </div>
   
 
-      
+       */}
 
      
     
