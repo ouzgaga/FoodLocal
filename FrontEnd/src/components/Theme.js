@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
@@ -8,10 +9,10 @@ const theme = createMuiTheme({
     primary: {
       main: '#66CCCC',
     },
-    secondary: {
-      main: '#fff59d',
+    typography: {
+      useNextVariants: true,
     },
-  },
-});
+  });
+  
 
 export default theme;

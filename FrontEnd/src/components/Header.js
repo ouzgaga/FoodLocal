@@ -4,28 +4,26 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
+import withWidth, {isWidthUp} from '@material-ui/core/withWidth';
+import compose from 'recompose/compose';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
   
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  Redirect
-} from 'react-router-dom';
  
-
-import LoginDialog from './LoginDialog';
+import MenuDrawer from './MenuDrawer.js';
+import LoginDialog from './LoginDialog.js';
 
 const styles = {
   root: {
     flexGrow: 1,
     position: 'fixed',
     weight: '100%',
+    height: 64,
     top: 0,
-    zIndex:1900,
+    shadow: 'none',
+    
   },
   grow: {
     flexGrow: 1,
@@ -65,55 +63,54 @@ class MenuAppBar extends React.Component  {
   };
 
 
-
   render() {
     const { classes } = this.props;
     const connected = Boolean(this.state.sConnected);
 
+    const menuLarge = (
+      <div>
+        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
+        <Link to="/about" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >About</Button></Link>
+        <Link to="/map" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >Map</Button></Link>     
+
+        {UserContext.Provider.name == null ?
+        <> 
+          <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button >New account</Button></Link>
+          <Button 
+          color="inherit"
+          onClick={this.handleClickLogin}>
+            Login
+          </Button>
+        </>
+          :
+          <Button 
+          color="inherit"
+          //onClick={this.handleClickLogin}
+          >
+            {UserContext.Provider.name}
+          </Button>
+        }
+       
+      </div>   
+    );
+    
     return (
-      <div >
       
+      <div >
         <AppBar position="static" className={classes.root}>
           <Toolbar>
           
           <img src={logo} className={classes.menuButton} alt="logo" />
-            
-              
-            <div className={classes.grow}></div>
-            <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
-            <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button >About</Button></Link>
-            <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button >Map</Button></Link>
-            
-            
-            
+          <div className={classes.grow}></div>
+            {isWidthUp('sm', this.props.width) ? menuLarge : <MenuDrawer/>}
+          </Toolbar>
 
-
-
-          {UserContext.Provider.name == null ?
-          <> 
-            <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1" ><Button >New account</Button></Link>
-            <Button 
-            color="inherit"
-            onClick={this.handleClickLogin}>
-              Login
-            </Button>
-          </>
-            :
-            <Button 
-            color="inherit"
-            //onClick={this.handleClickLogin}
-            >
-              {UserContext.Provider.name}
-            </Button>
-          }
           <LoginDialog
             classes = {this.props}
             open={this.state.open}
-            //onClose={this.handleCloseLogin.bind(this)}
-            onClose={this.handleCloseLogin} />
-            
-          </Toolbar>
-
+            onClose={this.handleCloseLogin.bind(this)}
+            //onClose={this.handleCloseLogin}
+          />
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {this.state.connectEmail}
           </Typography>
@@ -122,6 +119,10 @@ class MenuAppBar extends React.Component  {
     );
   }
 }
+
+export default compose(
+  withWidth(),
+  withStyles(styles),
+)(MenuAppBar);
   
-  
-  export default withStyles(styles)(MenuAppBar);
+
