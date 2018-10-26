@@ -32,7 +32,7 @@ module.exports = (app, config) => {
   app.use('/salesPoints', salesPointsController);
 
   app.use('/', (req, res, next) => {
-    res.status(httpStatus.OK).send('Hey mon ami! T\'aime ça manger des patates?!');
+    res.status(httpStatus.OK).send('Hey mon ami! T\'aimes ça manger des patates?!');
   });
 
   app.use((req, res, next) => {

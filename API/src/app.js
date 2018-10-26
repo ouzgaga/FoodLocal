@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
@@ -17,7 +16,3 @@ db.on('error', () => {
 const app = express();
 
 module.exports = require('./config/express')(app, config);
-
-app.listen(config.port, () => {
-  console.log(`Express server listening on port ${config.port}`);
-});

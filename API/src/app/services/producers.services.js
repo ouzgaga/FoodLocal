@@ -19,9 +19,9 @@ const Producers = mongoose.model('producers');
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducer ({tags = undefined, limit = 50, page = 0, lat, long, zoom} = {}) {
+function getProducer ({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
   const skip = page * limit;
-  return Producers.find({tags}).sort({id: -1}).skip(+skip).limit(+limit).exec(); // FIXME: Comment faire pour retourner un objet et non pas une promise?
+  return Producers.find(tags).sort({ id: -1 }).skip(+skip).limit(+limit).exec();
 }
 
 /**
@@ -39,7 +39,7 @@ function addProducer (bodyContent) {
  *
  * @param {Integer} id, L'id du producteur à récupérer.
  */
-function getProducerById ({id}) {
+function getProducerById ({ id }) {
   return Producers.findById(id).exec();
 }
 
@@ -52,7 +52,7 @@ function getProducerById ({id}) {
  * @param {Integer} producerInfos, Les informations du producteur à mettre à jour.
  */
 function updateProducer (id, producerInfos) {
-  return Producers.findByIdAndUpdate(id, producerInfos, {new: true}); // retourne l'objet modifié
+  return Producers.findByIdAndUpdate(id, producerInfos, { new: true }); // retourne l'objet modifié
   // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
 }
 
@@ -61,7 +61,7 @@ function updateProducer (id, producerInfos) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer ({id}) {
+function deleteProducer ({ id }) {
   return Producers.findByIdAndRemove(id);
 }
 

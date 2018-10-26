@@ -4,7 +4,8 @@ module.exports = {
     'comma-dangle'               : 'off',
     'space-before-function-paren': 'off',
     'key-spacing'                : 'off',
-    'max-len'                    : 'off'
+    'max-len'                    : 'off',
+    'no-plusplus'                 : 'off'
   },
   'env'    : {
     'mocha': true
