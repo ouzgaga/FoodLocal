@@ -42,7 +42,7 @@ const tileData = [
 
 
 const styles = theme => ({
-  root: {
+  /*root: {
     flexGrow: 1,
     height: '100%',
     zIndex: 1,
@@ -50,7 +50,7 @@ const styles = theme => ({
     position: 'relative',
     display: 'flex',
     width: '100%',
-  },
+  },*/
   appBar: {
     position: 'absolute',
     zIndex: 1900,
@@ -119,21 +119,21 @@ class App extends React.Component {
           </AppBar>
 */}
           <Router>
-  <MuiThemeProvider theme={Theme}>
-            <Header />
+          <MuiThemeProvider theme={Theme}>
+                    <Header />
 
-            <div className={classes.page} center="xs">
-              <Switch>
-                <Route default path="/about" exact component={PageAbout} classes={classes} />
-                <Route path="/newAccount" component={PageNewAccount} classes={classes} />
-                <Route path="/" component={PageMap} classes={classes} />
-                <Route path="*" component={PageError404} classes={classes} />
-              </Switch>
-            </div>
+                    <div className={classes.page} center="xs">
+                      <Switch>
+                        <Route default path="/about" exact component={PageAbout} classes={classes} />
+                        <Route path="/newAccount" component={PageNewAccount} classes={classes} />
+                        <Route path="/" component={PageMap} classes={classes} />
+                        <Route path="*" component={PageError404} classes={classes} />
+                      </Switch>
+                    </div>
 
 
-          </MuiThemeProvider>
-</Router>
+                  </MuiThemeProvider>
+        </Router>
 
         </div>
 
