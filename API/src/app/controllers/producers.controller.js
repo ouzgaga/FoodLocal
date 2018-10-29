@@ -1,6 +1,5 @@
 const express = require('express');
 const httpStatus = require('http-status');
-const APIError = require('../helpers/APIError');
 const producersServices = require('../services/producers.services');
 
 const router = new express.Router();

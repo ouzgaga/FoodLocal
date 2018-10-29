@@ -84,7 +84,7 @@ describe('tests producers controller', () => {
             })));
     });
 
-    it.only('should fetch all producers that have their description containing the word "Responsable"', () => request(app)
+    it('should fetch all producers that have their description containing the word "Responsable"', () => request(app)
       .get('/producers')
       .query({ tags: { description: /.*Responsable.*/i } }) // description contains 'Responsable'
       .set('Accept', 'application/json')
