@@ -1,6 +1,5 @@
 const express = require('express');
 const httpStatus = require('http-status');
-const APIError = require('../helpers/APIError');
 const producersServices = require('../services/producers.services');
 
 const router = new express.Router();
@@ -11,65 +10,63 @@ const router = new express.Router();
  * paramètres, retourne tous les producteurs de la base de
  * données.
  *
- * @param  req.query.tags, Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
- * @param  req.query.limit, Nombre maximum de producteurs à retourner.
- * @param  req.query.page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par
+ * @param {JSON} req.query.tags, Tags à utiliser pour filtrer les résultats.
+ * @param {Integer} req.query.limit, Nombre maximum de producteurs à retourner.
+ * @param {Integer} req.query.page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
- * @param  req.query.lat, La latitude de l'utilisateur
- * @param  req.query.long, La longitude de l'utilisateur
- * @param  req.query.zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
+ * @param {Number} req.query.lat, La latitude de l'utilisateur
+ * @param {Number} req.query.long, La longitude de l'utilisateur
+ * @param {Integer} req.query.zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  *   producteurs retourner pour l'affichage.
  */
-router.get('/', (req, res, next) => {
-  producersServices.getProducer(req.query).then((result) => {
-    res.status(httpStatus.OK).send(result);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
-      status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : err.title,
-      error : err.message
-    }
-  ));
-});
+router.get('/', (req, res, next) => producersServices.getProducer(req.query)
+  .then(result => res.status(httpStatus.OK).send(result))
+  .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send(
+      {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        title : err.title,
+        error : err.message
+      }
+    )));
 
 /**
  * Ajoute un nouveau producteur dans la base de données.
- * Doublons autorisés!
+ * Attention, doublons autorisés!
  *
  * @param {Integer} req.body, Les informations du producteur à ajouter.
  */
-router.post('/', (req, res, next) => {
-  producersServices.addProducer(req.body).then((result) => {
-    res.status(httpStatus.OK).send(result);// result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
-    status: httpStatus.INTERNAL_SERVER_ERROR,
-    title : err.title,
-    error : err.message
-  }));
-});
+router.post('/', (req, res, next) => producersServices.addProducer(req.body)
+  .then(result => res.status(httpStatus.OK).send(result))
+  .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send(
+      {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        title : err.title,
+        error : err.message
+      }
+    )));
 
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
  * @param {Integer} req.params.id, L'id du producteur à récupérer.
  */
-router.get('/:id', (req, res, next) => {
-  producersServices.getProducerById(req.params).then((result) => {
+router.get('/:id', (req, res, next) => producersServices.getProducerById(req.params)
+  .then((result) => {
     if (!res) {
-      res.status(httpStatus.OK).send(result);// result.data);
+      res.status(httpStatus.OK).send(result); // FIXME: faut-il mettre un return dans ce genre de fonction ou pas besoin?
     } else {
       res.status(httpStatus.NO_CONTENT).send();
     }
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
+  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send(
       {
         status: httpStatus.INTERNAL_SERVER_ERROR,
         title : err.title,
         error : err.message
       }
-    );
-  });
-});
+    )));
 
 /**
  * Met à jour le producteur possédant l'id reçu avec les
@@ -79,33 +76,32 @@ router.get('/:id', (req, res, next) => {
  * @param {Integer} req.params.id, L'id du producteur à mettre à jour.
  * @param {Integer} req.body, Les informations du producteur à mettre à jour.
  */
-router.put('/:id', (req, res, next) => {
-  producersServices.updateProducer(req.params.id, req.body).then((result) => {
-    res.status(httpStatus.OK).send(result);// result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
-      status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : err.title,
-      error : err.message
-    }
-  ));
-});
+router.put('/:id', (req, res, next) => producersServices.updateProducer(req.params.id, req.body)
+  .then(result => res.status(httpStatus.OK)
+    .send(result))
+  .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send(
+      {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        title : err.title,
+        error : err.message
+      }
+    )));
 
 /**
  * Supprime le producteur correspondant à l'id reçu.
  *
  * @param {Integer} req.params.id, L'id du producteur à supprimer.
  */
-router.delete('/:id', (req, res, next) => {
-  producersServices.deleteProducer(req.params.id).then((result) => {
-    res.status(httpStatus.OK).send(result);// result.data);
-  }).catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(
-    {
-      status: httpStatus.INTERNAL_SERVER_ERROR,
-      title : err.title,
-      error : err.message
-    }
-  ));
-});
+router.delete('/:id', (req, res, next) => producersServices.deleteProducer(req.params.id)
+  .then(result => res.status(httpStatus.OK).send(result))
+  .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send(
+      {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        title : err.title,
+        error : err.message
+      }
+    )));
 
 module.exports = router;

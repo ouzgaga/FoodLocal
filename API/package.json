@@ -19,6 +19,7 @@
 		"http-status": "^1.2.0",
 		"method-override": "^2.3.0",
 		"mongoose": "^4.1.2",
+		"mongoose-query-parser": "^1.1.4",
 		"morgan": "^1.6.1"
 	},
 	"devDependencies": {
