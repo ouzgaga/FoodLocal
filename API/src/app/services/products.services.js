@@ -14,7 +14,7 @@ const Products = mongoose.model('products');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
-function getProducts ({ tags = undefined, limit = 50, page = 0 }) {
+function getProducts ({ tags = undefined, limit = 50, page = 0 } = {}) {
   const skip = page * limit;
   return Products.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
     .exec();

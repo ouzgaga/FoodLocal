@@ -14,7 +14,7 @@ const Salespoints = mongoose.model('salespoints');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalesPoints ({ tags, limit, page }) {
+function getSalesPoints ({ tags, limit, page } = {}) {
   const skip = page * limit;
   return Salespoints.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
     .exec();
