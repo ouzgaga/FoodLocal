@@ -83,9 +83,12 @@ test-quality-code-api:
   image: docker:stable
   services:
     - docker:dind
-  scripts:
+  script:
     - docker run --env SOURCE_CODE="./API" --volume "./API":/code --volume /var/run/docker.sock:/var/run/docker.sock registry.gitlab.com/gitlab-org/security-products/codequality:${VERSION:-latest} /code
-
+  only:
+    - prod
+    - master
+    - API
 
 ## container_scanning
 
