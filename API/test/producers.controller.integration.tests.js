@@ -42,7 +42,7 @@ const james = {
 };
 let ids;
 
-describe('tests producers services', () => {
+describe('tests producers controller', () => {
   beforeEach(() => Producers.remove()
     .then(() => Promise.all([antoine, benoit, james, jerem].map(p => Producers.create(p)))
       .then(res => ids = res.map(d => d._id.toString()))));
@@ -53,7 +53,7 @@ describe('tests producers services', () => {
     it('should fetch all producers', () => request(app)
       .get('/producers')
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(httpStatus.OK)
       .then((response) => {
         response.body.should.be.an('array');
         response.body.length.should.be.equal(4);
@@ -61,20 +61,48 @@ describe('tests producers services', () => {
         response.body.map(d => d._id.toString()).should.have.members(ids);
       }));
 
-    it('should fetch all producers filtered with one tags', () => request(app)
+    it('should fetch all producers with default limit of 50', () => {
+      const tabPromises = [...Array(100).keys()].map((identifier) => {
+        const tonio = { ...antoine };
+        tonio.name += identifier;
+        return Producers.create(tonio);
+      });
+
+      return Producers.remove()
+        .then(() => Promise.all(tabPromises)
+          .then(() => request(app)
+            .get('/producers')
+            .set('Accept', 'application/json')
+            .expect(httpStatus.OK)
+            .then((response) => {
+              response.body.should.be.an('array');
+              response.body.length.should.be.equal(50);
+
+              for (let i = 0; i < 50; i++) {
+                response.body[i].name.should.be.equal(`Antoine${i}`);
+              }
+            })));
+    });
+
+    it.only('should fetch all producers that have their description containing the word "Responsable"', () => request(app)
       .get('/producers')
+      .query({ tags: { description: /.*Responsable.*/i } }) // description contains 'Responsable'
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(httpStatus.OK)
       .then((response) => {
-        response.body.length.should.be.equal(4);
+        response.body.should.be.an('array');
+        response.body.should.be.lengthOf(2);
+        const objects = response.body.map(d => d.toObject().name);
+        objects.should.have.members([james.name, benoit.name]);
       }));
 
-    it('should fetch all producers filtered with multiple tags', () => request(app)
+    it('should fetch all producers that have their name = "Benoît" AND their description containing the word "Responsable"', () => request(app)
       .get('/producers')
+      .query({ tags: { name: 'Benoît', description: /.*Responsable.*/i } }) // name = 'Benoît' AND description contains 'Responsable'
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(httpStatus.OK)
       .then((response) => {
-        response.body.length.should.be.equal(4);
+        response.body.length.should.be.equal(1);
       }));
   });
 });

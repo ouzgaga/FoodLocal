@@ -1,8 +1,19 @@
+const MongooseQueryParser = require('mongoose-query-parser');
+
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 require('../models/producers.model');
 
 const Producers = mongoose.model('producers');
+
+const parser = new MongooseQueryParser.MongooseQueryParser();
+const authorizedTags = {
+  tags: {
+    description: [
+      'name', 'description', 'phoneNumber', 'email', 'isValidated'
+    ]
+  }
+};
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -19,9 +30,25 @@ const Producers = mongoose.model('producers');
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducer ({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
-  const skip = page * limit;
-  return Producers.find(tags).sort({ id: -1 }).skip(+skip).limit(+limit).exec();
+function getProducer ({
+  tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12
+} = {}) {
+  let skip;
+  if (page !== 0) {
+    skip = page * limit;
+  }
+
+  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
+    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
+    tags = JSON.parse(tags); // transforme la string en object
+
+    tags = parser.parse(tags); // permet de filtrer la string au fromat mongoose...
+    return Producers.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
+      .exec();
+  }
+
+  return Producers.find(tags).sort({ id: -1 }).skip(+skip).limit(+limit)
+    .exec();
 }
 
 /**
@@ -52,7 +79,7 @@ function getProducerById ({ id }) {
  * @param {Integer} producerInfos, Les informations du producteur à mettre à jour.
  */
 function updateProducer (id, producerInfos) {
-  return Producers.findByIdAndUpdate(id, producerInfos, { new: true }); // retourne l'objet modifié
+  return Producers.findByIdAndUpdate(id, producerInfos, { new: true }); // retourne l'objet modifié  // FIXME: faut-il ajouter .exec() ??
   // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
 }
 

@@ -14,9 +14,10 @@ const Salespoints = mongoose.model('salespoints');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalesPoints ({tags, limit, page}) {
+function getSalesPoints ({ tags, limit, page }) {
   const skip = page * limit;
-  return Salespoints.find({tags}).sort({id: -1}).skip(+skip).limit(+limit).exec();
+  return Salespoints.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
+    .exec();
 }
 
 /**
@@ -34,7 +35,7 @@ function addSalesPoints (bodyContent) {
  *
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
-function getSalesPointById ({id}) {
+function getSalesPointById ({ id }) {
   return Salespoints.findById(id).exec();
 }
 
@@ -47,7 +48,7 @@ function getSalesPointById ({id}) {
  * @param {Integer} salespointInfos, Les informations du point de vente à mettre à jour.
  */
 function updateSalesPoint (id, salespointInfos) {
-  return Salespoints.findOneAndUpdate(id, salespointInfos, {new: true}); // retourne l'objet modifié
+  return Salespoints.findOneAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
   // return Salespoints.updateOne(salespointInfos); // retourne un OK mais pas l'objet modifié
 }
 
@@ -56,7 +57,7 @@ function updateSalesPoint (id, salespointInfos) {
  *
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
-function deleteSalesPoint ({id}) {
+function deleteSalesPoint ({ id }) {
   return Salespoints.findByIdAndRemove(id);
 }
 

@@ -13,6 +13,8 @@ db.on('error', () => {
   throw new APIError(`unable to connect to database at ${config.db}`, httpStatus.INTERNAL_SERVER_ERROR);
 });
 
+console.log(`connecté à la base de donnée de ${process.env.NODE_ENV} --> ${config.db}`);
+
 const app = express();
 
 module.exports = require('./config/express')(app, config);

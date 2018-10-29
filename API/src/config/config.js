@@ -10,7 +10,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db  : `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DBNAME_DEV}`
+    db  : `mongodb://${process.env.MONGODB_HOST_DEV}:${process.env.MONGODB_PORT_DEV}/${process.env.MONGODB_DBNAME_DEV}`
   },
 
   test: {
@@ -19,7 +19,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db  : `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DBNAME_TEST}`
+    db  : `mongodb://${process.env.MONGODB_HOST_TEST}:${process.env.MONGODB_PORT_TEST}/${process.env.MONGODB_DBNAME_TEST}`
   },
 
   production: {

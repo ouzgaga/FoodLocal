@@ -1,15 +1,14 @@
 swagger: '2.0'
 info:
-  version: '0.0.2'
+  version: '0.0.3'
   title: Local Food
-  description: Une API pour le site internet foodlocal.ch crée avec la spécification Swagger 2.0.
+  description: Une API pour le site internet foodlocal.ch crée avec la spécification OpenAPI 3.0.
   contact:
     email: info@foodlocal.ch
     name: Local Food Team
     url: http://foodlocal.ch/contact
-host: localhost:4040
-#api.foodlocal.ch
-basePath: /
+host: api.foodlocal.ch
+basePath: /v1
 schemes:
 - http
 consumes:
@@ -30,9 +29,7 @@ paths:
       - name: tags
         in: query
         required: false
-        type: array
-        items:
-          type: string
+        type: string
         description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
       - name: limit
         in: query
@@ -495,6 +492,26 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 definitions:
+  ProducerTags:
+    title: producerTags
+    description: Tags autorisés permettant de filtrer la recherche de producteurs dans la base de données.
+    type: object
+    properties:
+      name:
+        description: ''
+        type: string
+      description:
+        description: ''
+        type: string
+      phoneNumber:
+        description: ''
+        type: string
+      email:
+        description: ''
+        type: string
+      isValidated:
+        description: ''
+        type: boolean
   Product:
     title: product
     type: object
@@ -683,8 +700,8 @@ definitions:
         description: ''
         type: string
         format: date-time
-  Error61:
-    title: error61
+  Error63:
+    title: error63
     type: object
     properties:
       code:

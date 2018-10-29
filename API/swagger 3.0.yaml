@@ -1,6 +1,6 @@
 openapi: "3.0.1"
 info:
-  version: "0.0.2"
+  version: "0.0.3"
   title: Local Food
   description: Une API pour le site internet foodlocal.ch crée avec la spécification OpenAPI 3.0.
   termsOfService: http://swagger.io/terms/
@@ -24,35 +24,33 @@ paths:
       description: Retourne "limit" produits de la base de données, fitlrés selon les tags "tags" reçus à partir de la page "page". Sans paramètres, retourne tous les produits de la base de données.
       operationId: getProducts
       parameters:
-        - name: tags
-          in: query
-          description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
-          required: false
-          allowEmptyValue: false
-          style: form
-          schema:
-            type: array
-            items:
-              type: string
-        - name: limit
-          in: query
-          description: Nombre maximum de produits à retourner.
-          required: false
-          allowEmptyValue: false
-          style: form
-          schema:
-            type: integer
-            format: int32
-        - name: page
-          in: query
-          description: Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
-          required: false
-          allowEmptyValue: false
-          deprecated: false
-          style: form
-          schema:
-            type: integer
-            format: int32
+      - name: tags
+        in: query
+        description: Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
+        required: false
+        allowEmptyValue: false
+        style: form
+        schema:
+          $ref: '#/components/schemas/producerTags'
+      - name: limit
+        in: query
+        description: Nombre maximum de produits à retourner.
+        required: false
+        allowEmptyValue: false
+        style: form
+        schema:
+          type: integer
+          format: int32
+      - name: page
+        in: query
+        description: Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
+        required: false
+        allowEmptyValue: false
+        deprecated: false
+        style: form
+        schema:
+          type: integer
+          format: int32
       responses:
         '200':
           description: Réponses contenant "limit" produits de la base de données fitlrés selon les tags "tags" reçus à partir de la page "page".
@@ -533,7 +531,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
- 
+
 components:
   schemas:
     product:
@@ -567,7 +565,7 @@ components:
           items:
             type: integer
             format: int32
-          
+
     producer:
       type: object
       properties:
@@ -590,7 +588,22 @@ components:
         password:
           type: string
           format: password
-    
+
+    producerTags:
+      type: object
+      description: Tags autorisés permettant de filtrer la recherche de producteurs dans la base de données.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        isValidated:
+          type: boolean
+
     salesPoint:
       type: object
       description: Lieu où les produits du producteurs sont vendus.
@@ -614,7 +627,7 @@ components:
           items:
             type: integer
             format: int32
-            
+
     schedule:
       type: object
       description: Horaires complets du point de vente.
@@ -629,7 +642,7 @@ components:
           maxItems: 7
           items:
             $ref: '#/components/schemas/dailySchedule'
-            
+
     dailySchedule:
       type: object
       description: Horaires effectués pour ce 'weekday'.
@@ -651,7 +664,7 @@ components:
         closingHourPM:
           type: string
           format: date-time
-          
+
     address:
       type: object
       description: Adresse d'un point de vente.
@@ -673,7 +686,7 @@ components:
         latitude:
           type: number
           format: double
-          
+
     error:
       required:
       - code
