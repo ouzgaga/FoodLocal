@@ -14,9 +14,10 @@ const Products = mongoose.model('products');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
-function getProducts ({tags = undefined, limit = 50, page = 0}) {
+function getProducts ({ tags = undefined, limit = 50, page = 0 } = {}) {
   const skip = page * limit;
-  return Products.find({tags}).sort({id: -1}).skip(+skip).limit(+limit).exec();
+  return Products.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
+    .exec();
 }
 
 /**
@@ -34,7 +35,7 @@ function addProduct (bodyContent) {
  *
  * @param {Integer} id, L'id du produit à récupérer.
  */
-function getProductById ({id}) {
+function getProductById ({ id }) {
   return Products.findById(id).exec();
 }
 
@@ -47,7 +48,7 @@ function getProductById ({id}) {
  * @param {Integer} productInfos, Les informations du produit à mettre à jour.
  */
 function updateProduct (id, productInfos) {
-  return Products.findOneAndUpdate(id, productInfos, {new: true}); // retourne l'objet modifié
+  return Products.findOneAndUpdate(id, productInfos, { new: true }); // retourne l'objet modifié
   // return Products.updateOne(productInfos); // retourne un OK mais pas l'objet modifié
 }
 
@@ -56,7 +57,7 @@ function updateProduct (id, productInfos) {
  *
  * @param {Integer} id, L'id du produit à supprimer.
  */
-function deleteProduct ({id}) {
+function deleteProduct ({ id }) {
   return Products.findByIdAndRemove(id);
 }
 

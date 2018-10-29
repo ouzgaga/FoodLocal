@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: ingress
+ annotations:
+  kubernetes.io/ingress.global-static-ip-name: "130.211.30.25"
+spec:
+  rules:
+  - host: foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: frontend-service
+            servicePort: 80
+  - host: api.foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: api-service
+            servicePort: 4040

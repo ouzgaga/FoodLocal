@@ -5,9 +5,9 @@
 	"repository": "git@gitlab.com:Nooka10/local-food.git",
 	"main": "src/app.js",
 	"scripts": {
-		"start": "node ./src/app.js",
+		"start": "node ./src/server.js",
 		"dev": "nodemon",
-		"test": "NODE_ENV=test mocha --recursive test"
+		"test": "NODE_ENV=test mocha --recursive test --exit"
 	},
 	"dependencies": {
 		"bluebird": "^3.5.2",
@@ -19,6 +19,7 @@
 		"http-status": "^1.2.0",
 		"method-override": "^2.3.0",
 		"mongoose": "^4.1.2",
+		"mongoose-query-parser": "^1.1.4",
 		"morgan": "^1.6.1"
 	},
 	"devDependencies": {

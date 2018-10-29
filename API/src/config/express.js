@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const compress = require('compression');
 const methodOverride = require('method-override');
 const httpStatus = require('http-status');
-const APIError = require('../app/helpers/APIError');
 
 const productsController = require('../app/controllers/products.controller');
 const producersController = require('../app/controllers/producers.controller');
@@ -32,11 +31,11 @@ module.exports = (app, config) => {
   app.use('/salesPoints', salesPointsController);
 
   app.use('/', (req, res, next) => {
-    res.status(httpStatus.OK).send('Hey mon ami! T\'aime ça manger des patates?!');
+    res.status(httpStatus.OK).send('Hey mon ami! T\'aimes ça manger des patates?!');
   });
 
   app.use((req, res, next) => {
-    const err = new APIError('Not Found', httpStatus.NOT_FOUND);
+    const err = new Error('Not Found');
     err.status = httpStatus.NOT_FOUND;
     next(err);
   });
@@ -56,7 +55,7 @@ module.exports = (app, config) => {
     res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR);
     res.send({
       message: err.message,
-      error  : {},
+      error  : err,
       title  : 'error'
     });
   });
