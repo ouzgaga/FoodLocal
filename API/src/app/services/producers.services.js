@@ -30,9 +30,7 @@ const authorizedTags = {
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducer ({
-  tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12
-} = {}) {
+function getProducers ({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
@@ -42,7 +40,7 @@ function getProducer ({
     // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
     tags = JSON.parse(tags); // transforme la string en object
 
-    tags = parser.parse(tags); // permet de filtrer la string au fromat mongoose...
+    tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
     return Producers.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
       .exec();
   }
@@ -93,7 +91,7 @@ function deleteProducer ({ id }) {
 }
 
 module.exports = {
-  getProducer,
+  getProducer: getProducers,
   addProducer,
   getProducerById,
   updateProducer,

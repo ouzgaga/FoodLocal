@@ -35,7 +35,10 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Date,
       required: false
     },
-    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }],
+    producers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }],
+      required: false // FIXME: faire en sorte d'ajouter automatiquement un tableau vide par défaut!
+    },
   }
 );
 

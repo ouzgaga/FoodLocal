@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => salespointsServices.getSalesPoints(req.query
  *
  * @param {Integer} req.body, Les informations du point de vente à ajouter.
  */
-router.post('/', (req, res, next) => salespointsServices.addSalesPoints(req.body)
+router.post('/', (req, res, next) => salespointsServices.addSalesPoint(req.body)
   .then(result => res.status(httpStatus.OK).send(result))
   .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
     .send(

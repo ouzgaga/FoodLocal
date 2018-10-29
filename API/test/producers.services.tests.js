@@ -214,10 +214,7 @@ describe('tests producers services', () => {
         return producersServices.getProducer()
           .then((res) => {
             res.length.should.be.equal(3);
-            res.map(d => d.toObject()._id)
-              .should
-              .not
-              .contain(producer.toObject()._id);
+            res.map(d => d.toObject()._id).should.not.contain(producer.toObject()._id);
           });
       }));
   });

@@ -1,7 +1,11 @@
+const MongooseQueryParser = require('mongoose-query-parser');
+
 const mongoose = require('mongoose');
 require('../models/products.model');
 
 const Products = mongoose.model('products');
+
+const parser = new MongooseQueryParser.MongooseQueryParser();
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -14,8 +18,20 @@ const Products = mongoose.model('products');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
-function getProducts ({ tags = undefined, limit = 50, page = 0 }) {
-  const skip = page * limit;
+function getProducts ({ tags = undefined, limit = 50, page = 0 } = {}) {
+  let skip;
+  if (page !== 0) {
+    skip = page * limit;
+  }
+
+  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
+    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
+    tags = JSON.parse(tags); // transforme la string en object
+
+    tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
+    return Products.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
+      .exec();
+  }
   return Products.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
     .exec();
 }
@@ -62,8 +78,8 @@ function deleteProduct ({ id }) {
 }
 
 module.exports = {
-  getProducts,
-  addProduct,
+  getProducts: getProducts,
+  addProduct : addProduct,
   getProductById,
   updateProduct,
   deleteProduct
