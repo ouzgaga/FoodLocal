@@ -42,8 +42,8 @@ build-frontend:
 
 test-api:
   stage: test
-  image: node: 9-alpine
-  service:
+  image: node:9-alpine
+  services:
     - mongo:latest
   script:
     - cd ./API
@@ -54,7 +54,7 @@ test-api:
     - prod
     - master
     - API
-    
+
 #test-api:
 #  stage: test
 #  image: docker:stable
