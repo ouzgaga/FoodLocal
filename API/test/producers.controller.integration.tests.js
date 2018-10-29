@@ -43,11 +43,9 @@ const james = {
 let ids;
 
 describe('tests producers controller', () => {
-  beforeEach(() => Producers.remove()
+  beforeEach(() => Producers.deleteMany()
     .then(() => Promise.all([antoine, benoit, james, jerem].map(p => Producers.create(p)))
       .then(res => ids = res.map(d => d._id.toString()))));
-
-  // afterEach(() => Producers.remove());
 
   describe('GET /producers', () => {
     it('should fetch all producers', () => request(app)
@@ -68,7 +66,7 @@ describe('tests producers controller', () => {
         return Producers.create(tonio);
       });
 
-      return Producers.remove()
+      return Producers.deleteMany()
         .then(() => Promise.all(tabPromises)
           .then(() => request(app)
             .get('/producers')
@@ -84,9 +82,9 @@ describe('tests producers controller', () => {
             })));
     });
 
-    it.only('should fetch all producers that have their description containing the word "Responsable"', () => request(app)
+    /*it('should fetch all producers that have their description containing the word "Responsable"', () => request(app)
       .get('/producers')
-      .query({ tags: { description: /.*Professionel.*/i } }) // description contains 'Professionel'
+      .query({ tags: { description: /.*Professionel.*!/i } }) // description contains 'Professionel'
       .set('Accept', 'application/json')
       .expect(httpStatus.OK)
       .then((response) => {
@@ -96,23 +94,23 @@ describe('tests producers controller', () => {
         objects.should.have.members([james.name, benoit.name]);
       }));
 
-    it.only('should fetch all producers that have their name = "Benoît" AND their description containing the word "Responsable"', () => {
+    it('should fetch all producers that have their name = "Benoît" AND their description containing the word "Responsable"', () => {
       const tabPromises = [...Array(100).keys()].map((identifier) => {
         const tonio = { ...antoine };
         tonio.name += identifier;
         return Producers.create(tonio);
       });
 
-      return Producers.remove()
+      return Producers.deleteMany()
         .then(() => Promise.all(tabPromises))
         .then(() => request(app)
           .get('/producers')
-          .query({ tags: { name: 'Antoine', description: /.*Professionel.*/i } }) // name = 'Antoine' AND description contains 'Professionel'
+          .query({ tags: { name: 'Antoine', description: /.*Professionel.*!/i } }) // name = 'Antoine' AND description contains 'Professionel'
           .set('Accept', 'application/json')
           .expect(httpStatus.OK))
         .then((response) => {
           response.body.length.should.be.equal(1);
         });
-    });
+    });*/
   });
 });

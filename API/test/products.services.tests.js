@@ -61,8 +61,8 @@ const carotte = {
 let ids;
 
 describe('tests products services', () => {
-  beforeEach(() => Products.remove()
-    .then(() => Producers.remove())
+  beforeEach(() => Products.deleteMany()
+    .then(() => Producers.deleteMany())
     .then(() => Promise.all([producer1, producer2].map(p => Producers.create(p)))
       .then((producers) => {
         const prod1 = producers[0];
@@ -91,7 +91,7 @@ describe('tests products services', () => {
         return Products.create(pommeArray);
       });
 
-      return Products.remove().then(() => Promise.all(tabPromises)
+      return Products.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => productsServices.getProducts()
           .then((response) => {
             response.should.be.an('array');
@@ -147,7 +147,7 @@ describe('tests products services', () => {
       });
 
       let allProductsInDB;
-      return Products.remove().then(() => Promise.all(tabPromises)
+      return Products.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => productsServices.getProducts({ limit: 110 })
           .then((allProducts) => {
             allProductsInDB = allProducts;

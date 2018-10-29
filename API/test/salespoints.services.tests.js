@@ -125,8 +125,8 @@ const marche = {
 let ids;
 
 describe('tests salespoints services', () => {
-  beforeEach(() => Salespoints.remove()
-    .then(() => Producers.remove())
+  beforeEach(() => Salespoints.deleteMany()
+    .then(() => Producers.deleteMany())
     .then(() => Promise.all([producer1, producer2].map(p => Producers.create(p)))
       .then((producers) => {
         const prod1 = producers[0];
@@ -154,7 +154,7 @@ describe('tests salespoints services', () => {
         return Salespoints.create(fermeArray);
       });
 
-      return Salespoints.remove().then(() => Promise.all(tabPromises)
+      return Salespoints.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => salespointsServices.getSalesPoints()
           .then((response) => {
             response.should.be.an('array');
@@ -212,7 +212,7 @@ describe('tests salespoints services', () => {
       });
 
       let allSalespointsInDB;
-      return Salespoints.remove().then(() => Promise.all(tabPromises)
+      return Salespoints.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => salespointsServices.getSalesPoints({ limit: 110 })
           .then((allSalespoints) => {
             allSalespointsInDB = allSalespoints;
