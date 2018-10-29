@@ -96,6 +96,9 @@ code_quality-api:
   artifacts:
     reports:
       codequality: [gl-code-quality-report.json]
+  only:
+    - prod
+    - master
 
 ## container_scanning
 
