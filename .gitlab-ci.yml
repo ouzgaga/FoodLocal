@@ -19,7 +19,7 @@ build-api:
 
   script:
     - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker build --pull -f DockerfileProd -t $CONTAINER_TEST_IMAGE_API ./API/
+    - docker build --pull -t $CONTAINER_TEST_IMAGE_API ./API/
     - docker push $CONTAINER_TEST_IMAGE_API
   only:
     - prod
