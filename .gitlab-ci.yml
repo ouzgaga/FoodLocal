@@ -101,12 +101,13 @@ code_quality-api:
     - master
 
 ## container_scanning
+# https://docs.gitlab.com/ee/ci/examples/container_scanning.html
 
 ## dependency_scanning
+# https://docs.gitlab.com/ee/ci/examples/dependency_scanning.html
 
-## licence manager
-
-## sast
+## DAST
+#https://docs.gitlab.com/ee/ci/examples/dast.html
 
 ###############
 ### RELEASE ###

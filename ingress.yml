@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
  name: ingress
  annotations:
-  kubernetes.io/ingress.global-static-ip-name: "130.211.30.25"
+  kubernetes.io/ingress.global-static-ip-name: "35.186.239.54"
 spec:
   rules:
   - host: foodlocal.ch
@@ -18,3 +18,9 @@ spec:
         - backend:
             serviceName: api-service
             servicePort: 4040
+  - host: db.foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: mongo
+            servicePort: 27017

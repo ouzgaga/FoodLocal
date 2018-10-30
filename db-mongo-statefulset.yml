@@ -20,6 +20,8 @@ spec:
            - "--bind_ip_all"
            - "--smallfiles"
            - "--noprealloc"
+           - "--port"
+           - "27017"
          ports:
            - containerPort: 27017
          volumeMounts:
