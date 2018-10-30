@@ -40,11 +40,9 @@ const james = {
 let ids;
 
 describe('tests producers services', () => {
-  beforeEach(() => Producers.remove()
+  beforeEach(() => Producers.deleteMany()
     .then(() => Promise.all([antoine, benoit, james, jerem].map(p => Producers.create(p)))
       .then(res => ids = res.map(d => d._id.toString()))));
-
-  // afterEach(() => Producers.remove());
 
   describe('getProducer', () => {
     it('should fetch all producers', () => producersServices.getProducer()
@@ -62,7 +60,7 @@ describe('tests producers services', () => {
         return Producers.create(tonio);
       });
 
-      return Producers.remove().then(() => Promise.all(tabPromises)
+      return Producers.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => producersServices.getProducer()
           .then((response) => {
             response.should.be.an('array');
@@ -118,7 +116,7 @@ describe('tests producers services', () => {
       });
 
       let allProducersInDB;
-      return Producers.remove().then(() => Promise.all(tabPromises)
+      return Producers.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => producersServices.getProducer({ limit: 110 })
           .then((allProducers) => {
             allProducersInDB = allProducers;
@@ -214,10 +212,7 @@ describe('tests producers services', () => {
         return producersServices.getProducer()
           .then((res) => {
             res.length.should.be.equal(3);
-            res.map(d => d.toObject()._id)
-              .should
-              .not
-              .contain(producer.toObject()._id);
+            res.map(d => d.toObject()._id).should.not.contain(producer.toObject()._id);
           });
       }));
   });

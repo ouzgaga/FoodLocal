@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const config = require('../src/config/config');
 mongoose.Promise = require('bluebird');
 
-mongoose.connect(config.db, { useMongoClient: true });
+mongoose.connect(config.db, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, `unable to connect to database at ${config.db}`));
 db.once('open', () => {

@@ -1,8 +1,8 @@
 stages:
-  - build
-  - test
-  - release
-  - deploy
+- build
+- test
+- release
+- deploy
 
 variables:
   # We build and run test directly after the build of the test image
@@ -11,70 +11,57 @@ variables:
   CONTAINER_TEST_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:latest
 
-#############
-### BUILD ###
-#############
 build-api:
   stage: build
   image: docker:stable
   services:
-    - docker:dind
+  - docker:dind
 
   script:
-    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker build --pull -t $CONTAINER_TEST_IMAGE_API ./API/
-    - docker push $CONTAINER_TEST_IMAGE_API
+  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+  - docker build --pull -t $CONTAINER_TEST_IMAGE_API ./API/
+  - docker push $CONTAINER_TEST_IMAGE_API
   only:
-    - prod
-    - master
-    - API
+  - prod
+  - master
+  - API
 
 build-frontend:
   stage: build
   image: docker:stable
   services:
-    - docker:dind
+  - docker:dind
   script:
-    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
-    - docker push $CONTAINER_TEST_IMAGE_FRONTEND
+  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+  - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
+  - docker push $CONTAINER_TEST_IMAGE_FRONTEND
   only:
-    - 10-site-web-creation-des-pages-principales-carte
-    - prod
-    - master
+  - 10-site-web-creation-des-pages-principales-carte
+  - prod
+  - master
 
-############
-### TEST ###
-############
 test-api:
   stage: test
   image: node:9-alpine
   services:
-    - mongo:latest
+  - mongo:latest
   script:
-    - cd ./API
-    - npm i npm@latest -g
-    - npm i
-    - npm test
+  - cd ./API
+  - npm i npm@latest -g
+  - npm i
+  - npm test
   only:
-    - prod
-    - master
-    - 10-site-web-creation-des-pages-principales-carte
+  - prod
+  - master
+  - API
 
-#test-frontend:
+#test-api:
 #  stage: test
-#  image: node:9-alpine
-#    services:
-#      - mongo:latest
-#    script:
-#      - cd ./FrontEnd
-#      - npm i npm@latest -g
-#      - npm i
-#      - npm test
-#    only:
-#      - prod
-#      - master
-#      - API
+#  image: docker:stable
+#  services:
+#    - docker:dind
+#  script:
+#    - docker-compose run -e NODE_ENV=development -e MONGODB_HOST=${MONGODB_HOST} -e MONGODB_PORT=${MONGODB_PORT} -e MONGODB_DBNAME_DEV=dev -e MONGODB_DBNAME_TEST=test -e  ./API
 
 
 ## Test quality
@@ -116,14 +103,14 @@ release-image-api:
   stage: release
   image: docker:stable
   services:
-    - docker:dind
+  - docker:dind
   script:
-    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker pull $CONTAINER_TEST_IMAGE_API
-    - docker tag $CONTAINER_TEST_IMAGE_API $CONTAINER_RELEASE_IMAGE_API
-    - docker push $CONTAINER_RELEASE_IMAGE_API
+  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+  - docker pull $CONTAINER_TEST_IMAGE_API
+  - docker tag $CONTAINER_TEST_IMAGE_API $CONTAINER_RELEASE_IMAGE_API
+  - docker push $CONTAINER_RELEASE_IMAGE_API
   only:
-    - prod
+  - prod
 
 
 # Need probably 2 docker file (test and prod)
@@ -131,38 +118,35 @@ release-image-frontend:
   stage: release
   image: docker:stable
   services:
-    - docker:dind
+  - docker:dind
   script:
-    - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
-    - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
-    - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
-    - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
+  - docker login -u _json_key -p "${GC_KEY}" https://gcr.io
+  - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
+  - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
+  - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
   only:
-    - prod
+  - prod
 
-##############
-### DEPLOY ###
-##############
 deploy-api:
   stage: deploy
   image: google/cloud-sdk:alpine
   script:
-    - gcloud components install kubectl
-    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
-    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
-    - kubectl apply -f api-service.yml
-    - kubectl apply -f api-deployment.yml
+  - gcloud components install kubectl
+  - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+  - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+  - kubectl apply -f api-service.yml
+  - kubectl apply -f api-deployment.yml
   only:
-    - prod
+  - prod
 
 deploy-frontend:
   stage: deploy
   image: google/cloud-sdk:alpine
   script:
-    - gcloud components install kubectl
-    - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
-    - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
-    - kubectl apply -f frontend-service.yml
-    - kubectl apply -f frontend-deploy.yml
+  - gcloud components install kubectl
+  - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
+  - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+  - kubectl apply -f frontend-service.yml
+  - kubectl apply -f frontend-deploy.yml
   only:
-    - prod
+  - prod
