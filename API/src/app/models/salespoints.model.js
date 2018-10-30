@@ -1,32 +1,68 @@
 const mongoose = require('mongoose');
 
 /**
- * DailySchedule Schema
+ * Address Schema
  */
-const dailySchedule = new mongoose.Schema(
+const addressSchema = new mongoose.Schema(
   {
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
+    number    : {
+      type    : mongoose.Schema.Types.String,
+      required: false
+    },
+    street    : {
+      type    : mongoose.Schema.Types.String,
       required: true
     },
-    weekday: {
-      type: mongoose.Schema.Types.String,
+    city      : {
+      type    : mongoose.Schema.Types.String,
+      required: true
+    },
+    postalCode: {
+      type    : mongoose.Schema.Types.Number,
+      required: true
+    },
+    country   : {
+      type    : mongoose.Schema.Types.String,
+      required: true
+    },
+    longitude : {
+      type    : mongoose.Schema.Types.Number,
+      required: true
+    },
+    latitude  : {
+      type    : mongoose.Schema.Types.Number,
+      required: true
+    }
+  }
+);
+
+/**
+ * DailySchedule Schema
+ */
+const dailyScheduleSchema = new mongoose.Schema(
+  {
+    id           : {
+      type    : mongoose.Schema.Types.ObjectId,
+      required: false
+    },
+    weekday      : {
+      type    : mongoose.Schema.Types.String,
       required: true
     },
     openingHourAM: {
-      type: mongoose.Schema.Types.Date,
+      type    : mongoose.Schema.Types.Date,
       required: true
     },
     openingHourPM: {
-      type: mongoose.Schema.Types.String,
-      required: true
+      type    : mongoose.Schema.Types.Date,
+      required: false
     },
     closingHourAM: {
-      type: mongoose.Schema.Types.Date,
-      required: true
+      type    : mongoose.Schema.Types.Date,
+      required: false
     },
     closingHourPM: {
-      type: mongoose.Schema.Types.String,
+      type    : mongoose.Schema.Types.Date,
       required: true
     }
   }
@@ -37,62 +73,36 @@ const dailySchedule = new mongoose.Schema(
  */
 const salesPointSchema = new mongoose.Schema(
   {
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
+    id         : {
+      type: mongoose.Schema.Types.ObjectId
     },
-    name: {
-      type: mongoose.Schema.Types.String,
+    name       : {
+      type    : mongoose.Schema.Types.String,
       required: true
     },
     description: {
-      type: mongoose.Schema.Types.String,
+      type    : mongoose.Schema.Types.String,
       required: true
     },
-    type: {
-      type: mongoose.Schema.Types.String,
+    type       : {
+      type    : mongoose.Schema.Types.String,
       required: true
     },
-    address: {
-      number: {
-        type: mongoose.Schema.Types.String,
-        required: true
-      },
-      street: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      },
-      city: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      },
-      postalCode: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      },
-      country: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      },
-      longitude: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      },
-      latitude: {
-        type: mongoose.Schema.Types.String,
-        required: false
-      }
+    address    : {
+      type    : addressSchema,
+      required: false
     },
-    schedule: {
-      type: [dailySchedule],
+    schedule   : {
+      type    : [dailyScheduleSchema],
       minItems: 1,
       maxItems: 7,
       required: false
     },
-    producers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }]
+    producers  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }]
   }
 );
 
 /**
- * @typedef Producer
+ * @typedef salespoints
  */
 mongoose.model('salespoints', salesPointSchema);

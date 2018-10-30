@@ -4,7 +4,7 @@ const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
 
-mongoose.connect(config.db, { useMongoClient: true });
+mongoose.connect(config.db, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on('error', () => {
@@ -14,5 +14,8 @@ db.on('error', () => {
 console.log(`connecté à la base de donnée de ${process.env.NODE_ENV} --> ${config.db}`);
 
 const app = express();
+
+// close connection
+// mongoose.connection.close(); // FIXME: faut-il fermer la connexion...?
 
 module.exports = require('./config/express')(app, config);

@@ -1,7 +1,9 @@
+const MongooseQueryParser = require('mongoose-query-parser');
 const mongoose = require('mongoose');
 require('../models/salespoints.model');
 
 const Salespoints = mongoose.model('salespoints');
+const parser = new MongooseQueryParser.MongooseQueryParser();
 
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
@@ -14,8 +16,21 @@ const Salespoints = mongoose.model('salespoints');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalesPoints ({ tags, limit, page } = {}) {
-  const skip = page * limit;
+function getSalesPoints ({ tags = undefined, limit = 50, page = 0 } = {}) {
+  let skip;
+  if (page !== 0) {
+    skip = page * limit;
+  }
+
+  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
+    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
+    tags = JSON.parse(tags); // transforme la string en object
+
+    tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
+    return Salespoints.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
+      .exec();
+  }
+
   return Salespoints.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
     .exec();
 }
@@ -63,7 +78,7 @@ function deleteSalesPoint ({ id }) {
 
 module.exports = {
   getSalesPoints,
-  addSalesPoints,
+  addSalesPoint: addSalesPoints,
   getSalesPointById,
   updateSalesPoint,
   deleteSalesPoint

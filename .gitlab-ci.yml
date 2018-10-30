@@ -11,6 +11,9 @@ variables:
   CONTAINER_TEST_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:latest
 
+#############
+### BUILD ###
+#############
 build-api:
   stage: build
   image: docker:stable
@@ -40,6 +43,9 @@ build-frontend:
     - prod
     - master
 
+############
+### TEST ###
+############
 test-api:
   stage: test
   image: node:9-alpine
@@ -53,16 +59,58 @@ test-api:
   only:
     - prod
     - master
-    - API
+    - 10-site-web-creation-des-pages-principales-carte
 
-#test-api:
+#test-frontend:
 #  stage: test
-#  image: docker:stable
-#  services:
-#    - docker:dind
-#  script:
-#    - docker-compose run -e NODE_ENV=development -e MONGODB_HOST=${MONGODB_HOST} -e MONGODB_PORT=${MONGODB_PORT} -e MONGODB_DBNAME_DEV=dev -e MONGODB_DBNAME_TEST=test -e  ./API
+#  image: node:9-alpine
+#    services:
+#      - mongo:latest
+#    script:
+#      - cd ./FrontEnd
+#      - npm i npm@latest -g
+#      - npm i
+#      - npm test
+#    only:
+#      - prod
+#      - master
+#      - API
 
+
+## Test quality
+code_quality-api:
+  image: docker:stable
+  variables:
+    DOCKER_DRIVER: overlay2
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - cd ./API
+    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+    - docker run
+        --env SOURCE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
+  artifacts:
+    reports:
+      codequality: [gl-code-quality-report.json]
+  only:
+    - prod
+    - master
+
+## container_scanning
+
+## dependency_scanning
+
+## licence manager
+
+## sast
+
+###############
+### RELEASE ###
+###############
 release-image-api:
   stage: release
   image: docker:stable
@@ -91,6 +139,9 @@ release-image-frontend:
   only:
     - prod
 
+##############
+### DEPLOY ###
+##############
 deploy-api:
   stage: deploy
   image: google/cloud-sdk:alpine
