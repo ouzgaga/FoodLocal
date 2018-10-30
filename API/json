@@ -1,0 +1,54 @@
+{
+	"name": "Domaine de par là-bas",
+	"description": "Viendez acheter du bon vin pas cher.",
+	"type": "Vignoble",
+	"address": {
+		"number": "2",
+		"street": "Chemin de Bahyse-Dessus",
+		"city": "Bourg-en-Lavaux",
+		"postalCode": 1096,
+		"country": "Suisse",
+		"longitude": 46.5006296,
+		"latitude": 6.7332682
+	},
+	"schedule": {
+		"dailySchedule": [
+			{
+				"weekday": "lundi",
+				"openingHourAM": "2018-01-01T08:00:00.000Z",
+				"openingHourPM": "2018-01-01T13:00:00.000Z",
+				"closingHourAM": "2018-01-01T11:30:00.000Z",
+				"closingHourPM": "2018-01-01T18:00:00.000Z"
+			},
+			{
+				"weekday": "mardi",
+				"openingHourAM": "2018-01-01T08:00:00.000Z",
+				"openingHourPM": "2018-01-01T13:00:00.000Z",
+				"closingHourAM": "2018-01-01T11:30:00.000Z",
+				"closingHourPM": "2018-01-01T18:00:00.000Z"
+			},
+			{
+				"weekday": "mercredi",
+				"openingHourAM": "2018-01-01T08:00:00.000Z",
+				"openingHourPM": "2018-01-01T13:00:00.000Z",
+				"closingHourAM": "2018-01-01T11:30:00.000Z",
+				"closingHourPM": "2018-01-01T18:00:00.000Z"
+			},
+			{
+				"weekday": "jeudi",
+				"openingHourAM": "2018-01-01T08:00:00.000Z",
+				"openingHourPM": "2018-01-01T13:00:00.000Z",
+				"closingHourAM": "2018-01-01T11:30:00.000Z",
+				"closingHourPM": "2018-01-01T18:00:00.000Z"
+			},
+			{
+				"weekday": "vendredi",
+				"openingHourAM": "2018-01-01T08:00:00.000Z",
+				"openingHourPM": "2018-01-01T13:00:00.000Z",
+				"closingHourAM": "2018-01-01T11:30:00.000Z",
+				"closingHourPM": "2018-01-01T18:00:00.000Z"
+			}
+		]
+	},
+	"producers": []
+}

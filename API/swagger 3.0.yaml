@@ -424,7 +424,7 @@ paths:
       tags: [producer, salespoints]
       summary: Ajoute un nouveau point de vente dans la base de données.
       description: Ajoute un nouveau point de vente dans la base de données. Doublons autorisés!
-      operationId: addSalesPoints
+      operationId: addSalesPoint
       requestBody:
         description: Les données du point de vente à ajouter à la base de données.
         required: true
