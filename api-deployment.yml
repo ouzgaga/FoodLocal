@@ -17,7 +17,6 @@ spec:
       containers:
         - name: api-deployment
           image: gcr.io/foodlocal-218406/api:latest
-          ImagePullPollicy: Always
           ports:
             - containerPort: 4040
               name: api-deployment
