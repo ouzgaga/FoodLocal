@@ -63,6 +63,42 @@ test-api:
 #  script:
 #    - docker-compose run -e NODE_ENV=development -e MONGODB_HOST=${MONGODB_HOST} -e MONGODB_PORT=${MONGODB_PORT} -e MONGODB_DBNAME_DEV=dev -e MONGODB_DBNAME_TEST=test -e  ./API
 
+
+## Test quality
+code_quality-api:
+  image: docker:stable
+  variables:
+    DOCKER_DRIVER: overlay2
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - cd ./API
+    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+    - docker run
+        --env SOURCE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
+  artifacts:
+    reports:
+      codequality: [gl-code-quality-report.json]
+  only:
+    - prod
+    - master
+
+## container_scanning
+# https://docs.gitlab.com/ee/ci/examples/container_scanning.html
+
+## dependency_scanning
+# https://docs.gitlab.com/ee/ci/examples/dependency_scanning.html
+
+## DAST
+#https://docs.gitlab.com/ee/ci/examples/dast.html
+
+###############
+### RELEASE ###
+###############
 release-image-api:
   stage: release
   image: docker:stable
