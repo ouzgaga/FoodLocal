@@ -11,6 +11,9 @@ variables:
   CONTAINER_TEST_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE_FRONTEND: gcr.io/${GC_PROJECT_ID}/frontend:latest
 
+###########
+###BUILD###
+###########
 build-api:
   stage: build
   image: docker:stable
@@ -40,6 +43,9 @@ build-frontend:
   - prod
   - master
 
+##########
+###TEST###
+##########
 test-api:
   stage: test
   image: node:9-alpine
@@ -71,21 +77,21 @@ code_quality-api:
     DOCKER_DRIVER: overlay2
   allow_failure: true
   services:
-    - docker:stable-dind
+  - docker:stable-dind
   script:
-    - cd ./API
-    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
-        --env SOURCE_CODE="$PWD"
-        --volume "$PWD":/code
-        --volume /var/run/docker.sock:/var/run/docker.sock
-        "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
+  - cd ./API
+  - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+  - docker run
+      --env SOURCE_CODE="$PWD"
+      --volume "$PWD":/code
+      --volume /var/run/docker.sock:/var/run/docker.sock
+      "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
   artifacts:
     reports:
       codequality: [gl-code-quality-report.json]
   only:
-    - prod
-    - master
+  - prod
+  - master
 
 ## container_scanning
 # https://docs.gitlab.com/ee/ci/examples/container_scanning.html
@@ -127,6 +133,9 @@ release-image-frontend:
   only:
   - prod
 
+##############
+### DEPLOY ###
+##############
 deploy-api:
   stage: deploy
   image: google/cloud-sdk:alpine
@@ -134,6 +143,7 @@ deploy-api:
   - gcloud components install kubectl
   - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
   - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+  - kubectl delete service/api-service deployment/api-deployment
   - kubectl apply -f api-service.yml
   - kubectl apply -f api-deployment.yml
   only:
