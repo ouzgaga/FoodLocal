@@ -155,6 +155,7 @@ deploy-frontend:
   - gcloud components install kubectl
   - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
   - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
+  - kubectl delete service/frontend-service deployment/frontend-deploy --ignore-not-found=true
   - kubectl apply -f frontend-service.yml
   - kubectl apply -f frontend-deploy.yml
   only:
