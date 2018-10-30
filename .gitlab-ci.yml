@@ -118,7 +118,6 @@ release-image-api:
   only:
   - prod
 
-
 # Need probably 2 docker file (test and prod)
 release-image-frontend:
   stage: release
