@@ -6,6 +6,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: 4040
+      protocol: TCP
       targetPort: 4040
   selector:
     app: api-deployment
