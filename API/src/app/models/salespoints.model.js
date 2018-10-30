@@ -41,10 +41,6 @@ const addressSchema = new mongoose.Schema(
  */
 const dailyScheduleSchema = new mongoose.Schema(
   {
-    id           : {
-      type    : mongoose.Schema.Types.ObjectId,
-      required: false
-    },
     weekday      : {
       type    : mongoose.Schema.Types.String,
       required: true
@@ -73,9 +69,6 @@ const dailyScheduleSchema = new mongoose.Schema(
  */
 const salesPointSchema = new mongoose.Schema(
   {
-    id         : {
-      type: mongoose.Schema.Types.ObjectId
-    },
     name       : {
       type    : mongoose.Schema.Types.String,
       required: true
