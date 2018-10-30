@@ -36,6 +36,7 @@ router.get('/', (req, res, next) => producersServices.getProducer(req.query)
  *
  * @param {Integer} req.body, Les informations du producteur à ajouter.
  */
+// TODO: changer la valeur retournée! Retourner le code 201 avec une entête link contenant le lien vers /producers/:idQuiVientD'êtreCréé
 router.post('/', (req, res, next) => producersServices.addProducer(req.body)
   .then(result => res.status(httpStatus.OK).send(result))
   .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR)
