@@ -13,7 +13,6 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import Search from './components/Search';
 import Header from './components/Header';
 import Theme from './components/Theme';
 import ProducerVue from './components/ProducerVue';
@@ -23,7 +22,7 @@ import {
   PageMap,
   PageNewAccount,
   PageError404,
-} from './pages/Pages.js';
+} from './pages/Pages';
 
 
 const drawerWidth = 400;

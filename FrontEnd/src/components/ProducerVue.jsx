@@ -9,9 +9,6 @@ import {
 } from '../pages/Pages.js';
 
 import defaultImg from '../img/tractorIcon.svg';
-import team from '../img/teamAntoine.jpg';
-import logo from '../img/LogoCarrote.png';
-
 
 const styles = Theme => ({
   about: {
