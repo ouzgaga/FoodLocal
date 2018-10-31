@@ -45,7 +45,7 @@ const styles = theme => ({
 });
 
 function getSalespoints() {
-  return fetch('http://api.foodlocal.ch/salespoints')
+  return fetch('http://api.foodlocal.ch/salespoints?limit=10')
     .then(res => res.json())
     .catch(err => console.log(err));
 }

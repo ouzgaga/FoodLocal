@@ -21,9 +21,10 @@ const styles = {
 function ImgMediaCard(props) {
   const { classes } = props;
   const { salepoint } = props;
+  const link = `/producer/${salepoint.producers[0]}`;
   return (
     <Card className={classes.card}>
-      <CardActionArea href={123456} target="_blank">
+      <CardActionArea href={link} target="_blank">
         <CardMedia
           component="img"
           alt="Contemplative Reptile"
