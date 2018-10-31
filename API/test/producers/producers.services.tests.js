@@ -1,7 +1,7 @@
-require('../src/app/models/producers.model');
-require('./chai-config');
+require('../../src/app/models/producers.model');
+require('../chai-config');
 const mongoose = require('mongoose');
-const producersServices = require('../src/app/services/producers.services');
+const producersServices = require('../../src/app/services/producers.services');
 
 const Producers = mongoose.model('producers');
 
@@ -63,6 +63,7 @@ describe('tests producers services', () => {
       return Producers.deleteMany().then(() => Promise.all(tabPromises)
         .then(() => producersServices.getProducer()
           .then((response) => {
+            console.log("ERRRRRR", response);
             response.should.be.an('array');
             response.should.be.lengthOf(50);
 

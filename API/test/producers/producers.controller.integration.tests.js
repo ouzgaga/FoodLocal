@@ -1,10 +1,10 @@
-require('../src/app/models/producers.model');
-require('./chai-config');
+require('../../src/app/models/producers.model');
+require('../chai-config');
 const request = require('supertest');
 const httpStatus = require('http-status');
 
 const mongoose = require('mongoose');
-const app = require('../src/app.js');
+const app = require('../../src/app.js');
 
 const Producers = mongoose.model('producers');
 

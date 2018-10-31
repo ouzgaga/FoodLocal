@@ -41,12 +41,12 @@ function getProducers ({ tags = undefined, limit = 50, page = 0, lat = undefined
         tags = JSON.parse(tags); // transforme la string en object
 
     tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
-    return Producers.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
+    return Producers.find(tags.filter).sort({ _id: 1 }).skip(+skip).limit(+limit)
       .exec();
   }
 
-    return Producers.find(tags).sort({id: -1}).skip(+skip).limit(+limit)
-        .exec();
+  return Producers.find(tags).sort({ _id: 1 }).skip(+skip).limit(+limit)
+    .exec();
 }
 
 /**
