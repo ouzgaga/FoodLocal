@@ -66,7 +66,7 @@ class MyMap extends React.Component {
 
   loadProducer() {
     return (
-      this.state.salespoints.forEach(tile => (     
+      this.state.salespoints.map(tile => (     
         <Marker position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
           <Popup position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
             <ListItemProducer salepoint={tile} />

@@ -84,7 +84,7 @@ class Search extends React.Component {
         />
         <List className={classes.list}>
 
-          {this.state.salespoints.forEach(tile => (
+          {this.state.salespoints.map(tile => (
 
             <ListItem className={classes.listItem} key={tile.id}>
 
