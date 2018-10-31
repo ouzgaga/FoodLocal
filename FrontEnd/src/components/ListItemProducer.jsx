@@ -11,6 +11,7 @@ import defaultImage from '../img/guidouxFruits.png';
 const styles = {
   card: {
     maxWidth: 400,
+    width:'100%',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.

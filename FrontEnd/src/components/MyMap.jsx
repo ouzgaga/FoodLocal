@@ -41,8 +41,8 @@ class MyMap extends React.Component {
         latitude: 46.5333,
         longitude: 6.6667,
       },
+      zoom: 8, // on zoom sur la location de l'utilisateur
       salespoints: [],
-      zoom: 10, // on zoom sur la location de l'utilisateur
       userHasALocation: false, // indique si l'utilisateur a accepté de donner sa position
     };
     getSalespoints().then((res) => {
@@ -52,6 +52,16 @@ class MyMap extends React.Component {
 
 
   componentDidMount() {
+
+    this.setState({
+      location: {
+        // par défaut, position de Lausanne
+        latitude: 46.533,
+        longitude: 6.667,
+      },
+      zoom: 10, // on zoom sur la location de l'utilisateur
+    });
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
         location: {
@@ -94,7 +104,7 @@ class MyMap extends React.Component {
             // si l'utilisateur a accepté de donner sa location, l'affiche sur la carte
             userHasALocation
             && (
-              <CircleMarker key="userPosition" center={[latitude, longitude]} />
+              <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
             )
           }
           {
