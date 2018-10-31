@@ -4,16 +4,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom';
-import withWidth, {isWidthUp} from '@material-ui/core/withWidth';
+import { Link } from 'react-router-dom';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import compose from 'recompose/compose';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
   
  
-import MenuDrawer from './MenuDrawer.js';
-import LoginDialog from './LoginDialog.js';
+import MenuDrawer from './MenuDrawer';
+import LoginDialog from './LoginDialog';
 
 const styles = {
   root: {
@@ -23,7 +23,6 @@ const styles = {
     height: 64,
     top: 0,
     shadow: 'none',
-    
   },
   grow: {
     flexGrow: 1,
@@ -31,11 +30,11 @@ const styles = {
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
-    height: 60, 
+    height: 60,
   },
-  LinkButton:{
+  LinkButton: {
     textDecoration: 'none',
-    color: 'secondary'
+    color: 'secondary',
   },
 };
 
@@ -55,10 +54,7 @@ class MenuAppBar extends React.Component  {
   };
 
   handleCloseLogin = value => {
-    let b = this.state.a +1;
-    this.setState({open: false, a: b});
-
-    console.info('Close' + this.state.a);
+    this.setState({open: false});
   };
 
 
@@ -68,7 +64,7 @@ class MenuAppBar extends React.Component  {
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
+        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"> <Button ><Typography color="inherit" >Home </Typography></Button> </Link>
         <Link to="/about" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >About</Button></Link>
         <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >Map</Button></Link>     
 

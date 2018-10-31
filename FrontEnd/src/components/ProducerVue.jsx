@@ -158,7 +158,7 @@ class ProducerVue extends Component {
       })
       .catch(erreur => {
         console.log("Erreur: " + erreur);
-        this.setState({status: 1000});
+        this.setState({status: 404});
       });
   };
 
