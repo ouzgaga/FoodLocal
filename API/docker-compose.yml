@@ -1,0 +1,17 @@
+# not working yet
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: DockerfileTest
+    container_name: "api"
+    ports:
+      - "4040:4040" # Expose ports [HOST:CONTAINER}
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
