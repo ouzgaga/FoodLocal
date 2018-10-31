@@ -31,7 +31,7 @@ const styles = {
   },
   menuButton: {
     marginLeft: 12,
-    marginRight: 36,
+    marginRight: 12,
   },
   LinkButton:{
     textDecoration: 'none',

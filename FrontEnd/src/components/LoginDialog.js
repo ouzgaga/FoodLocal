@@ -3,18 +3,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 
-import MyLogin from './MyLogin.js';
+import MyLogin from './MyLogin';
 
 
 class LoginDialog extends React.Component {
   handleClose = () => { 
-    
+    this.props.onClose();
   };
 
-    handleListItemClick = value => {
-      this.props.onClose(value);
-      
-    };
+  handleListItemClick = value => {
+    this.props.onClose(value);
+    
+  };
 
   render() {
     const { classes, onClose,  ...other } = this.props;

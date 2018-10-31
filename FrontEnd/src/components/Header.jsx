@@ -10,8 +10,6 @@ import compose from 'recompose/compose';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
-  
- 
 import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
 
@@ -28,9 +26,11 @@ const styles = {
     flexGrow: 1,
   },
   menuButton: {
-    marginLeft: -12,
+    marginLeft: -7,
     marginRight: 20,
+    paddingTop: 4,
     height: 60,
+    outline: 'none',
   },
   LinkButton: {
     textDecoration: 'none',
@@ -43,7 +43,6 @@ class MenuAppBar extends React.Component  {
   state = {
     sConnected: null,
     open: false,
-    a: 1,
   };
 
 
@@ -59,45 +58,44 @@ class MenuAppBar extends React.Component  {
 
 
   render() {
-    const { classes } = this.props;
-    const connected = Boolean(this.state.sConnected);
+    const { classes, width } = this.props;
+    
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"> <Button ><Typography color="inherit" >Home </Typography></Button> </Link>
-        <Link to="/about" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >About</Button></Link>
-        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >Map</Button></Link>     
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link> 
+        <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
+           
 
         {UserContext.Provider.name == null ?
-        <> 
-          <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button >New account</Button></Link>
-          <Button 
-          color="inherit"
-          onClick={this.handleClickLogin}>
-            Login
+        <>
+          <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Noveau compte</Button></Link>
+          <Button
+            color="inherit"
+            onClick={this.handleClickLogin}
+          >
+            Se connecter
           </Button>
         </>
           :
-          <Button 
-          color="inherit"
-          //onClick={this.handleClickLogin}
+
+          <Button
+            color="inherit"
+            //onClick={this.handleClickLogin}
           >
             {UserContext.Provider.name}
           </Button>
         }
-       
-      </div>   
+      </div>
     );
-    
     return (
-      
-      <div >
+      <div>
         <AppBar position="static" className={classes.root}>
           <Toolbar>
+            <Link to="/" readOnly tabIndex="-1"><img src={logo} className={classes.menuButton} alt="logo" readOnly tabIndex="-1" /></Link>
           
-          <img src={logo} className={classes.menuButton} alt="logo" />
-          <div className={classes.grow}></div>
-            {isWidthUp('sm', this.props.width) ? menuLarge : <MenuDrawer/>}
+            <div className={classes.grow} />
+            {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
           </Toolbar>
 
           <LoginDialog
