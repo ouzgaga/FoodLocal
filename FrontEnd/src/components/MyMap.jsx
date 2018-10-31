@@ -66,10 +66,13 @@ class MyMap extends React.Component {
 
   loadProducer() {
     return (
-      this.state.salespoints.map(tile => (
 
-        <Marker key={tile.id} position={[tile.address.longitude, tile.address.latitude]} icon={myIcon}>
-          <Popup key={tile.id} position={[tile.address.longitude, tile.address.latitude]} closeButton={false}>
+      
+      this.state.salespoints.map(tile => (
+        console.log(tile),
+        
+        <Marker position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
+          <Popup position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
             <ListItemProducer salepoint={tile} />
           </Popup>
         </Marker>
