@@ -102,12 +102,13 @@ const styles = Theme => ({
 
   },
   imgRonde: {
-    marginLeft: 'auto',
+    marginLeft: 10,
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
 
     borderRadius: '50%',
+    
   },
   img: {
     margin: 'auto',
