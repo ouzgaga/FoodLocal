@@ -8,7 +8,7 @@ info:
     name: Local Food Team
     url: http://foodlocal.ch/contact
 host: api.foodlocal.ch
-basePath: /v1
+basePath: /
 schemes:
 - http
 consumes:
