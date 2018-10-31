@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
  name: ingress
  annotations:
-  kubernetes.io/ingress.global-static-ip-name: "35.186.239.54"
+  kubernetes.io/ingress.global-static-ip-name: "foodlocal"
 spec:
   rules:
   - host: foodlocal.ch

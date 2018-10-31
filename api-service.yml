@@ -4,6 +4,7 @@ metadata:
   name: api-service
 spec:
   type: LoadBalancer
+  loadBalancerIP: None
   ports:
     - port: 4040
       protocol: TCP

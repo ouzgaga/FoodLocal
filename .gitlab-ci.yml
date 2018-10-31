@@ -93,6 +93,7 @@ code_quality-api:
     - prod
     - master
 
+
 ## container_scanning
 # https://docs.gitlab.com/ee/ci/examples/container_scanning.html
 
