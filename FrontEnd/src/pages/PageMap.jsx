@@ -11,73 +11,6 @@ import './PageMap.css';
 
 const drawerWidth = 400;
 
-const tileData = [
-  {
-
-    id: 1,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.783,
-      lng: 6.7,
-    },
-
-  },
-  {
-
-    id: 2,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.781,
-      lng: 6.53,
-    },
-
-  },
-  {
-
-    id: 3,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.77,
-      lng: 6.58,
-    },
-
-  },
-  {
-
-    id: 4,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.789,
-      lng: 6.69,
-    },
-
-  },
-  {
-    id: 5,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.795,
-      lng: 6.63,
-    },
-  },
-  {
-    id: 6,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.70,
-      lng: 6.47,
-    },
-  },
-  {
-    id: 7,
-    title: 'Guidoux Fruits',
-    position: {
-      lat: 46.74,
-      lng: 6.77,
-    },
-  },
-];
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -108,7 +41,12 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       position: 'relative',
     },
-    
+  },
+  drawerPaper2: {
+    width: 300,
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
+    },
   },
   content: {
     flexGrow: 1,
@@ -150,7 +88,7 @@ class ResponsiveDrawer extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap listProducers={tileData} />
+          <MyMap />
 
         </main>
 
@@ -162,7 +100,7 @@ class ResponsiveDrawer extends React.Component {
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
-                paper: classes.drawerPaper,
+                paper: classes.drawerPaper2,
               }}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.

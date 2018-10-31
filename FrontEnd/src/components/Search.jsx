@@ -13,6 +13,7 @@ const styles = theme => ({
   card: {
     maxWidth: '400px',
     maxHeight: '300px',
+
   },
   avatar: {
     backgroundColor: red[500],
@@ -42,6 +43,12 @@ const styles = theme => ({
   list: {
     backgroundColor: 'transparent',
   },
+  listItem: {
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingBottom: 10,
+    paddingTop: 0,
+  },
 });
 
 function getSalespoints() {
@@ -66,8 +73,9 @@ class Search extends React.Component {
 
     return (
       <div className={classes.list}>
-        <Divider />
+        <Divider key="divider" />
         <SearchBar
+          key="SearchBar"
           onChange={() => console.log('onChange')}
           onRequestSearch={() => console.log('onRequestSearch')}
           style={{
@@ -75,13 +83,13 @@ class Search extends React.Component {
             maxWidth: 800,
           }}
         />
-        <List className={classes.list}>
+        <List key="list" className={classes.list}>
 
           {this.state.salespoints.map(tile => (
 
-            <ListItem key={tile.id}>
+            <ListItem className={classes.listItem} key={tile._id}>
 
-              <ListItemProducer key={tile.id} salepoint={tile} />
+              <ListItemProducer key={tile._id} salepoint={tile} />
 
             </ListItem>
           ))
