@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
-
+import YouTube from 'react-youtube';
 
 import PropTypes from 'prop-types';
 
@@ -15,14 +15,9 @@ const styles = Theme => ({
     width: '100%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    //display: 'flex',
-    //height: '70%',
     padding: 0,
     marginRight:0,
     backgroundColor: 'rgba(255, 255, 240, 0.9)',
-    
-    
-
   },
   video: {
     /*
@@ -46,17 +41,10 @@ const styles = Theme => ({
     width: '90%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    justifyContent: 'center',
-    
-    //display: 'flex',
-    //height: '70%',
-    
+    justifyContent: 'center',   
   },
   vid:{
-
-    maxHeight: 720,
-    height:360,
-    width: "100%",
+    
   },
   content:{
     flex: 1,
@@ -154,16 +142,14 @@ class PageAbout extends Component {
           </div>
       </div>
       
- {/*
+
       <div className={classes.video}>
         <YouTube 
           className={classes.vid}
-          videoId="EE7eXkFQf6A"
+          videoId="0Z31Vu8EoY8"
         />
       </div>
-  
 
-       */}
 
      
     
@@ -174,9 +160,9 @@ class PageAbout extends Component {
           <div className = {classes.text} >
             <h3  className = {classes.tx}>
               La team
-            </h3 >
-            <p >
-            LocalFood est une application web servant à referancer de petits producteurs locaux. Cela vous permet de retrouver facilement des produitsde la région et de contribuer à l'économie local.
+            </h3>
+            <p>
+              FoodLocal c’est 4 étudiants en informatique à la Haute Ecole d’Ingénieur à Yverdon, en Suisse, qui, pour leur travail de Bachelor, ont décidé de mettre la technologie et leurs connaissances en informatique au service des petits producteurs locaux.
             </p> 
           </div>
           <div className={classes.image}>
@@ -201,14 +187,7 @@ class PageAbout extends Component {
           </div>
           </div>
         </div>
-        
       </div>
-    
-    
-
-    
-      
-      
     );
   }
 }

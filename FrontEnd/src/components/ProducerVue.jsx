@@ -4,9 +4,14 @@ import Typography from '@material-ui/core/Typography';
 
 import PropTypes from 'prop-types';
 
+import {
+  PageError404,
+} from '../pages/Pages.js';
+
 import defaultImg from '../img/tractorIcon.svg';
 import team from '../img/teamAntoine.jpg';
 import logo from '../img/LogoCarrote.png';
+
 
 const styles = Theme => ({
   about: {
@@ -120,44 +125,89 @@ class ProducerVue extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.match.params.producerId,
+      userId: props.match.params.producerId,
       userPiture: defaultImg,
       userName: 'No name',
       userDescription: 'Place pour une description',
+      status: 0,
     };
   }
+
+  
+  componentDidMount(){
+    this.fetchData();
+  }
+
+
+
+  fetchData() {
+    const api = `http://api.foodlocal.ch/producers/${this.state.userId}`;
+    console.log(api);
+    fetch(api)
+      .then(results => {
+        this.setState({status: results.status})
+        if(results.status === 200){
+          this.setState({status: 200});
+          return results.json();
+        } else {
+          throw new Error("No data match");
+        }
+      })
+      .then(data => {
+        this.setProducerData(data);
+      })
+      .catch(erreur => {
+        console.log("Erreur: " + erreur);
+        this.setState({status: 1000});
+      });
+  };
+
+  setProducerData(data){
+    console.log(data);
+    this.setState({userName: data.name, userDescription: data.description});
+
+  }
+
+
 
   render() {
     const { classes } = this.props;
     const {
-      userPiture, userDescription, userName, userId,
+      userPiture, userDescription, userName, userId, status
     } = this.state;
-    return (
-      <div>
-        <div className={classes.about}>
-          <div className={classes.content}>
-            <div className={classes.image}>
-              <img className={classes.img} alt="complex" src={userPiture} />
-            </div>
-            <div className={classes.text}>
-              <Typography variant="h3">
-                {userName} with id {userId}
+
+    const producerInfo = (
+      <div className={classes.about}>
+        <div className={classes.content}>
+          <div className={classes.image}>
+            <img className={classes.img} alt="complex" src={userPiture} />
+          </div>
+          <div className={classes.text}>
+            <Typography variant="h3">
+              {userName}
+            </Typography>
+            <p>
+              <Typography variant="h5">
+                {userDescription}
               </Typography>
-              <p>
-                <Typography>
-                  {userDescription}
-                </Typography>
-              </p>
-            </div>
+            </p>
           </div>
         </div>
       </div>
+    );
+
+    return (
+      <div>
+        {status === 200 ? producerInfo : <PageError404 location={`/producers/${this.state.userId}`}></PageError404>}
+      </div>
+      
     );
   };
 }
 
 ProducerVue.propTypes = {
   classes: PropTypes.object.isRequired,
+  producerId: PropTypes.object.isRequired,
 };
 
 

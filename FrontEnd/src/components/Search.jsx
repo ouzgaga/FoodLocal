@@ -23,7 +23,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { withStyles } from '@material-ui/core/styles';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import pomme from '../img/pomme.PNG';
+import pomme from '../img/pomme.png';
 
 const styles = theme => ({
 
