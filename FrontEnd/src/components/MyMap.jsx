@@ -31,7 +31,7 @@ function getSalespoints() {
 }
 
 
-class MyMap extends React.Component { 
+class MyMap extends React.Component {
   constructor(props) {
     super(props);
 
@@ -41,8 +41,8 @@ class MyMap extends React.Component {
         latitude: 46.5333,
         longitude: 6.6667,
       },
+      zoom: 8, // on zoom sur la location de l'utilisateur
       salespoints: [],
-      zoom: 10, // on zoom sur la location de l'utilisateur
       userHasALocation: false, // indique si l'utilisateur a accepté de donner sa position
     };
     getSalespoints().then((res) => {
@@ -52,6 +52,16 @@ class MyMap extends React.Component {
 
 
   componentDidMount() {
+
+    this.setState({
+      location: {
+        // par défaut, position de Lausanne
+        latitude: 46.533,
+        longitude: 6.667,
+      },
+      zoom: 10, // on zoom sur la location de l'utilisateur
+    });
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
         location: {
@@ -66,9 +76,9 @@ class MyMap extends React.Component {
 
   loadProducer() {
     return (
-      this.state.salespoints.map(tile => (     
-        <Marker position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
-          <Popup position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
+      this.state.salespoints.map(tile => (
+        <Marker key={tile._id} position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
+          <Popup key={tile._id} position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
             <ListItemProducer salepoint={tile} />
           </Popup>
         </Marker>
@@ -82,9 +92,10 @@ class MyMap extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.map}>
-        <Map className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
+        <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
 
           <TileLayer
+            key="tileLayer"
             attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
           />
@@ -93,7 +104,7 @@ class MyMap extends React.Component {
             // si l'utilisateur a accepté de donner sa location, l'affiche sur la carte
             userHasALocation
             && (
-              <CircleMarker center={[latitude, longitude]} />
+              <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
             )
           }
           {

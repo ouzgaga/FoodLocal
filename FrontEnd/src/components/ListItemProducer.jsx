@@ -11,6 +11,7 @@ import defaultImage from '../img/guidouxFruits.png';
 const styles = {
   card: {
     maxWidth: 400,
+    width:'100%',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -18,7 +19,7 @@ const styles = {
   },
 };
 
-function ImgMediaCard(props) {
+function ListItemProducer(props) {
   const { classes } = props;
   const { salepoint } = props;
   const link = `/producer/${salepoint.producers[0]}`;
@@ -46,9 +47,4 @@ function ImgMediaCard(props) {
   );
 }
 
-ImgMediaCard.propTypes = {
-  classes: PropTypes.shape.isRequired,
-  salepoint: PropTypes.shape.isRequired,
-};
-
-export default withStyles(styles)(ImgMediaCard);
+export default withStyles(styles)(ListItemProducer);
