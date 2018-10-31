@@ -1,7 +1,7 @@
-require('../src/app/models/producers.model');
-require('./chai-config');
+require('../../src/app/models/producers.model');
+require('../chai-config');
 const mongoose = require('mongoose');
-const salespointsServices = require('../src/app/services/salespoints.services');
+const salespointsServices = require('../../src/app/services/salespoints.services');
 
 const Producers = mongoose.model('producers');
 const Salespoints = mongoose.model('salespoints');

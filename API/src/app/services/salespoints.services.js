@@ -11,7 +11,7 @@ const parser = new MongooseQueryParser.MongooseQueryParser();
  * paramètres, retourne tous les points de vente de la base de
  * données.
  *
- * @param {Array} tags, Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ",".
+ * @param {Array} tags, Tags à utiliser pour filtrer les résultats.
  * @param {Integer} limit, Nombre maximum de points de vente à retourner.
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
@@ -27,11 +27,11 @@ function getSalesPoints ({ tags = undefined, limit = 50, page = 0 } = {}) {
     tags = JSON.parse(tags); // transforme la string en object
 
     tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
-    return Salespoints.find(tags.filter).sort({ id: -1 }).skip(+skip).limit(+limit)
+    return Salespoints.find(tags.filter).sort({ _id: 1 }).skip(+skip).limit(+limit)
       .exec();
   }
 
-  return Salespoints.find({ tags }).sort({ id: -1 }).skip(+skip).limit(+limit)
+  return Salespoints.find({ tags }).sort({ _id: 1 }).skip(+skip).limit(+limit)
     .exec();
 }
 
