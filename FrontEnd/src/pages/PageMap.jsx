@@ -7,6 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Search from '../components/Search';
 import MyMap from '../components/MyMap';
+import './PageMap.css';
 
 const drawerWidth = 400;
 
@@ -80,14 +81,13 @@ const tileData = [
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: '100vh',
+    height: '91vh',
     width: '100vw',
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
     display: 'flex',
   },
-
   navIconHide: {
     position: 'absolute',
     top: 25,
@@ -108,10 +108,14 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       position: 'relative',
     },
+    
   },
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
+  },
+  drawer: {
+    overflowY: 'scroll',
   },
 });
 
@@ -135,9 +139,7 @@ class ResponsiveDrawer extends React.Component {
 
     return (
       <div className={classes.root}>
-
         <main className={classes.content}>
-
           <Button
             variant="fab"
             color="inherit"
@@ -152,33 +154,36 @@ class ResponsiveDrawer extends React.Component {
 
         </main>
 
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            anchor={theme.direction = 'right'}
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown>
-          <Drawer
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+        <div className={classes.drawer}>
+          <Hidden mdUp>
+            <Drawer
+              variant="temporary"
+              anchor={theme.direction = 'right'}
+              open={this.state.mobileOpen}
+              onClose={this.handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden smDown>
+            <Drawer
+              variant="permanent"
+              open
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+
+        </div>
 
       </div>
     );

@@ -1,0 +1,23 @@
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-popup {
+  margin-bottom: 35px;
+}
+
+.MuiListItem-root-316 {
+  padding-top: 0;
+}
+
+@media (min-width: 600px) {
+.MuiListItem-gutters-230 {
+    padding-left: 0px; 
+    padding-right: 0px;
+}
+}
+
+.MuiListItem-gutters-323 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
