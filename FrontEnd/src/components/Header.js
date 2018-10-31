@@ -49,7 +49,6 @@ class MenuAppBar extends React.Component  {
 
 
   handleClickLogin = () => {
-    
     this.setState({
       open: true,
     }); 
@@ -71,7 +70,7 @@ class MenuAppBar extends React.Component  {
       <div>
         <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"> <Button ><Typography variant="h6" color="inherit" >Home </Typography></Button> </Link>
         <Link to="/about" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >About</Button></Link>
-        <Link to="/map" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >Map</Button></Link>     
+        <Link to="/" className={classes.LinkButton}  readOnly tabIndex="-1"><Button >Map</Button></Link>     
 
         {UserContext.Provider.name == null ?
         <> 

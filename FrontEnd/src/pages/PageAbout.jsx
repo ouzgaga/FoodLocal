@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
-import Card from '@material-ui/core/Card'; 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import YouTube from 'react-youtube';
-import blueGrey from '@material-ui/core/colors/blueGrey'
 
-import About from '../components/About.js';
+
 import PropTypes from 'prop-types';
-import LoginDialog from '../components/LoginDialog.js';
+
 
 import team from '../img/teamAntoine.jpg';
-import leefDecoration from '../img/leefDecoration.jpg';
 import logo from '../img/LogoCarrote.png';
 
-const styles = theme => ({
+const styles = Theme => ({
   about: {
     display: 'flex',
     
@@ -125,14 +119,14 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
 
-    borderRadius: "50%",
+    borderRadius: '50%',
   },
   img: {
     margin: 'auto',
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-    borderColor: '#fffff'
+    borderColor: '#fffff',
   },
 });
 

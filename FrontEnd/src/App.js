@@ -16,6 +16,7 @@ import {
 import Search from './components/Search';
 import Header from './components/Header';
 import Theme from './components/Theme';
+import ProducerVue from './components/ProducerVue';
 
 import {
   PageAbout,
@@ -119,9 +120,11 @@ class App extends React.Component {
                     <div className={classes.page} center="xs">
                       <Switch>
                         <Route default path="/about" exact component={PageAbout} classes={classes} />
-                        <Route path="/newAccount" component={PageNewAccount} classes={classes} />
-                        <Route path="/" component={PageMap} classes={classes} />
+                        <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+                        <Route path="/" exact component={PageMap} classes={classes} />
+                        <Route path="/producer/:producerId" component={ProducerVue} />
                         <Route path="*" component={PageError404} classes={classes} />
+                        
                       </Switch>
                     </div>
 
