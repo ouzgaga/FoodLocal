@@ -51,8 +51,8 @@ router.post('/', (req, res, next) => salespointsServices.addSalesPoint(req.body)
  */
 router.get('/:id', (req, res, next) => salespointsServices.getSalesPointById(req.params)
   .then((result) => {
-    if (!res) {
-      res.status(httpStatus.OK).send(result); // FIXME: faut-il mettre un return dans ce genre de fonction ou pas besoin?
+    if (result) {
+      res.status(httpStatus.OK).send(result);
     } else {
       res.status(httpStatus.NO_CONTENT).send();
     }
