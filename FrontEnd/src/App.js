@@ -13,43 +13,23 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import Search from './components/Search';
 import Header from './components/Header';
 import Theme from './components/Theme';
+import ProducerVue from './components/ProducerVue';
 
 import {
   PageAbout,
   PageMap,
   PageNewAccount,
   PageError404,
-} from './pages/Pages.js';
+} from './pages/Pages';
 
 
 const drawerWidth = 400;
 
-const tileData = [
-  {
-
-    id: 1,
-    'title': 'Guidoux Fruits',
-    position: {
-      lat: 46.783,
-      lng: 6.7,
-    },
-
-  },
-];
-
-
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: '100%',
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    width: '100%',
+    paddingTop: 64,
   },
   appBar: {
     position: 'absolute',
@@ -89,51 +69,28 @@ class App extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    const drawer = (
-      <div>
-        <div className={classes.toolbar} />
-
-        <Search />
-      </div>
-    );
-
     return (
       <div className={classes.root}>
         <div>
-          {/*
-          <AppBar className={classes.appBar}>
-            <Toolbar>
 
-              <Typography variant="h6" color="inherit" noWrap>
-                Responsive drawer
-            </Typography>
-            <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerToggle}
-                className={classes.navIconHide}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-*/}
           <Router>
-  <MuiThemeProvider theme={Theme}>
-            <Header />
+            <MuiThemeProvider theme={Theme}>
+              <Header />
 
-            <div className={classes.page} center="xs">
-              <Switch>
-                <Route default path="/about" exact component={PageAbout} classes={classes} />
-                <Route path="/newAccount" component={PageNewAccount} classes={classes} />
-                <Route path="/" component={PageMap} classes={classes} />
-                <Route path="*" component={PageError404} classes={classes} />
-              </Switch>
-            </div>
+                    <div className={classes.page} center="xs">
+                      <Switch>
+                        <Route default path="/about" exact component={PageAbout} classes={classes} />
+                        <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+                        <Route path="/" exact component={PageMap} classes={classes} />
+                        <Route path="/producer/:producerId" component={ProducerVue} />
+                        <Route path="*" component={PageError404} classes={classes} />
+                        
+                      </Switch>
+                    </div>
 
 
-          </MuiThemeProvider>
-</Router>
+            </MuiThemeProvider>
+          </Router>
 
         </div>
 

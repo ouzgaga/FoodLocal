@@ -7,33 +7,3 @@ body {
 #root{
   height: 100%;
 }
-
-
-@media only screen and (min-width: 600px){
-.container {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 8fr 4fr;
-}
-.listProducer{
-  height: 90vh;
-  overflow-y: scroll;
-}
-  
-}
-
-.map {
-  background-color: #CCCCCC;
-  position: sticky;
-  top:0;
-  left: 0;
-  right: 0;
-  height: 90vh;
-}
-
-
-.footer{
-  height: 200;
-
-}
