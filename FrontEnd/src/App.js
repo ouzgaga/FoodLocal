@@ -28,20 +28,6 @@ import {
 
 const drawerWidth = 400;
 
-const tileData = [
-  {
-
-    id: 1,
-    'title': 'Guidoux Fruits',
-    position: {
-      lat: 46.783,
-      lng: 6.7,
-    },
-
-  },
-];
-
-
 const styles = theme => ({
   root: {
     paddingTop: 64,
@@ -84,38 +70,13 @@ class App extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    const drawer = (
-      <div>
-        <div className={classes.toolbar} />
-
-        <Search />
-      </div>
-    );
-
     return (
       <div className={classes.root}>
         <div>
-          {/*
-          <AppBar className={classes.appBar}>
-            <Toolbar>
 
-              <Typography variant="h6" color="inherit" noWrap>
-                Responsive drawer
-            </Typography>
-            <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerToggle}
-                className={classes.navIconHide}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-*/}
           <Router>
-          <MuiThemeProvider theme={Theme}>
-                    <Header />
+            <MuiThemeProvider theme={Theme}>
+              <Header />
 
                     <div className={classes.page} center="xs">
                       <Switch>
@@ -129,8 +90,8 @@ class App extends React.Component {
                     </div>
 
 
-                  </MuiThemeProvider>
-        </Router>
+            </MuiThemeProvider>
+          </Router>
 
         </div>
 
