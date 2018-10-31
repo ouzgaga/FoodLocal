@@ -1,34 +1,23 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
-import Card from '@material-ui/core/Card'; 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import YouTube from 'react-youtube';
-import blueGrey from '@material-ui/core/colors/blueGrey'
 
-import About from '../components/About.js';
 import PropTypes from 'prop-types';
-import LoginDialog from '../components/LoginDialog.js';
+
 
 import team from '../img/teamAntoine.jpg';
-import leefDecoration from '../img/leefDecoration.jpg';
 import logo from '../img/LogoCarrote.png';
 
-const styles = theme => ({
+const styles = Theme => ({
   about: {
     display: 'flex',
     
     width: '100%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    //display: 'flex',
-    //height: '70%',
     padding: 0,
     marginRight:0,
     backgroundColor: 'rgba(255, 255, 240, 0.9)',
-    
-    
-
   },
   video: {
     /*
@@ -52,17 +41,10 @@ const styles = theme => ({
     width: '90%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    justifyContent: 'center',
-    
-    //display: 'flex',
-    //height: '70%',
-    
+    justifyContent: 'center',   
   },
   vid:{
-
-    maxHeight: 720,
-    height:360,
-    width: "100%",
+    
   },
   content:{
     flex: 1,
@@ -125,14 +107,14 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
 
-    borderRadius: "50%",
+    borderRadius: '50%',
   },
   img: {
     margin: 'auto',
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-    borderColor: '#fffff'
+    borderColor: '#fffff',
   },
 });
 
@@ -160,16 +142,14 @@ class PageAbout extends Component {
           </div>
       </div>
       
- {/*
+
       <div className={classes.video}>
         <YouTube 
           className={classes.vid}
-          videoId="EE7eXkFQf6A"
+          videoId="0Z31Vu8EoY8"
         />
       </div>
-  
 
-       */}
 
      
     
@@ -180,9 +160,9 @@ class PageAbout extends Component {
           <div className = {classes.text} >
             <h3  className = {classes.tx}>
               La team
-            </h3 >
-            <p >
-            LocalFood est une application web servant à referancer de petits producteurs locaux. Cela vous permet de retrouver facilement des produitsde la région et de contribuer à l'économie local.
+            </h3>
+            <p>
+              FoodLocal c’est 4 étudiants en informatique à la Haute Ecole d’Ingénieur à Yverdon, en Suisse, qui, pour leur travail de Bachelor, ont décidé de mettre la technologie et leurs connaissances en informatique au service des petits producteurs locaux.
             </p> 
           </div>
           <div className={classes.image}>
@@ -207,14 +187,7 @@ class PageAbout extends Component {
           </div>
           </div>
         </div>
-        
       </div>
-    
-    
-
-    
-      
-      
     );
   }
 }
