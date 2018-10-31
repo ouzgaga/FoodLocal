@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
@@ -14,6 +15,9 @@ db.on('error', () => {
 console.log(`connecté à la base de donnée de ${process.env.NODE_ENV} --> ${config.db}`);
 
 const app = express();
+
+// Active CORS pour le client
+app.use(cors());
 
 // close connection
 // mongoose.connection.close(); // FIXME: faut-il fermer la connexion...?
