@@ -1,23 +1,35 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
+import Card from '@material-ui/core/Card'; 
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import YouTube from 'react-youtube';
+import blueGrey from '@material-ui/core/colors/blueGrey'
 
+import About from '../components/About.js';
 import PropTypes from 'prop-types';
-
+import LoginDialog from '../components/LoginDialog.js';
+import Paper from '@material-ui/core/Paper';
 
 import team from '../img/teamAntoine.jpg';
+import leefDecoration from '../img/leefDecoration.jpg';
 import logo from '../img/LogoCarrote.png';
 
-const styles = Theme => ({
+const styles = theme => ({
   about: {
     display: 'flex',
     
     width: '100%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
+    //display: 'flex',
+    //height: '70%',
     padding: 0,
     marginRight:0,
     backgroundColor: 'rgba(255, 255, 240, 0.9)',
+    
+    
+
   },
   video: {
     /*
@@ -41,10 +53,17 @@ const styles = Theme => ({
     width: '90%',
     marginLeft: '50%',
     transform: 'translateX(-50%)',
-    justifyContent: 'center',   
+    justifyContent: 'center',
+    
+    //display: 'flex',
+    //height: '70%',
+    
   },
   vid:{
-    
+
+    maxHeight: 640,
+    height:360,
+    width: "100%",
   },
   content:{
     flex: 1,
@@ -102,20 +121,31 @@ const styles = Theme => ({
 
   },
   imgRonde: {
-    marginLeft: 10,
+    marginLeft: 'auto',
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
 
-    borderRadius: '50%',
-    
+    borderRadius: "50%",
   },
   img: {
     margin: 'auto',
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-    borderColor: '#fffff',
+    borderColor: '#fffff'
+  },
+  paper: {
+
+    margin: 'none',
+    marginTop: 100,
+    marginBottom: 100,
+    padding: 40,
+
+  },
+  paperTitle: {
+    paddingBot: 15,
+    paddingLeft: 15,
   },
 });
 
@@ -143,14 +173,16 @@ class PageAbout extends Component {
           </div>
       </div>
       
-
+ 
       <div className={classes.video}>
         <YouTube 
           className={classes.vid}
-          videoId="0Z31Vu8EoY8"
+          videoId="EE7eXkFQf6A"
         />
       </div>
+  
 
+       
 
      
     
@@ -161,26 +193,9 @@ class PageAbout extends Component {
           <div className = {classes.text} >
             <h3  className = {classes.tx}>
               La team
-            </h3>
-            <p>
-              FoodLocal c’est 4 étudiants en informatique à la Haute Ecole d’Ingénieur à Yverdon, en Suisse, qui, pour leur travail de Bachelor, ont décidé de mettre la technologie et leurs connaissances en informatique au service des petits producteurs locaux.
-            </p> 
-          </div>
-          <div className={classes.image}>
-            <img className={classes.imgRonde} alt="complex" src={team}/> 
-          </div>
-          </div>
-        </div>
-
-        <div className={classes.about}>
-        <div className={classes.content}>
-          
-          <div className = {classes.text} >
-            <h3  className = {classes.tx}>
-              Local Local, mais pourquoi local?
             </h3 >
             <p >
-            de noius
+            LocalFood est une application web servant à referancer de petits producteurs locaux. Cela vous permet de retrouver facilement des produitsde la région et de contribuer à l'économie local.
             </p> 
           </div>
           <div className={classes.image}>
@@ -188,7 +203,30 @@ class PageAbout extends Component {
           </div>
           </div>
         </div>
+        
+        <Grid
+          container={'column'}
+          justify={'center'}
+          alignItems={'center'}
+        >
+          <Grid xl={1}>
+            <Paper elevation={10} className={classes.paper}>
+              <Typography variant="h3" color="Secondary" className={classes.paperTitle}>Pourquoi local? </Typography>
+              <Typography variant="h6" color="none">Les produits sont de meilleur calité et frais. Ils n'ont pas attendu dans un rayon de magasin pour être mangé.</Typography>
+              <Typography variant="h6" color="none">On soutient l’économie locale !</Typography>
+              <Typography variant="h6" color="none">C'est souvent moins cher.</Typography>
+              <Typography variant="h6" color="none">Etre éco-responsable en farvorisant l'achat de poroduits de la saison avec un minimum de temps passé dans un camion.</Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+
       </div>
+    
+    
+
+    
+      
+      
     );
   }
 }
