@@ -18,7 +18,7 @@ const styles = {
     flexGrow: 1,
     position: 'fixed',
     weight  : '100%',
-    height  : '8vh',
+    height  : '64px',
     top     : 0,
     shadow  : 'none'
   },
@@ -29,7 +29,7 @@ const styles = {
     marginLeft : -7,
     marginRight: 20,
     paddingTop : 4,
-    height     : 60,
+    height     : '60px',
     outline    : 'none'
   },
   LinkButton: {
