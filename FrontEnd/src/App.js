@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 
-
 import './App.css';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
@@ -29,7 +28,7 @@ const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
-    paddingTop: 64,
+    paddingTop: '64px',
   },
   appBar: {
     position: 'absolute',
@@ -72,28 +71,21 @@ class App extends React.Component {
     return (
       <div className={classes.root}>
         <div>
-
           <Router>
             <MuiThemeProvider theme={Theme}>
               <Header />
-
-                    <div className={classes.page} center="xs">
-                      <Switch>
-                        <Route default path="/about" exact component={PageAbout} classes={classes} />
-                        <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-                        <Route path="/" exact component={PageMap} classes={classes} />
-                        <Route path="/producer/:producerId" component={ProducerVue} />
-                        <Route path="*" component={PageError404} classes={classes} />
-                        
-                      </Switch>
-                    </div>
-
-
+              <div className={classes.page} center="xs">
+                <Switch>
+                  <Route default path="/about" exact component={PageAbout} classes={classes} />
+                  <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+                  <Route path="/" exact component={PageMap} classes={classes} />
+                  <Route path="/producer/:producerId" component={ProducerVue} />
+                  <Route path="*" component={PageError404} classes={classes} />
+                </Switch>
+              </div>
             </MuiThemeProvider>
           </Router>
-
         </div>
-
       </div>
     );
   }
@@ -108,15 +100,11 @@ export default withStyles(styles, { withTheme: true })(App);
 
 
 /*
-
-
 class App extends Component {
-
   render() {
     return (
       <MuiThemeProvider theme={Theme}>
         <div className="App" >
-
           <Header theme={Theme} />
           <div className="container">
             <div className="map">
@@ -126,17 +114,11 @@ class App extends Component {
               <Search />
             </div>
           </div>
-
         <Footer/>
-
         </div>
-
-
       </MuiThemeProvider>
     );
   }
 }
-
 export default App;
-
 */
