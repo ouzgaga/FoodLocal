@@ -1,7 +1,5 @@
 # Local Food
 
-
-
 ## Objectifs premier Spint
 
 ### Objectifs:
@@ -64,3 +62,56 @@ Antoine et Jérémie:
   - Carte avec pin des producteurs permettant d'afficher leurs infos essentielles dans une bulle et renvoyant sur leur page de description pour plus d'infos
   - Liste de tous les producteurs inscrits sur le site, avec leurs infos essentielles. Cliquer sur un producteur renvoie sur sa page de détails.
   - Détails producteurs affiche les informations détailées du producteur ainsi que la liste des produits qu'il propose.
+
+
+
+## Objectifs 2ème Spint
+
+### Objectifs:
+
+- **Infra:** 
+  - Ajouter la prise en charge https
+  - Améliorer les CI
+  - Améliorer la vitesse d'exécution des pipelines
+  - Donner un accès depuis l'extérieur à la DB
+- **UI:**
+  - Ajouter des tests unitaires
+  - Finir d'unifier le code en résolvant les erreurs indiquées par ESLint
+  - Améioration de la page affichant les informations détaillées d'un producteur
+  - Ajout de la possibilité de rechercher par produits / producteurs / points de vente et de filtrer la carte en fonction
+  - Prise en charge de l'inscription de producteurs
+  - Ajout de la partie administration (permttant la validation des inscriptions de producteurs)
+  - Ajout de l'interface d'administration pour les producteurs inscrits
+    - Ajout d'un produit
+    - Modification des informations / suppression d'un produit
+    - Ajout d'un point de vente
+    - Modification des informations / suppression d'un point de vente
+- **API:**
+  - Finir les tests d'intégration
+  - Ajouter une fonctionnalité d'authentification des utilisateurs
+  - Ajout et adaptation de l'API en fonction des besoins/demandes de l'UI
+
+
+
+### Répartition des tâches :
+
+Pour commencer, nous garderons la même répartition en 2 équipes de 2. Antoine et Jérémie continueront à s'occuper du front-end pendant que James et Benoît se chargeront du back-end.
+
+Lorsque James aura terminé de mettre en place les fonctionnalités de l'infrastructure (https, ...), il rejoindra l'équipe du front-end afin de leur prêter main forte. Benoît sera chargé de s'occuper de l'API.
+
+
+
+### Use-case que nous souhaitons obtenir pour la démo 2 :
+
+Pour la démo 2, on souhaite offrir les fonctionnalités suivantes:
+
+- Nous aurons accès à une interface administrateur nous permettant de valider l'inscription de producteurs.
+- Un producteur pourra s'inscrire à notre site. Il aura immédiatement accès à sa partie d'administration, mais n'apparaîtra sur la carte que lorsque nous aurons validé son inscription.
+- Un producteur inscrit pourra:
+  - Ajouter un produit
+  - Modifier les informations d'un produit
+  - Supprimer un produit
+  - Ajouter un nouveau point de vente
+  - Modifier les informations d'un point de vente
+  - Supprimer un point de vente (minimum 1 point de vente)
+- Un utilisateur pourra filtrer les points affichés sur la map par produit / producteur / point de vente.
