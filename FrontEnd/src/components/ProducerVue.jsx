@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import {
   PageError404,
-} from '../pages/Pages.js';
+} from '../pages/Pages';
 
 import defaultImg from '../img/tractorIcon.svg';
 
