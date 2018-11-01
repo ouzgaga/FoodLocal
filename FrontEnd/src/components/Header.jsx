@@ -14,77 +14,67 @@ import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
 
 const styles = {
-  root: {
+  root      : {
     flexGrow: 1,
     position: 'fixed',
-    weight: '100%',
-    height: 64,
-    top: 0,
-    shadow: 'none',
+    weight  : '100%',
+    height  : 64,
+    top     : 0,
+    shadow  : 'none'
   },
-  grow: {
-    flexGrow: 1,
+  grow      : {
+    flexGrow: 1
   },
   menuButton: {
-    marginLeft: -7,
+    marginLeft : -7,
     marginRight: 20,
-    paddingTop: 4,
-    height: 60,
-    outline: 'none',
+    paddingTop : 4,
+    height     : 60,
+    outline    : 'none'
   },
   LinkButton: {
     textDecoration: 'none',
-    color: 'secondary',
-  },
+    color         : 'secondary'
+  }
 };
 
-class MenuAppBar extends React.Component  {
-
+class MenuAppBar extends React.Component {
   state = {
     sConnected: null,
-    open: false,
+    open      : false
   };
-
 
   handleClickLogin = () => {
     this.setState({
-      open: true,
-    }); 
+      open: true
+    });
   };
 
-  handleCloseLogin = value => {
-    this.setState({open: false});
+  handleCloseLogin = (value) => {
+    this.setState({ open: false });
   };
 
-
-  render() {
+  render () {
     const { classes, width } = this.props;
-    
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link> 
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
         <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
-           
 
-        {UserContext.Provider.name == null ?
-        <>
-          <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Noveau compte</Button></Link>
-          <Button
-            color="inherit"
-            onClick={this.handleClickLogin}
-          >
-            Se connecter
-          </Button>
-        </>
-          :
 
-          <Button
-            color="inherit"
-            //onClick={this.handleClickLogin}
-          >
-            {UserContext.Provider.name}
-          </Button>
+        {UserContext.Provider.name == null
+          ? <>
+            <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>S'inscrire</Button></Link>
+            <Button color="inherit" onClick={this.handleClickLogin}>
+             Se connecter
+            </Button>
+         </>
+          : (
+            <Button color="inherit">
+              {UserContext.Provider.name}
+            </Button>
+          )
         }
       </div>
     );
@@ -93,16 +83,16 @@ class MenuAppBar extends React.Component  {
         <AppBar position="static" className={classes.root}>
           <Toolbar>
             <Link to="/" readOnly tabIndex="-1"><img src={logo} className={classes.menuButton} alt="logo" readOnly tabIndex="-1" /></Link>
-          
+
             <div className={classes.grow} />
             {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
           </Toolbar>
 
           <LoginDialog
-            classes = {this.props}
+            classes={this.props}
             open={this.state.open}
             onClose={this.handleCloseLogin.bind(this)}
-            //onClose={this.handleCloseLogin}
+            // onClose={this.handleCloseLogin}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {this.state.connectEmail}
@@ -115,7 +105,5 @@ class MenuAppBar extends React.Component  {
 
 export default compose(
   withWidth(),
-  withStyles(styles),
+  withStyles(styles)
 )(MenuAppBar);
-  
-
