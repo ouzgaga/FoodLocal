@@ -28,7 +28,7 @@ const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
-    paddingTop: '8vh',
+    paddingTop: '64px',
   },
   appBar: {
     position: 'absolute',
