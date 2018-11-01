@@ -18,7 +18,7 @@ const styles = {
     flexGrow: 1,
     position: 'fixed',
     weight  : '100%',
-    height  : 64,
+    height  : '8vh',
     top     : 0,
     shadow  : 'none'
   },
