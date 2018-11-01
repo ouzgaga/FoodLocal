@@ -20,7 +20,7 @@ const styles = {
 const myIcon = L.icon({
   iconUrl: MarkerCarotte,
   iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconAnchor: [20, 37],
   PopupAnchor: [-20, -20],
 });
 
