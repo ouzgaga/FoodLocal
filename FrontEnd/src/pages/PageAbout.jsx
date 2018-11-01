@@ -164,15 +164,12 @@ class PageAbout extends Component {
             </Paper>
           </Grid>
 
-           
-          {/* <Grid xl={1}>
-
+          <Grid xl={1}>
             <YouTube 
               className={classes.video}
               videoId="EE7eXkFQf6A"
             />
-
-          </Grid> */}
+          </Grid> 
  
         
  

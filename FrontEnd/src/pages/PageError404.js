@@ -17,10 +17,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    
-    
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-
   },
 };
 
