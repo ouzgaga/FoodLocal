@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Search from '../components/Search';
-import MyMap from '../components/MyMap';
+import MyMap from '../components/Map/MyMap';
 import './PageMap.css';
 
 const drawerWidth = 400;
@@ -95,7 +95,7 @@ class ResponsiveDrawer extends React.Component {
           <Hidden mdUp>
             <Drawer
               variant="temporary"
-              anchor={theme.direction = 'right'}
+              anchor="right"
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
