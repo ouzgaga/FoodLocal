@@ -14,7 +14,7 @@ import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
 
 const styles = {
-  root      : {
+  root: {
     flexGrow: 1,
     position: 'fixed',
     weight  : '100%',
@@ -22,7 +22,7 @@ const styles = {
     top     : 0,
     shadow  : 'none'
   },
-  grow      : {
+  grow: {
     flexGrow: 1
   },
   menuButton: {
