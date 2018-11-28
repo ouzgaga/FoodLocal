@@ -1,6 +1,23 @@
+#  FoodLocal
+
+Membres du groupe :
+
+- Antoine Rochat
+- Benoît Schopfer
+- James Smith
+- Jérémie Châtillon
+
+## Objectif
+
+Pour ce projet, nous avons regroupé les projet de TWEB, MAC et PDG.
+
+L'objectif de projet est de créer un site internet promouvant les petits producteurs locaux. La première itération de notre site est dors et déjà disponible à l'adresse http://foodlocal.ch.
+
+
+
+## Objectifs pour TWEB et MAC
+
 Pour la partie réseau social de notre projet, nous allons développer les fonctionnalités suivantes :
-
-
 
 ```
 Votre application gèrera l’inscription et la connexion d’un utilisateur, ainsi que l’accès à sa page de profil.
@@ -15,6 +32,7 @@ Votre application gèrera l’inscription et la connexion d’un utilisateur, ai
 - Notre application permettra aussi à des producteurs de s'inscrire. Un producteur inscrit et connecté pourra :
   - Modifier ses informations (ajouter des produits, lieux de vente, changer les horaires, ....)
   - Publier des news (message texte et géolocalisation)
+  - Il aura en plus accès aux fonctionnalités disponible pour un simple utilisateur inscrit. 
 
 Note : le mur d'un producteur sera public et accessible à n'importe qui (même un utilisateur non connecté). Celui d'un utilisateur sera entièrement privé et accessible que par lui-même (donc lorsqu'il est connecté).
 
