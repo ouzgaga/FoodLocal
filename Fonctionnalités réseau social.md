@@ -11,9 +11,7 @@ Membres du groupe :
 
 Pour ce projet, nous avons regroupé les projet de TWEB, MAC et PDG.
 
-L'objectif de projet est de créer un site internet promouvant les petits producteurs locaux. La première itération de notre site est dors et déjà disponible à l'adresse http://foodlocal.ch.
-
-
+L'objectif de projet est de créer un site internet promouvant les petits producteurs locaux. La première itération de notre site est dors et déjà disponible à l'adresse http://foodlocal.ch. Le frontend utilise le framework *React* et le backend implémente un serveur *NodeJS* exposant une API *REST* et une API *GraphQL*. 
 
 ## Objectifs pour TWEB et MAC
 
