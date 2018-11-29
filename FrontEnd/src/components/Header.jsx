@@ -14,34 +14,34 @@ import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
 
 const styles = {
-  root      : {
+  root: {
     flexGrow: 1,
     position: 'fixed',
-    weight  : '100%',
-    height  : '64px',
-    top     : 0,
-    shadow  : 'none'
+    weight: '100%',
+    height: '64px',
+    top: 0,
+    shadow: 'none'
   },
-  grow      : {
+  grow: {
     flexGrow: 1
   },
   menuButton: {
-    marginLeft : -7,
+    marginLeft: -7,
     marginRight: 20,
-    paddingTop : 4,
-    height     : '60px',
-    outline    : 'none'
+    paddingTop: 4,
+    height: '60px',
+    outline: 'none'
   },
   LinkButton: {
     textDecoration: 'none',
-    color         : 'secondary'
+    color: 'secondary'
   }
 };
 
 class MenuAppBar extends React.Component {
   state = {
     sConnected: null,
-    open      : false
+    open: false
   };
 
   handleClickLogin = () => {
@@ -54,11 +54,12 @@ class MenuAppBar extends React.Component {
     this.setState({ open: false });
   };
 
-  render () {
+  render() {
     const { classes, width } = this.props;
 
     const menuLarge = (
       <div>
+        <Link to="/becomeProducer" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Devenir Producteur</Button></Link>
         <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
         <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
 
@@ -67,9 +68,9 @@ class MenuAppBar extends React.Component {
           ? <>
             <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>S'inscrire</Button></Link>
             <Button color="inherit" onClick={this.handleClickLogin}>
-             Se connecter
+              Se connecter
             </Button>
-         </>
+          </>
           : (
             <Button color="inherit">
               {UserContext.Provider.name}
@@ -92,7 +93,7 @@ class MenuAppBar extends React.Component {
             classes={this.props}
             open={this.state.open}
             onClose={this.handleCloseLogin.bind(this)}
-            // onClose={this.handleCloseLogin}
+          // onClose={this.handleCloseLogin}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {this.state.connectEmail}

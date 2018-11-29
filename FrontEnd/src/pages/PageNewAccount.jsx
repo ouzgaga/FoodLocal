@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import InscriptionProducer from '../components/NewProducer/InscriptionProducer';
 
 class PageNewAccount extends Component {
   render() {
     return (
-      <div>
-        Page new Account
+      <div style={{ height: 'calc(100vh - 64px)', backgroundColor:'white' }}>
+        <InscriptionProducer />
       </div>
     );
   }

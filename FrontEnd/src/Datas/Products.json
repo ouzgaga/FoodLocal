@@ -1,0 +1,141 @@
+{
+  "products": [
+    {
+      "name" : "Boissons",
+      "items" : [
+        "Bières",
+        "Cidre",
+        "Eaux-de-vie",
+        "Hydromel",
+        "Jus de fruits",
+        "Liqueurs",
+        "Mousseux",
+        "Spiritueux",
+        "Vin blanc",
+        "Vin rosé",
+        "Vin rouge",
+        "Autres Alcools"
+      ]
+    },
+    {
+      "name" :"Céréales/Farines",
+      "items" : [
+        "Farine",
+        "Quinoa",
+        "Pâtes",
+        "Polenta",
+        "Autres Céréales/Farine"
+      ]
+    },
+    {
+      "name" :"Fruits",
+      "items" : [
+        "Abricots",
+        "Canneberges",
+        "Cassis",
+        "Cerises",
+        "Châtaignes",
+        "Coings",
+        "Fraises",
+        "Framboises",
+        "Groseilles",
+        "Kiwis",
+        "Mirabelles",
+        "Mûres",
+        "Myrtilles",
+        "Nectarines",
+        "Noix",
+        "Pêches",
+        "Poires",
+        "Pommes",
+        "Pruneaux",
+        "Prunes",
+        "Raisin",
+        "Sureau",
+        "Autres Fruits"
+      ]
+    },
+    {
+      "name" :"Légumes",
+      "items" : [
+        "Ail",
+        "Asperges",
+        "Aubergines",
+        "Betteraves",
+        "Brocolis",
+        "Carottes",
+        "Céleris en branche",
+        "Céleris-pommes",
+        "Choux blancs",
+        "Choux de Bruxelles",
+        "Choux frisés",
+        "Choux rouges",
+        "Choux-fleurs",
+        "Choux-raves",
+        "Concombres",
+        "Côtes de bette",
+        "Courges",
+        "Courgettes",
+        "Fenouil",
+        "Haricots",
+        "Maïs",
+        "Oignons",
+        "Petit-pois",
+        "Poireaux",
+        "Pois mange-tout",
+        "Poivrons",
+        "Pommes de terre",
+        "Radis",
+        "Raifort",
+        "Rhubarbe",
+        "Salades",
+        "Tomates",
+        "Autres légumes"
+      ]
+    },
+    {
+      "name" :"Viandes",
+      "items" : [
+        "Agneau",
+        "Autruche",
+        "Boeuf",
+        "Cabri",
+        "Caille",
+        "Canard",
+        "Cerf",
+        "Daim",
+        "Dinde",
+        "Lapin",
+        "Jambon",
+        "Pintade",
+        "Poisson",
+        "Porc",
+        "Poulet",
+        "Salami",
+        "Saucisses sèches",
+        "Terrines",
+        "Veau",
+        "Viandes séchées",
+        "Viandes fumées",
+        "Wapiti",
+        "Autres Viandes"
+      ]
+    },
+    {
+      "name" :"Autres Produits",
+      "items" : [
+        "Bois de feu",
+        "Boulangerie",
+        "Fleurs",
+        "Huiles",
+        "Miel",
+        "Oeufs",
+        "Pâtisserie et confiserie",
+        "Produits laitiers de brebis",
+        "Produits laitiers de chèvre",
+        "Produits laitiers de vache",
+        "Sapins de Noël"
+      ]
+    }
+  ]
+}
