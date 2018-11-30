@@ -1,8 +1,9 @@
-require('../../app/models/producers.model');
-
-const producerServices = require('../../app/services/producersServices');
-const Producers = require('../../app/models/producers.model');
-const SalesPoint = require('../../app/models/salespoints.model');
+const producersServices = require('../services/producers.services');
+const productsServices = require('../services/products.services');
+const usersServices = require('../services/users.services');
+const salesPointsServices = require('../services/salespoints.services');
+const Producers = require('../models/producers.model');
+const SalesPoint = require('../models/salespoints.model');
 
 const isEmailUnused = async(emailProducer) => {
   const producer = await Producers.findOne({ email: emailProducer });
@@ -11,10 +12,9 @@ const isEmailUnused = async(emailProducer) => {
 
 const producerResolvers = {
   Query: {
-    producers: (parent, args, context) => Producers.find({})
-      .sort({ _id: 1 }),
+    producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => Producers.findById(args.id)
+    producer: (parent, args, context) => producersServices.getProducerById({ id: args.id })
   },
 
   Mutation: {
@@ -38,7 +38,7 @@ const producerResolvers = {
       }
     },
 
-    updateProducerInfos: async (parent, args, context) => {
+    updateProducerInfos: async(parent, args, context) => {
       // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
 
 
@@ -48,14 +48,14 @@ const producerResolvers = {
         email: args.producer.email,
         password: args.producer.password,
         image: args.producer.image,
-        subscriptions: await producerServices.getFiltredProducersById(args.producer.subscriptions),
+        subscriptions: await producersServices.getFiltredProducersById(args.producer.subscriptions),
         emailValidated: args.producer.isValidated,
         // subscribedUsers: args.producer.subscribedUsers,
         phoneNumber: args.producer.phoneNumber,
         description: args.producer.description,
         website: args.producer.website,
         salesPoint: args.producer.salesPoint,
-        isValidated: args.producer.isValidated,
+        isValidated: args.producer.isValidated
         // Products: args.producer.Products
       };
 
@@ -63,15 +63,15 @@ const producerResolvers = {
       return Producers.findByIdAndUpdate(producer);
     }
   },
+
   Producer: {
-    salesPoint: (parent, args, context) => SalesPoint.findById(parent.salesPoint),
-    subscriptions: () => Producers.find({})
-    // userType: UserType!
-    // subscribedUsers : [User!]!
-    // salesPoint: SalesPoint!
-    // isValidated: Boolean!
-    // Products: [Product!]!
+    subscriptions: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.subscriptions),
+
+    subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
+
+    salesPoint: (parent, args, context) => salesPointsServices.getSalesPointById({ id: parent.salesPoint }),
+
+    Products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.subscribedUsers)
   }
 };
-
 module.exports = producerResolvers;

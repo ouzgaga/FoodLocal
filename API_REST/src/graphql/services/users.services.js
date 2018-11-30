@@ -1,18 +1,5 @@
-const MongooseQueryParser = require('mongoose-query-parser');
 
-const mongoose = require('mongoose');
-require('../../graphql/models/producers.model');
-
-const Producers = mongoose.model('producers');
-
-const parser = new MongooseQueryParser.MongooseQueryParser();
-const authorizedTags = {
-  tags: {
-    description: [
-      'name', 'description', 'phoneNumber', 'email', 'isValidated'
-    ]
-  }
-};
+const Users = require('../models/user.model');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -29,30 +16,23 @@ const authorizedTags = {
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducers({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
+function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
   }
 
-  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
-    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
-    tags = JSON.parse(tags); // transforme la string en object
-
-    tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
-    return Producers.find(tags.filter)
-      .sort({ _id: 1 })
-      .skip(+skip)
-      .limit(+limit)
-      .exec();
-  }
-
-  return Producers.find(tags)
+  return Users.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit)
     .exec();
 }
+
+function getAllUsersInReceivedIdList(listOfIdToGet) {
+  return Users.find({ _id: { $in: listOfIdToGet } });
+}
+
 
 /**
  * Ajoute un nouveau producteur dans la base de données.
@@ -60,8 +40,8 @@ function getProducers({ tags = undefined, limit = 50, page = 0, lat = undefined,
  *
  * @param {Integer} bodyContent, Les informations du producteur à ajouter.
  */
-function addProducer(bodyContent) {
-  return new Producers(bodyContent).save();
+function addUser(bodyContent) {
+  return new Users(bodyContent).save();
 }
 
 /**
@@ -69,8 +49,8 @@ function addProducer(bodyContent) {
  *
  * @param {Integer} id, L'id du producteur à récupérer.
  */
-function getProducerById({ id }) {
-  return Producers.findById(id)
+function getUserById({ id }) {
+  return Users.findById(id)
     .exec();
 }
 
@@ -80,11 +60,11 @@ function getProducerById({ id }) {
  * dans la base de données par celles reçues!
  *
  * @param {Integer} id, L'id du producteur à mettre à jour.
- * @param {Integer} producerInfos, Les informations du producteur à mettre à jour.
+ * @param {Integer} userInfos, Les informations du producteur à mettre à jour.
  */
-function updateProducer(id, producerInfos) {
-  return Producers.findByIdAndUpdate(id, producerInfos, { new: true }); // retourne l'objet modifié  // FIXME: faut-il ajouter .exec() ??
-  // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
+function updateUser(id, userInfos) {
+  return Users.findByIdAndUpdate(id, userInfos, { new: true }); // retourne l'objet modifié  // FIXME: faut-il ajouter .exec() ??
+  // return Users.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
 /**
@@ -92,14 +72,15 @@ function updateProducer(id, producerInfos) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer({ id }) {
-  return Producers.findByIdAndRemove(id);
+function deleteUser({ id }) {
+  return Users.findByIdAndRemove(id);
 }
 
 module.exports = {
-  getProducer: getProducers,
-  addProducer,
-  getProducerById,
-  updateProducer,
-  deleteProducer
+  getUsers,
+  addUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAllUsersInReceivedIdList
 };

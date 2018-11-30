@@ -1,7 +1,4 @@
-const mongoose = require('mongoose');
-require('../models/producers.model');
-
-const Producers = mongoose.model('producers');
+const Producers = require('../models/producers.model');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -13,12 +10,8 @@ const Producers = mongoose.model('producers');
  * @param {Integer} limit, Nombre maximum de producteurs à retourner.
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
- * @param {Number} lat, La latitude de l'utilisateur
- * @param {Number} long, La longitude de l'utilisateur
- * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
- * producteurs retourner pour l'affichage.
  */
-function getProducers({ tags = undefined, limit = 50, page = 0 } = {}) {
+function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
@@ -31,9 +24,25 @@ function getProducers({ tags = undefined, limit = 50, page = 0 } = {}) {
     .exec();
 }
 
-function getFiltredProducersById(listOfIdToGet) {
+/**
+ * Retourne le producteur correspondant à l'id reçu.
+ *
+ * @param {Integer} id, L'id du producteur à récupérer.
+ * @returns {*}
+ */
+function getProducerById({ id }) {
+  return Producers.findById(id);
+}
+
+/**
+ * Retourne tous les producteurs dont l'id se trouve dans la liste passée en paramètre.
+ * @param listOfIdToGet, liste contenant les ids des producteurs que l'on cherche.
+ * @returns {*}
+ */
+function getAllProducersInReceivedIdList(listOfIdToGet) {
   return Producers.find({ _id: { $in: listOfIdToGet } });
 }
+
 
 /**
  * Ajoute un nouveau producteur dans la base de données.
@@ -43,16 +52,6 @@ function getFiltredProducersById(listOfIdToGet) {
  */
 function addProducer(bodyContent) {
   return new Producers(bodyContent).save();
-}
-
-/**
- * Retourne le producteur correspondant à l'id reçu.
- *
- * @param {Integer} id, L'id du producteur à récupérer.
- */
-function getProducerById({ id }) {
-  return Producers.findById(id)
-    .exec();
 }
 
 /**
@@ -78,10 +77,10 @@ function deleteProducer({ id }) {
 }
 
 module.exports = {
-  getProducer: getProducers,
+  getProducers,
   addProducer,
   getProducerById,
   updateProducer,
   deleteProducer,
-  getFiltredProducersById
+  getAllProducersInReceivedIdList
 };

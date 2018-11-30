@@ -1,4 +1,4 @@
-require('../../app/models/producers.model');
+require('../models/producers.model');
 
 const dailyScheduleResolvers = {
 

@@ -1,11 +1,4 @@
-const MongooseQueryParser = require('mongoose-query-parser');
-
-const mongoose = require('mongoose');
-require('../../graphql/models/products.model');
-
-const Products = mongoose.model('products');
-
-const parser = new MongooseQueryParser.MongooseQueryParser();
+const Products = require('../../graphql/models/products.model');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -18,23 +11,23 @@ const parser = new MongooseQueryParser.MongooseQueryParser();
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
-function getProducts ({ tags = undefined, limit = 50, page = 0 } = {}) {
+function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
   }
 
-  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
-    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
-    tags = JSON.parse(tags); // transforme la string en object
-
-    tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
-    return Products.find(tags.filter).sort({ _id: 1 }).skip(+skip).limit(+limit)
-      .exec();
-  }
-  return Products.find({ tags }).sort({ _id: 1 }).skip(+skip).limit(+limit)
+  return Products.find({ tags })
+    .sort({ _id: 1 })
+    .skip(+skip)
+    .limit(+limit)
     .exec();
 }
+
+function getAllProductsInReceivedIdList(listOfIdToGet) {
+  return Products.find({ _id: { $in: listOfIdToGet } });
+}
+
 
 /**
  * Ajoute un nouveau produit dans la base de données.
@@ -42,7 +35,7 @@ function getProducts ({ tags = undefined, limit = 50, page = 0 } = {}) {
  *
  * @param {Integer} bodyContent, Les informations du produit à ajouter.
  */
-function addProduct (bodyContent) {
+function addProduct(bodyContent) {
   return new Products(bodyContent).save();
 }
 
@@ -51,8 +44,9 @@ function addProduct (bodyContent) {
  *
  * @param {Integer} id, L'id du produit à récupérer.
  */
-function getProductById ({ id }) {
-  return Products.findById(id).exec();
+function getProductById({ id }) {
+  return Products.findById(id)
+    .exec();
 }
 
 /**
@@ -63,7 +57,7 @@ function getProductById ({ id }) {
  * @param {Integer} id, L'id du produit à mettre à jour.
  * @param {Integer} productInfos, Les informations du produit à mettre à jour.
  */
-function updateProduct (id, productInfos) {
+function updateProduct(id, productInfos) {
   return Products.findOneAndUpdate(id, productInfos, { new: true }); // retourne l'objet modifié
   // return Products.updateOne(productInfos); // retourne un OK mais pas l'objet modifié
 }
@@ -73,13 +67,14 @@ function updateProduct (id, productInfos) {
  *
  * @param {Integer} id, L'id du produit à supprimer.
  */
-function deleteProduct ({ id }) {
+function deleteProduct({ id }) {
   return Products.findByIdAndRemove(id);
 }
 
 module.exports = {
-  getProducts: getProducts,
-  addProduct : addProduct,
+  getProducts,
+  getAllProductsInReceivedIdList,
+  addProduct,
   getProductById,
   updateProduct,
   deleteProduct
