@@ -11,23 +11,21 @@ function getSteps() {
   return ['Détails', 'Produits disponibles', 'Description des produits', 'Confirmation'];
 }
 
-export class UserForm extends Component {
+
+export class InscriptionProducer extends Component {
   state = {
     step: 0,
     salePointName: '',
-    address: {
-      road: '',
-      city: '',
-      zip: '',
-      countryState: '',
-      country: ''
-    },
+    addressRoad: '',
+    addressCity: '',
+    addressZip: '',
+    AddressCountryState: '',
+    AddressCountry: '',
     phoneNumber: '',
-    schedule: '',
+    scheduleActive: false,
     website: '',
     description: ''
-  };
-
+  }
   // Proceed to next step
   nextStep = () => {
     const { step } = this.state;
@@ -49,10 +47,6 @@ export class UserForm extends Component {
     this.setState({ [input]: e.target.value });
   };
 
-  handleChangeAddress = input => (e) => {
-    this.setState({ address: e.target.value });
-  }
-
   pageContext = () => {
     const { step } = this.state;
     const {
@@ -67,7 +61,7 @@ export class UserForm extends Component {
           <DetailsInscriptionProducerForm
             nextStep={this.nextStep}
             handleChange={this.handleChange}
-            values={values}
+            values={this.state}
           />
         );
       case 1:
@@ -76,19 +70,27 @@ export class UserForm extends Component {
             nextStep={this.nextStep}
             prevStep={this.prevStep}
             handleChange={this.handleChange}
-            values={values}
+            values={this.state}
           />
         );
       case 2:
         return (
-          <DetailsInscriptionProducerForm
+          <AvailableProductsForm
             nextStep={this.nextStep}
+            prevStep={this.prevStep}
             handleChange={this.handleChange}
-            values={values}
+            values={this.state}
           />
         );
       case 3:
-        return <DetailsInscriptionProducerForm />;
+        return (
+          <AvailableProductsForm
+            nextStep={this.nextStep}
+            prevStep={this.prevStep}
+            handleChange={this.handleChange}
+            values={this.state}
+          />
+        );
       default:
         return <div>Error</div>;
     }
@@ -98,22 +100,22 @@ export class UserForm extends Component {
     const { step } = this.state;
     const steps = getSteps();
     return (
-        <div>
-          <Stepper activeStep={step} alternativeLabel>
-            {steps.map(label => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Grid container justify="center" style={{padding:20}}>
+      <div>
+        <Stepper activeStep={step} alternativeLabel>
+          {steps.map(label => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <Grid container justify="center" style={{ padding: 20 }}>
 
-            {this.pageContext()}
-          </Grid>
+          {this.pageContext()}
+        </Grid>
 
-        </div>
+      </div>
     );
   }
 }
 
-export default UserForm;
+export default InscriptionProducer;

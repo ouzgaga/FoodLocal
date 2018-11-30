@@ -3,15 +3,15 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import CardMedia from '@material-ui/core/CardMedia';
 
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 
-
-const styles = {
+const styles = theme => ({
   root: {
     maxWidth: 600,
   },
@@ -22,16 +22,22 @@ const styles = {
   typo: {
     marginBottom: 0,
   },
-  MuiOutlinedInput: {
-    padding: 0,
+  media: {
+    height: 80,
+    width: 80,
+    backgroundColor: theme.palette.primary,
   }
-};
+});
 
 class DetailsInscriptionProducerForm extends Component {
   continue = (e) => {
     const { nextStep } = this.props;
     e.preventDefault();
     nextStep();
+  };
+
+  handleChangeCheckbox = name => event => {
+    this.props.handleChange({ [name]: event.target.checked });
   };
 
   render() {
@@ -77,8 +83,8 @@ class DetailsInscriptionProducerForm extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth
-                onChange={handleChange('address.zip')}
-                defaultValue={values.address.zip}
+                onChange={handleChange('addressZip')}
+                defaultValue={values.addressZip}
               />
             </Grid>
             <Grid item xs={12} sm={8}>
@@ -89,8 +95,8 @@ class DetailsInscriptionProducerForm extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth
-                onChange={handleChange('address.city')}
-                defaultValue={values.address.city}
+                onChange={handleChange('addressCity')}
+                defaultValue={values.addressCity}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -101,8 +107,8 @@ class DetailsInscriptionProducerForm extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth
-                onChange={handleChange('address.countryState')}
-                defaultValue={values.address.countryState}
+                onChange={handleChange('addressCountryState')}
+                defaultValue={values.addressCountryState}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -113,12 +119,31 @@ class DetailsInscriptionProducerForm extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth
-                onChange={handleChange('address.country')}
-                defaultValue={values.address.country}
+                onChange={handleChange('addressCountry')}
+                defaultValue={values.addressCountry}
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <Typography className={classes.typo} variant="subheading" gutterBottom> Description (facultatif) </Typography>
+              <TextField
+                className={classes.textField}
+                id="descrition"
+                variant="outlined"
+                multiline
+                fullWidth
+                onChange={handleChange('description')}
+                defaultValue={values.time}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <Typography className={classes.typo} variant="subheading" gutterBottom> Horaire (facultatif) </Typography>
+              <Checkbox
+                checked={values.scheduleActive}
+                onChange={handleChange('scheduleActive')}
+                value={values.scheduleActive}
+              />
               <TextField
                 className={classes.textField}
                 id="time"
@@ -130,10 +155,11 @@ class DetailsInscriptionProducerForm extends Component {
             </Grid>
 
             <Grid item xs={12}>
-
-              <Avatar alt="Remy Sharp" src={MarkerCarotte} className={classes.avatar} />
+              <div style={{ backgroundColor: this.props.theme.palette.primary }}>
+                <CardMedia className={classes.media} image={MarkerCarotte} title="Paella dish" />
+              </div>
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12}>
               <Button variant="contained" onClick={this.continue} color="primary"> SUIVANT </Button>
             </Grid>
           </Grid>
@@ -143,4 +169,4 @@ class DetailsInscriptionProducerForm extends Component {
   }
 }
 
-export default withStyles(styles)(DetailsInscriptionProducerForm);
+export default withStyles(styles, { withTheme: true })(DetailsInscriptionProducerForm);
