@@ -1,0 +1,28 @@
+
+type Product {
+	id: ID!
+	description: String
+	productType: ProductType!
+}
+
+input ProductInputAdd {
+	description: String
+	productType: ProductTypeInput!
+}
+
+input ProductInputUpdate {
+	id: ID!
+	description: String
+	productType: ProductTypeInput!
+}
+
+type ProductType {
+	id: ID!
+	name: String!
+	image: String # fixme: faudra l'encoder en base64
+}
+
+input ProductTypeInput {
+	name: String!
+	image: String
+}

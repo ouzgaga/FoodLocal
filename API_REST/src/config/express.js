@@ -31,7 +31,7 @@ module.exports = (app, config) => {
   app.use('/salesPoints', salesPointsController);
 
   app.use('/', (req, res, next) => {
-    res.sendFile(`${config.root}/SpecAPI.html`);
+    res.sendFile(`${config.root}/specAPI/index.html`);
   });
 
   app.use((req, res, next) => {

@@ -1,0 +1,64 @@
+type Query {
+	producers: [Producer!]!
+	producer(id: ID!) : Producer
+}
+
+type Mutation {
+	addProducer(producer: ProducerInputAdd!): Producer!
+	updateProducerInfos(producer: ProducerInputUpdate!): Producer
+	#deleteProducer(producer: Producer!): Producer
+}
+
+type Producer implements Person {
+	id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	subscriptions:[Producer!]!
+	emailValidated: Boolean!
+	subscribedUsers : [User!]!
+	phoneNumber: String
+	description: String
+	website: String
+	salesPoint: SalesPoint!
+	isValidated: Boolean! # validation côté serveur uniquement
+	Products: [Product!]!
+}
+
+input ProducerInputAdd {
+	# id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	# subscriptions:[ProducerInputAdd!]!
+	# emailValidated: Boolean!
+	# subscribedUsers : [UserInputAdd!]!
+	phoneNumber: String
+	description: String
+	website: String
+	salesPoint: SalesPointInputAdd!
+	# isValidated: Boolean!
+	Products: [ProductInputAdd!] # pas obligatoire si vide
+}
+
+input ProducerInputUpdate {
+	id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	subscriptions:[ProducerInputUpdate!] # pas obligatoire si vide
+	# emailValidated: Boolean! # ne peut pas être modifié par le client
+	subscribedUsers : [UserInputUpdate!] # pas obligatoire si vide
+	phoneNumber: String
+	description: String
+	website: String
+	salesPoint: SalesPointInputUpdate!
+	# isValidated: Boolean!
+	Products: [ProductInputUpdate!] # pas obligatoire si vide
+}

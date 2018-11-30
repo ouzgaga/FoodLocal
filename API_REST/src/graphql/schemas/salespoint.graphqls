@@ -1,0 +1,65 @@
+type SalesPoint {
+	id: ID!
+	name: String!
+	address: Address
+	schedule: [DailySchedule!]
+}
+
+input SalesPointInputAdd {
+	name: String!
+	address: AddressInput
+	schedule: [DailyScheduleInput!]
+}
+
+input SalesPointInputUpdate {
+	id: ID!
+	name: String!
+	address: AddressInput
+	schedule: [DailyScheduleInput!]
+}
+
+enum WeekDays {
+	MONDAY
+	TUESDAY
+	WEDNESDAY
+	THURSDAY
+	FRIDAY
+	SATURSDAY
+	SUNDAY
+}
+
+type DailySchedule {
+	weekDay: WeekDays!
+	openingHourAM: String!
+	closingHourAM: String
+	openingHourPM: String
+	closingHourPM: String!
+}
+
+input DailyScheduleInput {
+	weekDay: WeekDays!
+	openingHourAM: String!
+	closingHourAM: String
+	openingHourPM: String
+	closingHourPM: String!
+}
+
+type Address {
+	number: Int
+	street: String!
+	city: String!
+	postalCode: String!
+	country: String!
+	longitude: Float!
+	latitude: Float!
+}
+
+input AddressInput {
+	number: Int
+	street: String!
+	city: String!
+	postalCode: String!
+	country: String!
+	longitude: Float!
+	latitude: Float!
+}

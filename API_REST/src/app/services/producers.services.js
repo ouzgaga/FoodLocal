@@ -1,7 +1,6 @@
 const MongooseQueryParser = require('mongoose-query-parser');
 
 const mongoose = require('mongoose');
-const httpStatus = require('http-status');
 require('../models/producers.model');
 
 const Producers = mongoose.model('producers');
@@ -30,7 +29,7 @@ const authorizedTags = {
  * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
  * producteurs retourner pour l'affichage.
  */
-function getProducers ({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
+function getProducers({ tags = undefined, limit = 50, page = 0, lat = undefined, long = undefined, zoom = 12 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
@@ -41,11 +40,17 @@ function getProducers ({ tags = undefined, limit = 50, page = 0, lat = undefined
     tags = JSON.parse(tags); // transforme la string en object
 
     tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
-    return Producers.find(tags.filter).sort({ _id: 1 }).skip(+skip).limit(+limit)
+    return Producers.find(tags.filter)
+      .sort({ _id: 1 })
+      .skip(+skip)
+      .limit(+limit)
       .exec();
   }
 
-  return Producers.find(tags).sort({ _id: 1 }).skip(+skip).limit(+limit)
+  return Producers.find(tags)
+    .sort({ _id: 1 })
+    .skip(+skip)
+    .limit(+limit)
     .exec();
 }
 
@@ -55,7 +60,7 @@ function getProducers ({ tags = undefined, limit = 50, page = 0, lat = undefined
  *
  * @param {Integer} bodyContent, Les informations du producteur à ajouter.
  */
-function addProducer (bodyContent) {
+function addProducer(bodyContent) {
   return new Producers(bodyContent).save();
 }
 
@@ -64,8 +69,9 @@ function addProducer (bodyContent) {
  *
  * @param {Integer} id, L'id du producteur à récupérer.
  */
-function getProducerById ({ id }) {
-  return Producers.findById(id).exec();
+function getProducerById({ id }) {
+  return Producers.findById(id)
+    .exec();
 }
 
 /**
@@ -76,7 +82,7 @@ function getProducerById ({ id }) {
  * @param {Integer} id, L'id du producteur à mettre à jour.
  * @param {Integer} producerInfos, Les informations du producteur à mettre à jour.
  */
-function updateProducer (id, producerInfos) {
+function updateProducer(id, producerInfos) {
   return Producers.findByIdAndUpdate(id, producerInfos, { new: true }); // retourne l'objet modifié  // FIXME: faut-il ajouter .exec() ??
   // return Producers.updateOne(producerInfos); // retourne un OK mais pas l'objet modifié
 }
@@ -86,7 +92,7 @@ function updateProducer (id, producerInfos) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer ({ id }) {
+function deleteProducer({ id }) {
   return Producers.findByIdAndRemove(id);
 }
 

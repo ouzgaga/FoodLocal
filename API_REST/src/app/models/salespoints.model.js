@@ -43,22 +43,31 @@ const dailyScheduleSchema = new mongoose.Schema(
   {
     weekday      : {
       type    : mongoose.Schema.Types.String,
+      enum    : [
+        'MONDAY',
+        'TUESDAY',
+        'WEDNESDAY',
+        'THURSDAY',
+        'FRIDAY',
+        'SATURSDAY',
+        'SUNDAY'
+      ],
       required: true
     },
     openingHourAM: {
-      type    : mongoose.Schema.Types.Date,
+      type    : mongoose.Schema.Types.String,
       required: true
     },
     openingHourPM: {
-      type    : mongoose.Schema.Types.Date,
+      type    : mongoose.Schema.Types.String,
       required: false
     },
     closingHourAM: {
-      type    : mongoose.Schema.Types.Date,
+      type    : mongoose.Schema.Types.String,
       required: false
     },
     closingHourPM: {
-      type    : mongoose.Schema.Types.Date,
+      type    : mongoose.Schema.Types.String,
       required: true
     }
   }
@@ -69,33 +78,25 @@ const dailyScheduleSchema = new mongoose.Schema(
  */
 const salesPointSchema = new mongoose.Schema(
   {
-    name       : {
+    name    : {
       type    : mongoose.Schema.Types.String,
       required: true
     },
-    description: {
-      type    : mongoose.Schema.Types.String,
-      required: true
-    },
-    type       : {
-      type    : mongoose.Schema.Types.String,
-      required: true
-    },
-    address    : {
+    address : {
       type    : addressSchema,
       required: false
     },
-    schedule   : {
+    schedule: {
       type    : [dailyScheduleSchema],
       minItems: 1,
       maxItems: 7,
       required: false
-    },
-    producers  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producers' }]
+    }
   }
 );
 
 /**
  * @typedef salespoints
  */
-mongoose.model('salespoints', salesPointSchema);
+
+module.exports = mongoose.model('salespoints', salesPointSchema);

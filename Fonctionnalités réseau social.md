@@ -77,6 +77,7 @@ Un utilisateur (connecté ou non) pourra effectuer les recherches avancées suiv
   - produits 
   - catégorie de produit (pommes, légumes, viande, ....)
   - lieu
+  - statistiques (producteurs les mieux notés)
 
 
 
@@ -86,4 +87,5 @@ Flux d'activités
 
 Le flux des activités d'un producteur sera visible pour tout utilisateur (même sans être connecté) sur le mur du producteur.
 
-Le flux d'activités d'un utilisateur sera visible sur son mur personnel (et privé). De plus, les utilisateurs recevront des notifications lorsqu'un producteur auquel ils sont abonnés mettra ses informations à jour ou ajoutera une ou plusieurs news.
+Le flux d'activités d'un utilisateur sera visible sur son mur personnel (et privé). De plus, les utilisateurs recevront des notifications lorsqu'un producteur auquel ils sont abonnés mettra ses informations à jour ou ajoutera une ou plusieurs news. 
+
