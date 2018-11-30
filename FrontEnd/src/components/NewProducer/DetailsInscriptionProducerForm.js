@@ -3,13 +3,17 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+
+import MarkerCarotte from '../../img/MarkerCarotte.png';
+
 
 const styles = {
   root: {
     maxWidth: 600,
-
   },
   textField: {
     margin: 0,
@@ -40,15 +44,15 @@ class DetailsInscriptionProducerForm extends Component {
 
         <div className={classes.root}>
 
-          <Grid container spacing={24} >
+          <Grid container spacing={24}>
             <Grid item xs={12}>
               <Typography variant="subheading" className={classes.typo} gutterBottom> Nom du commerce </Typography>
               <TextField
                 className={classes.textField}
                 id="salePointName"
-                margin="normal"
                 variant="outlined"
                 fullWidth
+                margin="none"
                 onChange={handleChange('salePointName')}
                 defaultValue={values.salePointName}
               />
@@ -113,7 +117,22 @@ class DetailsInscriptionProducerForm extends Component {
                 defaultValue={values.address.country}
               />
             </Grid>
-            <br />
+            <Grid item xs={12}>
+              <Typography className={classes.typo} variant="subheading" gutterBottom> Horaire (facultatif) </Typography>
+              <TextField
+                className={classes.textField}
+                id="time"
+                variant="outlined"
+                type="time"
+                onChange={handleChange('address.time')}
+                defaultValue={values.time}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+
+              <Avatar alt="Remy Sharp" src={MarkerCarotte} className={classes.avatar} />
+            </Grid>
             <Grid item xs={12} sm={12}>
               <Button variant="contained" onClick={this.continue} color="primary"> SUIVANT </Button>
             </Grid>

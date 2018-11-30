@@ -3,12 +3,15 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import FormControl from '@material-ui/core/FormControl';
 
 const Products = require('../../Datas/Products.json');
 
 export default class AvailableProductsForm extends Component {
   state = {
-    checkedB: true,
+    value: undefined,
   }
 
   continue = (e) => {
@@ -21,30 +24,35 @@ export default class AvailableProductsForm extends Component {
     this.props.prevStep();
   };
 
-  handleChange = name => (event) => {
-    this.setState({ [name]: event.target.checked });
+
+  handleChange = event => {
+    console.log(event);
+    this.setState({ value: event });
   };
 
   render() {
-    const { values, handleChange } = this.props;
+    const { values } = this.props;
+    const { item } = this.state;
     return (
       <Grid container spacing={24}>
 
-        {Products.products.map(product => (
-          <Grid item xs={4} sm={1}>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={this.state.checkedB}
-                  onChange={this.handleChange('checkedB')}
-                  value={product.name}
-                  color="primary"
+        {Products.products.map((product) => {
+          return (
+            <Grid item xs={4} sm={2} key={product.name}>
+              <Button key={product.name} color="primary" value={product.name} onClick={() => { this.setState({ value: product.items }); }}>
+                {product.name}
+              </Button>
+            </Grid>
+          );
+        })}
 
-                />
-              )}
-              label={product.name}
-            />
+        {console.log(this.state.value)}
+        
+        {this.state.value !== undefined && this.state.value.map(product => (
+          <Grid item xs={4} sm={2}>
+           <div>{product}</div>
           </Grid>
+
         ))}
 
         <Grid item xs={12}>
@@ -56,8 +64,9 @@ export default class AvailableProductsForm extends Component {
           >
 
 
+
             PRÉCÉDENT
-                </Button>
+</Button>
           <Button
             variant="contained"
             onClick={this.continue}
@@ -65,8 +74,9 @@ export default class AvailableProductsForm extends Component {
           >
 
 
+
             SUIVANT
-                </Button>
+</Button>
         </Grid>
       </Grid>
     );

@@ -15,7 +15,6 @@ export class UserForm extends Component {
   state = {
     step: 0,
     salePointName: '',
-    phoneNumber: '',
     address: {
       road: '',
       city: '',
@@ -23,6 +22,7 @@ export class UserForm extends Component {
       countryState: '',
       country: ''
     },
+    phoneNumber: '',
     schedule: '',
     website: '',
     description: ''
@@ -106,11 +106,9 @@ export class UserForm extends Component {
               </Step>
             ))}
           </Stepper>
-          <Grid container justify="center">
+          <Grid container justify="center" style={{padding:20}}>
 
-          <div style={{ padding: 20 }}>
             {this.pageContext()}
-          </div>
           </Grid>
 
         </div>
