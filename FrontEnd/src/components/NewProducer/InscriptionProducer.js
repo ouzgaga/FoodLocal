@@ -11,6 +11,10 @@ function getSteps() {
   return ['Détails', 'Produits disponibles', 'Description des produits', 'Confirmation'];
 }
 
+export const IncriptionProducerContext = React.createContext({
+
+});
+
 
 export class InscriptionProducer extends Component {
   state = {
@@ -24,7 +28,12 @@ export class InscriptionProducer extends Component {
     phoneNumber: '',
     scheduleActive: false,
     website: '',
-    description: ''
+    description: '',
+    timeMondayEnable: false,
+    timeMonday1Start: '08:00',
+    timeMonday1End: '18:00',
+    timeMonday2Start: '14:00',
+    timeMonday2End: '18:00'
   }
   // Proceed to next step
   nextStep = () => {
@@ -47,40 +56,27 @@ export class InscriptionProducer extends Component {
     this.setState({ [input]: e.target.value });
   };
 
+  // change the checkbox value
+  handleChangeCheckbox = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
+
+  addTime
+
   pageContext = () => {
     const { step } = this.state;
-    const {
-      salePointName, phoneNumber, address, schedule, website, description
-    } = this.state;
-    const values = {
-      salePointName, phoneNumber, address, schedule, website, description
-    };
     switch (step) {
       case 0:
         return (
-          <DetailsInscriptionProducerForm
-            nextStep={this.nextStep}
-            handleChange={this.handleChange}
-            values={this.state}
-          />
+          <DetailsInscriptionProducerForm />
         );
       case 1:
         return (
-          <AvailableProductsForm
-            nextStep={this.nextStep}
-            prevStep={this.prevStep}
-            handleChange={this.handleChange}
-            values={this.state}
-          />
+          <AvailableProductsForm />
         );
       case 2:
         return (
-          <AvailableProductsForm
-            nextStep={this.nextStep}
-            prevStep={this.prevStep}
-            handleChange={this.handleChange}
-            values={this.state}
-          />
+          <AvailableProductsForm />
         );
       case 3:
         return (
@@ -100,7 +96,15 @@ export class InscriptionProducer extends Component {
     const { step } = this.state;
     const steps = getSteps();
     return (
-      <div>
+      <IncriptionProducerContext.Provider
+        value={{
+          nextStep: this.nextStep,
+          prevStep: this.prevStep,
+          handleChange: this.handleChange,
+          handleChangeCheckbox: this.handleChangeCheckbox,
+          values: this.state,
+        }}
+      >
         <Stepper activeStep={step} alternativeLabel>
           {steps.map(label => (
             <Step key={label}>
@@ -113,7 +117,7 @@ export class InscriptionProducer extends Component {
           {this.pageContext()}
         </Grid>
 
-      </div>
+      </IncriptionProducerContext.Provider>
     );
   }
 }
