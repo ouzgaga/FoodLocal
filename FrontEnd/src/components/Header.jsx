@@ -20,7 +20,7 @@ const styles = {
     weight  : '100%',
     height  : '64px',
     top     : 0,
-    shadow  : 'none'
+    shadow  : 'none',
   },
   grow: {
     flexGrow: 1
@@ -30,11 +30,11 @@ const styles = {
     marginRight: 20,
     paddingTop : 4,
     height     : '60px',
-    outline    : 'none'
+    outline    : 'none',
   },
   LinkButton: {
     textDecoration: 'none',
-    color         : 'secondary'
+    color         : 'secondary',
   }
 };
 
@@ -59,7 +59,8 @@ class MenuAppBar extends React.Component {
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Acceuil</Button></Link>
+        <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
         <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
 
 
@@ -83,7 +84,6 @@ class MenuAppBar extends React.Component {
         <AppBar position="static" className={classes.root}>
           <Toolbar>
             <Link to="/" readOnly tabIndex="-1"><img src={logo} className={classes.menuButton} alt="logo" readOnly tabIndex="-1" /></Link>
-
             <div className={classes.grow} />
             {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
           </Toolbar>
