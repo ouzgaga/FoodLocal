@@ -59,7 +59,7 @@ class MenuAppBar extends React.Component {
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Acceuil</Button></Link>
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Accueil</Button></Link>
         <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
         <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
 

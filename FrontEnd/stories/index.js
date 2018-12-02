@@ -6,7 +6,7 @@ import ProducerPost from '../src/components/producer/ProducerPost';
 import ProducerHeader from '../src/components/producer/ProducerHeader';
 
 import ProducerUserInteraction from '../src/components/producer/ProducerUserInteraction';
-
+import NewPost from '../src/components/mur/NewPost';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -57,5 +57,12 @@ storiesOf('ProducerUserInteraction', module)
   .add('1000 folowers', () => (
     <ProducerUserInteraction
       followersCount={1000}
+    />
+  ));
+
+storiesOf('NewPost', module)
+  .add('Default', () => (
+    <NewPost
+      maxLenght={24}
     />
   ));

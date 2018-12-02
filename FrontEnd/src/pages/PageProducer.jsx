@@ -7,10 +7,13 @@ import ProducerContent from '../components/producer/ProducerContent';
 
 const styles = theme => ({
   root: {
+    width: 900,
+    margin: 'auto',
     maxWidth: '100%',
     maxHeight: '100%',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
   },

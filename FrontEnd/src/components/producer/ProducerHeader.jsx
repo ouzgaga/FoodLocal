@@ -20,6 +20,7 @@ const styles = theme => ({
     height: '100%',
     padding: theme.spacing.unit * 2,
     textAlign: 'justify',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   leftBox: {
     flexGrow: 1,
@@ -43,7 +44,7 @@ function ProducerHeader(props) {
   const { classes, name, description, image, ratingValue, nbRating } = props;
   
   return (
-    <Paper className={classes.root}>
+    <div className={classes.root}>
       <Grid container spacing={16}>
         <Grid item xs={6} sm container className={classes.leftBox}>
           <ButtonBase className={classes.image}>
@@ -78,7 +79,7 @@ function ProducerHeader(props) {
           </Grid>
         </Grid>
       </Grid>
-    </Paper>
+    </div>
   );
 }
 

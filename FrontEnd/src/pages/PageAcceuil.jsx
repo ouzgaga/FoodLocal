@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 
-import PapillonImg from '../img/papillon.png';
 import SearchIconButton from '../components/items/SearchIconButton';
 
 const styles = theme => ({

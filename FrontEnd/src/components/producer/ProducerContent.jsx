@@ -10,6 +10,9 @@ const styles = {
     flexGrow: 1,
     width: '100%',
     height: '100%',
+    widht: 1000,
+    padding: 16,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
 };
 
@@ -43,7 +46,7 @@ class ProducerContent extends React.Component {
     
 
     return (
-      <Paper className={classes.root}>
+      <div className={classes.root}>
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
@@ -58,7 +61,7 @@ class ProducerContent extends React.Component {
         {value === 0 && this.state.array}
         {value === 1 && 'Produits'}
         {value === 2 && 'Fil d\'actualité'}
-      </Paper>
+      </div>
     );
   }
 }
