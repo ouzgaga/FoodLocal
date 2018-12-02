@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-import MarkerCarotte from '../../img/strawberry.png';
+import MarkerCarotte from '../../img/strawberry2.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
 
 const Products = require('../../Datas/Products.json');
@@ -18,14 +18,12 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    color: theme.palette.text.secondary,
   },
   media: {
     height: 80,
     width: 80,
-    backgroundColor: theme.palette.primary,
+    backgroundColor: '#66CCCC',
   },
 });
 
@@ -71,7 +69,7 @@ class AvailableProductsForm extends Component {
 
               ))}
 
-           
+           <Grid container>
                 <Grid item xs={6}>
                   <div className={classes.paper}>
 
@@ -85,7 +83,7 @@ class AvailableProductsForm extends Component {
                   </div>
                 </Grid>
               </Grid>
-           
+           </Grid>
           </div>
 
         )}
