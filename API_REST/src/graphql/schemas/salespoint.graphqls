@@ -1,8 +1,21 @@
+type Query {
+	salespoints: [SalesPoint!]!
+
+	salespoint(salespoint: SalesPointInputGetAndDelete!) : SalesPoint
+}
+
+type Mutation {
+	addSalespoint(salespoint: SalesPointInputAdd!): SalesPoint!
+	updateSalespoint(salespoint: SalesPointInputUpdate!): SalesPoint
+	deleteSalesPoint(salespoint: SalesPointInputGetAndDelete!): SalesPoint
+}
+
 type SalesPoint {
 	id: ID!
 	name: String!
 	address: Address
 	schedule: [DailySchedule!]
+	# FIXME: est-ce qu'on enregistre aussi l'ID du producteur pour avoir le lien dans les 2 sens?
 }
 
 input SalesPointInputAdd {
@@ -18,6 +31,10 @@ input SalesPointInputUpdate {
 	schedule: [DailyScheduleInput!]
 }
 
+input SalesPointInputGetAndDelete {
+	id: ID!
+}
+
 enum WeekDays {
 	MONDAY
 	TUESDAY
@@ -30,18 +47,22 @@ enum WeekDays {
 
 type DailySchedule {
 	weekDay: WeekDays!
-	openingHourAM: String!
-	closingHourAM: String
-	openingHourPM: String
-	closingHourPM: String!
+	schedule: [Schedule!]!
 }
 
 input DailyScheduleInput {
 	weekDay: WeekDays!
-	openingHourAM: String!
-	closingHourAM: String
-	openingHourPM: String
-	closingHourPM: String!
+	schedule: [ScheduleInput!]!
+}
+
+type Schedule {
+	openingHour: String!
+	closingHour: String!
+}
+
+input ScheduleInput {
+	openingHour: String!
+	closingHour: String!
 }
 
 type Address {

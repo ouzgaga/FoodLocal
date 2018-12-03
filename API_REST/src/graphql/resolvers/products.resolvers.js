@@ -1,16 +1,11 @@
-const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
 const productTypeServices = require('../services/productType.services');
 const productTypeCategoryServices = require('../services/productTypeCategory.services');
-const usersServices = require('../services/users.services');
-const salesPointsServices = require('../services/salespoints.services');
-const Producers = require('../models/producers.modelgql');
-const SalesPoint = require('../models/salespoints.modelgql');
 
 
 const productResolvers = {
   Query: {
-    products: () => productsServices.getProducts(),
+    products: () => productsServices.getProductsw(),
 
     product: (parent, args, context) => productsServices.getProductById(args.product),
 

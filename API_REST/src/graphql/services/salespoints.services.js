@@ -1,4 +1,6 @@
-const Salespoints = require('../models/salespoints.modelgql');
+const mongoose = require('mongoose');
+const SalespointsModel = require('../models/salespoints.modelgql');
+
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
  * selon les tags "tags" reçus à partir de la page "page". Sans
@@ -10,24 +12,33 @@ const Salespoints = require('../models/salespoints.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalesPoints ({ tags = undefined, limit = 50, page = 0 } = {}) {
+function getSalesPoints({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
   }
 
-  return Salespoints.find({ tags }).sort({ _id: 1 }).skip(+skip).limit(+limit)
-    .exec();
+  return SalespointsModel.find({ tags })
+    .sort({ _id: 1 })
+    .skip(+skip)
+    .limit(+limit);
 }
 
 /**
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
  *
- * @param {Integer} salesPoint, Les informations du point de vente à ajouter.
+ * @param {Integer} salespoint, Les informations du point de vente à ajouter.
  */
-function addSalesPoint (salesPoint) {
-  return new Salespoints(salesPoint).save();
+function addSalesPoint(salespoint) {
+  // Si le point de vente ne possède pas d'id -> on l'ajoute à la DB
+  if (salespoint.id === undefined) {
+    return new SalespointsModel(salespoint).save();
+  } else {
+    // Si le product possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce product
+    // FIXME: ou bien on met à jour le contenu de la DB ...?
+    return salespoint;
+  }
 }
 
 /**
@@ -35,8 +46,16 @@ function addSalesPoint (salesPoint) {
  *
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
-function getSalesPointById ({ id }) {
-  return Salespoints.findById(id).exec();
+function getSalesPointById({ id }) {
+  let objectId = id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received product.id is invalid!');
+  } else {
+    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
+    objectId = new mongoose.Types.ObjectId(id);
+  }
+
+  return SalespointsModel.findById(objectId);
 }
 
 /**
@@ -44,12 +63,14 @@ function getSalesPointById ({ id }) {
  * données reçues. Remplace toutes les données du point de
  * vente dans la base de données par celles reçues!
  *
- * @param {Integer} id, L'id du point de vente à mettre à jour.
- * @param {Integer} salespointInfos, Les informations du point de vente à mettre à jour.
+ * @param {Integer} salespoint, Les informations du point de vente à mettre à jour.
  */
-function updateSalesPoint (id, salespointInfos) {
-  return Salespoints.findByIdAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
-  // return Salespoints.updateOne(salespointInfos); // retourne un OK mais pas l'objet modifié
+function updateSalesPoint(salespoint) {
+  if (!mongoose.Types.ObjectId.isValid(salespoint.id)) {
+    return new Error('Received product.id is invalid!');
+  }
+
+  return SalespointsModel.findByIdAndUpdate(salespoint.id, salespoint, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -57,8 +78,12 @@ function updateSalesPoint (id, salespointInfos) {
  *
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
-function deleteSalesPoint ({ id }) {
-  return Salespoints.findByIdAndRemove(id);
+function deleteSalesPoint({ id }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received product.id is invalid!');
+  }
+
+  return SalespointsModel.findByIdAndRemove(id);
 }
 
 module.exports = {

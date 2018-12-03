@@ -21,8 +21,7 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
   return ProductModel.find({ tags })
     .sort({ _id: 1 })
     .skip(+skip)
-    .limit(+limit)
-    .exec();
+    .limit(+limit);
 }
 
 function getAllProductsInReceivedIdList(listOfIdToGet) {
@@ -71,8 +70,7 @@ function getProductById({ id }) {
     objectId = new mongoose.Types.ObjectId(id);
   }
 
-  return ProductModel.findById(objectId)
-    .exec();
+  return ProductModel.findById(objectId);
 }
 
 /**
@@ -101,12 +99,12 @@ async function updateProduct(product) {
  *
  * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct(product) {
-  if (!mongoose.Types.ObjectId.isValid(product.id)) {
+function deleteProduct({ id }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   }
 
-  return ProductModel.findByIdAndRemove(product.id);
+  return ProductModel.findByIdAndRemove(id);
 }
 
 module.exports = {

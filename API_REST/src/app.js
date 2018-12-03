@@ -8,8 +8,8 @@ const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
 
 const Producer = require('./graphql/resolvers/producers.resolvers');
 const Product = require('./graphql/resolvers/products.resolvers');
+const Salespoint = require('./graphql/resolvers/salespoint.resolvers');
 const Person = require('./graphql/resolvers/person.resolvers');
-const DailySchedule = require('./graphql/resolvers/dailySchedule.resolvers');
 const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
@@ -26,8 +26,8 @@ app.use(cors());
 const resolvers = merge(
   Producer,
   Product,
+  Salespoint,
   // Person,
-  DailySchedule
 );
 
 const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));
