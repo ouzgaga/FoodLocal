@@ -8,6 +8,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 
+import AdressContainer from '../items/AdressContainer';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -19,11 +21,16 @@ const styles = theme => ({
 class ResearchMap extends React.Component {
   constructor(props) {
     super(props);
-    
+    this.state = {
+      road: 'Ch. de test 2',
+      city: '1020 sasd',
+      country: 'Suisse',
+    }
   }
 
   render() {
     const { classes } = this.props;   
+    const { road, city, country } = this.state;
 
     return (
       <div>
@@ -35,9 +42,11 @@ class ResearchMap extends React.Component {
           <div>
             this is the research field
           </div>
-          <div>
-            this the adress
-          </div>
+          <AdressContainer
+            road={road}
+            city={city}
+            country={country}
+          />
         </div>
       </div>
     );

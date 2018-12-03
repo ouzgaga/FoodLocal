@@ -7,6 +7,7 @@ import ProducerHeader from '../src/components/producer/ProducerHeader';
 
 import ProducerUserInteraction from '../src/components/producer/ProducerUserInteraction';
 import NewPost from '../src/components/mur/NewPost';
+import AdressContainer from '../src/components/items/AdressContainer';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -66,3 +67,14 @@ storiesOf('NewPost', module)
       maxLenght={24}
     />
   ));
+
+  storiesOf('AdressContainer', module)
+  .add('Default', () => (
+    <AdressContainer
+      road="Route 1"
+      city="2230 dfees"
+      country="Suisse"
+    />
+  ));
+
+  
