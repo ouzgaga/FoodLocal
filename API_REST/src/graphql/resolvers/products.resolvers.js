@@ -12,7 +12,7 @@ const productResolvers = {
   Query: {
     products: () => productsServices.getProducts(),
 
-    product: (parent, args, context) => productsServices.getProductById({ id: args.id }),
+    product: (parent, args, context) => productsServices.getProductById(args.product),
 
     productTypes: () => productTypeServices.getProductTypes(),
 

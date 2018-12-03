@@ -23,7 +23,7 @@ type Mutation {
 	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
 	updateProduct(product: ProductInputUpdate!): Product
 	#Supprime le produit correspondant à l'id passée en paramètre. Ne supprime pas le 'productType'.
-	deleteProduct(producer: ProductInputGetAndDelete!): Product
+	deleteProduct(product: ProductInputGetAndDelete!): Product
 
 
 	#Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
@@ -57,7 +57,7 @@ input ProductInputAdd {
 input ProductInputUpdate {
 	id: ID!
 	description: String
-	productType: ProductTypeInputUpdate!
+	productType: ProductTypeInputGetAndDelete!
 }
 
 input ProductInputGetAndDelete {
