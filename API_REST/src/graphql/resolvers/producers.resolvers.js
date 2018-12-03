@@ -2,19 +2,22 @@ const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
 const usersServices = require('../services/users.services');
 const salesPointsServices = require('../services/salespoints.services');
-const Producers = require('../models/producers.modelgql');
+const ProducersModel = require('../models/producers.modelgql');
+const UsersModel = require('../models/user.modelgql');
 const SalesPoint = require('../models/salespoints.modelgql');
 
-const isEmailUnused = async(emailProducer) => {
-  const producer = await Producers.findOne({ email: emailProducer });
-  return producer === null;
+const isEmailUnused = async(emailUser) => {
+  const existingUser = await UsersModel.findOne({ email: emailUser });
+  const existingProducer = await ProducersModel.findOne({ email: emailUser });
+
+  return existingUser === null && existingProducer === null;
 };
 
 const producerResolvers = {
   Query: {
     producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => producersServices.getProducerById({ id: args.id })
+    producer: (parent, args, context) => producersServices.getProducerById(args.producer)
   },
 
   Mutation: {
@@ -35,7 +38,7 @@ const producerResolvers = {
           products: productsId
         };
 
-        return new Producers(producer)
+        return new ProducersModel(producer)
           .save();
       } else {
         throw new Error('This email is already used.');
@@ -51,7 +54,7 @@ const producerResolvers = {
         email: args.producer.email,
         password: args.producer.password,
         image: args.producer.image,
-        subscriptions: await producersServices.getFiltredProducersById(args.producer.subscriptions),
+        subscriptions: await producersServices.getAllProducersInReceivedIdList(args.producer.subscriptions),
         emailValidated: args.producer.isValidated,
         // subscribedUsers: args.producer.subscribedUsers,
         phoneNumber: args.producer.phoneNumber,
@@ -62,7 +65,7 @@ const producerResolvers = {
         // Products: args.producer.Products
       };
 
-      return Producers.findByIdAndUpdate(producer);
+      return ProducersModel.findByIdAndUpdate(producer);
     }
   },
 

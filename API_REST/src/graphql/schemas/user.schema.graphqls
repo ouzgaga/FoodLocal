@@ -1,7 +1,6 @@
 type Query {
 	users: [User!]!
-
-	user(salespoint: UserInputGetAndDelete!) : User
+	user(user: UserInputGetAndDelete!) : User
 }
 
 type Mutation {

@@ -1,5 +1,6 @@
-
-const Users = require('../models/user.modelgql');
+const mongoose = require('mongoose');
+const UsersModel = require('../models/user.modelgql');
+const ProducersModel = require('../models/producers.modelgql');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -11,10 +12,6 @@ const Users = require('../models/user.modelgql');
  * @param {Integer} limit, Nombre maximum de producteurs à retourner.
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
- * @param {Number} lat, La latitude de l'utilisateur
- * @param {Number} long, La longitude de l'utilisateur
- * @param {Integer} zoom, Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels
- * producteurs retourner pour l'affichage.
  */
 function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
@@ -22,26 +19,42 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return Users.find(tags)
+  return UsersModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
-    .limit(+limit)
-    .exec();
+    .limit(+limit);
 }
 
-function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return Users.find({ _id: { $in: listOfIdToGet } });
+function getAllProducersInReceivedIdList(listOfIdToGet) {
+  return UsersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
+const isEmailUnused = async(emailUser) => {
+  const existingUser = await UsersModel.findOne({ email: emailUser });
+  const existingProducer = await ProducersModel.findOne({ email: emailUser });
+
+  return existingUser === null && existingProducer === null;
+};
 
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
  *
- * @param {Integer} bodyContent, Les informations du producteur à ajouter.
+ * @param {Integer} user, Les informations du producteur à ajouter.
  */
-function addUser(bodyContent) {
-  return new Users(bodyContent).save();
+async function addUser(user) {
+  // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
+  if (await isEmailUnused(user.email)) {
+    const userToAdd = {
+      ...user,
+      subscriptions: [],
+      emailValidated: false
+    };
+
+    return new UsersModel(userToAdd).save();
+  } else {
+    throw new Error('This email is already used.');
+  }
 }
 
 /**
@@ -50,8 +63,15 @@ function addUser(bodyContent) {
  * @param {Integer} id, L'id du producteur à récupérer.
  */
 function getUserById({ id }) {
-  return Users.findById(id)
-    .exec();
+  let objectId = id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received salespoint.id is invalid!');
+  } else {
+    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
+    objectId = new mongoose.Types.ObjectId(id);
+  }
+
+  return UsersModel.findById(objectId);
 }
 
 /**
@@ -59,12 +79,20 @@ function getUserById({ id }) {
  * données reçues. Remplace toutes les données du producteur
  * dans la base de données par celles reçues!
  *
- * @param {Integer} id, L'id du producteur à mettre à jour.
- * @param {Integer} userInfos, Les informations du producteur à mettre à jour.
+ * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-function updateUser(id, userInfos) {
-  return Users.findByIdAndUpdate(id, userInfos, { new: true }); // retourne l'objet modifié  // FIXME: faut-il ajouter .exec() ??
-  // return Users.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
+async function updateUser(user) {
+  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+    return new Error('Received user.id is invalid!');
+  }
+
+  const usertoUpdate = {
+    ...user,
+    subscriptions: await getAllProducersInReceivedIdList(user.subscriptions)
+  };
+
+  return UsersModel.findByIdAndUpdate(user.id, usertoUpdate, { new: true }); // retourne l'objet modifié
+  // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
 /**
@@ -73,7 +101,11 @@ function updateUser(id, userInfos) {
  * @param {Integer} id, L'id du producteur à supprimer.
  */
 function deleteUser({ id }) {
-  return Users.findByIdAndRemove(id);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  }
+
+  return UsersModel.findByIdAndRemove(id);
 }
 
 module.exports = {
@@ -82,5 +114,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList
+  getAllProducersInReceivedIdList
 };
