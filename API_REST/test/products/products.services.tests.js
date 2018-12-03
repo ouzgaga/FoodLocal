@@ -1,4 +1,4 @@
-require('../../src/graphql/models/producers.model');
+require('../../src/graphql/models/producers.modelgql');
 require('../chai-config');
 const mongoose = require('mongoose');
 const productsServices = require('../../src/app/services/products.services');

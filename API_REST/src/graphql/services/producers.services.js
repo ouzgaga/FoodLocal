@@ -1,4 +1,4 @@
-const Producers = require('../models/producers.model');
+const Producers = require('../models/producers.modelgql');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés

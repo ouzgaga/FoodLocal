@@ -1,4 +1,4 @@
-const Salespoints = require('../models/salespoints.model');
+const Salespoints = require('../models/salespoints.modelgql');
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
  * selon les tags "tags" reçus à partir de la page "page". Sans
@@ -24,10 +24,10 @@ function getSalesPoints ({ tags = undefined, limit = 50, page = 0 } = {}) {
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
  *
- * @param {Integer} bodyContent, Les informations du point de vente à ajouter.
+ * @param {Integer} salesPoint, Les informations du point de vente à ajouter.
  */
-function addSalesPoint (bodyContent) {
-  return new Salespoints(bodyContent).save();
+function addSalesPoint (salesPoint) {
+  return new Salespoints(salesPoint).save();
 }
 
 /**
@@ -48,7 +48,7 @@ function getSalesPointById ({ id }) {
  * @param {Integer} salespointInfos, Les informations du point de vente à mettre à jour.
  */
 function updateSalesPoint (id, salespointInfos) {
-  return Salespoints.findOneAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
+  return Salespoints.findByIdAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
   // return Salespoints.updateOne(salespointInfos); // retourne un OK mais pas l'objet modifié
 }
 

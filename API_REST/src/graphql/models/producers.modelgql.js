@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserSchema = require('./user.model');
+const UserSchema = require('./user.modelgql');
 
 /**
  * Producer Schema (hérite du contenu du schéma 'users')
@@ -35,7 +35,7 @@ const producerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Boolean,
       required: true
     },
-    Products: [
+    products: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products'

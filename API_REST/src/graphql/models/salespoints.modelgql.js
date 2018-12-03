@@ -41,7 +41,7 @@ const addressSchema = new mongoose.Schema(
  */
 const dailyScheduleSchema = new mongoose.Schema(
   {
-    weekday      : {
+    weekDay      : {
       type    : mongoose.Schema.Types.String,
       enum    : [
         'MONDAY',

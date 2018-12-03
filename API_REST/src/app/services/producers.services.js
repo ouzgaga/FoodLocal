@@ -1,7 +1,7 @@
 const MongooseQueryParser = require('mongoose-query-parser');
 
 const mongoose = require('mongoose');
-require('../../graphql/models/producers.model');
+require('../../graphql/models/producers.modelgql');
 
 const Producers = mongoose.model('producers');
 

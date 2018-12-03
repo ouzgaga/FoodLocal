@@ -1,4 +1,6 @@
-const Products = require('../../graphql/models/products.model');
+const { Products } = require('../models/products.modelgql');
+
+const ProductTypeServices = require('./productType.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -28,15 +30,26 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
   return Products.find({ _id: { $in: listOfIdToGet } });
 }
 
-
 /**
  * Ajoute un nouveau produit dans la base de données.
  * Attention, doublons autorisés!
  *
- * @param {Integer} bodyContent, Les informations du produit à ajouter.
+ * @param {Integer} product, Les informations du produit à ajouter.
  */
-function addProduct(bodyContent) {
-  return new Products(bodyContent).save();
+async function addProduct(product) {
+  const newProduct = {
+    description: product.description,
+    productType: product.productType.id
+  };
+
+  return new Products(newProduct).save();
+}
+
+async function addAllProductsInArray(productsArray) {
+  const promises = [];
+  productsArray.map(product => promises.push(addProduct(product)));
+  const resolvedPromises = await Promise.all(promises);
+  return resolvedPromises.map(res => res.id);
 }
 
 /**
@@ -53,27 +66,33 @@ function getProductById({ id }) {
  * Met à jour le produit possédant l'id reçu avec les données
  * reçues. Remplace toutes les données du produit dans la base
  * de données par celles reçues!
+ * Ne modifie pas les informations du productType (car elles ne peuvent pas être modifiées par un producteur!)
  *
- * @param {Integer} id, L'id du produit à mettre à jour.
- * @param {Integer} productInfos, Les informations du produit à mettre à jour.
+ * @param product, Les informations du produit à mettre à jour.
  */
-function updateProduct(id, productInfos) {
-  return Products.findOneAndUpdate(id, productInfos, { new: true }); // retourne l'objet modifié
-  // return Products.updateOne(productInfos); // retourne un OK mais pas l'objet modifié
+async function updateProduct(product) {
+  const updatedProduct = {
+    ...product,
+    productType: product.productType.id
+  };
+
+  return Products.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
+  // return Products.updateOne(product); // retourne un OK mais pas l'objet modifié
 }
 
 /**
- * Supprime le produit correspondant à l'id reçu.
+ * Supprime le produit correspondant à l'id reçu. Ne supprime pas le type du produit ni sa catégorie.
  *
- * @param {Integer} id, L'id du produit à supprimer.
+ * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct({ id }) {
-  return Products.findByIdAndRemove(id);
+function deleteProduct(product) {
+  return Products.findByIdAndRemove(product.id);
 }
 
 module.exports = {
   getProducts,
   getAllProductsInReceivedIdList,
+  addAllProductsInArray,
   addProduct,
   getProductById,
   updateProduct,

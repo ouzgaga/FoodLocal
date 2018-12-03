@@ -1,4 +1,4 @@
-require('../models/producers.model');
+require('../models/producers.modelgql');
 
 const PersonType = {
   USER    : 'users',

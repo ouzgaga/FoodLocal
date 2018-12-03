@@ -1,5 +1,5 @@
 
-const Users = require('../models/user.model');
+const Users = require('../models/user.modelgql');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés

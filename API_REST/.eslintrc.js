@@ -6,7 +6,8 @@ module.exports = {
     'key-spacing': 'off',
     'max-len': 'off',
     'no-plusplus': 'off',
-    'no-else-return': 'off'
+    'no-else-return': 'off',
+    'no-trailing-spaces': 'off'
   },
   'env': {
     'mocha': true

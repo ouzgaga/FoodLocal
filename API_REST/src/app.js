@@ -7,6 +7,7 @@ const path = require('path');
 const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
 
 const Producer = require('./graphql/resolvers/producers.resolvers');
+const Product = require('./graphql/resolvers/products.resolvers');
 const Person = require('./graphql/resolvers/person.resolvers');
 const DailySchedule = require('./graphql/resolvers/dailySchedule.resolvers');
 const config = require('./config/config');
@@ -24,8 +25,9 @@ app.use(cors());
 
 const resolvers = merge(
   Producer,
+  Product,
   // Person,
-  // DailySchedule
+  DailySchedule
 );
 
 const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));

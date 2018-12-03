@@ -2,8 +2,8 @@ const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
 const usersServices = require('../services/users.services');
 const salesPointsServices = require('../services/salespoints.services');
-const Producers = require('../models/producers.model');
-const SalesPoint = require('../models/salespoints.model');
+const Producers = require('../models/producers.modelgql');
+const SalesPoint = require('../models/salespoints.modelgql');
 
 const isEmailUnused = async(emailProducer) => {
   const producer = await Producers.findOne({ email: emailProducer });
@@ -19,8 +19,11 @@ const producerResolvers = {
 
   Mutation: {
     addProducer: async(parent, args, context) => {
+      // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
       if (await isEmailUnused(args.producer.email)) {
-        const salespoint = await new SalesPoint(args.producer.salesPoint).save();
+        const salespoint = await salesPointsServices.addSalesPoint(args.producer.salesPoint);
+
+        const productsId = await productsServices.addAllProductsInArray(args.producer.products);
 
         const producer = {
           ...args.producer,
@@ -28,7 +31,8 @@ const producerResolvers = {
           subscriptions: [],
           emailValidated: false,
           subscribedUsers: [],
-          isValidated: false
+          isValidated: false,
+          products: productsId
         };
 
         return new Producers(producer)
@@ -40,7 +44,6 @@ const producerResolvers = {
 
     updateProducerInfos: async(parent, args, context) => {
       // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
-
 
       const producer = {
         firstname: args.producer.firstname,
@@ -59,7 +62,6 @@ const producerResolvers = {
         // Products: args.producer.Products
       };
 
-
       return Producers.findByIdAndUpdate(producer);
     }
   },
@@ -71,7 +73,7 @@ const producerResolvers = {
 
     salesPoint: (parent, args, context) => salesPointsServices.getSalesPointById({ id: parent.salesPoint }),
 
-    Products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.subscribedUsers)
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.products)
   }
 };
 module.exports = producerResolvers;
