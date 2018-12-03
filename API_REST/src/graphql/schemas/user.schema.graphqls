@@ -1,3 +1,15 @@
+type Query {
+	users: [User!]!
+
+	user(salespoint: UserInputGetAndDelete!) : User
+}
+
+type Mutation {
+	addUser(user: UserInputAdd!): User!
+	updateUser(user: UserInputUpdate!): User
+	deleteUser(user: UserInputGetAndDelete!): User
+}
+
 type User implements Person {
 	id: ID!
 	firstname: String!
@@ -29,6 +41,10 @@ input UserInputUpdate {
 	image: String # faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!]  # pas obligatoire si vide
 	emailValidated: Boolean!
+}
+
+input UserInputGetAndDelete {
+	id: ID!
 }
 
 

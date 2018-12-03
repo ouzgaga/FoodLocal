@@ -4,7 +4,7 @@ const salespointsResolvers = {
   Query: {
     salespoints: () => salespointsServices.getSalesPoints(),
 
-    salespoint: (parent, args, context) => salespointsServices.getSalesPointById({ id: args.id })
+    salespoint: (parent, args, context) => salespointsServices.getSalesPointById(args.salespoint)
   },
 
   Mutation: {

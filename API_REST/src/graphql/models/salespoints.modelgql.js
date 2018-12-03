@@ -73,6 +73,7 @@ const dailyScheduleSchema = new mongoose.Schema(
     schedule: {
       type: [scheduleSchema],
       minItems: 1,
+      maxItems: 2,
       required: true
     }
   }

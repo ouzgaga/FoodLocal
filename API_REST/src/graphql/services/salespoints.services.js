@@ -49,7 +49,7 @@ function addSalesPoint(salespoint) {
 function getSalesPointById({ id }) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
+    return new Error('Received salespoint.id is invalid!');
   } else {
     // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
     objectId = new mongoose.Types.ObjectId(id);
@@ -67,7 +67,7 @@ function getSalesPointById({ id }) {
  */
 function updateSalesPoint(salespoint) {
   if (!mongoose.Types.ObjectId.isValid(salespoint.id)) {
-    return new Error('Received product.id is invalid!');
+    return new Error('Received salespoint.id is invalid!');
   }
 
   return SalespointsModel.findByIdAndUpdate(salespoint.id, salespoint, { new: true }); // retourne l'objet modifié
@@ -80,7 +80,7 @@ function updateSalesPoint(salespoint) {
  */
 function deleteSalesPoint({ id }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
+    return new Error('Received salespoint.id is invalid!');
   }
 
   return SalespointsModel.findByIdAndRemove(id);

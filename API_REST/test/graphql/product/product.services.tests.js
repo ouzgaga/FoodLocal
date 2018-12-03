@@ -1,5 +1,4 @@
 require('../../chai-config');
-const mongoose = require('mongoose');
 
 const productService = require('../../../src/graphql/services/products.services');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
@@ -74,13 +73,13 @@ describe('tests productType services', () => {
     allProducts.should.be.an('array');
     allProducts.length.should.be.equal(2);
 
-    allProducts.map((productType) => {
-      productType.should.be.not.null;
-      productType.id.should.be.not.null;
-      productType.description.should.be.not.null;
-      productType.productType.should.be.not.null;
-      productType.productType.should.be.an('object');
-      productType.productType.id.should.be.not.null;
+    allProducts.map((product) => {
+      product.should.be.not.null;
+      product.id.should.be.not.null;
+      product.description.should.be.not.null;
+      product.productType.should.be.not.null;
+      product.productType.should.be.an('object');
+      product.productType.id.should.be.not.null;
     });
   });
 
