@@ -21,6 +21,7 @@ import {
   PageMap,
   PageNewAccount,
   PageError404,
+  PageBecomeProducer,
 } from './pages/Pages';
 
 
@@ -78,6 +79,7 @@ class App extends React.Component {
                 <Switch>
                   <Route default path="/about" exact component={PageAbout} classes={classes} />
                   <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+                  <Route path="/becomeProducer" exct component={PageBecomeProducer} classes={classes} />
                   <Route path="/" exact component={PageMap} classes={classes} />
                   <Route path="/producer/:producerId" component={ProducerVue} />
                   <Route path="*" component={PageError404} classes={classes} />

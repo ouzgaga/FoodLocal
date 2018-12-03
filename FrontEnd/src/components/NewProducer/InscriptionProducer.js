@@ -15,7 +15,7 @@ function getSteps() {
 export const IncriptionProducerContext = React.createContext({});
 
 
-export class InscriptionProducer extends Component {
+class InscriptionProducer extends Component {
   state = {
     step: 0,
     salePointName: '',

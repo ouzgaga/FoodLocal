@@ -110,26 +110,43 @@ class DaySchedule extends Component {
                   );
                 })}
 
-                <Grid item xs={4} sm={2}>
-
-                  {day.length > 0
-                    && (
+                {day.length > 0
+                  && (
+                    <Grid item xs={1}>
                       <Fab color={red} aria-label="Add" className={classes.fabDelete} onClick={deleteLastSchedule(day, dayName)}>
                         <DeleteIcon />
-                      </Fab>)
-                  }
+                      </Fab>
+                    </Grid>)
+                }
 
-                  {day.length < 2
-                    && (
-                      <Fab color="primary" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(day, dayName)}>
-                        <AddIcon />
-                      </Fab>)
-                  }
-                </Grid>
+                {day.length === 1 && (
+                  <Fragment>
+                    <Hidden smUp>
+                      <Grid item xs={2} />
+                      <Grid item xs={2} />
+
+                    </Hidden>
+                  </Fragment>)
+
+                }
+
+                {day.length < 2
+                  && (
+                    <Grid item xs={6} sm={4}>
+                      <FormControlLabel
+                        control={(
+                          <Fab color="primary" label="Ajouter un horaire" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(day, dayName)}>
+                            <AddIcon />
+                          </Fab>
+                        )}
+                        label="Ajouter un horaire"
+                      />
+                    </Grid>
+                  )
+                }
               </Grid>
-
             </Fragment>
-          )}
+        )}
       </IncriptionProducerContext>
     );
   }

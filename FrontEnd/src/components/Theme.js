@@ -18,6 +18,13 @@ const theme = createMuiTheme({
         padding: '10px 5px', // Some CSS
       }
     },
+    MuiCardContent: {
+      root: {
+        paddingTop: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+      }
+    },
   },
 });
 
