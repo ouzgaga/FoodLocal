@@ -39,7 +39,7 @@ function addProductType(productType) {
     };
     return new ProductTypeModel(newProductType).save();
   } else {
-    // Si le productTypeCategory possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce productTypeCategory
+    // Si le productType possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce productType
     // FIXME: ou bien on met à jour le contenu de la DB ...?
     return productType;
   }

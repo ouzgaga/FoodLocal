@@ -29,7 +29,7 @@ const productResolvers = {
 
     updateProduct: (parent, args, contet) => productsServices.updateProduct(args.product),
 
-    deleteProduct: (parent, args, context) => productsServices.deleteProduct(args.product),
+    deleteProduct: async(parent, args, context) => productsServices.deleteProduct(args.product),
 
     addProductType: (parent, args, context) => productTypeServices.addProductType(args.productType),
     updateProductType: (parent, args, context) => productTypeServices.updateProductType(args.productType),

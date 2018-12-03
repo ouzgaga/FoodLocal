@@ -30,6 +30,8 @@ describe('tests productType services', () => {
   beforeEach(async() => {
     // on supprime tout le contenu de la DB
     await ProductTypeModel.deleteMany();
+    await ProductTypeCategoryModel.deleteMany();
+
     // on ajoute le contenu de départ
     category = await ProductTypeCategoryModel.create(category);
     pomme = {
@@ -106,14 +108,14 @@ describe('tests productType services', () => {
   });
 
   it('should add a new productType', async() => {
-    const addedProductTypeCategory = await productTypeService.addProductType(pomme);
+    const addedProductType = await productTypeService.addProductType(pomme);
 
-    addedProductTypeCategory.should.be.an('object');
-    addedProductTypeCategory.should.be.not.null;
-    addedProductTypeCategory._id.should.be.not.null;
+    addedProductType.should.be.an('object');
+    addedProductType.should.be.not.null;
+    addedProductType._id.should.be.not.null;
 
-    addedProductTypeCategory.name.should.be.equal(pomme.name);
-    addedProductTypeCategory.image.should.be.equal(pomme.image);
+    addedProductType.name.should.be.equal(pomme.name);
+    addedProductType.image.should.be.equal(pomme.image);
   });
 
   describe('tests updateProductType', () => {
@@ -125,61 +127,61 @@ describe('tests productType services', () => {
         image: poire.image,
         category: { id: category.id }
       };
-      const updatedProductTypeCategory = await productTypeService.updateProductType(addedProductType);
+      const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
-      updatedProductTypeCategory.should.be.an('object');
-      updatedProductTypeCategory.should.be.not.null;
-      updatedProductTypeCategory.id.should.be.not.null;
-      updatedProductTypeCategory.name.should.be.equal(poire.name);
-      updatedProductTypeCategory.image.should.be.equal(poire.image);
+      updatedProductType.should.be.an('object');
+      updatedProductType.should.be.not.null;
+      updatedProductType.id.should.be.not.null;
+      updatedProductType.name.should.be.equal(poire.name);
+      updatedProductType.image.should.be.equal(poire.image);
     });
 
     it('should fail updating a productType because no id received', async() => {
-      const addedProductTypeCategory = {
+      const addedProductType = {
         id: '',
         ...poire
       };
-      const updatedProductTypeCategory = await productTypeService.updateProductType(addedProductTypeCategory);
+      const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
-      updatedProductTypeCategory.message.should.be.equal('Received productType.id is invalid!');
+      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
     });
 
     it('should fail updating a productType because invalid id received', async() => {
-      const addedProductTypeCategory = {
+      const addedProductType = {
         id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
         ...poire
       };
-      const updatedProductTypeCategory = await productTypeService.updateProductType(addedProductTypeCategory);
+      const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
-      updatedProductTypeCategory.message.should.be.equal('Received productType.id is invalid!');
+      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
     });
 
     it('should fail updating a productType because invalid id received', async() => {
-      const addedProductTypeCategory = {
+      const addedProductType = {
         id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
         ...poire
       };
-      const updatedProductTypeCategory = await productTypeService.updateProductType(addedProductTypeCategory);
+      const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
-      updatedProductTypeCategory.message.should.be.equal('Received productType.id is invalid!');
+      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
     });
   });
 
   it('should delete a productType', async() => {
-    const addedProductTypeCategory = await productTypeService.addProductType(pomme);
+    const addedProductType = await productTypeService.addProductType(pomme);
 
-    addedProductTypeCategory.should.be.an('object');
-    addedProductTypeCategory.should.be.not.null;
-    addedProductTypeCategory._id.should.be.not.null;
+    addedProductType.should.be.an('object');
+    addedProductType.should.be.not.null;
+    addedProductType._id.should.be.not.null;
 
-    addedProductTypeCategory.name.should.be.equal(pomme.name);
-    addedProductTypeCategory.image.should.be.equal(pomme.image);
+    addedProductType.name.should.be.equal(pomme.name);
+    addedProductType.image.should.be.equal(pomme.image);
 
-    let deleteProductTypeCategory = await productTypeService.deleteProductType(addedProductTypeCategory);
+    let deleteProductType = await productTypeService.deleteProductType(addedProductType);
 
-    deleteProductTypeCategory.should.be.not.null;
+    deleteProductType.should.be.not.null;
 
-    deleteProductTypeCategory = await productTypeService.getProductTypeById(deleteProductTypeCategory);
-    it.should.be.null = deleteProductTypeCategory; // Fixme: Ca marche de faire ça ??
+    deleteProductType = await productTypeService.getProductTypeById(deleteProductType);
+    it.should.be.null = deleteProductType; // Fixme: Ca marche de faire ça ??
   });
 });
