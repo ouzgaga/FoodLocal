@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 /**
  * User Schema
  */
-const options = { discriminatorKey: 'kind'};
+const options = { discriminatorKey: 'kind' };
 
 const userSchema = new mongoose.Schema(
   {
@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
     }
   }, options
 );
+// FIXME: C'est normal que le 'kind' n'apparaisse dans la DB que pour les producers mais pas pour les users ?
 
 /**
  * @typedef Producer

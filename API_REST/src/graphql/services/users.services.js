@@ -25,7 +25,7 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-function getAllProducersInReceivedIdList(listOfIdToGet) {
+function getAllUsersInReceivedIdList(listOfIdToGet) {
   return UsersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
@@ -88,7 +88,7 @@ async function updateUser(user) {
 
   const usertoUpdate = {
     ...user,
-    subscriptions: await getAllProducersInReceivedIdList(user.subscriptions)
+    subscriptions: await getAllUsersInReceivedIdList(user.subscriptions)
   };
 
   return UsersModel.findByIdAndUpdate(user.id, usertoUpdate, { new: true }); // retourne l'objet modifié
@@ -114,5 +114,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  getAllProducersInReceivedIdList
+  getAllUsersInReceivedIdList
 };

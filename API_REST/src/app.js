@@ -25,11 +25,11 @@ const app = express();
 app.use(cors());
 
 const resolvers = merge(
+  Person,
   Producer,
   User,
   Product,
   Salespoint,
-  // Person,
 );
 
 const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));

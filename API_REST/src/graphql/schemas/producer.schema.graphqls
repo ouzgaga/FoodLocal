@@ -1,12 +1,12 @@
 type Query {
 	producers: [Producer!]!
-	producer(id: ID!) : Producer
+	producer(producer: ProducerInputGetAndDelete!) : Producer
 }
 
 type Mutation {
 	addProducer(producer: ProducerInputAdd!): Producer!
-	updateProducerInfos(producer: ProducerInputUpdate!): Producer
-	#deleteProducer(producer: Producer!): Producer
+	updateProducer(producer: ProducerInputUpdate!): Producer
+	deleteProducer(producer: ProducerInputGetAndDelete!): Producer
 }
 
 type Producer implements Person {
@@ -59,6 +59,10 @@ input ProducerInputUpdate {
 	description: String
 	website: String
 	salesPoint: SalesPointInputUpdate!
-	# isValidated: Boolean!
+	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
 	products: [ProductInputUpdate!] # pas obligatoire si vide
+}
+
+input ProducerInputGetAndDelete {
+	id: ID!
 }
