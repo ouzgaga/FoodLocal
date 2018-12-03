@@ -5,7 +5,7 @@ const productTypeCategoryServices = require('../services/productTypeCategory.ser
 
 const productResolvers = {
   Query: {
-    products: () => productsServices.getProductsw(),
+    products: () => productsServices.getProducts(),
 
     product: (parent, args, context) => productsServices.getProductById(args.product),
 

@@ -65,7 +65,7 @@ async function addUser(user) {
 function getUserById({ id }) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received salespoint.id is invalid!');
+    return new Error('Received user.id is invalid!');
   } else {
     // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
     objectId = new mongoose.Types.ObjectId(id);

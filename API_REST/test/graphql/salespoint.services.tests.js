@@ -95,7 +95,7 @@ let magasin2 = {
   ]
 };
 
-describe('tests productType services', () => {
+describe('tests salespoints services', () => {
   beforeEach(async() => {
     // on supprime tout le contenu de la DB
     await SalespointModel.deleteMany();
@@ -226,8 +226,8 @@ describe('tests productType services', () => {
     });
   });
 
-  describe('tests getProductTypeById', () => {
-    it('should get one productType', async() => {
+  describe('tests getSalesPointById', () => {
+    it('should get one salespoint', async() => {
       const salespointGotInDB = await salespointService.getSalesPointById(magasin1);
       salespointGotInDB.should.be.an('object');
       salespointGotInDB.should.be.not.null;
@@ -256,13 +256,13 @@ describe('tests productType services', () => {
       }
     });
 
-    it('should fail getting one productType because no id received', async() => {
+    it('should fail getting one salespoint because no id received', async() => {
       const productTypeGotInDB = await salespointService.getSalesPointById({ id: '' });
       productTypeGotInDB.message.should.be.equal('Received salespoint.id is invalid!');
     });
   });
 
-  it('should add a new productType', async() => {
+  it('should add a new salespoint', async() => {
     const addedSalespoint = await salespointService.addSalesPoint(magasin1);
     addedSalespoint.should.be.an('object');
     addedSalespoint.should.be.not.null;
@@ -291,8 +291,8 @@ describe('tests productType services', () => {
     }
   });
 
-  describe('tests updateProductType', () => {
-    it('should update a productType', async() => {
+  describe('tests updateSalesPoint', () => {
+    it('should update a salespoint', async() => {
       let addedProduct = await salespointService.addSalesPoint(magasin2);
       addedProduct = {
         id: addedProduct.id,
@@ -376,7 +376,7 @@ describe('tests productType services', () => {
       }
     });
 
-    it('should fail updating a productType because no id received', async() => {
+    it('should fail updating a salesPoint because no id received', async() => {
       const addedSalespoint = {
         id: '',
         ...magasin1
@@ -386,7 +386,7 @@ describe('tests productType services', () => {
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
+    it('should fail updating a salesPoint because invalid id received', async() => {
       const addedSalespoint = {
         id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
         ...magasin1
@@ -396,7 +396,7 @@ describe('tests productType services', () => {
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
+    it('should fail updating a salesPoint because invalid id received', async() => {
       const addedSalespoint = {
         id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
         ...magasin1
@@ -407,7 +407,7 @@ describe('tests productType services', () => {
     });
   });
 
-  it('should delete a productType', async() => {
+  it('should delete a salesPoint', async() => {
     const addedSalespoint = await salespointService.addSalesPoint(magasin1);
     addedSalespoint.should.be.an('object');
     addedSalespoint.should.be.not.null;
