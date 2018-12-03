@@ -3,9 +3,16 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
+import Hidden from '@material-ui/core/Hidden';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import red from '@material-ui/core/colors/red';
+
 import CardMedia from '@material-ui/core/CardMedia';
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
@@ -15,157 +22,116 @@ const styles = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
+  timePicker: {
+    paddingRight: 0,
+  },
+  fabAdd: {
+    color: '#FFFFFF',
+    height: 36,
+    width: 36,
+  },
+  fabDelete: {
+    backgroundColor: '#f44336',
+    color: '#FFFFFF',
+    height: 36,
+    width: 36,
+  },
 });
 
 class DaySchedule extends Component {
   render() {
-    const { classes } = this.props;
-
-    const { dayEnable,
-      time1Start,
-      time1End,
-      time2Start,
-      time2End,
-      handleChange,
-      handleChangeCheckbox,
-      nameDayEnable,
-      nameTime1Start,
-      nameTime1End,
-      nameTime2Start,
-      nameTime2End } = this.props;
-
+    const { classes, day, dayName, printName } = this.props;
+    let i = -1;
     return (
-      <Fragment>
-        {dayEnable ? (
-          <Fragment>
-            <Grid item sm={1} xs={2}>
-              <Typography className={classes.typo} variant="body1"> Lundi </Typography>
-            </Grid>
-            <Grid item sm={1} xs={1}>
-
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    className={classes.checkboxDay}
-                    checked={dayEnable}
-                    onChange={handleChangeCheckbox(nameDayEnable)}
-                    value={dayEnable}
-                    color="primary"
-                  />
-                )}
-
-              />
-            </Grid>
-          </Fragment>
-        )
-          : (
+      <IncriptionProducerContext>
+        {({
+          values, addNewSchedule, deleteLastSchedule, handleChangeSchedule
+        }) => (
             <Fragment>
-              <Grid item sm={2} xs={3}>
-                <Typography className={classes.typo} variant="body1"> Lundi </Typography>
+              <Grid container spacing={24}>
+                <Grid item sm={2} xs={2}>
+                  <Typography className={classes.typo} variant="body1">
+                    {printName}
+                  </Typography>
+                </Grid>
+
+
+                {day.map((schedule) => {
+                  ++i;
+                  return (
+
+                    <Fragment>
+                      <Grid item sm={4} xs={6}>
+
+                        <div style={{ display: 'flex' }}>
+
+                          <TextField
+                            className={classes.timePicker}
+                            id={`open${dayName}${i}`}
+                            variant="outlined"
+                            type="time"
+                            onChange={handleChangeSchedule(day, dayName, i, 'open')}
+                            defaultValue={schedule.open}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            inputProps={{
+                              step: 900, // 15 min
+                            }}
+                          />
+
+                          <TextField
+                            className={classes.timePicker}
+                            id={`close${dayName}${i}`}
+                            variant="outlined"
+                            type="time"
+                            onChange={handleChangeSchedule(day, dayName, i, 'close')}
+                            defaultValue={schedule.close}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            inputProps={{
+                              step: 900, // 15 min
+                            }}
+                          />
+                        </div>
+                      </Grid>
+                      {day.length === 2 && i !== 1 && (
+
+                        <Fragment>
+                          <Hidden smUp>
+                            <Grid item xs={4} sm={false} />
+                            <Grid item xs={2} sm={false} />
+                          </Hidden>
+                        </Fragment>
+                      )
+                      }
+                    </Fragment>
+                  );
+                })}
+
+                <Grid item xs={4} sm={2}>
+
+                  {day.length > 0
+                    && (
+                      <Fab color={red} aria-label="Add" className={classes.fabDelete} onClick={deleteLastSchedule(day, dayName)}>
+                        <DeleteIcon />
+                      </Fab>)
+                  }
+
+                  {day.length < 2
+                    && (
+                      <Fab color="primary" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(day, dayName)}>
+                        <AddIcon />
+                      </Fab>)
+                  }
+                </Grid>
               </Grid>
-              <Grid item sm={10} xs={9}>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      className={classes.checkboxDay}
-                      checked={dayEnable}
-                      onChange={handleChangeCheckbox(nameDayEnable)}
-                      value={dayEnable}
-                      color="primary"
-                    />
-                  )}
-                  label="Ajouter un horaire pour lundi"
-                />
-              </Grid>
+
             </Fragment>
-          )
-        }
-
-        {dayEnable && (
-          <Fragment>
-            <Grid item sm={2} xs={2}>
-              <Typography className={classes.typo3} variant="body1" color="inherit">
-                {'Matin'}
-              </Typography>
-            </Grid>
-            <Grid item sm={8} xs={5} style={{ padding: 0 }}>
-              <div style={{ display: 'flex' }}>
-
-                <TextField
-                  className={classes.timePicker}
-                  id="timeMondayStart1"
-                  variant="outlined"
-                  type="time"
-                  onChange={handleChange(nameTime1Start)}
-                  defaultValue={time1Start}
-                 
-                />
-                <Typography className={classes.typo3} variant="body1" color="inherit">
-                  {'-'}
-                </Typography>
-
-                <TextField
-                  className={classes.timePicker}
-                  id="timeMondayEnd1"
-                  variant="outlined"
-                  type="time"
-                  onChange={handleChange(nameTime1End)}
-                  defaultValue={time1End}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 900, // 15 min
-                  }}
-                />
-              </div>
-            </Grid>
-            <Grid container>
-              <Grid item sm={2} xs={2} />
-
-              <Grid item sm={2} xs={2}>
-                <Typography className={classes.typo3} variant="body1" color="inherit">
-                  {'Après-midi'}
-                </Typography>
-              </Grid>
-              <Grid item sm={8} xs={8} style={{ padding: 0 }}>
-
-                <div style={{ display: 'flex' }}>
-                  <TextField
-                    className={classes.timePicker}
-                    id="timeMondayStart1"
-                    variant="outlined"
-                    type="time"
-                    onChange={handleChange(nameTime2Start)}
-                    defaultValue={time2Start}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      step: 900, // 15 min
-                    }}
-                  />
-                  <TextField
-                    className={classes.timePicker}
-                    id="timeMondayEnd1"
-                    variant="outlined"
-                    type="time"
-                    onChange={handleChange(nameTime2End)}
-                    defaultValue={time2End}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      step: 900, // 15 min
-                    }}
-                  />
-                </div>
-              </Grid>
-            </Grid>
-          </Fragment>
-        )}
-      </Fragment>
-    )
+          )}
+      </IncriptionProducerContext>
+    );
   }
 }
 

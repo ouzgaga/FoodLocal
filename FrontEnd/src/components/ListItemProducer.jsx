@@ -10,7 +10,6 @@ import defaultImage from '../img/guidouxFruits.png';
 const styles = {
   card: {
     maxWidth: 400,
-    height: '100%',
     width:'100%',
   },
   media: {

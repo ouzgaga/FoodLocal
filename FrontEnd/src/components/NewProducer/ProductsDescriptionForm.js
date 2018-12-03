@@ -4,7 +4,6 @@ import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -13,7 +12,6 @@ import TextField from '@material-ui/core/TextField';
 
 import MarkerCarotte from '../../img/strawberry.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
-import DaySchedule from './DaySchedule';
 
 const styles = theme => ({
   root: {
@@ -36,60 +34,58 @@ class ProductsDescriptionForm extends Component {
     return (
       <IncriptionProducerContext>
         {({
-          values, nextStep, handleChange, prevStep
+          values, nextStep, handleChangeDescription, prevStep
         }) => (
-            <div className={classes.root}>
-              <Grid container spacing={24}>
+          <div className={classes.root}>
+            <Grid container spacing={24}>
+              <List subheader={<li />}>
+                {values.items.map(product => (
+                  <ListItem className={classes.root} key={product.item}>
+                    <Grid item xs={3}>
+                      <Card className={classes.media}>
 
-                <List subheader={<li />}>
-                  {values.items.map(product => (
-                    <ListItem className={classes.root} key={product}>
-                      <Grid item xs={3}>
-                        <Card className={classes.media}>
+                        <CardMedia className={classes.media2} image={MarkerCarotte} title={product.item} />
+                      </Card>
+                      <div className={classes.paper}>
+                        <Typography className={classes.typo} variant="body1" gutterBottom>
+                          {product.item}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item xs={9}>
 
-                          <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
-                        </Card>
-                        <div className={classes.paper}>
-                          <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
-                        </div>
-                      </Grid>
-                      <Grid item xs={9}>
+                      <TextField
+                        className={classes.textField}
+                        id="description"
+                        margin="normal"
+                        variant="outlined"
+                        fullWidth
 
-                        <TextField
-                          className={classes.textField}
-                          id="description"
-                          margin="normal"
-                          variant="outlined"
-                          fullWidth
+                        multiline
+                        onChange={handleChangeDescription(product.item)}
+                        placeholder="Entrez une description de votre produit (facultatif)"
+                        defaultValue={product.description}
+                      />
+                    </Grid>
+                  </ListItem>
+                ))}
 
-                          multiline
-                          onChange={handleChange('description')}
-                          placeholder="Entrez une description de votre produit (facultatif)"
-                          defaultValue={values.description}
-                        />
-                      </Grid>
-                    </ListItem>
-                  ))}
-
-
-                </List>
+              </List>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6}>
+                <div className={classes.paper}>
+                  <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
+                </div>
               </Grid>
-              <Grid container>
-                <Grid item xs={6}>
-                  <div className={classes.paper}>
-
-                    <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
-                  </div>
-                </Grid>
-                <Grid item xs={6}>
-                  <div className={classes.paper}>
-
-                    <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
-                  </div>
-                </Grid>
+              <Grid item xs={6}>
+                <div className={classes.paper}>
+                  <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">TERMINER</Button>
+                </div>
               </Grid>
-            </div>
-          )
+            </Grid>
+          </div>
+        )
         }
       </IncriptionProducerContext>
     );

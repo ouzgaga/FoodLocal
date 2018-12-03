@@ -31,10 +31,22 @@ const styles = theme => ({
   },
 });
 
+function has(items, product) {
+  let hasItem = false;
+  items.forEach((item) => {
+    if (item.item === product) {
+      hasItem = true;
+    }
+  });
+  return hasItem;
+}
+
 class AvailableProductsForm extends Component {
   state = {
     value: undefined,
   }
+
+  
 
   render() {
     const { classes } = this.props;
@@ -62,7 +74,7 @@ class AvailableProductsForm extends Component {
                 <Grid item xs={4} sm={2}>
 
                   <Card className={classes.media} style={{ margin: '0 auto' }}>
-                    {values.items.includes(product) ? (
+                    {has(values.items, product) ? (
                       <CardActionArea onClick={removeItem(product)}>
 
                         <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
@@ -93,7 +105,6 @@ class AvailableProductsForm extends Component {
                 </Grid>
                 <Grid item xs={6}>
                   <div className={classes.paper}>
-
                     <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
                   </div>
                 </Grid>

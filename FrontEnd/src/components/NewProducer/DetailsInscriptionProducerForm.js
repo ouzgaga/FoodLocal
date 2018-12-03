@@ -167,20 +167,43 @@ class DetailsInscriptionProducerForm extends Component {
 
                 {values.scheduleActive
                   && (
-                    <DaySchedule
-                      dayEnable={values.timeMondayEnable}
-                      time1Start={values.timeMonday1Start}
-                      time1End={values.timeMonday1End}
-                      time2Start={values.timeMonday2Start}
-                      time2End={values.timeMonday2End}
-                      handleChange={handleChange}
-                      handleChangeCheckbox={handleChangeCheckbox}
-                      nameDayEnable="timeMondayEnable"
-                      nameTime1Start="timeMonday1Start"
-                      nameTime1End="timeMonday1End"
-                      nameTime2Start="timeMonday2Start"
-                      nameTime2End="timeMonday2End"
-                    />
+                    <Fragment>
+                      <DaySchedule
+                        day={values.monday}
+                        dayName="monday"
+                        printName="Lundi"
+                      />
+                      <DaySchedule
+                        day={values.tuesday}
+                        dayName="tuesday"
+                        printName="Mardi"
+                      />
+                      <DaySchedule
+                        day={values.wednesday}
+                        dayName="wednesday"
+                        printName="Mercredi"
+                      />
+                      <DaySchedule
+                        day={values.thursday}
+                        dayName="thursday"
+                        printName="Jeudi"
+                      />
+                      <DaySchedule
+                        day={values.friday}
+                        dayName="friday"
+                        printName="Vendredi"
+                      />
+                      <DaySchedule
+                        day={values.saturday}
+                        dayName="saturday"
+                        printName="Samedi"
+                      />
+                      <DaySchedule
+                        day={values.sunday}
+                        dayName="sunday"
+                        printName="Dimanche"
+                      />
+                    </Fragment>
                   )
                 }
 

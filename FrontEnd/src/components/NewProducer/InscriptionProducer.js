@@ -12,9 +12,7 @@ function getSteps() {
   return ['Détails', 'Produits disponibles', 'Description des produits', 'Confirmation'];
 }
 
-export const IncriptionProducerContext = React.createContext({
-
-});
+export const IncriptionProducerContext = React.createContext({});
 
 
 export class InscriptionProducer extends Component {
@@ -30,13 +28,16 @@ export class InscriptionProducer extends Component {
     scheduleActive: false,
     website: '',
     description: '',
-    timeMondayEnable: false,
-    timeMonday1Start: '08:00',
-    timeMonday1End: '18:00',
-    timeMonday2Start: '14:00',
-    timeMonday2End: '18:00',
+    monday: [],
+    tuesday: [],
+    wednesday: [],
+    thursday: [],
+    friday: [],
+    saturday: [],
+    sunday: [],
     items: [],
   }
+
   // Proceed to next step
   nextStep = () => {
     const { step } = this.state;
@@ -59,25 +60,69 @@ export class InscriptionProducer extends Component {
   };
 
   // change the checkbox value
-  handleChangeCheckbox = name => event => {
+  handleChangeCheckbox = name => (event) => {
     this.setState({ [name]: event.target.checked });
   };
 
-  addItem = newItem => () => {
+  addNewSchedule = (day, dayName) => () => {
+    const schedule = { open: '08:00', close: '18:00' };
+
     this.setState({
-      items: [...this.state.items, newItem]
+      [dayName]: [...day, schedule]
     });
   }
 
-  removeItem = itemToDelete => () => {
-    const newItems = this.state.items.filter(item => {
-      return item !== itemToDelete;
+  deleteLastSchedule = (dayTab, dayName) => () => {
+    const newSchedule = dayTab;
+
+    newSchedule.pop();
+
+    this.setState({
+      [dayName]: newSchedule
     });
+  }
+
+  handleChangeSchedule = (day, dayName, index, type) => (event) => {
+    const newSchedule = day;
+
+    newSchedule[index][type] = event.target.value;
+
+    this.setState({
+      [dayName]: newSchedule
+    });
+  }
+
+  // ajoute un nouveau produit dans notre tableau de produits
+  addItem = newItem => () => {
+    const { items } = this.state;
+    const newItemToAdd = { item: newItem, description: '' };
+    this.setState({
+      items: [...items, newItemToAdd]
+    });
+  }
+
+  // supprime un produit du tableau des produits
+  removeItem = itemToDelete => () => {
+    const { items } = this.state;
+    const newItems = items.filter(item => item.item !== itemToDelete);
 
     this.setState({
       items: [...newItems]
     });
   }
+
+  // change la descrpiton d'un produit
+  handleChangeDescription = input => (e) => {
+    const newItems = [...this.state.items];
+    newItems.forEach((item) => {
+      if (item.item === input) {
+        console.log(item);
+        item.description = e.target.value;
+      }
+    });
+
+    this.setState({ items: newItems });
+  };
 
   pageContext = () => {
     const { step } = this.state;
@@ -120,6 +165,10 @@ export class InscriptionProducer extends Component {
           handleChangeCheckbox: this.handleChangeCheckbox,
           addItem: this.addItem,
           removeItem: this.removeItem,
+          addNewSchedule: this.addNewSchedule,
+          deleteLastSchedule: this.deleteLastSchedule,
+          handleChangeSchedule: this.handleChangeSchedule,
+          handleChangeDescription: this.handleChangeDescription,
           values: this.state,
         }}
       >
@@ -131,7 +180,6 @@ export class InscriptionProducer extends Component {
           ))}
         </Stepper>
         <Grid container justify="center" style={{ padding: 20 }}>
-
           {this.pageContext()}
         </Grid>
 
