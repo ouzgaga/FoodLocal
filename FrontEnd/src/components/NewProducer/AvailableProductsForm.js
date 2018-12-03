@@ -23,6 +23,10 @@ const styles = theme => ({
   media: {
     height: 80,
     width: 80,
+  },
+  media2: {
+    height: 80,
+    width: 80,
     backgroundColor: '#66CCCC',
   },
 });
@@ -37,7 +41,7 @@ class AvailableProductsForm extends Component {
     const { item } = this.state;
     return (
       <IncriptionProducerContext>
-        {({ values, nextStep, prevStep, handleChange, handleChangeCheckbox }) => (
+        {({ values, nextStep, prevStep, addItem, removeItem }) => (
           <div className={classes.root}>
             <Grid container spacing={24}>
 
@@ -58,9 +62,20 @@ class AvailableProductsForm extends Component {
                 <Grid item xs={4} sm={2}>
 
                   <Card className={classes.media} style={{ margin: '0 auto' }}>
-                    <CardActionArea>
-                      <CardMedia className={classes.media} image={MarkerCarotte} title="Paella dish" />
-                    </CardActionArea>
+                    {values.items.includes(product) ? (
+                      <CardActionArea onClick={removeItem(product)}>
+
+                        <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
+                      </CardActionArea>
+
+                    ) : (
+                        <CardActionArea onClick={addItem(product)}>
+                          <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
+                        </CardActionArea>
+
+                      )
+                    }
+
                   </Card>
                   <div className={classes.paper}>
                     <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
@@ -69,7 +84,7 @@ class AvailableProductsForm extends Component {
 
               ))}
 
-           <Grid container>
+              <Grid container>
                 <Grid item xs={6}>
                   <div className={classes.paper}>
 
@@ -83,7 +98,7 @@ class AvailableProductsForm extends Component {
                   </div>
                 </Grid>
               </Grid>
-           </Grid>
+            </Grid>
           </div>
 
         )}

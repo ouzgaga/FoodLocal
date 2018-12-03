@@ -25,7 +25,7 @@ const myIcon = L.icon({
 });
 
 function getSalespoints() {
-  return fetch('http://api.foodlocal.ch/salespoints?limit=10&page=0')
+  return fetch('https://api.foodlocal.ch/salespoints?limit=10&page=0')
     .then(res => res.json())
     .catch(err => console.log(err));
 }

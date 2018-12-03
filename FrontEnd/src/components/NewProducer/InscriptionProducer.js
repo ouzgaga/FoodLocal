@@ -5,6 +5,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Grid from '@material-ui/core/Grid';
 import DetailsInscriptionProducerForm from './DetailsInscriptionProducerForm';
 import AvailableProductsForm from './AvailableProductsForm';
+import ProductsDescriptionForm from './ProductsDescriptionForm';
 
 
 function getSteps() {
@@ -33,7 +34,8 @@ export class InscriptionProducer extends Component {
     timeMonday1Start: '08:00',
     timeMonday1End: '18:00',
     timeMonday2Start: '14:00',
-    timeMonday2End: '18:00'
+    timeMonday2End: '18:00',
+    items: [],
   }
   // Proceed to next step
   nextStep = () => {
@@ -61,7 +63,21 @@ export class InscriptionProducer extends Component {
     this.setState({ [name]: event.target.checked });
   };
 
-  addTime
+  addItem = newItem => () => {
+    this.setState({
+      items: [...this.state.items, newItem]
+    });
+  }
+
+  removeItem = itemToDelete => () => {
+    const newItems = this.state.items.filter(item => {
+      return item !== itemToDelete;
+    });
+
+    this.setState({
+      items: [...newItems]
+    });
+  }
 
   pageContext = () => {
     const { step } = this.state;
@@ -76,7 +92,7 @@ export class InscriptionProducer extends Component {
         );
       case 2:
         return (
-          <AvailableProductsForm />
+          <ProductsDescriptionForm />
         );
       case 3:
         return (
@@ -102,6 +118,8 @@ export class InscriptionProducer extends Component {
           prevStep: this.prevStep,
           handleChange: this.handleChange,
           handleChangeCheckbox: this.handleChangeCheckbox,
+          addItem: this.addItem,
+          removeItem: this.removeItem,
           values: this.state,
         }}
       >

@@ -32,11 +32,6 @@ const styles = theme => ({
     marginLeft: 10,
     marginRight: 10,
   },
-  media: {
-    height: 80,
-    width: 80,
-    backgroundColor: theme.palette.primary,
-  },
   fab: {
     height: 30,
     width: 30,
@@ -49,7 +44,6 @@ const styles = theme => ({
   timePicker: {
     padding: 5,
   }
-
 });
 
 class DetailsInscriptionProducerForm extends Component {
@@ -190,7 +184,6 @@ class DetailsInscriptionProducerForm extends Component {
                   )
                 }
 
-               
                 <Grid item xs={12}>
                   <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary"> SUIVANT </Button>
                 </Grid>

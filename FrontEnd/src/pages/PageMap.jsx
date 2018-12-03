@@ -49,10 +49,12 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: '#66CCCC',
+    height: '400',
   },
   drawer: {
     overflowY: 'scroll',
+    backgroundColor: '#FFFFFF',
   },
 });
 
