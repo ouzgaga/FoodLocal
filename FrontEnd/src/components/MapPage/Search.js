@@ -4,7 +4,6 @@ import { Divider } from '@material-ui/core';
 import red from '@material-ui/core/colors/red';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import SearchBar from 'material-ui-search-bar';
 import { withStyles } from '@material-ui/core/styles';
 import ListItemProducer from './ListItemProducer';
 
@@ -51,45 +50,24 @@ const styles = theme => ({
   },
 });
 
-function getSalespoints() {
-  return fetch('http://api.foodlocal.ch/salespoints?limit=10')
-    .then(res => res.json())
-    .catch(err => console.log(err));
-}
-
 class Search extends React.Component {
+  
   constructor(props) {
     super(props);
-    this.state = {
-      salespoints: [],
-    };
-    getSalespoints().then((res) => {
-      this.setState({ salespoints: res });
-    });
   }
 
   render() {
-    const { classes } = this.props;
-
+    const { classes, data } = this.props;
     return (
       <div className={classes.list}>
-        <Divider key="divider" />
-        <SearchBar
-          key="SearchBar"
-          onChange={() => console.log('onChange')}
-          onRequestSearch={() => console.log('onRequestSearch')}
-          style={{
-            margin: '0 auto',
-            maxWidth: 800,
-          }}
-        />
+       
         <List key="list" className={classes.list}>
 
-          {this.state.salespoints.map(tile => (
+          {this.props.data.producers.map(tile => (
 
             <ListItem className={classes.listItem} key={tile._id}>
 
-              <ListItemProducer key={tile._id} salepoint={tile} />
+              <ListItemProducer key={tile._id} salepoint={tile} producer={tile}/>
 
             </ListItem>
           ))

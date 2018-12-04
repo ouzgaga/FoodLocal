@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: ingress
+ annotations:
+  nginx.org/ssl-services: "kubernetes-dashboard"
+  ingress.kubernetes.io/ssl-passthrough: "true"
+  nginx.ingress.kubernetes.io/secure-backends: "true"
+  kubernetes.io/ingress.global-static-ip-name: "foodlocal"
+  kubernetes.io/tls-acme: "true"
+  certmanager.k8s.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - foodlocal.ch
+    secretName: foodlocal-crt
+  rules:
+  - host: foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: frontend-service
+            servicePort: 80
+  - host: api.foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: api-service
+            servicePort: 4040

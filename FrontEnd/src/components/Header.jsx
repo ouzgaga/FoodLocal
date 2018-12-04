@@ -27,7 +27,7 @@ const styles = {
     flexGrow: 1
   },
   menuButton: {
-    marginLeft : -7,
+    marginLeft: -7,
     marginRight: 20,
     paddingTop : 4,
     height     : '60px',
@@ -56,7 +56,7 @@ class MenuAppBar extends React.Component {
     this.setState({ open: false });
   };
 
-  render () {
+  render() {
     const { classes, width } = this.props;
 
     const menuLarge = (
@@ -70,9 +70,9 @@ class MenuAppBar extends React.Component {
           ? <>
             <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>S'inscrire</Button></Link>
             <Button color="inherit" onClick={this.handleClickLogin}>
-             Se connecter
+              Se connecter
             </Button>
-         </>
+          </>
           : (
             <Button color="inherit">
               {UserContext.Provider.name}
