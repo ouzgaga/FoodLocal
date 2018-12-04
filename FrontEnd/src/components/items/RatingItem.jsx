@@ -24,9 +24,7 @@ const styles = {
 
 
 class RatingItem extends React.Component {
-
-  
-  constructor(props){
+  constructor(props) {
     super(props);
     const maxValue = 5;
     this.state = {
@@ -36,14 +34,14 @@ class RatingItem extends React.Component {
 
 
   handleChange = (value) => {
-    if(this.props.onChange){
-      this.props.onChange(value)
+    if(this.props.onChange) {
+      this.props.onChange(value);
     }
-    this.setState({data: value});
+    this.setState({ data: value });
   };
 
   render() {
-    const { classes, onChange,  readOnly} = this.props;
+    const { classes, readOnly } = this.props;
     const { data } = this.state;
 
     return (

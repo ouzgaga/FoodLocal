@@ -20,6 +20,7 @@ const styles = theme => ({
     textAlign: 'justify',
   },
   bootstrapRoot: {
+    
     'label + &': {
       marginTop: theme.spacing.unit * 3,
     },

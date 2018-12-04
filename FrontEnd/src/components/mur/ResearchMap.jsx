@@ -37,7 +37,6 @@ class ResearchMap extends React.Component {
         <div>
           this is a map
         </div>
-
         <div>
           <div>
             this is the research field

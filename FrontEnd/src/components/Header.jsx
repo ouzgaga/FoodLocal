@@ -12,6 +12,7 @@ import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
 import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
+import SimpleDialog from './items/SimpleDialog';
 
 const styles = {
   root: {
@@ -41,16 +42,17 @@ const styles = {
 class MenuAppBar extends React.Component {
   state = {
     sConnected: null,
-    open      : false
+    open      : false,
+    newAccountOpen: false,
   };
 
-  handleClickLogin = () => {
+  handleClickLogin = prop => () => {
     this.setState({
-      open: true
+      [prop]: true
     });
   };
 
-  handleCloseLogin = (value) => {
+  handleCloseLogin = prop => (value) => {
     this.setState({ open: false });
   };
 
@@ -88,10 +90,17 @@ class MenuAppBar extends React.Component {
             {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
           </Toolbar>
 
+          <SimpleDialog
+            open={this.state.newAccountOpen}
+            onClose={this.handleCloseLogin('newAccountOpen').bind(this)}
+          >
+            hello
+
+          </SimpleDialog>
           <LoginDialog
             classes={this.props}
             open={this.state.open}
-            onClose={this.handleCloseLogin.bind(this)}
+            onClose={this.handleCloseLogin('close').bind(this)}
             // onClose={this.handleCloseLogin}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>

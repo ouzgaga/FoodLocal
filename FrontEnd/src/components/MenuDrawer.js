@@ -145,7 +145,7 @@ class SwipeableTemporaryDrawer extends React.Component {
           <Link to="/" className={classes.LinkButton}>
             <ListItem button >
               <ListItemIcon> <MapIcone color="primary"/> </ListItemIcon>
-              <ListItemText primary="Accueil" />
+              <ListItemText primary="Accueil"/>
             </ListItem>
           </Link> 
           <Link to="/about" className={classes.LinkButton}>

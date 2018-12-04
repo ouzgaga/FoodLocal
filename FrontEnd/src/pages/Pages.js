@@ -4,6 +4,7 @@ import PageError404 from './PageError404';
 import PageNewAccount from './PageNewAccount';
 import PageProducer from './PageProducer';
 import PageAcceuil from './PageAcceuil';
+import PageEmailValidation from './PageEmailValidation';
 
 export {
   PageAbout,
@@ -11,5 +12,6 @@ export {
   PageNewAccount,
   PageProducer,
   PageAcceuil,
+  PageEmailValidation,
   PageError404,
 };

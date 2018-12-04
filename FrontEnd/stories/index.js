@@ -8,6 +8,16 @@ import ProducerHeader from '../src/components/producer/ProducerHeader';
 import ProducerUserInteraction from '../src/components/producer/ProducerUserInteraction';
 import NewPost from '../src/components/mur/NewPost';
 import AdressContainer from '../src/components/items/AdressContainer';
+import CenteredPaper from '../src/components/items/CenteredPaper';
+import InscriptionContainer from '../src/components/newUser/InscriptionContainer';
+import StatusForm from '../src/components/newUser/StatusForm';
+import InformationsForm from '../src/components/newUser/InformationsForm';
+import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionForm';
+import InputPassword from '../src/components/items/InputPassword';
+
+function onChange(event){
+
+}
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -68,13 +78,69 @@ storiesOf('NewPost', module)
     />
   ));
 
-  storiesOf('AdressContainer', module)
+storiesOf('AdressContainer', module)
   .add('Default', () => (
     <AdressContainer
       road="Route 1"
       city="2230 dfees"
       country="Suisse"
     />
-  ));
+));
 
   
+
+storiesOf('CenteredPaper', module)
+  .add('Text element', () => (
+    <CenteredPaper>
+      Hello
+    </CenteredPaper>
+  ))
+  .add('Single div', () => (
+    <CenteredPaper>
+      <div>Hello</div>
+    </CenteredPaper>
+  ))
+  .add('Multiple div', () => (
+    <CenteredPaper>
+      <div>Hello</div>
+      <div>Word</div>
+    </CenteredPaper>
+  ));
+
+storiesOf('InscriptionContainer', module)
+  .add('InscriptionContainer', () => (
+    <InscriptionContainer />
+  ));
+
+storiesOf('InformationsForm', module)
+  .add('InformationsForm', () => (
+    <InformationsForm
+    onChange={onChange}
+    />
+  ));
+
+storiesOf('StatusForm', module)
+  .add('StatusForm', () => (
+    <StatusForm
+    onChange={onChange}/>
+));
+
+storiesOf('InputPassword', module)
+  .add('Default', () => (
+    <InputPassword 
+    onChange={onChange}
+    />
+  ))
+  .add('label + required', () => (
+    <InputPassword 
+      label='Mot de passe'
+      required
+      onChange={onChange}
+    />
+  ));
+
+  storiesOf('GeneralsConditionForm', module)
+  .add('GeneralsConditionForm', () => (
+    <GeneralsConditionForm
+    onChange={onChange}/>
+));
