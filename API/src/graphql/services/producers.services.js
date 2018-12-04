@@ -73,13 +73,16 @@ const isEmailUnused = async(emailUser) => {
 async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await isEmailUnused(producer.email)) {
-    const salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
+    let salespoint;
+    if (producer.salesPoint !== undefined) {
+      salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
+    }
 
     const productsId = await productsServices.addAllProductsInArray(producer.products);
 
     const producerToAdd = {
       ...producer,
-      salesPoint: salespoint.id,
+      salesPoint: salespoint !== undefined ? salespoint.id : null,
       subscriptions: [],
       emailValidated: false,
       subscribedUsers: [],

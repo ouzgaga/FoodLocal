@@ -29,7 +29,7 @@ const producerSchema = new mongoose.Schema(
     salesPoint: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'salespoints',
-      required: true
+      required: false
     },
     isValidated: {
       type: mongoose.Schema.Types.Boolean,
