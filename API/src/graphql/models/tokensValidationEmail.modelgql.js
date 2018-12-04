@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 /**
  * TokenValidationEmail Schema
  */
@@ -19,11 +20,6 @@ const TokenValidationEmail = new mongoose.Schema(
       type: mongoose.Schema.Types.Date,
       required: true,
       default: mongoose.Schema.Types.Date.now
-    },
-    dateExpiration: {
-      type: mongoose.Schema.Types.Date, // TODO: custum validation date bigger then dateCreation
-      required: true,
-      default: mongoose.Schema.Types.Date.now().getDate() + 7
     }
   }
 );

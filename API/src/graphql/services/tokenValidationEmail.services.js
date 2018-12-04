@@ -71,6 +71,13 @@ function deleteTokenValidationEmail({ id }) {
   return TokenValidationEmailsModel.findByIdAndRemove(id);
 }
 
+function tokenToOld(dateCreation) {
+  /*const daysAgo = 7;
+  const date = new Date() - (daysAgo * 24 * 60 * 60 * 1000);
+  return date.getDate() >= dateCreation.getDate();*/
+  return false;
+}
+
 /**
  * Check if the token is valide
  * @param token - token to check
@@ -81,7 +88,7 @@ function validateToken({ value }) {
   // if token not found return that the token is not valide
   if (token === null) {
     return false;
-  } else if (token.dateExpiration <= Date.now()) {
+  } else if (tokenToOld(token.dateCreation)) {
     return false;
   } else { // is a valide token
     UserService.validateEmailUserById(token);
@@ -89,6 +96,7 @@ function validateToken({ value }) {
     return true;
   }
 }
+
 
 module.exports = {
   getTokenValidationEmails,

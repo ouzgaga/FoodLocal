@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const TokenValidationEmail = require('tokenValidationEmail.services');
+const TokenValidationEmail = require('./tokenValidationEmail.services');
 const UsersModel = require('../models/user.modelgql');
 const ProducersModel = require('../models/producers.modelgql');
 

@@ -5,6 +5,7 @@ const SalesPointModel = require('../models/salespoints.modelgql');
 const productsServices = require('../services/products.services');
 const usersServices = require('../services/users.services');
 const salesPointsServices = require('../services/salespoints.services');
+const TokenValidationEmail = require('./tokenValidationEmail.services');
 
 
 /**
@@ -90,7 +91,9 @@ async function addProducer(producer) {
       products: productsId
     };
 
-    return new ProducersModel(producerToAdd).save();
+    const producerAdded =  new ProducersModel(producerToAdd).save();
+    TokenValidationEmail.addTokenValidationEmail(producerAdded);
+    return producerAdded;
   } else {
     throw new Error('This email is already used.');
   }
