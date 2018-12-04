@@ -7,11 +7,11 @@ const Producers = mongoose.model('producers');
 
 const parser = new MongooseQueryParser.MongooseQueryParser();
 const authorizedTags = {
-  tags: {
-    description: [
-      'name', 'description', 'phoneNumber', 'email', 'isValidated'
-    ]
-  }
+    tags: {
+        description: [
+            'name', 'description', 'phoneNumber', 'email', 'isValidated'
+        ]
+    }
 };
 
 /**
@@ -35,9 +35,9 @@ function getProducers({ tags = undefined, limit = 50, page = 0, lat = undefined,
     skip = page * limit;
   }
 
-  if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
-    // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
-    tags = JSON.parse(tags); // transforme la string en object
+    if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
+        // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
+        tags = JSON.parse(tags); // transforme la string en object
 
     tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
     return Producers.find(tags.filter)

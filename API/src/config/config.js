@@ -6,7 +6,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = {
   development: {
     root: rootPath,
-    app : {
+    app: {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
@@ -15,7 +15,7 @@ const config = {
 
   test: {
     root: rootPath,
-    app : {
+    app: {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
@@ -24,7 +24,7 @@ const config = {
 
   production: {
     root: rootPath,
-    app : {
+    app: {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
