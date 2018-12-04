@@ -1,2 +1,1 @@
-sh runDB.sh
-sh lauchFrontAndBack.sh
+sh deployFrontAndBack.sh
