@@ -1,6 +1,17 @@
+# not working yet
 version: '3'
 services:
-  api:
-    build: ./API REST/API/
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb_foodlocal"
     ports:
-      - "4040:4040"
+      - "27017:27017"
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: "api_foodlocal"
+    ports:
+      - "4040:4040" # Expose ports [HOST:CONTAINER}
+    depends_on:
+      - mongodb
