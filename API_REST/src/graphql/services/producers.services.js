@@ -116,15 +116,15 @@ async function updateProducer(producer) {
     email: producer.email,
     password: producer.password,
     image: producer.image,
-    subscriptions: producer.subscriptions.map(s => s.id),
+    subscriptions: producer.subscriptions !== undefined ? producer.subscriptions.map(s => s.id) : [],
     emailValidated: producerValidations.emailValidated,
-    subscribedUsers: producer.subscribedUsers.map(u => u.id),
+    subscribedUsers: producer.subscribedUsers !== undefined ? producer.subscribedUsers.map(u => u.id) : [],
     phoneNumber: producer.phoneNumber,
     description: producer.description,
     website: producer.website,
     salesPoint: producer.salesPoint.id,
     isValidated: producerValidations.isValidated,
-    products: producer.products.map(p => p.id)
+    products: producer.products !== undefined ? producer.products.map(p => p.id) : []
   };
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié

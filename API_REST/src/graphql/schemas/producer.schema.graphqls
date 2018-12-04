@@ -1,6 +1,7 @@
 type Query {
 	producers: [Producer!]!
 	producer(producer: ProducerInputGetAndDelete!) : Producer
+	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
 }
 
 type Mutation {

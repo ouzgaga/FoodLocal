@@ -1,4 +1,5 @@
 const productsServices = require('../services/products.services');
+const producerServices = require('../services/producers.services');
 const productTypeServices = require('../services/productType.services');
 const productTypeCategoryServices = require('../services/productTypeCategory.services');
 
@@ -27,6 +28,7 @@ const productResolvers = {
     deleteProduct: async(parent, args, context) => productsServices.deleteProduct(args.product),
 
     addProductType: (parent, args, context) => productTypeServices.addProductType(args.productType),
+    addProducerProducingThisProductType: (parent, args, context) => productTypeServices.addProducerProducingThisProductType(args.productTypeId, args.producerId),
     updateProductType: (parent, args, context) => productTypeServices.updateProductType(args.productType),
     deleteProductType: (parent, args, context) => productTypeServices.deleteProductType(args.productType),
 
@@ -40,7 +42,8 @@ const productResolvers = {
   },
 
   ProductType: {
-    category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.category)
+    category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.category),
+    producers: (parent, args, context) => producerServices.getAllProducersInReceivedIdList(parent.producers)
   }
 };
 module.exports = productResolvers;

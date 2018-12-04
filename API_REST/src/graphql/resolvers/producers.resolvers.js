@@ -7,7 +7,9 @@ const producerResolvers = {
   Query: {
     producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => producersServices.getProducerById(args.producer)
+    producer: (parent, args, context) => producersServices.getProducerById(args.producer),
+
+    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds)
   },
 
   Mutation: {

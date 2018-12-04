@@ -24,6 +24,13 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
+async function addProducerProducingThisProductType(idProductTypeToModify, idProducerToAdd) {
+  const productType = await this.getProductTypeById(idProductTypeToModify);
+  productType.producers.push(idProducerToAdd);
+
+  return this.updateProductType(productType);
+}
+
 /**
  * Ajoute un nouveau type de produit dans la base de données.
  * Attention, doublons autorisés!
@@ -67,7 +74,7 @@ function getProductTypeById({ id }) {
  * reçues. Remplace toutes les données du type de produit dans la base
  * de données par celles reçues!
  *
- * @param {Integer} productType, Les informations du type de produit à mettre à jour.
+ * @param {ProductType} productType, Les informations du type de produit à mettre à jour.
  */
 async function updateProductType(productType) {
   if (!mongoose.Types.ObjectId.isValid(productType.id)) {
@@ -100,6 +107,7 @@ function deleteProductType(productType) {
 module.exports = {
   getProductTypes,
   addProductType,
+  addProducerProducingThisProductType,
   getProductTypeById,
   updateProductType,
   deleteProductType
