@@ -11,9 +11,7 @@ Membres du groupe :
 
 Pour ce projet, nous avons regroupé les projet de TWEB, MAC et PDG.
 
-L'objectif de projet est de créer un site internet promouvant les petits producteurs locaux. La première itération de notre site est dors et déjà disponible à l'adresse http://foodlocal.ch.
-
-
+L'objectif de projet est de créer un site internet promouvant les petits producteurs locaux. La première itération de notre site est dors et déjà disponible à l'adresse http://foodlocal.ch. Le frontend utilise le framework *React* et le backend implémente un serveur *NodeJS* exposant une API *REST* et une API *GraphQL*. 
 
 ## Objectifs pour TWEB et MAC
 
@@ -77,7 +75,6 @@ Un utilisateur (connecté ou non) pourra effectuer les recherches avancées suiv
   - produits 
   - catégorie de produit (pommes, légumes, viande, ....)
   - lieu
-  - statistiques (producteurs les mieux notés)
 
 
 
@@ -87,5 +84,4 @@ Flux d'activités
 
 Le flux des activités d'un producteur sera visible pour tout utilisateur (même sans être connecté) sur le mur du producteur.
 
-Le flux d'activités d'un utilisateur sera visible sur son mur personnel (et privé). De plus, les utilisateurs recevront des notifications lorsqu'un producteur auquel ils sont abonnés mettra ses informations à jour ou ajoutera une ou plusieurs news. 
-
+Le flux d'activités d'un utilisateur sera visible sur son mur personnel (et privé). De plus, les utilisateurs recevront des notifications lorsqu'un producteur auquel ils sont abonnés mettra ses informations à jour ou ajoutera une ou plusieurs news.

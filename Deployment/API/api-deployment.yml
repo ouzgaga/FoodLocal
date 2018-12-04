@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-deployment
+  template:
+    metadata:
+      labels:
+        app: api-deployment
+    spec:
+      containers:
+        - name: api-deployment
+          image: gcr.io/foodlocal-218406/api:latest
+          ports:
+            - containerPort: 4040
+              name: api-deployment
+          env:
+            - name: PORT
+              value: "4040"
+            - name: NODE_ENV
+              value: "production"
+            - name: MONGODB_PORT_PROD
+              value: "27017"
+            - name: MONGODB_HOST_PROD
+              value: "mongo"
+            - name: MONGODB_DBNAME_PROD
+              value: "api_foodlocal_production"

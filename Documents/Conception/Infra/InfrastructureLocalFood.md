@@ -1,6 +1,6 @@
 # Infrastructure Local Food
 
-![](/home/james/Documents/HEIG-VD/Cours/PDG/local-food/Documents/Graphs/Infrastructure.png)	
+![](./Graphs/Infrastructure.png)	
 
 In our App we will separate our Business tier in two applications.
 
