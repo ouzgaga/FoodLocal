@@ -1,7 +1,7 @@
 const MongooseQueryParser = require('mongoose-query-parser');
 
 const mongoose = require('mongoose');
-require('../models/products.model');
+require('../../graphql/models/products.modelgql');
 
 const Products = mongoose.model('products');
 
@@ -64,7 +64,7 @@ function getProductById ({ id }) {
  * @param {Integer} productInfos, Les informations du produit à mettre à jour.
  */
 function updateProduct (id, productInfos) {
-  return Products.findOneAndUpdate(id, productInfos, { new: true }); // retourne l'objet modifié
+  return Products.findByIdAndUpdate(id, productInfos, { new: true }); // retourne l'objet modifié
   // return Products.updateOne(productInfos); // retourne un OK mais pas l'objet modifié
 }
 

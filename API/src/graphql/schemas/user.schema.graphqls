@@ -1,0 +1,49 @@
+type Query {
+	users: [User!]!
+	user(user: UserInputGetAndDelete!) : User
+}
+
+type Mutation {
+	addUser(user: UserInputAdd!): User!
+	updateUser(user: UserInputUpdate!): User
+	deleteUser(user: UserInputGetAndDelete!): User
+}
+
+type User implements Person {
+	id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	subscriptions:[Producer!]!
+	emailValidated: Boolean!
+}
+
+input UserInputAdd {
+	# id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	# subscriptions:[Producer!]!
+	# emailValidated: Boolean!
+}
+
+input UserInputUpdate {
+	id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # faudra l'encoder en base64
+	subscriptions:[ProducerInputUpdate!]  # pas obligatoire si vide
+	emailValidated: Boolean!
+}
+
+input UserInputGetAndDelete {
+	id: ID!
+}
+
+
