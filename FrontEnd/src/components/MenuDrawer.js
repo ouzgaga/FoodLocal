@@ -14,6 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MapIcone from '@material-ui/icons/Map';
+import HomeIcone from '@material-ui/icons/Home';
 import DescriptionIcone from '@material-ui/icons/DescriptionRounded';
 
 import UserContext from './UserContext';
@@ -82,9 +83,17 @@ class SwipeableTemporaryDrawer extends React.Component {
         <Link to="/" className={classes.LinkButton}>
           <ListItem button>
             <ListItemIcon>
+              <HomeIcone color="primary"/>
+            </ListItemIcon>
+            <ListItemText primary="Acceuil" />
+          </ListItem>
+        </Link>
+        <Link to="/map" className={classes.LinkButton}>
+          <ListItem button>
+            <ListItemIcon>
               <MapIcone color="primary"/>
             </ListItemIcon>
-            <ListItemText primary="Map" />
+            <ListItemText primary="Carte" />
           </ListItem>
         </Link>
         
@@ -93,7 +102,7 @@ class SwipeableTemporaryDrawer extends React.Component {
             <ListItemIcon>
               <DescriptionIcone color="primary"/>
             </ListItemIcon>
-            <ListItemText primary="A propos de nouss" />
+            <ListItemText primary="A propos de nous" />
           </ListItem>
         </Link>
   
@@ -130,7 +139,13 @@ class SwipeableTemporaryDrawer extends React.Component {
           <Link to="/" className={classes.LinkButton}>
             <ListItem button >
               <ListItemIcon> <MapIcone color="primary"/> </ListItemIcon>
-              <ListItemText primary="Map" />
+              <ListItemText primary="Acceuil" />
+            </ListItem>
+          </Link> 
+          <Link to="/" className={classes.LinkButton}>
+            <ListItem button >
+              <ListItemIcon> <MapIcone color="primary"/> </ListItemIcon>
+              <ListItemText primary="Accueil"/>
             </ListItem>
           </Link> 
           <Link to="/about" className={classes.LinkButton}>

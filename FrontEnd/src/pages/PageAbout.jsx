@@ -109,10 +109,12 @@ const styles = theme => ({
   },
   paper     : {
 
-    margin      : 'none',
+
     marginTop   : 100,
     marginBottom: 50,
-    padding     : 40
+    padding     : 40,
+    maxWidth    : 800,
+    textAlign: 'justify',
 
   },
   paperTitle: {
@@ -161,19 +163,21 @@ class PageAbout extends Component {
             </Paper>
           </Grid>
 
+          
+ 
+        
+ 
+      
+      
+        </Grid>
+        <Grid container="column" justify="center" alignItems="center">
           <Grid xl={1}>
             <YouTube 
               className={classes.video}
               videoId="EE7eXkFQf6A"
             />
           </Grid> 
- 
-        
- 
-      
-      
-      </Grid>
-  
+        </Grid>
 {/*       <div className={classes.video}>
         <YouTube 
           
