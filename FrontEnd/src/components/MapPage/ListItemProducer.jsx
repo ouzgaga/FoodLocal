@@ -9,8 +9,8 @@ import CardHeader from '@material-ui/core/CardHeader';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import defaultImage from '../img/guidouxFruits.png';
-import MarkerCarotte from '../img/strawberry2.png';
+import defaultImage from '../../img/guidouxFruits.png';
+import MarkerCarotte from '../../img/strawberry2.png';
 
 const styles = theme => ({
   card: {
@@ -37,7 +37,7 @@ const styles = theme => ({
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: 'translateZ(0)',
-    padding:10,
+    padding: 10,
   },
   gridListTile: {
     maxHeight: 100,
@@ -60,23 +60,23 @@ function ListItemProducer(props) {
   const { classes } = props;
   const { salepoint } = props;
   const { products } = props;
-  const place  = 'Yverdon';
-  const tileData = ['pomme', 'poire', 'pomme', 'poire', 'pomme', 'poire', 'pomme', 'poire', 'pomme', 'poire', 'pomme', 'poire'];
-  const link = `/producer/${salepoint.producers[0]}`; // TODO
+  const { producer } = props;
+  const place = 'Yverdon';
+  //const link = `/producer/${salepoint.producers[0]}`; // TODO
 
   return (
     <Card className={classes.card}>
-      <CardActionArea href={link} target="_blank">
-        <CardHeader title={salepoint.name} subheader={place} className={classes.titleItem} />
+      <CardActionArea target="_blank">
+        <CardHeader title={producer.salesPoint.name} subheader={place} className={classes.titleItem} />
         <div className={classes.root}>
           <GridList className={classes.gridList}>
-            {tileData.map(tile => (
+            {producer.products.map(item => (
               <div className={classes.paper}>
 
-              <GridListTile key={tile} className={classes.gridListTile} style={{ margin: '0 auto' }}>
-                  <CardMedia className={classes.media} image={MarkerCarotte} title={tile} />
-                <Typography className={classes.typo} variant="body1" gutterBottom> {tile} </Typography>
-              </GridListTile>
+                <GridListTile key={item.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
+                  <CardMedia className={classes.media} image={item.productType.image} title={item.productType.name} />
+                  <Typography className={classes.typo} variant="body1" gutterBottom> {item.productType.name} </Typography>
+                </GridListTile>
               </div>
 
             ))}

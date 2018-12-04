@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Grid from '@material-ui/core/Grid';
@@ -20,13 +19,10 @@ import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 
 import ListItemProducer from './ListItemProducer';
-import MarkerCarotte from '../img/MarkerCarotte.png';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import MarkerCarotte from '../../img/MarkerCarotte.png';
 
-// setup
-const provider = new OpenStreetMapProvider();
 
-const Products = require('../Datas/Products.json');
+const Products = require('../../Datas/Products.json');
 
 const styles = {
   map: {
@@ -60,17 +56,6 @@ const myIcon = L.icon({
   PopupAnchor: [-20, -20],
 });
 
-function getSalespoints() {
-  return fetch('https://api.foodlocal.ch/salespoints?limit=10&page=0')
-    .then(res => res.json())
-    .catch(err => console.log(err));
-}
-
-async function buttonclick() {
-  const results = await provider.search({ query: 'Route d\'Oron' });
-  console.log(results);
-}
-
 function has(items, product) {
   let hasItem = false;
   items.forEach((item) => {
@@ -100,11 +85,7 @@ class MyMap extends React.Component {
       salespoints: [],
       userHasALocation: false, // indique si l'utilisateur a accepté de donner sa position
     };
-    getSalespoints().then((res) => {
-      this.setState({ salespoints: res });
-    });
   }
-
 
   componentDidMount() {
 
@@ -160,7 +141,7 @@ class MyMap extends React.Component {
 
   loadProducer() {
     return (
-      this.state.salespoints.map(tile => (
+      this.props.data.producers.map(tile => (
         <Marker key={tile._id} position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
           <Popup key={tile._id} position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
             <ListItemProducer salepoint={tile} />
@@ -181,10 +162,10 @@ class MyMap extends React.Component {
       <div className={classes.map}>
         <div className={classes.filterBar}>
           <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
-            Produits
+            {'Produits'}
           </Button>
 
-          <Button variant="outlined" size="small" className={classes.margin} onClick={buttonclick}>
+          <Button variant="outlined" size="small" className={classes.margin} >
             Filtres
           </Button>
           <TextField
@@ -281,11 +262,7 @@ class MyMap extends React.Component {
               <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
             )
           }
-          {
-            this.loadProducer()
-          }
         </Map>
-
       </div>
     );
   }

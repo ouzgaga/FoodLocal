@@ -55,7 +55,6 @@ class DaySchedule extends Component {
                   </Typography>
                 </Grid>
 
-
                 {day.map((schedule) => {
                   ++i;
                   return (

@@ -17,7 +17,8 @@ module.exports = {
     'key-spacing'                    : 'off',
     'max-len'                        : 'off',
     'no-plusplus'                    : 'off',
-    'react/jsx-filename-extension'   : 'off'
+    'react/jsx-filename-extension'   : 'off',
+    'no-return-assign'               : 'off',
   }
 
 };

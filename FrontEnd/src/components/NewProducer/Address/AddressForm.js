@@ -1,74 +1,94 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import { withStyles } from '@material-ui/core/styles';
 import AddressSuggest from './AddressSuggest';
 import AddressInput from './AddressInput';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
+const provider = new OpenStreetMapProvider();
 
+const styles = {
+  popper : {
+    zIndex: 2000,
+  }
+};
 
 class AddressForm extends Component {
   constructor(props) {
     super(props);
-
-    const address = '';
     this.state = {
-      'address': address,
-      'query': '',
-      'locationId': ''
-    }
-
-    this.onQuery = this.onQuery.bind(this);
+      results: [],
+      open: false,
+    };
   }
 
-  onQuery(evt) {
-    const query = evt.target.value;
-    if (!query.length > 0) {
-      const address = '';
-      return this.setState({
-        'address': address,
-        'query': '',
-        'locationId': ''
-      })
-    }
+  handleClose = event => {
+    this.setState({ open: false });
+  };
 
-    const self = this;
-    axios.get('https://autocomplete.geocoder.api.here.com/6.2/suggest.json', {
-      'params': {
-        'app_id': 'qSO8SUPISJTK5GNE0ndG',
-        'app_code': 'rTBAuzJ7lhT97Pv8c2H8QA',
-        'query': query,
-        'maxresults': 1,
-      }
-    }).then(function (response) {
-      const address = response.data.suggestions[0].address;
-      const id = response.data.suggestions[0].locationId;
-      self.setState({
-        'address': address,
-        'query': query,
-        'locationId': id,
+
+  load = (event) => {
+    this.setState({ open: 'true' });
+
+    provider.search({ query: event.target.value }).then((results2) => {
+      this.setState({
+        results: results2,
       });
     });
   }
 
   render() {
+    const {classes} = this.props;
     return (
       <div class="container">
-        <AddressSuggest
-          query={this.state.query}
-          onChange={this.onQuery}
+        <Typography variant="subheading" gutterBottom> Addresse </Typography>
+        <TextField
+          id="road"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          onChange={this.load}
+          defaultValue={'Route'}
+
         />
-        <AddressInput
-          street={this.state.address.street}
-          city={this.state.address.city}
-          state={this.state.address.state}
-          postalCode={this.state.address.postalCode}
-          country={this.state.address.country}
-        />
-        <br />
-        <button type="submit" className="btn btn-primary">Check</button>
-        <button type="submit" className="btn btn-outline-secondary">Clear</button>
+
+        {console.log(this.state.results)}
+
+        <Popper open={this.state.open} className={classes.popper} transition disablePortal>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              id="menu-list-grow"
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={this.handleClose}>
+
+                  <MenuList>
+                    {this.state.results.map(item => {
+                      { console.log(item) }
+                      return (
+                        <MenuItem onClick={this.handleClose}>{item.label}</MenuItem>
+                      )
+                    })}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+
       </div>
     );
   }
 }
 
-export default AddressForm;
+export default withStyles(styles)(AddressForm);
