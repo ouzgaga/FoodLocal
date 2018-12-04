@@ -4,8 +4,29 @@ import {
   Map, TileLayer, Marker, Popup, CircleMarker,
 } from 'react-leaflet';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+
 import ListItemProducer from './ListItemProducer';
 import MarkerCarotte from '../img/MarkerCarotte.png';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+
+// setup
+const provider = new OpenStreetMapProvider();
+
+const Products = require('../Datas/Products.json');
 
 const styles = {
   map: {
@@ -14,7 +35,22 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: '100%',
+    height: 'calc(100vh - 114px)',
+  },
+  filterBar: {
+    backgroundColor: '#FFFFFF',
+    height: 50,
+    width: '100%',
+    borderBottom: '1px solid grey',
+  },
+  media: {
+    height: 80,
+    width: 80,
+  },
+  media2: {
+    height: 80,
+    width: 80,
+    backgroundColor: '#66CCCC',
   },
 };
 const myIcon = L.icon({
@@ -30,12 +66,31 @@ function getSalespoints() {
     .catch(err => console.log(err));
 }
 
+async function buttonclick() {
+  const results = await provider.search({ query: 'Route d\'Oron' });
+  console.log(results);
+}
+
+function has(items, product) {
+  let hasItem = false;
+  items.forEach((item) => {
+    if (item === product) {
+      hasItem = true;
+    }
+  });
+  return hasItem;
+}
+
 
 class MyMap extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      items: [],
+      openFiltres: false,
+      value: Products.products[0].items,
+
       location: {
         // par défaut, position de Lausanne
         latitude: 46.5333,
@@ -74,6 +129,35 @@ class MyMap extends React.Component {
     });
   }
 
+
+  // ouvre le pop-up pour les filtres
+  handleClickOpenFilters = () => {
+    this.setState({ openFiltres: true });
+  };
+
+  // ferme le pop-up des filtres
+  handleClose = () => {
+    this.setState({ openFiltres: false });
+  };
+
+  addItem = newItem => () => {
+    console.log(this.state.items);
+    const { items } = this.state;
+    this.setState({
+      items: [...items, newItem]
+    });
+  }
+
+  // supprime un produit du tableau des produits
+  removeItem = itemToDelete => () => {
+    const { items } = this.state;
+    const newItems = items.filter(item => item !== itemToDelete);
+
+    this.setState({
+      items: [...newItems]
+    });
+  }
+
   loadProducer() {
     return (
       this.state.salespoints.map(tile => (
@@ -90,8 +174,98 @@ class MyMap extends React.Component {
     const { location, zoom, userHasALocation } = this.state;
     const { latitude, longitude } = location;
     const { classes } = this.props;
+    const { fullScreen } = this.props;
+
     return (
+
       <div className={classes.map}>
+        <div className={classes.filterBar}>
+          <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
+            Produits
+          </Button>
+
+          <Button variant="outlined" size="small" className={classes.margin} onClick={buttonclick}>
+            Filtres
+          </Button>
+          <TextField
+            id="outlined-with-placeholder"
+            label="With placeholder"
+            placeholder="Placeholder"
+            className={classes.textField}
+            margin="normal"
+            variant="outlined"
+          />
+          <Dialog
+            fullScreen={fullScreen}
+            fullWidth
+            maxWidth={false}
+            open={this.state.openFiltres}
+            onClose={this.handleClose}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">{"Séléctionnez les produits que vous cherchez"}</DialogTitle>
+            <DialogContent>
+              <div className={classes.root}>
+                <Grid container spacing={24}>
+                  {Products.products.map(product => (
+                    <Grid item xs={4} sm={2} key={product.name}>
+                      <div className={classes.paper}>
+                        <Card className={classes.media} style={{ margin: '0 auto' }}>
+                          <CardActionArea onClick={() => { this.setState({ value: product.items }); }}>
+                            {this.state.value === product.items
+                              ? (
+                                <CardMedia className={classes.media2} image={MarkerCarotte} title={product.name} />
+                              ) : (
+                                <CardMedia className={classes.media} image={MarkerCarotte} title={product.name} />
+                              )}
+                          </CardActionArea>
+                        </Card>
+
+                        <div className={classes.paper}>
+                          <Typography className={classes.typo} variant="body1" gutterBottom>
+                            {product.name}
+                          </Typography>
+                        </div>
+                      </div>
+                    </Grid>
+                  ))}
+                  <Grid item xs={12}>
+                    <Divider variant="middle" />
+                  </Grid>
+                  {this.state.value !== undefined && this.state.value.map(product => (
+                    <Grid item xs={4} sm={2}>
+
+                      <Card className={classes.media} style={{ margin: '0 auto' }}>
+
+                        {has(this.state.items, product) ? (
+                          <CardActionArea onClick={this.removeItem(product)}>
+
+                            <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
+                          </CardActionArea>
+
+                        ) : (
+                            <CardActionArea onClick={this.addItem(product)}>
+                              <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
+                            </CardActionArea>
+                          )
+                        }
+
+                      </Card>
+                      <div className={classes.paper}>
+                        <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
+                      </div>
+                    </Grid>
+                  ))}
+                </Grid>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={this.handleClose} color="primary" autoFocus>
+                {'Voir les producteurs'}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
         <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
 
           <TileLayer
@@ -117,4 +291,4 @@ class MyMap extends React.Component {
   }
 }
 
-export default withStyles(styles)(MyMap);
+export default withStyles(styles)(withMobileDialog()(MyMap));

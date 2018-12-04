@@ -73,16 +73,7 @@ class Search extends React.Component {
 
     return (
       <div className={classes.list}>
-        <Divider key="divider" />
-        <SearchBar
-          key="SearchBar"
-          onChange={() => console.log('onChange')}
-          onRequestSearch={() => console.log('onRequestSearch')}
-          style={{
-            margin: '0 auto',
-            maxWidth: 800,
-          }}
-        />
+       
         <List key="list" className={classes.list}>
 
           {this.state.salespoints.map(tile => (

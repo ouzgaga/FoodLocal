@@ -13,6 +13,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import MarkerCarotte from '../../img/strawberry.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
 import DaySchedule from './DaySchedule';
+import AddressForm from './Address/AddressForm';
 
 const styles = theme => ({
   root: {
@@ -70,6 +71,9 @@ class DetailsInscriptionProducerForm extends Component {
                     defaultValue={values.salePointName}
                   />
                 </Grid>
+
+                <AddressForm/>
+                {/*
                 <Grid item xs={12}>
                   <Typography variant="subheading" className={classes.typo} gutterBottom> Nom de la rue et numéro </Typography>
                   <TextField
@@ -131,6 +135,7 @@ class DetailsInscriptionProducerForm extends Component {
                   />
                 </Grid>
 
+*/}
                 <Grid item xs={12} align="space-between">
                   <Typography className={classes.typo} variant="subheading" gutterBottom> Description (facultatif) </Typography>
                   <TextField

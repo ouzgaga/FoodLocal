@@ -23,10 +23,11 @@ const styles = theme => ({
   },
   navIconHide: {
     position: 'absolute',
-    top: 25,
+    top: 60,
     right: 16,
     zIndex: 2000,
     rotate: 90,
+    backgroundColor: '#66CCCC',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
@@ -121,9 +122,7 @@ class ResponsiveDrawer extends React.Component {
               {drawer}
             </Drawer>
           </Hidden>
-
         </div>
-
       </div>
     );
   }
