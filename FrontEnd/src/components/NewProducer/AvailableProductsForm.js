@@ -50,7 +50,6 @@ class AvailableProductsForm extends Component {
 
   render() {
     const { classes } = this.props;
-    const { item } = this.state;
     return (
       <IncriptionProducerContext>
         {({

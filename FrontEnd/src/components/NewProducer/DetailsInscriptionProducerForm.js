@@ -7,10 +7,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import MarkerCarotte from '../../img/strawberry.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
 import DaySchedule from './DaySchedule';
 import AddressForm from './Address/AddressForm';
@@ -66,76 +62,14 @@ class DetailsInscriptionProducerForm extends Component {
                     id="salePointName"
                     variant="outlined"
                     fullWidth
-                    margin="none"
+                    margin="normal"
                     onChange={handleChange('salePointName')}
                     defaultValue={values.salePointName}
                   />
                 </Grid>
 
-                <AddressForm/>
-                {/*
-                <Grid item xs={12}>
-                  <Typography variant="subheading" className={classes.typo} gutterBottom> Nom de la rue et numéro </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="road"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange('road')}
-                    defaultValue={values.road}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Typography className={classes.typo} variant="subheading" gutterBottom> Code postal </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="zip"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange('addressZip')}
-                    defaultValue={values.addressZip}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                  <Typography className={classes.typo} variant="subheading" gutterBottom> Ville </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="zip"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange('addressCity')}
-                    defaultValue={values.addressCity}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography className={classes.typo} variant="subheading" gutterBottom> État </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="countryState"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange('addressCountryState')}
-                    defaultValue={values.addressCountryState}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography className={classes.typo} variant="subheading" gutterBottom> Pays </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="country"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange('addressCountry')}
-                    defaultValue={values.addressCountry}
-                  />
-                </Grid>
-
-*/}
+                <AddressForm />
+               
                 <Grid item xs={12} align="space-between">
                   <Typography className={classes.typo} variant="subheading" gutterBottom> Description (facultatif) </Typography>
                   <TextField

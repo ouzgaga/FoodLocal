@@ -19,11 +19,15 @@ class InscriptionProducer extends Component {
   state = {
     step: 0,
     salePointName: '',
+    showCompleteAddress: false,
     addressRoad: '',
+    addressNumber: '',
     addressCity: '',
     addressZip: '',
-    AddressCountryState: '',
-    AddressCountry: '',
+    addressCountryState: '',
+    addressCountry: '',
+    addressLongitude: null,
+    addressLatitude: null,
     phoneNumber: '',
     scheduleActive: false,
     website: '',
@@ -58,6 +62,10 @@ class InscriptionProducer extends Component {
   handleChange = input => (e) => {
     this.setState({ [input]: e.target.value });
   };
+
+  handleChangeProperty = (propertyName, newProperty) => {
+    this.setState({ [propertyName]: newProperty });
+  }
 
   // change the checkbox value
   handleChangeCheckbox = name => (event) => {
@@ -116,7 +124,6 @@ class InscriptionProducer extends Component {
     const newItems = [...this.state.items];
     newItems.forEach((item) => {
       if (item.item === input) {
-        console.log(item);
         item.description = e.target.value;
       }
     });
@@ -162,6 +169,7 @@ class InscriptionProducer extends Component {
           nextStep: this.nextStep,
           prevStep: this.prevStep,
           handleChange: this.handleChange,
+          handleChangeProperty: this.handleChangeProperty,
           handleChangeCheckbox: this.handleChangeCheckbox,
           addItem: this.addItem,
           removeItem: this.removeItem,

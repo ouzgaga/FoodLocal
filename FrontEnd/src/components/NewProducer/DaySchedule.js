@@ -48,8 +48,9 @@ class DaySchedule extends Component {
           values, addNewSchedule, deleteLastSchedule, handleChangeSchedule
         }) => (
             <Fragment>
-              <Grid container spacing={24}>
-                <Grid item sm={2} xs={2}>
+            <Grid item xs={12}> 
+              <Grid container spacing={24} style={{ marginBottom: '-30'}}>
+                <Grid item sm={2} xs={4}>
                   <Typography className={classes.typo} variant="body1">
                     {printName}
                   </Typography>
@@ -100,7 +101,6 @@ class DaySchedule extends Component {
                         <Fragment>
                           <Hidden smUp>
                             <Grid item xs={4} sm={false} />
-                            <Grid item xs={2} sm={false} />
                           </Hidden>
                         </Fragment>
                       )
@@ -131,7 +131,7 @@ class DaySchedule extends Component {
 
                 {day.length < 2
                   && (
-                    <Grid item xs={6} sm={4}>
+                    <Grid item xs={8} sm={4}>
                       <FormControlLabel
                         control={(
                           <Fab color="primary" label="Ajouter un horaire" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(day, dayName)}>
@@ -143,6 +143,7 @@ class DaySchedule extends Component {
                     </Grid>
                   )
                 }
+              </Grid>
               </Grid>
             </Fragment>
         )}
