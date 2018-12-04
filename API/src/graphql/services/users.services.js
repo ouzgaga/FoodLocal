@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const TokenValidationEmail = require('tokenValidationEmail.services');
 const UsersModel = require('../models/user.modelgql');
 const ProducersModel = require('../models/producers.modelgql');
 
@@ -51,7 +52,14 @@ async function addUser(user) {
       emailValidated: false
     };
 
-    return new UsersModel(userToAdd).save();
+    const userAdded = new UsersModel(userToAdd).save();
+    // Check if the user didn't had any problem add the add action
+    if (user === null) {
+      return null;
+    }
+    // Adding token and waiting for validation email
+    TokenValidationEmail.addTokenValidationEmail(userAdded);
+    return userAdded;
   } else {
     throw new Error('This email is already used.');
   }
