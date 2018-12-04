@@ -1,0 +1,10 @@
+interface Person {
+	id: ID!
+	firstname: String!
+	lastname: String!
+	email: String!
+	password: String!
+	image: String # fixme: faudra l'encoder en base64
+	subscriptions:[Producer!]!
+	emailValidated: Boolean!
+}

@@ -1,4 +1,4 @@
-require('../../src/app/models/producers.model');
+require('../../src/graphql/models/producers.modelgql');
 require('../chai-config');
 const request = require('supertest');
 const httpStatus = require('http-status');

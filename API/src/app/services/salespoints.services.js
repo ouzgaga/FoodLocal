@@ -1,6 +1,6 @@
 const MongooseQueryParser = require('mongoose-query-parser');
 const mongoose = require('mongoose');
-require('../models/salespoints.model');
+require('../../graphql/models/salespoints.modelgql');
 
 const Salespoints = mongoose.model('salespoints');
 const parser = new MongooseQueryParser.MongooseQueryParser();
@@ -63,7 +63,7 @@ function getSalesPointById ({ id }) {
  * @param {Integer} salespointInfos, Les informations du point de vente à mettre à jour.
  */
 function updateSalesPoint (id, salespointInfos) {
-  return Salespoints.findOneAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
+  return Salespoints.findByIdAndUpdate(id, salespointInfos, { new: true }); // retourne l'objet modifié
   // return Salespoints.updateOne(salespointInfos); // retourne un OK mais pas l'objet modifié
 }
 
