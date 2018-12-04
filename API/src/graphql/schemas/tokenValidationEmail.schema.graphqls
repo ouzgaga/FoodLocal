@@ -1,0 +1,16 @@
+type Mutation {
+    validateToken(value: TokenInput!): Boolean
+    askNewToken(idUser: ID!): Boolean
+}
+
+type Token {
+    id: ID!
+    value: String!
+    idUser: ID!
+    dateCreation: Date!
+    dateExpiration: Date!
+}
+
+input TokenInput {
+    value: String!
+}

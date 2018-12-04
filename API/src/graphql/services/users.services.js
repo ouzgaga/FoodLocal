@@ -95,6 +95,15 @@ async function updateUser(user) {
   // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
+async function validateEmailUserById({id}) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  }
+  const user = getUserById(id);
+  user.emailValidated = true;
+  return updateUser(user);
+}
+
 /**
  * Supprime le producteur correspondant à l'id reçu.
  *
@@ -104,7 +113,6 @@ function deleteUser({ id }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
-
   return UsersModel.findByIdAndRemove(id);
 }
 
@@ -113,6 +121,7 @@ module.exports = {
   addUser,
   getUserById,
   updateUser,
+  validateEmailUserById,
   deleteUser,
   getAllUsersInReceivedIdList
 };
