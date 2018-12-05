@@ -51,7 +51,9 @@ async function addTokenValidationEmail (user) {
   // insert in the database
   const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();
   const name = `${user.firstname} ${user.lastname}`;
-  mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
+
+  // FIXME: À décommenter pour réellement envoyer les emails!!!!!
+  // mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
   return tokenValidationEmail;
 }
 

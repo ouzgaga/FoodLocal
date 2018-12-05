@@ -10,6 +10,7 @@ let magasin1 = {
     street: 'Chemin de par ici',
     city: 'Yverdon',
     postalCode: '1400',
+    state: 'Vaud',
     country: 'Suisse',
     longitude: 1.1234567,
     latitude: 1.123456789
@@ -52,6 +53,7 @@ let magasin2 = {
     street: 'Chemin de par là-bas',
     city: 'Yverdon',
     postalCode: '1400',
+    state: 'Vaud',
     country: 'Suisse',
     longitude: 1.1234567,
     latitude: 1.123456789
@@ -101,6 +103,7 @@ describe('tests salespoints services', () => {
         street: 'Chemin de par ici',
         city: 'Yverdon',
         postalCode: '1400',
+        state: 'Vaud',
         country: 'Suisse',
         longitude: 1.1234567,
         latitude: 1.123456789
@@ -143,6 +146,7 @@ describe('tests salespoints services', () => {
         street: 'Chemin de par là-bas',
         city: 'Yverdon',
         postalCode: '1400',
+        state: 'Vaud',
         country: 'Suisse',
         longitude: 1.1234567,
         latitude: 1.123456789

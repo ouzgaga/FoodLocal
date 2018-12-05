@@ -62,25 +62,25 @@ async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await UtilsServices.isEmailUnused(producer.email)) {
     let salespoint;
-    if (producer.salesPoint !== undefined) {
+    if (producer.salesPoint != null) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
     }
 
     let productsId;
-    if (producer.products !== undefined && producer.products.length !== 0) {
+    if (producer.products != null && producer.products.length !== 0) {
       productsId = await productsServices.addAllProductsInArray(producer.products);
     }
     const producerToAdd = {
       ...producer,
-      salesPointId: salespoint !== undefined ? salespoint.id : null,
+      salesPointId: salespoint != null ? salespoint.id : null,
       subscriptions: [],
       emailValidated: false,
       subscribedUsers: [],
       isValidated: false,
-      productsIds: productsId !== undefined ? productsId : []
+      productsIds: productsId != null ? productsId : []
     };
 
-    const producerAdded =  new ProducersModel(producerToAdd).save();
+    const producerAdded = await new ProducersModel(producerToAdd).save();
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else {
@@ -111,15 +111,15 @@ async function updateProducer(producer) {
     email: producer.email,
     password: producer.password,
     image: producer.image,
-    subscriptions: producer.subscriptions !== undefined ? producer.subscriptions.map(s => s.id) : [],
+    subscriptions: producer.subscriptions != null ? producer.subscriptions.map(s => s.id) : [],
     emailValidated: producerValidations.emailValidated,
-    subscribedUsersIds: producer.subscribedUsers !== undefined ? producer.subscribedUsers.map(u => u.id) : [],
+    subscribedUsersIds: producer.subscribedUsers != null ? producer.subscribedUsers.map(u => u.id) : [],
     phoneNumber: producer.phoneNumber,
     description: producer.description,
     website: producer.website,
     salesPointId: producer.salesPoint,
     isValidated: producerValidations.isValidated,
-    productsIds: producer.products !== undefined ? producer.products.map(p => p.id) : []
+    productsIds: producer.products != null ? producer.products.map(p => p.id) : []
   };
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié

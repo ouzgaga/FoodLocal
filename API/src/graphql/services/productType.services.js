@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
-const ProductTypeCategoryServices = require('./productTypeCategory.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -57,7 +56,7 @@ function getProductTypeByCategory(productTypeCategoryId) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    return ProductTypeModel.find({ category: productTypeCategoryId });
+    return ProductTypeModel.find({ categoryId: productTypeCategoryId });
   }
 }
 
@@ -77,8 +76,8 @@ async function updateProductType(productType) {
     id: productType.id,
     name: productType.name,
     image: productType.image,
-    // category: productType.category.id,
-    producers: productType.producers.map(p => p.id)
+    categoryId: productType.category.id,
+    producersIds: productType.producers.map(p => p.id)
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
