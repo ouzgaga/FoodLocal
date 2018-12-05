@@ -9,10 +9,14 @@ const producerResolvers = {
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
+    producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
+
     searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds)
   },
 
   Mutation: {
+    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
+
     addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
 
     updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
