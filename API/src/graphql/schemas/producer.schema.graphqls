@@ -1,10 +1,12 @@
 type Query {
 	producers: [Producer!]!
 	producer(producerId: ID!) : Producer
+	producersWaitingForValidation: [Producer!]!
 	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
 }
 
 type Mutation {
+	validateAProducer(producerId: ID!, validationState: Boolean!): Producer!
 	addProducer(producer: ProducerInputAdd!): Producer!
 	updateProducer(producer: ProducerInputUpdate!): Producer
 	deleteProducer(producerId: ID!): Producer

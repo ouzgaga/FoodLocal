@@ -43,6 +43,10 @@ function getProducerById(id) {
   }
 }
 
+function getAllProducerWaitingForValidation() {
+  return ProducersModel.find({ isValidated: false });
+}
+
 /**
  * Retourne tous les producteurs dont l'id se trouve dans la liste passée en paramètre.
  * @param listOfIdToGet, liste contenant les ids des producteurs que l'on cherche.
@@ -125,6 +129,20 @@ async function updateProducer(producer) {
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
 }
 
+async function validateAProducer(producerId, validationState) {
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received producer.id is invalid!');
+  }
+
+  const producerToUpdate = await getProducerById(producerId);
+  if (producerToUpdate != null) {
+    producerToUpdate.isValidated = validationState;
+    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return null;
+  }
+}
+
 /**
  * Supprime le producteur correspondant à l'id reçu.
  *
@@ -140,9 +158,11 @@ function deleteProducer(id) {
 
 module.exports = {
   getProducers,
-  addProducer,
   getProducerById,
+  getAllProducerWaitingForValidation,
+  getAllProducersInReceivedIdList,
+  addProducer,
   updateProducer,
-  deleteProducer,
-  getAllProducersInReceivedIdList
+  validateAProducer,
+  deleteProducer
 };
