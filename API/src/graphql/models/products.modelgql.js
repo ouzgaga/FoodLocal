@@ -33,6 +33,11 @@ const ProductTypeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'productTypeCategory',
       required: true
+    },
+    producers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'producers',
+      required: true
     }
   }
 );

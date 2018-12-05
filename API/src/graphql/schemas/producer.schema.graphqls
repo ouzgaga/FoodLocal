@@ -17,7 +17,7 @@ type Producer implements Person {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[Producer!]!
+	subscriptions: [Producer!]!
 	emailValidated: Boolean!
 	subscribedUsers : [User!]!
 	phoneNumber: String

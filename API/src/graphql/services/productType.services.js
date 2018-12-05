@@ -24,13 +24,6 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-async function addProducerProducingThisProductType(idProductTypeToModify, idProducerToAdd) {
-  const productType = await this.getProductTypeById(idProductTypeToModify);
-  productType.producers.push(idProducerToAdd);
-
-  return this.updateProductType(productType);
-}
-
 /**
  * Ajoute un nouveau type de produit dans la base de données.
  * Attention, doublons autorisés!
@@ -38,18 +31,12 @@ async function addProducerProducingThisProductType(idProductTypeToModify, idProd
  * @param {Integer} productType, Les informations du type de produit à ajouter.
  */
 function addProductType(productType) {
-  // Si le productType ne possède pas d'id -> on l'ajoute à la DB
-  if (productType.id === undefined) {
-    const newProductType = {
-      ...productType,
-      category: productType.category.id
-    };
-    return new ProductTypeModel(newProductType).save();
-  } else {
-    // Si le productType possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce productType
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return productType;
-  }
+  const newProductType = {
+    ...productType,
+    category: productType.category.id,
+    producers: []
+  };
+  return new ProductTypeModel(newProductType).save();
 }
 
 /**
@@ -82,11 +69,25 @@ async function updateProductType(productType) {
   }
 
   const updatedProductType = {
-    ...productType,
-    category: productType.category.id
+    id: productType.id,
+    name: productType.name,
+    image: productType.image,
+    category: productType.category.id,
+    producers: productType.producers.map(p => p.id)
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
+}
+
+async function addProducerProducingThisProductType(idProductType, { id: idProducer }) {
+  const productType = await getProductTypeById(idProductType);
+  if (productType.producers !== null) {
+    productType.producers.push(idProducer);
+  } else {
+    productType.producer = [idProducer];
+  }
+
+  return updateProductType(productType);
 }
 
 /**

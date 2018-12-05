@@ -78,8 +78,10 @@ async function addProducer(producer) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
     }
 
-    const productsId = await productsServices.addAllProductsInArray(producer.products);
-
+    let productsId;
+    if (producer.products !== undefined && producer.products.length !== 0) {
+      productsId = await productsServices.addAllProductsInArray(producer.products);
+    }
     const producerToAdd = {
       ...producer,
       salesPoint: salespoint !== undefined ? salespoint.id : null,
@@ -87,7 +89,7 @@ async function addProducer(producer) {
       emailValidated: false,
       subscribedUsers: [],
       isValidated: false,
-      products: productsId
+      products: productsId !== undefined ? productsId : []
     };
 
     return new ProducersModel(producerToAdd).save();
