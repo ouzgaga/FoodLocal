@@ -40,12 +40,12 @@ const productResolvers = {
   },
 
   Product: {
-    productType: (parent, args, context) => productTypeServices.getProductTypeById(parent.productType)
+    productType: (parent, args, context) => productTypeServices.getProductTypeById(parent.productTypeId)
   },
 
   ProductType: {
     category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.categoryId),
-    producers: (parent, args, context) => producerServices.getAllProducersInReceivedIdList(parent.producers)
+    producers: (parent, args, context) => producerServices.getAllProducersInReceivedIdList(parent.producersIds)
   }
 };
 module.exports = productResolvers;
