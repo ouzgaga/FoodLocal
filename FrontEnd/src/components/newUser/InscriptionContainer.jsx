@@ -56,6 +56,13 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`,
     width: '100%',
   },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  grow: {
+    flexGrow: 1
+  },
 });
 
 const steps = ['Informations', 'Status', 'Conditions générales'];
@@ -125,7 +132,7 @@ class InscriptionContainer extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if (!this.state.GC) {
+    if (!this.state.GC && this.state.activeStep === 2) {
       this.setState({ errorMessage: errorNoCG });
     } else {
       this.setState(state => ({
@@ -136,14 +143,15 @@ class InscriptionContainer extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, onValidate, onClose  } = this.props;
+
     const { activeStep, errorMessage, email } = this.state;
 
     return (
       <React.Fragment>
         <CssBaseline />
         <main className={classes.layout}>
-          <Paper className={classes.paper}>
+          <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <AccountIcon />
             </Avatar>
@@ -164,7 +172,7 @@ class InscriptionContainer extends React.Component {
                       Veuillez-aller sur votre adresse mail pour confirmer l'inscrition.
                     </Typography>
                     <Button
-                      onClick={this.handleClose}
+                      onClick={onValidate}
                       variant="contained"
                       className={classes.button}
                       color="primary"
@@ -190,6 +198,15 @@ class InscriptionContainer extends React.Component {
                         ))}
                       </Stepper>
                       <div className={classes.buttons}>
+
+                        <Button
+                          onClick={onClose}
+                          className={classes.button}
+                          tabindex="-1"
+                        >
+                          Annuler
+                        </Button>
+                        <div className={classes.grow} />
                         {activeStep !== 0 && (
                           <Button onClick={this.handleBack} className={classes.button}>
                             Retour
@@ -208,7 +225,7 @@ class InscriptionContainer extends React.Component {
                   )}
               </React.Fragment>
             </form>
-          </Paper>
+          </div>
         </main>
       </React.Fragment>
     );

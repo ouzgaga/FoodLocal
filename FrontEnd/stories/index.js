@@ -14,6 +14,7 @@ import StatusForm from '../src/components/newUser/StatusForm';
 import InformationsForm from '../src/components/newUser/InformationsForm';
 import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionForm';
 import InputPassword from '../src/components/items/InputPassword';
+import BoxWithHeader from '../src/components/items/BoxWithHeader';
 
 function onChange(event){
 
@@ -87,8 +88,6 @@ storiesOf('AdressContainer', module)
     />
 ));
 
-  
-
 storiesOf('CenteredPaper', module)
   .add('Text element', () => (
     <CenteredPaper>
@@ -143,4 +142,19 @@ storiesOf('InputPassword', module)
   .add('GeneralsConditionForm', () => (
     <GeneralsConditionForm
     onChange={onChange}/>
+));
+
+storiesOf('BoxWithHeader', module)
+  .add('empty', () => (
+    <BoxWithHeader />
+)).add('no header', () => (
+  <BoxWithHeader>
+    hello word
+  </BoxWithHeader>
+)).add('child + header', () => (
+  <BoxWithHeader
+    header="Header"
+  >
+    hello word
+  </BoxWithHeader>
 ));

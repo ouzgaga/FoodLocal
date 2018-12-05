@@ -19,7 +19,7 @@ import InputPassword from '../items/InputPassword';
 
 const styles = theme => ({
   form: {
-    width: '100%', // Fix IE11 issue.
+    //width: '100%', // Fix IE11 issue.
     marginTop: theme.spacing.unit,
   },
 });
@@ -32,7 +32,7 @@ function InformationsForm(props) {
         <div className={classes.form}>
         
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Adresse mail </InputLabel>
+            <InputLabel htmlFor="email">Adresse mail</InputLabel>
             <Input
               type="email"
               id="email"
@@ -48,9 +48,8 @@ function InformationsForm(props) {
             <Input
               type="text"
               id="lastNameInput"
-              name="LastNameInput"
-              autoComplete="LastNameInput"
-              autoFocus
+              name="lastNameInput"
+              autoComplete="lastNameInput"
               onChange={onChange('lastName')}
               value={lastName}
             />
@@ -62,7 +61,6 @@ function InformationsForm(props) {
               id="firstNameInput"
               name="firstNameInput"
               autoComplete="firstNameInput"
-              autoFocus
               onChange={onChange('firstName')}
               value={firstName}
             />
