@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const TokenGenerator = require('uuid-token-generator');
-const usersServices = require('./users.services');
 const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
 const mail = require('../../utils/sendEmailFoodlocal');
 
@@ -37,10 +36,7 @@ function getTokenValidationEmailByValue(value) {
  * @param id
  * @returns {Promise<*>}
  */
-async function addTokenValidationEmail(id) {
-  console.log(usersServices);
-  // Get user by id
-  const user = usersServices.getUserById(id);
+async function addTokenValidationEmail (user) {
   // check user exist
   if (user === null) {
     return null;
@@ -50,7 +46,7 @@ async function addTokenValidationEmail(id) {
   const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
   const token = {
     value: tokenGen.generate(),
-    idUser: id
+    idUser: user.id
   };
   // insert in the database
   const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();

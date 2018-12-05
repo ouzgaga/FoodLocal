@@ -44,7 +44,6 @@ const isEmailUnused = async(emailUser) => {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser(user) {
-  console.log(tokenValidationEmail);
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await isEmailUnused(user.email)) {
     const userToAdd = {
@@ -53,8 +52,8 @@ async function addUser(user) {
       emailValidated: false
     };
 
-    const userAdded = new UsersModel(userToAdd).save();
-    tokenValidationEmail.addTokenValidationEmail(userToAdd.id);
+    const userAdded = await new UsersModel(userToAdd).save();
+    tokenValidationEmail.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
     throw new Error('This email is already used.');

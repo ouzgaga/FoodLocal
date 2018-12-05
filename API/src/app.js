@@ -32,7 +32,7 @@ const resolvers = merge(
   User,
   Product,
   Salespoint,
-  Utils
+  Utils,
   TokenValidationEmail,
 );
 
