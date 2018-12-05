@@ -15,6 +15,11 @@ import InformationsForm from '../src/components/newUser/InformationsForm';
 import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionForm';
 import InputPassword from '../src/components/items/InputPassword';
 import BoxWithHeader from '../src/components/items/BoxWithHeader';
+import BorderedTextField from '../src/components/items/fields/BorderedTextField';
+import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
+import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
+
+
 
 function onChange(event){
 
@@ -153,8 +158,43 @@ storiesOf('BoxWithHeader', module)
   </BoxWithHeader>
 )).add('child + header', () => (
   <BoxWithHeader
-    header="Header"
+    header="Informations personnels"
   >
-    hello word
+    <PersonalInformation />
   </BoxWithHeader>
 ));
+
+storiesOf('BorderedTextField', module)
+  .add('no data', () => (
+    <BorderedTextField />
+  ))
+  .add('Default value', () => (
+    <BorderedTextField
+      defaultValue="Hello word"
+    />
+  ))
+  .add('fullWidth', () => (
+    <BorderedTextField
+      defaultValue="Hello word"
+      fullWidth
+    />
+  ));
+
+storiesOf('BoxLeftRight', module)
+  .add('BoxLeftRight', () => (
+    <BoxLeftRight 
+      title="hello"
+    >
+      world
+    </BoxLeftRight>
+  ));
+
+
+storiesOf('PersonalInformation', module)
+  .add('PersonalInformation', () => (
+    <PersonalInformation />
+  ));
+
+
+  
+  

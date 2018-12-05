@@ -29,7 +29,7 @@ function BoxWithHeader(props) {
       { header ?
         (
           <Grid item xs={12} className={classes.header}>
-            <Typography>header</Typography>
+            <Typography>{header}</Typography>
           </Grid>
         ) : (
           <></>

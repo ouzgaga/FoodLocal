@@ -113,7 +113,7 @@ class MenuAppBar extends React.Component {
           <LoginDialog
             classes={this.props}
             open={this.state.open}
-            onClose={this.handleClickDrawer('close')}
+            onClose={this.handleClickDrawer('open')}
             onClick2={this.handleOpenAndClose}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
