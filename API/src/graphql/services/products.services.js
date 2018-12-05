@@ -35,18 +35,19 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
-  // Si le product ne possède pas d'id -> on l'ajoute à la DB
-  if (product.id === undefined) {
-    const newProduct = {
-      description: product.description,
-      productType: product.productType.id
-    };
-    return new ProductModel(newProduct).save();
+  let productTypeId;
+  if (!mongoose.Types.ObjectId.isValid(product.productType.id)) {
+    return new Error('Received productType.id is invalid!');
   } else {
-    // Si le product possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce product
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return product;
+    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
+    productTypeId = new mongoose.Types.ObjectId(product.productType.id);
   }
+  const newProduct = {
+    description: product.description,
+    productType: productTypeId
+  };
+
+  return new ProductModel(newProduct).save();
 }
 
 async function addAllProductsInArray(productsArray) {

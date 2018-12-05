@@ -75,7 +75,6 @@ type ProductType {
 }
 
 input ProductTypeInputAdd {
-	id: ID
 	name: String!
 	image: String
 	category: ProductTypeCategoryInputGetAndDelete! #fixme: on ne peut pas ajouter une catégorie en même temps qu'un type de produit, ok?
@@ -99,7 +98,6 @@ type ProductTypeCategory{
 }
 
 input ProductTypeCategoryInputAdd {
-	id: ID
 	name: String!
 	image: String # fixme: faudra l'encoder en base64
 }

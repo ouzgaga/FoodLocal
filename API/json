@@ -1,19 +1,14 @@
 {
 	"producer": {
-		"id": "5c05b88a17c26f87220e2904",
-		"firstname": "Benoît",
-		"lastname": "Schopfer",
-		"email": "benoit.schopfer4@heig-vd.ch",
+		"firstname": "Antoine",
+		"lastname": "Rochat",
+		"email": "coucou4@cava.ch",
 		"password": "1234abcd",
-		"image": "Ceci est une image encodée en base64!",
-		"subscriptions": [],
-		"emailValidated": false,
-		"subscribedUsers": [],
+		"image": "Ceci est l'image d'un tueur encodée en base64!",
 		"phoneNumber": "0761435196",
-		"description": "Un chouet gaillard!",
-		"website": "benoitschopfer.ch",
-		"salesPoint": {
-			"id": "5c05b88a17c26f87220e28f7",
+		"description": "Un vrai boulet!",
+		"website": "websiteduteubé.ch",
+		"salespoint": {
 			"name": "Chez moi",
 			"address": {
 				"number": 6,
@@ -21,8 +16,8 @@
 				"city": "Yverdon",
 				"postalCode": "1400",
 				"country": "Suisse",
-				"longitude": 1.1234567,
-				"latitude": 1.123456789
+				"longitude": 6.6655123,
+				"latitude": 46.759914
 			},
 			"schedule": [
 				{
@@ -66,22 +61,6 @@
 					]
 				}
 			]
-		},
-		"products": [
-			{
-				"id": "5c05b88a17c26f87220e2902",
-				"description": "Une pomme monnnnstre bonne!",
-				"productType": {
-					"id": "5c050afa96f1ff3cca213d1f"
-				}
-			},
-			{
-				"id": "5c05b88a17c26f87220e2903",
-				"description": "Une poire de folie!",
-				"productType": {
-					"id": "5c05ad449fdaf88060a42aef"
-				}
-			}
-		]
+		}
 	}
 }
