@@ -112,7 +112,7 @@ describe('tests product services', () => {
 
   describe('tests getProductById', () => {
     it('should get one product', async() => {
-      let productGotInDB = await productService.getProductById(maPomme);
+      let productGotInDB = await productService.getProductById(maPomme.id);
 
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
@@ -124,7 +124,7 @@ describe('tests product services', () => {
       productGotInDB.productType.id.should.be.not.null;
       productGotInDB.productType.id.should.be.eql(maPomme.productType.id);
 
-      productGotInDB = await productService.getProductById(maPoire);
+      productGotInDB = await productService.getProductById(maPoire.id);
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;

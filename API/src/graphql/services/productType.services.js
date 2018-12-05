@@ -85,7 +85,7 @@ async function updateProductType(productType) {
     id: productType.id,
     name: productType.name,
     image: productType.image,
-    category: productType.category.id,
+    // category: productType.category.id,
     producers: productType.producers.map(p => p.id)
   };
 

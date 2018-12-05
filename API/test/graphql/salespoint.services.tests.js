@@ -212,7 +212,7 @@ describe('tests salespoints services', () => {
 
   describe('tests getSalesPointById', () => {
     it('should get one salespoint', async() => {
-      const salespointGotInDB = await salespointService.getSalesPointById(magasin1);
+      const salespointGotInDB = await salespointService.getSalesPointById(magasin1.id);
       salespointGotInDB.should.be.an('object');
       salespointGotInDB.should.be.not.null;
       salespointGotInDB.id.should.be.equal(magasin1.id);
@@ -268,7 +268,7 @@ describe('tests salespoints services', () => {
     });
 
     it('should fail getting one salespoint because no id received', async() => {
-      const productTypeGotInDB = await salespointService.getSalesPointById({ id: '' });
+      const productTypeGotInDB = await salespointService.getSalesPointById('');
       productTypeGotInDB.message.should.be.equal('Received salespoint.id is invalid!');
     });
   });

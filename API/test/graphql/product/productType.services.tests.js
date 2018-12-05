@@ -90,7 +90,7 @@ describe('tests productType services', () => {
 
   describe('tests getProductTypeById', () => {
     it('should get one productType', async() => {
-      let productTypeGotInDB = await productTypeService.getProductTypeById(pomme);
+      let productTypeGotInDB = await productTypeService.getProductTypeById(pomme.id);
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
@@ -99,7 +99,7 @@ describe('tests productType services', () => {
       productTypeGotInDB.name.should.be.equal(pomme.name);
       productTypeGotInDB.image.should.be.equal(pomme.image);
       productTypeGotInDB.category.id.should.be.eql(new mongoose.Types.ObjectId(category.id).id);
-      productTypeGotInDB = await productTypeService.getProductTypeById(raisin);
+      productTypeGotInDB = await productTypeService.getProductTypeById(raisin.id);
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
@@ -111,7 +111,7 @@ describe('tests productType services', () => {
     });
 
     it('should fail getting one productType because no id received', async() => {
-      const productTypeGotInDB = await productTypeService.getProductTypeById({ id: '' });
+      const productTypeGotInDB = await productTypeService.getProductTypeById('');
       productTypeGotInDB.message.should.be.equal('Received productType.id is invalid!');
     });
   });
