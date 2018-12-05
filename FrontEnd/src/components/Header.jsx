@@ -12,64 +12,73 @@ import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
 import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
+import SimpleDialog from './items/SimpleDialog';
+import InscriptionContainer from './newUser/InscriptionContainer';
 
 const styles = {
-  root      : {
+  root: {
     flexGrow: 1,
     position: 'fixed',
     weight  : '100%',
     height  : '64px',
     top     : 0,
-    shadow  : 'none'
+    shadow  : 'none',
   },
-  grow      : {
+  grow: {
     flexGrow: 1
   },
   menuButton: {
-    marginLeft : -7,
+    marginLeft: -7,
     marginRight: 20,
     paddingTop : 4,
     height     : '60px',
-    outline    : 'none'
+    outline    : 'none',
   },
   LinkButton: {
     textDecoration: 'none',
-    color         : 'secondary'
+    color         : 'secondary',
   }
 };
 
 class MenuAppBar extends React.Component {
   state = {
     sConnected: null,
-    open      : false
+    open: false,
+    newAccountOpen: false,
   };
 
-  handleClickLogin = () => {
+  handleClickDrawer = prop => () => {
+    this.setState(state => ({
+      [prop]: !state[prop]
+    }));
+  };
+
+  handleOpenAndClose = () => {
     this.setState({
-      open: true
+      open: false,
+      newAccountOpen: true,
     });
-  };
+  }
 
-  handleCloseLogin = (value) => {
-    this.setState({ open: false });
-  };
-
-  render () {
+  render() {
     const { classes, width } = this.props;
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Accueil</Button></Link>
+        <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
         <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
 
 
         {UserContext.Provider.name == null
           ? <>
-            <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>S'inscrire</Button></Link>
-            <Button color="inherit" onClick={this.handleClickLogin}>
-             Se connecter
+            <Button color="inherit" onClick={this.handleClickDrawer('newAccountOpen')}>
+              S'inscrire
             </Button>
-         </>
+            <Button color="inherit" onClick={this.handleClickDrawer('open')}>
+              Se connecter
+            </Button>
+          </>
           : (
             <Button color="inherit">
               {UserContext.Provider.name}
@@ -83,16 +92,29 @@ class MenuAppBar extends React.Component {
         <AppBar position="static" className={classes.root}>
           <Toolbar>
             <Link to="/" readOnly tabIndex="-1"><img src={logo} className={classes.menuButton} alt="logo" readOnly tabIndex="-1" /></Link>
-
             <div className={classes.grow} />
-            {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
+            {isWidthUp('sm', width) ? menuLarge : <MenuDrawer onClick={this.handleClickDrawer} />}
           </Toolbar>
 
+          
+
+            <SimpleDialog
+              open={this.state.newAccountOpen}
+              onClose={this.handleClickDrawer('newAccountOpen')}
+            >
+              <InscriptionContainer
+                onClose={this.handleClickDrawer('newAccountOpen')}
+                onValidate={this.handleClickDrawer('newAccountOpen')}
+              />
+
+            </SimpleDialog> 
+
+          
           <LoginDialog
             classes={this.props}
             open={this.state.open}
-            onClose={this.handleCloseLogin.bind(this)}
-            // onClose={this.handleCloseLogin}
+            onClose={this.handleClickDrawer('close')}
+            onClick2={this.handleOpenAndClose}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {this.state.connectEmail}

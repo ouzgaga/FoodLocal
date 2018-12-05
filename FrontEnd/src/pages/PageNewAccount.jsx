@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 class PageNewAccount extends Component {
   render() {
     return (
-      <div>
-        Page new Account
+      <div style={{ minHeight: 'calc(100vh - 64px)', backgroundColor:'white' }}>
       </div>
     );
   }

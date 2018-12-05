@@ -195,7 +195,7 @@ class ProducerVue extends Component {
 
     return (
       <div>
-        {status === 200 ? producerInfo : <PageError404 location={`/producers/${this.state.userId}`}></PageError404>}
+        {status === 200 ? producerInfo : <PageError404 location={`/producer/${this.state.userId}`}></PageError404>}
       </div>
       
     );

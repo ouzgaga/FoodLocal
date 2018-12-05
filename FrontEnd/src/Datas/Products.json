@@ -1,0 +1,126 @@
+{
+  "products": [
+    {
+      "name" : "Boissons",
+      "items" : [
+        "Alcools forts",
+        "Bières / Cidres",
+        "Jus de fruits",
+        "Lait",
+        "Mousseux",
+        "Vins",
+        "Autres Alcools"
+      ]
+    },
+    {
+      "name" :"Céréales / Farines",
+      "items" : [
+        "Farine",
+        "Quinoa",
+        "Pâtes",
+        "Polenta",
+        "Autres Céréales / Farine"
+      ]
+    },
+    {
+      "name" :"Fruits",
+      "items" : [
+        "Abricots",
+        "Canneberges",
+        "Cassis",
+        "Cerises",
+        "Châtaignes",
+        "Coings",
+        "Fraises",
+        "Framboises",
+        "Groseilles",
+        "Kiwis",
+        "Mirabelles",
+        "Mûres",
+        "Myrtilles",
+        "Nectarines",
+        "Noix",
+        "Pêches",
+        "Poires",
+        "Pommes",
+        "Pruneaux",
+        "Prunes",
+        "Raisin",
+        "Sureau",
+        "Autres Fruits"
+      ]
+    },
+    {
+      "name" :"Légumes",
+      "items" : [
+        "Ail",
+        "Asperges",
+        "Aubergines",
+        "Betteraves",
+        "Brocolis",
+        "Carottes",
+        "Céleris",
+        "Choux",
+        "Choux de Bruxelles",
+        "Choux frisés",
+        "Choux-fleurs",
+        "Choux-raves",
+        "Concombres",
+        "Courges",
+        "Courgettes",
+        "Fenouil",
+        "Haricots",
+        "Maïs",
+        "Oignons",
+        "Petits-pois",
+        "Poireaux",
+        "Poivrons",
+        "Pommes de terre",
+        "Radis",
+        "Raifort",
+        "Rhubarbe",
+        "Salades",
+        "Tomates",
+        "Autres légumes"
+      ]
+    },
+    {
+      "name" :"Viandes",
+      "items" : [
+        "Agneau",
+        "Autruche",
+        "Boeuf",
+        "Chèvre",
+        "Caille",
+        "Canard",
+        "Cerf",
+        "Dinde",
+        "Lapin",
+        "Jambon",
+        "Pintade",
+        "Poisson",
+        "Porc",
+        "Poulet",
+        "Saucisses diverses",
+        "Veau",
+        "Viandes séchées / fumées",
+        "Viandes fumées",
+        "Autres Viandes"
+      ]
+    },
+    {
+      "name" :"Autres Produits",
+      "items" : [
+        "Bois de feu",
+        "Fleurs",
+        "Fromages / produits laitiers",
+        "Huiles",
+        "Miel",
+        "Oeufs",
+        "Pain",
+        "Pâtisserie et confiserie",
+        "Sapins de Noël"
+      ]
+    }
+  ]
+}
