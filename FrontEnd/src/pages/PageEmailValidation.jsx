@@ -44,7 +44,12 @@ class PageEmailValidation extends Component {
             {(validate, { data, loading, error }) => (
               <div>
                 <DoMutation mutate={validate} />
-                {error && <div><Typography variant="h3" color="secondary">Error - Token not valide</Typography><Button>Send new email confimation</Button></div>}
+                {error && (
+                  <div>
+                    <Typography variant="h3" color="secondary">Error - Token not valide</Typography>
+                    <Button>Send new email confimation</Button> {/* TODO */}
+                  </div>
+                )}
                 {loading && <Typography variant="h3" color="secondary">Loading</Typography>}
                 {data && <Typography variant="h3" color="secondary">Email confirmé</Typography>}
               </div>
