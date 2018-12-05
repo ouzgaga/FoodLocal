@@ -2,7 +2,7 @@ const tokenValidationEmailServices = require('../services/tokenValidationEmail.s
 
 const producerResolvers = {
   Mutation: {
-    validateToken: (parent, args, context) => tokenValidationEmailServices.validateTokenValidationEmail(args.token),
+    validateToken: (parent, args, context) => tokenValidationEmailServices.validateToken(args.value),
     askNewToken: (parent, args, context) => {
       const token = tokenValidationEmailServices.addTokenValidationEmail(args.idUser);
       if (token === null) {

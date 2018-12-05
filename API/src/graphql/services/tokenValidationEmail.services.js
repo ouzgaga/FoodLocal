@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const TokenGenerator = require('uuid-token-generator');
+const usersServices = require('./users.services');
 const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
-const UserService = require('./users.services');
 const mail = require('../../utils/sendEmailFoodlocal');
 
 /**
@@ -37,9 +37,10 @@ function getTokenValidationEmailByValue(value) {
  * @param id
  * @returns {Promise<*>}
  */
-async function addTokenValidationEmail({ id }) {
+async function addTokenValidationEmail(id) {
+  console.log(usersServices);
   // Get user by id
-  const user = UserService.getUserById(id);
+  const user = usersServices.getUserById(id);
   // check user exist
   if (user === null) {
     return null;
@@ -52,9 +53,9 @@ async function addTokenValidationEmail({ id }) {
     idUser: id
   };
   // insert in the database
-  const tokenValidationEmail = new TokenValidationEmailsModel(token).save();
+  const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();
   const name = `${user.firstname} ${user.lastname}`;
-  mail.sendMailConfirmation(user.email, name, tokenValidationEmail);
+  mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
   return tokenValidationEmail;
 }
 
@@ -63,7 +64,7 @@ async function addTokenValidationEmail({ id }) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteTokenValidationEmail({ id }) {
+function deleteTokenValidationEmail(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received TokenValidationEmail.id is invalid!');
   }
@@ -72,9 +73,9 @@ function deleteTokenValidationEmail({ id }) {
 }
 
 function tokenToOld(dateCreation) {
-  /*const daysAgo = 7;
+  /* const daysAgo = 7;
   const date = new Date() - (daysAgo * 24 * 60 * 60 * 1000);
-  return date.getDate() >= dateCreation.getDate();*/
+  return date.getDate() >= dateCreation.getDate(); */
   return false;
 }
 
@@ -83,7 +84,7 @@ function tokenToOld(dateCreation) {
  * @param token - token to check
  * @returns {boolean} - result
  */
-function validateToken({ value }) {
+function validateToken(value) {
   const token = getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
   // if token not found return that the token is not valide
   if (token === null) {
@@ -91,7 +92,7 @@ function validateToken({ value }) {
   } else if (tokenToOld(token.dateCreation)) {
     return false;
   } else { // is a valide token
-    UserService.validateEmailUserById(token);
+    usersServices.validateEmailUserById(token.idUser);
     deleteTokenValidationEmail(token); // delete token
     return true;
   }

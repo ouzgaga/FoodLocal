@@ -11,6 +11,7 @@ const User = require('./graphql/resolvers/users.resolvers');
 const Person = require('./graphql/resolvers/person.resolvers');
 const Product = require('./graphql/resolvers/products.resolvers');
 const Salespoint = require('./graphql/resolvers/salespoint.resolvers');
+const TokenValidationEmail = require('./graphql/resolvers/tokenValidationEmail.resolvers');
 const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
@@ -30,6 +31,7 @@ const resolvers = merge(
   User,
   Product,
   Salespoint,
+  TokenValidationEmail,
 );
 
 const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));

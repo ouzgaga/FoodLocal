@@ -18,7 +18,6 @@ const TokenValidationEmail = new mongoose.Schema(
     },
     dateCreation: {
       type: mongoose.Schema.Types.Date,
-      required: true,
       default: mongoose.Schema.Types.Date.now
     }
   }

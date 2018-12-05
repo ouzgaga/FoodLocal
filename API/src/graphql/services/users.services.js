@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const TokenValidationEmail = require('./tokenValidationEmail.services');
 const UsersModel = require('../models/user.modelgql');
 const ProducersModel = require('../models/producers.modelgql');
+const tokenValidationEmail = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -44,6 +44,7 @@ const isEmailUnused = async(emailUser) => {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser(user) {
+  console.log(tokenValidationEmail);
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await isEmailUnused(user.email)) {
     const userToAdd = {
@@ -53,12 +54,7 @@ async function addUser(user) {
     };
 
     const userAdded = new UsersModel(userToAdd).save();
-    // Check if the user didn't had any problem add the add action
-    if (user === null) {
-      return null;
-    }
-    // Adding token and waiting for validation email
-    TokenValidationEmail.addTokenValidationEmail(userAdded);
+    tokenValidationEmail.addTokenValidationEmail(userToAdd.id);
     return userAdded;
   } else {
     throw new Error('This email is already used.');
@@ -70,7 +66,7 @@ async function addUser(user) {
  *
  * @param {Integer} id, L'id du producteur à récupérer.
  */
-function getUserById({ id }) {
+function getUserById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
@@ -103,15 +99,6 @@ async function updateUser(user) {
   // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
-async function validateEmailUserById({id}) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
-  }
-  const user = getUserById(id);
-  user.emailValidated = true;
-  return updateUser(user);
-}
-
 /**
  * Supprime le producteur correspondant à l'id reçu.
  *
@@ -121,7 +108,17 @@ function deleteUser({ id }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+
   return UsersModel.findByIdAndRemove(id);
+}
+
+async function validateEmailUserById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  }
+  const user = getUserById(id);
+  user.emailValidated = true;
+  return updateUser(user);
 }
 
 module.exports = {
@@ -129,7 +126,7 @@ module.exports = {
   addUser,
   getUserById,
   updateUser,
-  validateEmailUserById,
   deleteUser,
-  getAllUsersInReceivedIdList
+  getAllUsersInReceivedIdList,
+  validateEmailUserById
 };

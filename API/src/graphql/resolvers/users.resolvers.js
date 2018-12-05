@@ -4,7 +4,7 @@ const producerResolvers = {
   Query: {
     users: () => usersServices.getUsers(),
 
-    user: (parent, args, context) => usersServices.getUserById(args.user)
+    user: (parent, args, context) => usersServices.getUserById(args.user.id)
   },
 
   Mutation: {
