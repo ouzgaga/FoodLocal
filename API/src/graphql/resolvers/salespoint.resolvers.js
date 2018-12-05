@@ -14,6 +14,5 @@ const salespointsResolvers = {
 
     deleteSalesPoint: (parent, args, context) => salespointsServices.deleteSalesPoint(args.salespointId)
   }
-
 };
 module.exports = salespointsResolvers;

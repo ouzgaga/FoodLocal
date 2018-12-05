@@ -34,7 +34,7 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
 function addProductType(productType) {
   const newProductType = {
     ...productType,
-    category: productType.category.id,
+    categoryId: productType.categoryId,
     producers: []
   };
   return new ProductTypeModel(newProductType).save();
@@ -46,27 +46,19 @@ function addProductType(productType) {
  * @param {Integer} id, L'id du type de produit à récupérer.
  */
 function getProductTypeById(id) {
-  let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductTypeModel.findById(id);
   }
-
-  return ProductTypeModel.findById(objectId);
 }
 
 function getProductTypeByCategory(productTypeCategoryId) {
-  let id = productTypeCategoryId;
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    // FIXME: je comprends pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    id = new mongoose.Types.ObjectId(productTypeCategoryId);
+    return ProductTypeModel.find({ category: productTypeCategoryId });
   }
-
-  return ProductTypeModel.find({ category: id });
 }
 
 /**

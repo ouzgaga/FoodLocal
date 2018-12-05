@@ -23,10 +23,9 @@ let benoit = {
       longitude: 1.1234567,
       latitude: 1.123456789
     },
-    schedule: [
+    schedule:
       {
-        weekDay: 'MONDAY',
-        schedule: [
+        monday: [
           {
             openingHour: '08:00',
             closingHour: '12:00'
@@ -35,36 +34,24 @@ let benoit = {
             openingHour: '13:00',
             closingHour: '18:00'
           }
-        ]
-      },
-      {
-        weekDay: 'TUESDAY',
-        schedule: [
-          {
-            openingHour: '08:00',
-            closingHour: '18:00'
-          }
-        ]
-      },
-      {
-        weekDay: 'WEDNESDAY',
-        schedule: [
+        ],
+        tuesday: [],
+        wednesday: [
           {
             openingHour: '08:00',
             closingHour: '12:00'
           }
-        ]
-      },
-      {
-        weekDay: 'FRIDAY',
-        schedule: [
+        ],
+        thursday: [],
+        friday: [
           {
-            openingHour: '13:00',
-            closingHour: '18:00'
+            openingHour: '08:00',
+            closingHour: '12:00'
           }
-        ]
+        ],
+        saturday: [],
+        sunday: []
       }
-    ]
   },
   products: [
     {
@@ -101,10 +88,9 @@ let antoine = {
       longitude: 1.1234796,
       latitude: 1.123418029
     },
-    schedule: [
+    schedule:
       {
-        weekDay: 'MONDAY',
-        schedule: [
+        monday: [
           {
             openingHour: '08:00',
             closingHour: '12:00'
@@ -113,18 +99,24 @@ let antoine = {
             openingHour: '13:00',
             closingHour: '18:00'
           }
-        ]
-      },
-      {
-        weekDay: 'FRIDAY',
-        schedule: [
+        ],
+        tuesday: [],
+        wednesday: [
           {
-            openingHour: '13:00',
-            closingHour: '18:00'
+            openingHour: '08:00',
+            closingHour: '12:00'
           }
-        ]
+        ],
+        thursday: [],
+        friday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        saturday: [],
+        sunday: []
       }
-    ]
   },
   products: [
     {
@@ -301,9 +293,9 @@ describe('tests producers services', () => {
       producer.subscriptions.length.should.be.equal(0);
       producer.emailValidated.should.be.not.null;
       producer.emailValidated.should.be.equal(false);
-      producer.subscribedUsers.should.be.not.null;
-      producer.subscribedUsers.should.be.an('array');
-      producer.subscribedUsers.map((subscribedUser) => {
+      producer.subscribedUsersIds.should.be.not.null;
+      producer.subscribedUsersIds.should.be.an('array');
+      producer.subscribedUsersIds.map((subscribedUser) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;
@@ -312,8 +304,8 @@ describe('tests producers services', () => {
       });
       producer.phoneNumber.should.be.not.null;
       producer.description.should.be.not.null;
-      producer.salesPoint.should.be.not.null;
-      producer.salesPoint.id.should.be.not.null;
+      producer.salesPointId.should.be.not.null;
+      producer.salesPointId.id.should.be.not.null;
     });
   });
 
@@ -337,9 +329,9 @@ describe('tests producers services', () => {
       producer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
       producer.emailValidated.should.be.not.null;
       producer.emailValidated.should.be.equal(benoit.emailValidated);
-      producer.subscribedUsers.should.be.not.null;
-      producer.subscribedUsers.should.be.an('array');
-      producer.subscribedUsers.map((subscribedUser) => {
+      producer.subscribedUsersIds.should.be.not.null;
+      producer.subscribedUsersIds.should.be.an('array');
+      producer.subscribedUsersIds.map((subscribedUser) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;
@@ -348,8 +340,8 @@ describe('tests producers services', () => {
       });
       producer.phoneNumber.should.be.not.null;
       producer.description.should.be.not.null;
-      producer.salesPoint.should.be.not.null;
-      producer.salesPoint.id.should.be.not.null;
+      producer.salesPointId.should.be.not.null;
+      producer.salesPointId.id.should.be.not.null;
     });
 
     it('should fail getting one user because no id received', async() => {
@@ -372,7 +364,7 @@ describe('tests producers services', () => {
         phoneNumber: '0761435196',
         description: 'Un chouet gaillard!',
         website: 'benoitschopfer.ch',
-        salesPoint: {
+        salesPointId: {
           name: 'Chez moi',
           address: {
             number: 6,
@@ -412,7 +404,7 @@ describe('tests producers services', () => {
             sunday: []
           }
         },
-        products: [
+        productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
             productType: {
@@ -461,7 +453,7 @@ describe('tests producers services', () => {
         phoneNumber: '0761435196',
         description: 'Un chouet gaillard!',
         website: 'benoitschopfer.ch',
-        salesPoint: {
+        salesPointId: {
           name: 'Chez moi',
           address: {
             number: 6,
@@ -501,7 +493,7 @@ describe('tests producers services', () => {
             sunday: []
           }
         },
-        products: [
+        productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
             productType: {
@@ -546,85 +538,11 @@ describe('tests producers services', () => {
 
   describe('tests updateProducer', () => {
     it('should update a producer', async() => {
-      const addedProducer = {
-        id: antoine.id,
-        firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer5@heig-vd.ch',
-        password: '1234abcd',
-        image: 'Ceci est une image encodée en base64!',
-        phoneNumber: '0761435196',
-        description: 'Un chouet gaillard!',
-        website: 'benoitschopfer.ch',
-        salesPoint: {
-          name: 'Chez moi',
-          address: {
-            number: 6,
-            street: 'Chemin de par ici',
-            city: 'Yverdon',
-            postalCode: '1400',
-            country: 'Suisse',
-            longitude: 1.1234567,
-            latitude: 1.123456789
-          },
-          schedule: [
-            {
-              weekDay: 'MONDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                },
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'TUESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'WEDNESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'FRIDAY',
-              schedule: [
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            }
-          ]
-        },
-        products: [
-          {
-            description: 'Une pomme monnnnstre bonne!',
-            productType: {
-              id: '5c050afa96f1ff3cca213d1f'
-            }
-          },
-          {
-            description: 'Une poire de folie!',
-            productType: {
-              id: '5c05ad449fdaf88060a42aef'
-            }
-          }
-        ]
-      };
+      const addedProducer = await producersService.getProducerById(benoit.id);
+      const producerToUpdate = {
+        ...addedProducer,
+
+      }
       const updatedProducer = await producersService.updateProducer(addedProducer);
       updatedProducer.should.be.not.null;
       updatedProducer.id.should.be.not.null;
@@ -677,11 +595,11 @@ describe('tests producers services', () => {
   });
 
   it('should delete a producer', async() => {
-    let deleteProducer = await producersService.deleteProducer(benoit);
+    let deleteProducer = await producersService.deleteProducer(benoit.id);
 
     deleteProducer.should.be.not.null;
 
-    deleteProducer = await producersService.getProducerById(deleteProducer);
+    deleteProducer = await producersService.getProducerById(deleteProducer.id);
     it.should.be.null = deleteProducer; // Fixme: Ca marche de faire ça ??
   });
 });

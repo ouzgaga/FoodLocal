@@ -37,39 +37,39 @@ describe('tests productType services', () => {
     pomme = {
       name: pomme.name,
       image: pomme.image,
-      category: category.id
+      categoryId: category.id
     };
     const addedPomme = await ProductTypeModel.create(pomme);
     pomme.id = addedPomme.id;
-    pomme.category = { id: category.id };
+    pomme.categoryId = category.id;
 
 
     poire = {
       name: poire.name,
       image: poire.image,
-      category: category.id
+      categoryId: category.id
     };
     const addedPoire = await ProductTypeModel.create(poire);
     poire.id = addedPoire.id;
-    poire.category = { id: category.id };
+    poire.categoryId = category.id;
 
     raisin = {
       name: raisin.name,
       image: raisin.image,
-      category: category.id
+      categoryId: category.id
     };
     const addedRaisin = await ProductTypeModel.create(raisin);
     raisin.id = addedRaisin.id;
-    raisin.category = { id: category.id };
+    raisin.categoryId = category.id;
 
     courgette = {
       name: courgette.name,
       image: courgette.image,
-      category: category.id
+      categoryId: category.id
     };
     const addedCourgette = await ProductTypeModel.create(courgette);
     courgette.id = addedCourgette.id;
-    courgette.category = { id: category.id };
+    courgette.categoryId = category.id;
   });
 
   it('should get all productType', async() => {
@@ -98,7 +98,7 @@ describe('tests productType services', () => {
 
       productTypeGotInDB.name.should.be.equal(pomme.name);
       productTypeGotInDB.image.should.be.equal(pomme.image);
-      productTypeGotInDB.category.id.should.be.eql(new mongoose.Types.ObjectId(category.id).id);
+      productTypeGotInDB.category.id.should.be.eql(category.id);
       productTypeGotInDB = await productTypeService.getProductTypeById(raisin.id);
 
       productTypeGotInDB.should.be.an('object');
@@ -107,7 +107,7 @@ describe('tests productType services', () => {
       productTypeGotInDB.name.should.be.equal(raisin.name);
 
       productTypeGotInDB.image.should.be.equal(raisin.image);
-      productTypeGotInDB.category.id.should.be.eql(new mongoose.Types.ObjectId(category.id).id);
+      productTypeGotInDB.category.id.should.be.eql(category.id);
     });
 
     it('should fail getting one productType because no id received', async() => {
