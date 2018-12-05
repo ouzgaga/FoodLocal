@@ -7,7 +7,7 @@ const producerResolvers = {
   Query: {
     producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => producersServices.getProducerById(args.producer),
+    producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
     searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds)
   },
@@ -17,7 +17,7 @@ const producerResolvers = {
 
     updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
 
-    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producer)
+    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId)
   },
 
   Producer: {
@@ -25,7 +25,7 @@ const producerResolvers = {
 
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
-    salesPoint: (parent, args, context) => parent.salesPoint !== null ? salesPointsServices.getSalesPointById({ id: parent.salesPoint }) : null,
+    salesPoint: (parent, args, context) => parent.salesPointId !== undefined ? salesPointsServices.getSalesPointById(parent.salesPointId) : null,
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.products)
   }

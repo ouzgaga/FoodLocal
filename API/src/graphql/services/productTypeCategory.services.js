@@ -37,18 +37,14 @@ function addProductTypeCategory(productTypeCategory) {
 /**
  * Retourne la catégorie de produits correspondante à l'id reçu.
  *
- * @param productTypeCategory, un objet contenant l'id de la catégorie de produits à récupérer dans un champ nommé 'id'.
+ * @param id, un objet contenant l'id de la catégorie de produits à récupérer dans un champ nommé 'id'.
  */
-function getProductTypeCategoryById({ id }) {
-  let objectId = id;
+function getProductTypeCategoryById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductTypeCategoryModel.findById(id);
   }
-
-  return ProductTypeCategoryModel.findById(objectId);
 }
 
 /**
@@ -71,7 +67,7 @@ function updateProductTypeCategory(productTypeCategory) {
  *
  * @param {Integer} id, L'id de la catégorie de produits à supprimer.
  */
-function deleteProductTypeCategory({ id }) {
+function deleteProductTypeCategory(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
   }
