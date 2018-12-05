@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
+const ProductTypeCategoryServices = require('./productTypeCategory.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -56,6 +57,18 @@ function getProductTypeById({ id }) {
   return ProductTypeModel.findById(objectId);
 }
 
+function getProductTypeByCategory(productTypeCategoryId) {
+  let id = productTypeCategoryId;
+  if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
+    return new Error('Received productTypeCategory.id is invalid!');
+  } else {
+    // FIXME: je comprends pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
+    id = new mongoose.Types.ObjectId(productTypeCategoryId);
+  }
+
+  return ProductTypeModel.find({ category: id });
+}
+
 /**
  * Met à jour le type de produit possédant l'id reçu avec les données
  * reçues. Remplace toutes les données du type de produit dans la base
@@ -107,6 +120,7 @@ function deleteProductType(productType) {
 
 module.exports = {
   getProductTypes,
+  getProductTypeByCategory,
   addProductType,
   addProducerProducingThisProductType,
   getProductTypeById,
