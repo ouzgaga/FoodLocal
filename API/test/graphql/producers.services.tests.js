@@ -19,6 +19,7 @@ let benoit = {
       street: 'Chemin de par ici',
       city: 'Yverdon',
       postalCode: '1400',
+      state: 'Vaud',
       country: 'Suisse',
       longitude: 1.1234567,
       latitude: 1.123456789
@@ -56,15 +57,13 @@ let benoit = {
   products: [
     {
       description: 'Une pomme monnnnstre bonne!',
-      productType: {
+      productTypeId: {
         id: '5c050afa96f1ff3cca213d1f'
       }
     },
     {
       description: 'Une poire de folie!',
-      productType: {
-        id: '5c05ad449fdaf88060a42aef'
-      }
+      productTypeId: '5c05ad449fdaf88060a42aef'
     }
   ]
 };
@@ -84,6 +83,7 @@ let antoine = {
       street: 'Chemin de par ici',
       city: 'Quelque part par là-bas',
       postalCode: '1234',
+      state: 'Vaud',
       country: 'Suisse',
       longitude: 1.1234796,
       latitude: 1.123418029
@@ -121,15 +121,13 @@ let antoine = {
   products: [
     {
       description: 'Une pomme monnnnstre bonne!',
-      productType: {
+      productTypeId: {
         id: '5c050afa96f1ff3cca213d1f'
       }
     },
     {
       description: 'Une poire de folie!',
-      productType: {
-        id: '5c05ad449fdaf88060a42aef'
-      }
+      productTypeId: '5c05ad449fdaf88060a42aef'
     }
   ]
 };
@@ -157,6 +155,7 @@ describe('tests producers services', () => {
           street: 'Chemin de par ici',
           city: 'Yverdon',
           postalCode: '1400',
+          state: 'Vaud',
           country: 'Suisse',
           longitude: 1.1234567,
           latitude: 1.123456789
@@ -194,15 +193,11 @@ describe('tests producers services', () => {
       products: [
         {
           description: 'Une pomme monnnnstre bonne!',
-          productType: {
-            id: '5c050afa96f1ff3cca213d1f'
-          }
+          productTypeId: '5c050afa96f1ff3cca213d1f'
         },
         {
           description: 'Une poire de folie!',
-          productType: {
-            id: '5c05ad449fdaf88060a42aef'
-          }
+          productTypeId: '5c05ad449fdaf88060a42aef'
         }
       ]
     };
@@ -223,6 +218,7 @@ describe('tests producers services', () => {
           street: 'Chemin de par ici',
           city: 'Quelque part par là-bas',
           postalCode: '1234',
+          state: 'Vaud',
           country: 'Suisse',
           longitude: 1.1234796,
           latitude: 1.123418029
@@ -260,15 +256,11 @@ describe('tests producers services', () => {
       products: [
         {
           description: 'Une pomme monnnnstre bonne!',
-          productType: {
-            id: '5c050afa96f1ff3cca213d1f'
-          }
+          productTypeId: '5c050afa96f1ff3cca213d1f'
         },
         {
           description: 'Une poire de folie!',
-          productType: {
-            id: '5c05ad449fdaf88060a42aef'
-          }
+          productTypeId: '5c05ad449fdaf88060a42aef'
         }
       ]
     };
@@ -407,15 +399,11 @@ describe('tests producers services', () => {
         productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
-            productType: {
-              id: '5c050afa96f1ff3cca213d1f'
-            }
+            productTypeId: '5c050afa96f1ff3cca213d1f'
           },
           {
             description: 'Une poire de folie!',
-            productType: {
-              id: '5c05ad449fdaf88060a42aef'
-            }
+            productTypeId: '5c05ad449fdaf88060a42aef'
           }
         ]
       };
@@ -496,15 +484,11 @@ describe('tests producers services', () => {
         productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
-            productType: {
-              id: '5c050afa96f1ff3cca213d1f'
-            }
+            productTypeId: '5c050afa96f1ff3cca213d1f'
           },
           {
             description: 'Une poire de folie!',
-            productType: {
-              id: '5c05ad449fdaf88060a42aef'
-            }
+            productTypeId: '5c05ad449fdaf88060a42aef'
           }
         ]
       };
@@ -540,9 +524,9 @@ describe('tests producers services', () => {
     it('should update a producer', async() => {
       const addedProducer = await producersService.getProducerById(benoit.id);
       const producerToUpdate = {
-        ...addedProducer,
+        ...addedProducer
 
-      }
+      };
       const updatedProducer = await producersService.updateProducer(addedProducer);
       updatedProducer.should.be.not.null;
       updatedProducer.id.should.be.not.null;

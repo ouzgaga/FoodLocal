@@ -35,7 +35,7 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
-  if (!mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
     const newProduct = {
@@ -82,7 +82,7 @@ async function updateProduct(product) {
 
   const updatedProduct = {
     ...product,
-    productType: product.productType.id
+    productTypeId: product.productTypeId
   };
 
   return ProductModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié

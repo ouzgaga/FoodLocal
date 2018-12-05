@@ -25,8 +25,8 @@ const producerResolvers = {
 
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
-    salesPoint: (parent, args, context) => parent.salesPointId !== undefined && parent.salesPointId !== null ? salesPointsServices.getSalesPointById(
-      parent.salesPointId) : undefined,
+    salesPoint: (parent, args, context) => parent.salesPointId != null ? salesPointsServices.getSalesPointById(
+      parent.salesPointId) : null,
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.products)
   }
