@@ -76,7 +76,7 @@ describe('tests users services', () => {
 
   describe('tests getUserById', () => {
     it('should get one user', async() => {
-      const user = await usersService.getUserById(benoit);
+      const user = await usersService.getUserById(benoit.id);
       user.should.be.not.null;
       user.id.should.be.not.null;
       user.firstname.should.be.not.null;
@@ -97,7 +97,7 @@ describe('tests users services', () => {
     });
 
     it('should fail getting one user because no id received', async() => {
-      const userGotInDB = await usersService.getUserById({ id: '' });
+      const userGotInDB = await usersService.getUserById('');
       userGotInDB.message.should.be.equal('Received user.id is invalid!');
     });
   });
