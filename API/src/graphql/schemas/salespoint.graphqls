@@ -1,0 +1,86 @@
+type Query {
+	salespoints: [SalesPoint!]!
+
+	salespoint(salespoint: SalesPointInputGetAndDelete!) : SalesPoint
+}
+
+type Mutation {
+	addSalespoint(salespoint: SalesPointInputAdd!): SalesPoint!
+	updateSalespoint(salespoint: SalesPointInputUpdate!): SalesPoint
+	deleteSalesPoint(salespoint: SalesPointInputGetAndDelete!): SalesPoint
+}
+
+type SalesPoint {
+	id: ID!
+	name: String!
+	address: Address
+	schedule: [DailySchedule!]
+	# FIXME: est-ce qu'on enregistre aussi l'ID du producteur pour avoir le lien dans les 2 sens?
+}
+
+input SalesPointInputAdd {
+	name: String!
+	address: AddressInput
+	schedule: [DailyScheduleInput!]
+}
+
+input SalesPointInputUpdate {
+	id: ID!
+	name: String!
+	address: AddressInput
+	schedule: [DailyScheduleInput!]
+}
+
+input SalesPointInputGetAndDelete {
+	id: ID!
+}
+
+enum WeekDays {
+	MONDAY
+	TUESDAY
+	WEDNESDAY
+	THURSDAY
+	FRIDAY
+	SATURSDAY
+	SUNDAY
+}
+
+type DailySchedule {
+	weekDay: WeekDays!
+	schedule: [Schedule!]!
+}
+
+input DailyScheduleInput {
+	weekDay: WeekDays!
+	schedule: [ScheduleInput!]!
+}
+
+type Schedule {
+	openingHour: String!
+	closingHour: String!
+}
+
+input ScheduleInput {
+	openingHour: String!
+	closingHour: String!
+}
+
+type Address {
+	number: Int
+	street: String!
+	city: String!
+	postalCode: String!
+	country: String!
+	longitude: Float!
+	latitude: Float!
+}
+
+input AddressInput {
+	number: Int
+	street: String!
+	city: String!
+	postalCode: String!
+	country: String!
+	longitude: Float!
+	latitude: Float!
+}

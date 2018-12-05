@@ -1,54 +1,66 @@
 {
-	"name": "Domaine de par là-bas",
-	"description": "Viendez acheter du bon vin pas cher.",
-	"type": "Vignoble",
-	"address": {
-		"number": "2",
-		"street": "Chemin de Bahyse-Dessus",
-		"city": "Bourg-en-Lavaux",
-		"postalCode": 1096,
-		"country": "Suisse",
-		"longitude": 46.5006296,
-		"latitude": 6.7332682
-	},
-	"schedule": {
-		"dailySchedule": [
-			{
-				"weekday": "lundi",
-				"openingHourAM": "2018-01-01T08:00:00.000Z",
-				"openingHourPM": "2018-01-01T13:00:00.000Z",
-				"closingHourAM": "2018-01-01T11:30:00.000Z",
-				"closingHourPM": "2018-01-01T18:00:00.000Z"
+	"producer": {
+		"firstname": "Antoine",
+		"lastname": "Rochat",
+		"email": "coucou4@cava.ch",
+		"password": "1234abcd",
+		"image": "Ceci est l'image d'un tueur encodée en base64!",
+		"phoneNumber": "0761435196",
+		"description": "Un vrai boulet!",
+		"website": "websiteduteubé.ch",
+		"salespoint": {
+			"name": "Chez moi",
+			"address": {
+				"number": 6,
+				"street": "Chemin de par ici",
+				"city": "Yverdon",
+				"postalCode": "1400",
+				"country": "Suisse",
+				"longitude": 6.6655123,
+				"latitude": 46.759914
 			},
-			{
-				"weekday": "mardi",
-				"openingHourAM": "2018-01-01T08:00:00.000Z",
-				"openingHourPM": "2018-01-01T13:00:00.000Z",
-				"closingHourAM": "2018-01-01T11:30:00.000Z",
-				"closingHourPM": "2018-01-01T18:00:00.000Z"
-			},
-			{
-				"weekday": "mercredi",
-				"openingHourAM": "2018-01-01T08:00:00.000Z",
-				"openingHourPM": "2018-01-01T13:00:00.000Z",
-				"closingHourAM": "2018-01-01T11:30:00.000Z",
-				"closingHourPM": "2018-01-01T18:00:00.000Z"
-			},
-			{
-				"weekday": "jeudi",
-				"openingHourAM": "2018-01-01T08:00:00.000Z",
-				"openingHourPM": "2018-01-01T13:00:00.000Z",
-				"closingHourAM": "2018-01-01T11:30:00.000Z",
-				"closingHourPM": "2018-01-01T18:00:00.000Z"
-			},
-			{
-				"weekday": "vendredi",
-				"openingHourAM": "2018-01-01T08:00:00.000Z",
-				"openingHourPM": "2018-01-01T13:00:00.000Z",
-				"closingHourAM": "2018-01-01T11:30:00.000Z",
-				"closingHourPM": "2018-01-01T18:00:00.000Z"
-			}
-		]
-	},
-	"producers": []
+			"schedule": [
+				{
+					"weekDay": "MONDAY",
+					"schedule": [
+						{
+							"openingHour": "08:00",
+							"closingHour": "12:00"
+						},
+						{
+							"openingHour": "13:00",
+							"closingHour": "18:00"
+						}
+					]
+				},
+				{
+					"weekDay": "TUESDAY",
+					"schedule": [
+						{
+							"openingHour": "08:00",
+							"closingHour": "18:00"
+						}
+					]
+				},
+				{
+					"weekDay": "WEDNESDAY",
+					"schedule": [
+						{
+							"openingHour": "08:00",
+							"closingHour": "12:00"
+						}
+					]
+				},
+				{
+					"weekDay": "FRIDAY",
+					"schedule": [
+						{
+							"openingHour": "13:00",
+							"closingHour": "18:00"
+						}
+					]
+				}
+			]
+		}
+	}
 }

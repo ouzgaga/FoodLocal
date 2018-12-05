@@ -144,8 +144,8 @@ deploy-api:
   - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
   - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
   - kubectl delete deployment/api-deployment --ignore-not-found=true
-  - kubectl apply -f api-service.yml
-  - kubectl apply -f api-deployment.yml
+  - kubectl apply -f ./Deployment/API/api-service.yml
+  - kubectl apply -f ./Deployment/API/api-deployment.yml
   only:
   - prod
 
@@ -157,8 +157,8 @@ deploy-frontend:
   - gcloud auth activate-service-account --key-file=<(echo "${GC_KEY}")
   - gcloud container clusters get-credentials ${GC_CLUSTER_ID} --zone ${GC_ZONE} --project ${GC_PROJECT_ID}
   - kubectl delete deployment/frontend-deploy --ignore-not-found=true
-  - kubectl apply -f frontend-service.yml
-  - kubectl apply -f frontend-deploy.yml
+  - kubectl apply -f ./Deployment/Frontend/frontend-service.yml
+  - kubectl apply -f ./Deployment/Frontend/frontend-deploy.yml
   only:
   - prod
 
