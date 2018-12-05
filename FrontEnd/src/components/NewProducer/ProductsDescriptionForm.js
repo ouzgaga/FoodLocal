@@ -87,8 +87,7 @@ class ProductsDescriptionForm extends Component {
                 </Grid>
               </Grid>
             </div>
-          )
-        }
+          )}
       </IncriptionProducerContext>
     );
   }

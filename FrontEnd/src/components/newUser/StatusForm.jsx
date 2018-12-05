@@ -50,6 +50,7 @@ const chooseInformation = (value) => {
 
 
 function StatusForm(props) {
+  document.title = 'Nouveau Compte - Status';
   const { classes, value, onChange } = props;
   return (
     <React.Fragment>

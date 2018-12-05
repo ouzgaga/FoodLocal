@@ -36,6 +36,11 @@ const styles = theme => ({
 });
 
 class PageAcceuil extends Component {
+  constructor(props) {
+    super(props);
+    document.title = 'Accueil';
+  }
+
   render() {
     const { classes, location } = this.props;
     return (
