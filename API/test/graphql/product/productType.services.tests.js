@@ -83,8 +83,7 @@ describe('tests productType services', () => {
       productType.id.should.be.not.null;
       productType.name.should.be.not.null;
       productType.image.should.be.not.null;
-      productType.category.should.be.not.null;
-      productType.category.id.should.be.not.null;
+      productType.categoryId.should.be.not.null;
     });
   });
 
@@ -94,20 +93,20 @@ describe('tests productType services', () => {
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
-      productTypeGotInDB._id.should.be.not.null;
+      productTypeGotInDB.id.should.be.not.null;
 
       productTypeGotInDB.name.should.be.equal(pomme.name);
       productTypeGotInDB.image.should.be.equal(pomme.image);
-      productTypeGotInDB.category.id.should.be.eql(category.id);
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
       productTypeGotInDB = await productTypeService.getProductTypeById(raisin.id);
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
-      productTypeGotInDB._id.should.be.not.null;
+      productTypeGotInDB.id.should.be.not.null;
       productTypeGotInDB.name.should.be.equal(raisin.name);
 
       productTypeGotInDB.image.should.be.equal(raisin.image);
-      productTypeGotInDB.category.id.should.be.eql(category.id);
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
     });
 
     it('should fail getting one productType because no id received', async() => {
@@ -121,7 +120,7 @@ describe('tests productType services', () => {
 
     addedProductType.should.be.an('object');
     addedProductType.should.be.not.null;
-    addedProductType._id.should.be.not.null;
+    addedProductType.id.should.be.not.null;
 
     addedProductType.name.should.be.equal(pomme.name);
     addedProductType.image.should.be.equal(pomme.image);
@@ -182,7 +181,7 @@ describe('tests productType services', () => {
 
     addedProductType.should.be.an('object');
     addedProductType.should.be.not.null;
-    addedProductType._id.should.be.not.null;
+    addedProductType.id.should.be.not.null;
 
     addedProductType.name.should.be.equal(pomme.name);
     addedProductType.image.should.be.equal(pomme.image);
