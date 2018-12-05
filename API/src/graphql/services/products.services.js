@@ -35,19 +35,16 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
-  let productTypeId;
-  if (!mongoose.Types.ObjectId.isValid(product.productType.id)) {
+  if (!mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    productTypeId = new mongoose.Types.ObjectId(product.productType.id);
-  }
-  const newProduct = {
-    description: product.description,
-    productType: productTypeId
-  };
+    const newProduct = {
+      description: product.description,
+      productTypeId: product.productTypeId
+    };
 
-  return new ProductModel(newProduct).save();
+    return new ProductModel(newProduct).save();
+  }
 }
 
 async function addAllProductsInArray(productsArray) {
@@ -63,15 +60,11 @@ async function addAllProductsInArray(productsArray) {
  * @param {Integer} id, L'id du produit à récupérer.
  */
 function getProductById(id) {
-  let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductModel.findById(id);
   }
-
-  return ProductModel.findById(objectId);
 }
 
 /**

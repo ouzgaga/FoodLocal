@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const UsersModel = require('../models/user.modelgql');
-const ProducersModel = require('../models/producers.modelgql');
+const UtilsServices = require('../services/utils.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -29,13 +29,6 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
   return UsersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
-const isEmailUnused = async(emailUser) => {
-  const existingUser = await UsersModel.findOne({ email: emailUser });
-  const existingProducer = await ProducersModel.findOne({ email: emailUser });
-
-  return existingUser === null && existingProducer === null;
-};
-
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -44,7 +37,7 @@ const isEmailUnused = async(emailUser) => {
  */
 async function addUser(user) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await isEmailUnused(user.email)) {
+  if (await UtilsServices.isEmailUnused(user.email)) {
     const userToAdd = {
       ...user,
       subscriptions: [],
@@ -63,15 +56,11 @@ async function addUser(user) {
  * @param {Integer} id, L'id du producteur à récupérer.
  */
 function getUserById(id) {
-  let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return UsersModel.findById(id);
   }
-
-  return UsersModel.findById(objectId);
 }
 
 /**
