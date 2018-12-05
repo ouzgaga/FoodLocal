@@ -12,7 +12,9 @@ const productResolvers = {
 
     productTypes: () => productTypeServices.getProductTypes(),
 
-    productType: (parent, args, contet) => productTypeServices.getProductTypeById(args.productType),
+    productType: (parent, args, context) => productTypeServices.getProductTypeById(args.productType),
+
+    productTypesOfCategory: (parent, args, context) => productTypeServices.getProductTypeByCategory(args.productTypeCategoryId),
 
     productTypeCategories: () => productTypeCategoryServices.getProductsCategories(),
 
