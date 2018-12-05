@@ -20,7 +20,11 @@ import {
   PageAbout,
   PageMap,
   PageNewAccount,
+  PageAcceuil,
+  PageProducer,
+  PageEmailValidation,
   PageError404,
+  PageBecomeProducer,
 } from './pages/Pages';
 
 
@@ -76,10 +80,14 @@ class App extends React.Component {
               <Header />
               <div className={classes.page} center="xs">
                 <Switch>
+                  <Route path="/" exact component={PageAcceuil} classes={classes} />
                   <Route default path="/about" exact component={PageAbout} classes={classes} />
                   <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-                  <Route path="/" exact component={PageMap} classes={classes} />
+                  <Route path="/becomeProducer" exct component={PageBecomeProducer} classes={classes} />
+                  <Route path="/map" exact component={PageMap} classes={classes} />
                   <Route path="/producer/:producerId" component={ProducerVue} />
+                  <Route path="/producers/:token" component={PageEmailValidation} />
+                  <Route path="/pageproducer/" component={PageProducer} classes={classes} />
                   <Route path="*" component={PageError404} classes={classes} />
                 </Switch>
               </div>
