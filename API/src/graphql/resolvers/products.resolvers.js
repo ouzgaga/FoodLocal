@@ -44,7 +44,7 @@ const productResolvers = {
   },
 
   ProductType: {
-    category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.category),
+    category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.categoryId),
     producers: (parent, args, context) => producerServices.getAllProducersInReceivedIdList(parent.producers)
   }
 };

@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
-const UsersModel = require('../models/user.modelgql');
-const SalesPointModel = require('../models/salespoints.modelgql');
 const productsServices = require('../services/products.services');
-const usersServices = require('../services/users.services');
 const salesPointsServices = require('../services/salespoints.services');
+const UtilsServices = require('../services/utils.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
 
 
@@ -38,15 +36,11 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
  * @returns {*}
  */
 function getProducerById(id) {
-  let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProducersModel.findById(id);
   }
-
-  return ProducersModel.findById(objectId);
 }
 
 /**
@@ -58,13 +52,6 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return ProducersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
-const isEmailUnused = async(emailUser) => {
-  const existingUser = await UsersModel.findOne({ email: emailUser });
-  const existingProducer = await ProducersModel.findOne({ email: emailUser });
-
-  return existingUser === null && existingProducer === null;
-};
-
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -73,7 +60,7 @@ const isEmailUnused = async(emailUser) => {
  */
 async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await isEmailUnused(producer.email)) {
+  if (await UtilsServices.isEmailUnused(producer.email)) {
     let salespoint;
     if (producer.salesPoint !== undefined) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
@@ -85,12 +72,12 @@ async function addProducer(producer) {
     }
     const producerToAdd = {
       ...producer,
-      salesPoint: salespoint !== undefined ? salespoint.id : null,
+      salesPointId: salespoint !== undefined ? salespoint.id : null,
       subscriptions: [],
       emailValidated: false,
       subscribedUsers: [],
       isValidated: false,
-      products: productsId !== undefined ? productsId : []
+      productsIds: productsId !== undefined ? productsId : []
     };
 
     const producerAdded =  new ProducersModel(producerToAdd).save();
@@ -126,13 +113,13 @@ async function updateProducer(producer) {
     image: producer.image,
     subscriptions: producer.subscriptions !== undefined ? producer.subscriptions.map(s => s.id) : [],
     emailValidated: producerValidations.emailValidated,
-    subscribedUsers: producer.subscribedUsers !== undefined ? producer.subscribedUsers.map(u => u.id) : [],
+    subscribedUsersIds: producer.subscribedUsers !== undefined ? producer.subscribedUsers.map(u => u.id) : [],
     phoneNumber: producer.phoneNumber,
     description: producer.description,
     website: producer.website,
-    salesPoint: producer.salesPoint.id,
+    salesPointId: producer.salesPoint,
     isValidated: producerValidations.isValidated,
-    products: producer.products !== undefined ? producer.products.map(p => p.id) : []
+    productsIds: producer.products !== undefined ? producer.products.map(p => p.id) : []
   };
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié

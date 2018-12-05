@@ -21,6 +21,10 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Number,
       required: true
     },
+    state: {
+      type: mongoose.Schema.Types.String,
+      required: true
+    },
     country: {
       type: mongoose.Schema.Types.String,
       required: true
