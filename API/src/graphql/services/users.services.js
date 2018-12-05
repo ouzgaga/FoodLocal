@@ -104,7 +104,7 @@ async function updateUser(user) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteUser({ id }) {
+function deleteUser(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }

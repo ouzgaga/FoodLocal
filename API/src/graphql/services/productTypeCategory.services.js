@@ -31,14 +31,7 @@ function getProductsCategories({ tags = undefined, limit = 50, page = 0 } = {}) 
  * @param productTypeCategory, Les informations de la catégorie de produits à ajouter.
  */
 function addProductTypeCategory(productTypeCategory) {
-  // Si le productTypeCategory ne possède pas d'id -> on l'ajoute à la DB
-  if (productTypeCategory.id === undefined) {
-    return new ProductTypeCategoryModel(productTypeCategory).save();
-  } else {
-    // Si le productTypeCategory possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce productTypeCategory
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return productTypeCategory;
-  }
+  return new ProductTypeCategoryModel(productTypeCategory).save();
 }
 
 /**
@@ -46,7 +39,7 @@ function addProductTypeCategory(productTypeCategory) {
  *
  * @param productTypeCategory, un objet contenant l'id de la catégorie de produits à récupérer dans un champ nommé 'id'.
  */
-function getProductTypeCategoryById({ id }) {
+function getProductTypeCategoryById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
@@ -78,7 +71,7 @@ function updateProductTypeCategory(productTypeCategory) {
  *
  * @param {Integer} id, L'id de la catégorie de produits à supprimer.
  */
-function deleteProductTypeCategory({ id }) {
+function deleteProductTypeCategory(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
   }

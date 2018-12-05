@@ -169,10 +169,9 @@ describe('tests producers services', () => {
           longitude: 1.1234567,
           latitude: 1.123456789
         },
-        schedule: [
+        schedule:
           {
-            weekDay: 'MONDAY',
-            schedule: [
+            monday: [
               {
                 openingHour: '08:00',
                 closingHour: '12:00'
@@ -181,36 +180,24 @@ describe('tests producers services', () => {
                 openingHour: '13:00',
                 closingHour: '18:00'
               }
-            ]
-          },
-          {
-            weekDay: 'TUESDAY',
-            schedule: [
-              {
-                openingHour: '08:00',
-                closingHour: '18:00'
-              }
-            ]
-          },
-          {
-            weekDay: 'WEDNESDAY',
-            schedule: [
+            ],
+            tuesday: [],
+            wednesday: [
               {
                 openingHour: '08:00',
                 closingHour: '12:00'
               }
-            ]
-          },
-          {
-            weekDay: 'FRIDAY',
-            schedule: [
+            ],
+            thursday: [],
+            friday: [
               {
-                openingHour: '13:00',
-                closingHour: '18:00'
+                openingHour: '08:00',
+                closingHour: '12:00'
               }
-            ]
+            ],
+            saturday: [],
+            sunday: []
           }
-        ]
       },
       products: [
         {
@@ -248,10 +235,9 @@ describe('tests producers services', () => {
           longitude: 1.1234796,
           latitude: 1.123418029
         },
-        schedule: [
+        schedule:
           {
-            weekDay: 'MONDAY',
-            schedule: [
+            monday: [
               {
                 openingHour: '08:00',
                 closingHour: '12:00'
@@ -260,18 +246,24 @@ describe('tests producers services', () => {
                 openingHour: '13:00',
                 closingHour: '18:00'
               }
-            ]
-          },
-          {
-            weekDay: 'FRIDAY',
-            schedule: [
+            ],
+            tuesday: [],
+            wednesday: [
               {
-                openingHour: '13:00',
-                closingHour: '18:00'
+                openingHour: '08:00',
+                closingHour: '12:00'
               }
-            ]
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
           }
-        ]
       },
       products: [
         {
@@ -327,7 +319,7 @@ describe('tests producers services', () => {
 
   describe('tests getProducerById', () => {
     it('should get one producer', async() => {
-      const producer = await producersService.getProducerById(benoit);
+      const producer = await producersService.getProducerById(benoit.id);
       producer.should.be.not.null;
       producer.id.should.be.not.null;
       producer.firstname.should.be.not.null;
@@ -361,7 +353,7 @@ describe('tests producers services', () => {
     });
 
     it('should fail getting one user because no id received', async() => {
-      const producerGotInDB = await producersService.getProducerById({ id: '' });
+      const producerGotInDB = await producersService.getProducerById('');
       producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
     });
   });
@@ -391,48 +383,34 @@ describe('tests producers services', () => {
             longitude: 1.1234567,
             latitude: 1.123456789
           },
-          schedule: [
-            {
-              weekDay: 'MONDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                },
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'TUESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'WEDNESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'FRIDAY',
-              schedule: [
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            }
-          ]
+          schedule: {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
         },
         products: [
           {
@@ -494,48 +472,34 @@ describe('tests producers services', () => {
             longitude: 1.1234567,
             latitude: 1.123456789
           },
-          schedule: [
-            {
-              weekDay: 'MONDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                },
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'TUESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '18:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'WEDNESDAY',
-              schedule: [
-                {
-                  openingHour: '08:00',
-                  closingHour: '12:00'
-                }
-              ]
-            },
-            {
-              weekDay: 'FRIDAY',
-              schedule: [
-                {
-                  openingHour: '13:00',
-                  closingHour: '18:00'
-                }
-              ]
-            }
-          ]
+          schedule: {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
         },
         products: [
           {

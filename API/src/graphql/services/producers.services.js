@@ -34,10 +34,10 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du producteur à récupérer.
+ * @param {String} id, L'id du producteur à récupérer.
  * @returns {*}
  */
-function getProducerById({ id }) {
+function getProducerById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
@@ -79,8 +79,10 @@ async function addProducer(producer) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
     }
 
-    const productsId = await productsServices.addAllProductsInArray(producer.products);
-
+    let productsId;
+    if (producer.products !== undefined && producer.products.length !== 0) {
+      productsId = await productsServices.addAllProductsInArray(producer.products);
+    }
     const producerToAdd = {
       ...producer,
       salesPoint: salespoint !== undefined ? salespoint.id : null,
@@ -88,7 +90,7 @@ async function addProducer(producer) {
       emailValidated: false,
       subscribedUsers: [],
       isValidated: false,
-      products: productsId
+      products: productsId !== undefined ? productsId : []
     };
 
     const producerAdded =  new ProducersModel(producerToAdd).save();
@@ -141,7 +143,7 @@ async function updateProducer(producer) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer({ id }) {
+function deleteProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }

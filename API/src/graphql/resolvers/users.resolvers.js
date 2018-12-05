@@ -4,7 +4,7 @@ const producerResolvers = {
   Query: {
     users: () => usersServices.getUsers(),
 
-    user: (parent, args, context) => usersServices.getUserById(args.user.id)
+    user: (parent, args, context) => usersServices.getUserById(args.userId)
   },
 
   Mutation: {
@@ -12,7 +12,7 @@ const producerResolvers = {
 
     updateUser: async(parent, args, context) => usersServices.updateUser(args.user),
 
-    deleteUser: (parent, args, context) => usersServices.deleteUser(args.user)
+    deleteUser: (parent, args, context) => usersServices.deleteUser(args.userId)
   },
 
   User: {
