@@ -12,6 +12,20 @@ const theme = createMuiTheme({
       main: '#66cc99',
     },
   },
+  overrides: {
+    MuiOutlinedInput: {
+      input: {
+        padding: '10px 5px', // Some CSS
+      }
+    },
+    MuiCardContent: {
+      root: {
+        paddingTop: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+      }
+    },
+  },
 });
 
 export default theme;
