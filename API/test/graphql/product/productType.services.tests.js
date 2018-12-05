@@ -39,28 +39,37 @@ describe('tests productType services', () => {
       image: pomme.image,
       category: category.id
     };
-    pomme = await ProductTypeModel.create(pomme);
+    const addedPomme = await ProductTypeModel.create(pomme);
+    pomme.id = addedPomme.id;
+    pomme.category = { id: category.id };
+
 
     poire = {
       name: poire.name,
       image: poire.image,
       category: category.id
     };
-    poire = await ProductTypeModel.create(poire);
+    const addedPoire = await ProductTypeModel.create(poire);
+    poire.id = addedPoire.id;
+    poire.category = { id: category.id };
 
     raisin = {
       name: raisin.name,
       image: raisin.image,
       category: category.id
     };
-    raisin = await ProductTypeModel.create(raisin);
+    const addedRaisin = await ProductTypeModel.create(raisin);
+    raisin.id = addedRaisin.id;
+    raisin.category = { id: category.id };
 
     courgette = {
       name: courgette.name,
       image: courgette.image,
       category: category.id
     };
-    courgette = await ProductTypeModel.create(courgette);
+    const addedCourgette = await ProductTypeModel.create(courgette);
+    courgette.id = addedCourgette.id;
+    courgette.category = { id: category.id };
   });
 
   it('should get all productType', async() => {
@@ -125,7 +134,8 @@ describe('tests productType services', () => {
         id: addedProductType.id,
         name: poire.name,
         image: poire.image,
-        category: { id: category.id }
+        category: { id: category.id },
+        producers: []
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -138,8 +148,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because no id received', async() => {
       const addedProductType = {
-        id: '',
-        ...poire
+        ...poire,
+        id: ''
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -148,8 +158,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because invalid id received', async() => {
       const addedProductType = {
-        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-        ...poire
+        ...poire,
+        id: '5c04561e7209e21e582750' // id trop court (<24 caractères)
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -158,8 +168,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because invalid id received', async() => {
       const addedProductType = {
-        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-        ...poire
+        ...poire,
+        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3' // id trop long (> 24 caractères)
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
