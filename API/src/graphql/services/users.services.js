@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const UsersModel = require('../models/user.modelgql');
 const UtilsServices = require('../services/utils.services');
+const ProducersModel = require('../models/producers.modelgql');
+const tokenValidationEmail = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -44,7 +46,9 @@ async function addUser(user) {
       emailValidated: false
     };
 
-    return new UsersModel(userToAdd).save();
+    const userAdded = await new UsersModel(userToAdd).save();
+    tokenValidationEmail.addTokenValidationEmail(userAdded);
+    return userAdded;
   } else {
     throw new Error('This email is already used.');
   }
@@ -97,11 +101,21 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
+async function validateEmailUserById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  }
+  const user = getUserById(id);
+  user.emailValidated = true;
+  return updateUser(user);
+}
+
 module.exports = {
   getUsers,
   addUser,
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList
+  getAllUsersInReceivedIdList,
+  validateEmailUserById
 };

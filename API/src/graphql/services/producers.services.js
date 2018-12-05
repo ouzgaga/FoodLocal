@@ -3,6 +3,7 @@ const ProducersModel = require('../models/producers.modelgql');
 const productsServices = require('../services/products.services');
 const salesPointsServices = require('../services/salespoints.services');
 const UtilsServices = require('../services/utils.services');
+const TokenValidationEmail = require('./tokenValidationEmail.services');
 
 
 /**
@@ -79,7 +80,9 @@ async function addProducer(producer) {
       productsIds: productsId !== undefined ? productsId : []
     };
 
-    return new ProducersModel(producerToAdd).save();
+    const producerAdded =  new ProducersModel(producerToAdd).save();
+    TokenValidationEmail.addTokenValidationEmail(producerAdded);
+    return producerAdded;
   } else {
     throw new Error('This email is already used.');
   }
