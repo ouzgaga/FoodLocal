@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import L from 'leaflet';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -16,8 +17,6 @@ import {
 } from 'react-leaflet';
 import MarkerCarotte from '../../../img/MarkerCarotte.png';
 
-import AddressSuggest from './AddressSuggest';
-import AddressInput from './AddressInput';
 import { IncriptionProducerContext } from '../InscriptionProducer';
 
 const myIcon = L.icon({
@@ -76,26 +75,28 @@ class AddressForm extends Component {
   chooseItem = (address, handleChangeProperty) => (e) => {
     e.preventDefault();
     this.setState({ open: false });
-    console.log(address)
     const {
       city, country, postcode, road, state, house_number
     } = address.raw.address;
 
     const { lat, lon } = address.raw;
-    handleChangeProperty('addressCity', city);
-    handleChangeProperty('addressCountry', country);
-    handleChangeProperty('addressZip', postcode);
-    handleChangeProperty('addressRoad', road);
-    handleChangeProperty('addressCountryState', state);
-    handleChangeProperty('addressNumber', house_number);
+    handleChangeProperty('city', city);
+    handleChangeProperty('country', country);
+    handleChangeProperty('postalCode', postcode);
+    handleChangeProperty('street', road);
+    handleChangeProperty('state', state);
+    handleChangeProperty('number', house_number);
     handleChangeProperty('showCompleteAddress', true);
-    handleChangeProperty('addressLatitude', lat);
-    handleChangeProperty('addressLongitude', lon);
+    handleChangeProperty('latitude', lat);
+    handleChangeProperty('longitude', lon);
   }
 
+  handleChange = (propertyName, handleChangeProperty) => (e) => {
+    handleChangeProperty(propertyName, e.target.value);
+  }
 
   load = (event) => {
-    this.setState({ open: 'true' });
+    this.setState({ open: true });
 
     provider.search({ query: event.target.value }).then((results2) => {
       this.setState({
@@ -106,8 +107,8 @@ class AddressForm extends Component {
 
   changeMarkerPos = handleChangeProperty => (event) => {
     const { lat, lng } = event.target._latlng; // TODO : demander à paul
-    handleChangeProperty('addressLatitude', lat);
-    handleChangeProperty('addressLongitude', lng);
+    handleChangeProperty('latitude', lat);
+    handleChangeProperty('longitude', lng);
   }
 
   render() {
@@ -116,7 +117,7 @@ class AddressForm extends Component {
     return (
       <IncriptionProducerContext>
         {({
-          values, handleChangeProperty, handleChange
+          values, handleChangeProperty
         }) => (
 
             <Fragment>
@@ -127,12 +128,12 @@ class AddressForm extends Component {
                       <Typography variant="body1" className={classes.typo} gutterBottom> Nom de la rue</Typography>
                       <TextField
                         className={classes.textField}
-                        id="road"
+                        id="street"
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressRoad')}
-                        defaultValue={values.addressRoad}
+                        onChange={this.handleChange('street', handleChangeProperty)}
+                        defaultValue={values.street}
                       />
                     </Grid>
                     <Grid item xs={4}>
@@ -140,36 +141,36 @@ class AddressForm extends Component {
                       <Typography className={classes.typo} variant="body1" gutterBottom> Numéro </Typography>
                       <TextField
                         className={classes.textField}
-                        id="addressNumber"
+                        id="number"
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressNumber')}
-                        defaultValue={values.addressNumber}
+                        onChange={this.handleChange('number', handleChangeProperty)}
+                        defaultValue={values.number}
                       />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> Code postal </Typography>
                       <TextField
                         className={classes.textField}
-                        id="zip"
+                        id="postalCode"
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressZip')}
-                        defaultValue={values.addressZip}
+                        onChange={this.handleChange('postalCode', handleChangeProperty)}
+                        defaultValue={values.postalCode}
                       />
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> Ville </Typography>
                       <TextField
                         className={classes.textField}
-                        id="zip"
+                        id="city"
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressCity')}
-                        defaultValue={values.addressCity}
+                        onChange={this.handleChange('city', handleChangeProperty)}
+                        defaultValue={values.city}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -180,8 +181,8 @@ class AddressForm extends Component {
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressCountryState')}
-                        defaultValue={values.addressCountryState}
+                        onChange={this.handleChange('state', handleChangeProperty)}
+                        defaultValue={values.state}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -192,8 +193,8 @@ class AddressForm extends Component {
                         margin="normal"
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange('addressCountry')}
-                        defaultValue={values.addressCountry}
+                        onChange={this.handleChange('country', handleChangeProperty)}
+                        defaultValue={values.country}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -204,14 +205,14 @@ class AddressForm extends Component {
                         {'Vous pouvez ajuster le repère s\'il ne se trouve pas au bon endroit'}
                       </Typography>
 
-                      <Map key="map" className={classes.map} center={[values.addressLatitude, values.addressLongitude]} zoom={17}>
+                      <Map key="map" className={classes.map} center={[values.latitude, values.longitude]} zoom={17}>
 
                         <TileLayer
                           key="tileLayer"
                           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                           url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
                         />
-                        <Marker draggable position={[values.addressLatitude, values.addressLongitude]} icon={myIcon} onDragEnd={this.changeMarkerPos(handleChangeProperty)} />
+                        <Marker draggable position={[values.latitude, values.longitude]} icon={myIcon} onDragEnd={this.changeMarkerPos(handleChangeProperty)} />
 
                       </Map>
                     </Grid>
@@ -221,7 +222,9 @@ class AddressForm extends Component {
                 ) : (
                   <Fragment>
                     <Grid item xs={12}>
-                      <Typography className={classes.typo} variant="body1" gutterBottom> Adresse </Typography>
+                      <Typography className={classes.typo} variant="body1" gutterBottom>
+                        {'Adresse'}
+                      </Typography>
                       <TextField
                         className={classes.textField}
                         id="fullAddress"
@@ -244,7 +247,7 @@ class AddressForm extends Component {
                               <ClickAwayListener onClickAway={this.handleClose}>
                                 <MenuList>
                                   {this.state.results.map(item => (
-                                    <MenuItem onClick={this.chooseItem(item, handleChangeProperty)}>{item.label}</MenuItem>
+                                    <MenuItem key={item.label} onClick={this.chooseItem(item, handleChangeProperty)}>{item.label}</MenuItem>
                                   ))}
                                 </MenuList>
                               </ClickAwayListener>
@@ -264,5 +267,10 @@ class AddressForm extends Component {
     );
   }
 }
+
+
+AddressForm.propTypes = {
+  classes: PropTypes.shape().isRequired,
+};
 
 export default withStyles(styles)(AddressForm);

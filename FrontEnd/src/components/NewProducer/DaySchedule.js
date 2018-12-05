@@ -36,6 +36,12 @@ const styles = theme => ({
     height: 36,
     width: 36,
   },
+  typo:{
+    paddingTop:10,
+  },
+  grid: {
+    padding:0,
+  }
 });
 
 class DaySchedule extends Component {
@@ -45,12 +51,12 @@ class DaySchedule extends Component {
     return (
       <IncriptionProducerContext>
         {({
-          values, addNewSchedule, deleteLastSchedule, handleChangeSchedule
+          addNewSchedule, deleteLastSchedule, handleChangeSchedule
         }) => (
             <Fragment>
-            <Grid item xs={12}> 
+            <Grid item xs={12} className={classes.grid}> 
               <Grid container spacing={24} style={{ marginBottom: '-30'}}>
-                <Grid item sm={2} xs={4}>
+                <Grid item sm={2} xs={4} className={classes.grid}>
                   <Typography className={classes.typo} variant="body1">
                     {printName}
                   </Typography>
@@ -61,7 +67,7 @@ class DaySchedule extends Component {
                   return (
 
                     <Fragment>
-                      <Grid item sm={4} xs={6}>
+                      <Grid item sm={4} xs={6} className={classes.grid}>
 
                         <div style={{ display: 'flex' }}>
 
@@ -70,8 +76,8 @@ class DaySchedule extends Component {
                             id={`open${dayName}${i}`}
                             variant="outlined"
                             type="time"
-                            onChange={handleChangeSchedule(day, dayName, i, 'open')}
-                            defaultValue={schedule.open}
+                            onChange={handleChangeSchedule(dayName, i, 'openingHour')}
+                            defaultValue={schedule.openingHour}
                             InputLabelProps={{
                               shrink: true,
                             }}
@@ -85,8 +91,8 @@ class DaySchedule extends Component {
                             id={`close${dayName}${i}`}
                             variant="outlined"
                             type="time"
-                            onChange={handleChangeSchedule(day, dayName, i, 'close')}
-                            defaultValue={schedule.close}
+                            onChange={handleChangeSchedule(dayName, i, 'closingHour')}
+                            defaultValue={schedule.closingHour}
                             InputLabelProps={{
                               shrink: true,
                             }}
@@ -111,8 +117,8 @@ class DaySchedule extends Component {
 
                 {day.length > 0
                   && (
-                    <Grid item xs={1}>
-                      <Fab color={red} aria-label="Add" className={classes.fabDelete} onClick={deleteLastSchedule(day, dayName)}>
+                    <Grid item xs={1} className={classes.grid}>
+                      <Fab color={red} aria-label="Add" className={classes.fabDelete} onClick={deleteLastSchedule(dayName)}>
                         <DeleteIcon />
                       </Fab>
                     </Grid>)
@@ -131,10 +137,10 @@ class DaySchedule extends Component {
 
                 {day.length < 2
                   && (
-                    <Grid item xs={8} sm={4}>
+                    <Grid item xs={8} sm={4} className={classes.grid}>
                       <FormControlLabel
                         control={(
-                          <Fab color="primary" label="Ajouter un horaire" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(day, dayName)}>
+                          <Fab color="primary" label="Ajouter un horaire" aria-label="Add" className={classes.fabAdd} onClick={addNewSchedule(dayName)}>
                             <AddIcon />
                           </Fab>
                         )}

@@ -21,7 +21,6 @@ import TextField from '@material-ui/core/TextField';
 import ListItemProducer from './ListItemProducer';
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 
-
 const Products = require('../../Datas/Products.json');
 
 const styles = {

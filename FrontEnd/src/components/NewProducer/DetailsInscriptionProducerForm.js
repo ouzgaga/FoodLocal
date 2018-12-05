@@ -7,9 +7,13 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import { IncriptionProducerContext } from './InscriptionProducer';
 import DaySchedule from './DaySchedule';
 import AddressForm from './Address/AddressForm';
+import InputForm from './InputForm';
 
 const styles = theme => ({
   root: {
@@ -40,50 +44,81 @@ const styles = theme => ({
   },
   timePicker: {
     padding: 5,
-  }
+  },
+  fabAdd: {
+    color: '#FFFFFF',
+    height: 36,
+    width: 36,
+  },
 });
 
 class DetailsInscriptionProducerForm extends Component {
+
+  handleChange = (handleChangeProperty, fieldNameToChange) => (e) => {
+    handleChangeProperty(fieldNameToChange, e.target.value);
+  }
+
+  changeCheckbox = (handleChangeProperty, fieldNameToChange) => (event) => {
+    handleChangeProperty(fieldNameToChange, event.target.checked);
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <IncriptionProducerContext>
         {({
-          values, nextStep, handleChange, handleChangeCheckbox
+          values, nextStep, handleChangeProperty
         }) => (
             <div className={classes.root}>
 
               <Grid container spacing={24}>
                 <Grid item xs={12}>
-                  <Typography variant="subheading" className={classes.typo} gutterBottom> Nom du commerce </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="salePointName"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    onChange={handleChange('salePointName')}
-                    defaultValue={values.salePointName}
+                  <InputForm
+                    handleChangeProperty={handleChangeProperty}
+                    inputTitle="Nom du point de vente"
+                    fieldNameToChange="name"
+                    placeholder=""
+                    value={values.name}
+                    multiline={false}
                   />
                 </Grid>
 
-                <AddressForm />
-               
-                <Grid item xs={12} align="space-between">
-                  <Typography className={classes.typo} variant="subheading" gutterBottom> Description (facultatif) </Typography>
-                  <TextField
-                    className={classes.textField}
-                    id="description"
-                    margin="normal"
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    onChange={handleChange('description')}
+                <Grid item xs={12}>
+                  <InputForm
+                    handleChangeProperty={handleChangeProperty}
+                    inputTitle="Description (facultatif)"
+                    fieldNameToChange="description"
                     placeholder="Entrez une description de votre point de vente"
-                    defaultValue={values.description}
+                    value={values.description}
+                    multiline
                   />
                 </Grid>
+
+                <Grid item sm={5} xs={12} align="space-between">
+                  <InputForm
+                    handleChangeProperty={handleChangeProperty}
+                    inputTitle="Numéro de téléphone"
+                    fieldNameToChange="phoneNumber"
+                    placeholder=""
+                    value={values.phoneNumber}
+                    multiline={false}
+                  />
+                </Grid>
+
+                <Grid item sm={7} xs={12} align="space-between">
+                  <InputForm
+                    handleChangeProperty={handleChangeProperty}
+                    inputTitle="Site Web (facultatif)"
+                    fieldNameToChange="website"
+                    placeholder="Entrez le lien de votre site Web"
+                    value={values.website}
+                    multiline={false}
+                  />
+                </Grid>
+
+                {/* Adresse du producteur */}
+                <AddressForm />
 
                 <Grid item xs={12} sm={4}>
                   <Typography className={classes.typo} variant="subheading" gutterBottom> Horaire (facultatif) </Typography>
@@ -95,7 +130,7 @@ class DetailsInscriptionProducerForm extends Component {
                         className={classes.checkboxDay}
 
                         checked={values.scheduleActive}
-                        onChange={handleChangeCheckbox('scheduleActive')}
+                        onChange={this.changeCheckbox(handleChangeProperty, 'scheduleActive')}
                         value={values.scheduleActive}
                         color="primary"
                       />
@@ -147,7 +182,15 @@ class DetailsInscriptionProducerForm extends Component {
                 }
 
                 <Grid item xs={12}>
-                  <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary"> SUIVANT </Button>
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Grid item xs={4} />
+
+                    <Grid item xs={4}>
+                      <div className={classes.paper}>
+                        <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
+                      </div>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </div>
