@@ -1,15 +1,13 @@
+type Query {
+    tokens: [Token!]
+}
+
 type Mutation {
-    validateToken(value: TokenInput!): Boolean
-    askNewToken(idUser: ID!): Boolean
+    validateToken(token: String!): Boolean!
+    askNewToken(idUser: ID!): Boolean!
 }
 
 type Token {
-    id: ID!
     value: String!
     idUser: ID!
-    dateCreation: String!
-}
-
-input TokenInput {
-    value: String!
 }

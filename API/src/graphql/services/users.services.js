@@ -73,7 +73,6 @@ function getUserById(id) {
     // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
     objectId = new mongoose.Types.ObjectId(id);
   }
-
   return UsersModel.findById(objectId);
 }
 
@@ -84,17 +83,23 @@ function getUserById(id) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser(user) {
-  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+async function updateUser({
+  id, firstname, lastname, email, password, image, subscriptions, emailValidated 
+}) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
 
-  const usertoUpdate = {
-    ...user,
-    subscriptions: await getAllUsersInReceivedIdList(user.subscriptions)
+  const userToUpdate = {
+    firstname,
+    lastname,
+    email,
+    password,
+    image,
+    subscriptions: await getAllUsersInReceivedIdList(subscriptions),
+    emailValidated
   };
-
-  return UsersModel.findByIdAndUpdate(user.id, usertoUpdate, { new: true }); // retourne l'objet modifié
+  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
   // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
@@ -111,13 +116,18 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
-async function validateEmailUserById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
+async function validateEmailUserByToken(value) {
+  if (tokenValidationEmail.validateToken(value)) {
+    const token = await tokenValidationEmail.getTokenValidationEmailByValue(value);
+    if (token === null) {
+      throw Error('token not found');
+    }
+    const user = await getUserById(token.idUser);
+    user.emailValidated = true;
+    return updateUser(user) !== null;
+  } else {
+    return new Error('Token not valid');
   }
-  const user = getUserById(id);
-  user.emailValidated = true;
-  return updateUser(user);
 }
 
 module.exports = {
@@ -127,5 +137,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getAllUsersInReceivedIdList,
-  validateEmailUserById
+  validateEmailUserByToken
 };

@@ -80,7 +80,7 @@ function tokenToOld(dateCreation) {
  * @param token - token to check
  * @returns {boolean} - result
  */
-function validateToken(value) {
+async function validateToken(value) {
   const token = getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
   // if token not found return that the token is not valide
   if (token === null) {
@@ -88,14 +88,14 @@ function validateToken(value) {
   } else if (tokenToOld(token.dateCreation)) {
     return false;
   } else { // is a valide token
-    usersServices.validateEmailUserById(token.idUser);
-    deleteTokenValidationEmail(token); // delete token
+    await deleteTokenValidationEmail(token); // delete token
     return true;
   }
 }
 
 
 module.exports = {
+  getTokenValidationEmailByValue,
   getTokenValidationEmails,
   addTokenValidationEmail,
   validateToken
