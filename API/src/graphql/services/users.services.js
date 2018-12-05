@@ -108,16 +108,13 @@ function deleteUser(id) {
 }
 
 async function validateEmailUserByToken(value) {
-  if (tokenValidationEmail.validateToken(value)) {
-    const token = await tokenValidationEmail.getTokenValidationEmailByValue(value);
-    if (token === null) {
-      throw Error('token not found');
-    }
+  const token = await tokenValidationEmail.validateToken(value);
+  if (token !== null) {
     const user = await getUserById(token.idUser);
     user.emailValidated = true;
     return updateUser(user) !== null;
   } else {
-    return new Error('Token not valid');
+    return new Error("Token not valid");
   }
 }
 

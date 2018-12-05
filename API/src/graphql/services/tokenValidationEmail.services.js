@@ -51,7 +51,7 @@ async function addTokenValidationEmail (user) {
   // insert in the database
   const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();
   const name = `${user.firstname} ${user.lastname}`;
-  mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
+  //mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
   return tokenValidationEmail;
 }
 
@@ -81,15 +81,15 @@ function tokenToOld(dateCreation) {
  * @returns {boolean} - result
  */
 async function validateToken(value) {
-  const token = getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
+  const token = await getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
   // if token not found return that the token is not valide
-  if (token === null) {
-    return false;
+  if (token == null) {
+    return null;
   } else if (tokenToOld(token.dateCreation)) {
-    return false;
+    return null;
   } else { // is a valide token
-    await deleteTokenValidationEmail(token); // delete token
-    return true;
+    await deleteTokenValidationEmail(token.id); // delete token
+    return token;
   }
 }
 

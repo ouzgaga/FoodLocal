@@ -19,22 +19,38 @@ const mutation = gql`
     }
 `;
 
+class DoMutation extends React.Component {
+  componentDidMount() {
+    const { mutate } = this.props;
+    mutate();
+  };
+
+  render() {
+    return null;
+  };
+};
+
 class PageEmailValidation extends Component {
   render() {
     const { classes } = this.props;
     const { token } = this.props.match.params;
     return (
       <div>
-        <Mutation mutation={mutation} variables={{ token }}>
-          {(validate, { data, loading, error }) => (
-            <Button
-              className={'RepositoryItem-title-action'}
-              onClick={validate}
-            >
-              result
-            </Button>
-          )}
-        </Mutation>
+        <CenteredPaper className={classes.paper}>
+          <Typography variant="h3" color="secondary">
+            Validation d'email
+          </Typography>
+          <Mutation mutation={mutation} variables={{ token }}>
+            {(validate, { data, loading, error }) => (
+              <div>
+                <DoMutation mutate={validate} />
+                {error && <div><Typography variant="h3" color="secondary">Error - Token not valide</Typography><Button>Send new email confimation</Button></div>}
+                {loading && <Typography variant="h3" color="secondary">Loading</Typography>}
+                {data && <Typography variant="h3" color="secondary">Email confirmé</Typography>}
+              </div>
+            )}
+          </Mutation>
+        </CenteredPaper>
       </div>
     );
   }
