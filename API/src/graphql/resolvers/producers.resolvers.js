@@ -32,7 +32,7 @@ const producerResolvers = {
     salesPoint: (parent, args, context) => parent.salesPointId != null ? salesPointsServices.getSalesPointById(
       parent.salesPointId) : null,
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.products)
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
   }
 };
 
