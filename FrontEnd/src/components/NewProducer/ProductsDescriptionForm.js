@@ -36,56 +36,58 @@ class ProductsDescriptionForm extends Component {
         {({
           values, nextStep, handleChangeDescription, prevStep
         }) => (
-          <div className={classes.root}>
-            <Grid container spacing={24}>
-              <List subheader={<li />}>
-                {values.items.map(product => (
-                  <ListItem className={classes.root} key={product.item}>
-                    <Grid item xs={3}>
-                      <Card className={classes.media}>
+            <div className={classes.root}>
+              <Grid container spacing={24}>
+                <List subheader={<li />}>
+                  {values.items.map(product => (
+                    <ListItem className={classes.root} key={product.item}>
+                      <Grid item xs={3}>
+                        <Card className={classes.media}>
 
-                        <CardMedia className={classes.media2} image={MarkerCarotte} title={product.item} />
-                      </Card>
-                      <div className={classes.paper}>
-                        <Typography className={classes.typo} variant="body1" gutterBottom>
-                          {product.item}
-                        </Typography>
-                      </div>
-                    </Grid>
-                    <Grid item xs={9}>
+                          <CardMedia className={classes.media2} image={MarkerCarotte} title={product.item} />
+                        </Card>
+                        <div className={classes.paper}>
+                          <Typography className={classes.typo} variant="body1" gutterBottom>
+                            {product.item}
+                          </Typography>
+                        </div>
+                      </Grid>
+                      <Grid item xs={9}>
 
-                      <TextField
-                        className={classes.textField}
-                        id="description"
-                        margin="normal"
-                        variant="outlined"
-                        fullWidth
+                        <TextField
+                          className={classes.textField}
+                          id="description"
+                          margin="normal"
+                          variant="outlined"
+                          fullWidth
 
-                        multiline
-                        onChange={handleChangeDescription(product.item)}
-                        placeholder="Entrez une description de votre produit (facultatif)"
-                        defaultValue={product.description}
-                      />
-                    </Grid>
-                  </ListItem>
-                ))}
+                          multiline
+                          onChange={handleChangeDescription(product.item)}
+                          placeholder="Entrez une description de votre produit (facultatif)"
+                          defaultValue={product.description}
+                        />
+                      </Grid>
+                    </ListItem>
+                  ))}
 
-              </List>
-            </Grid>
-            <Grid container>
-              <Grid item xs={6}>
-                <div className={classes.paper}>
-                  <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
-                </div>
+                </List>
               </Grid>
-              <Grid item xs={6}>
-                <div className={classes.paper}>
-                  <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">TERMINER</Button>
-                </div>
+              <Grid item xs={12}>
+                <Grid container direction="row" justify="space-between" alignItems="center">
+                  <Grid item xs={4}>
+                    <div className={classes.paper}>
+                      <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
+                    </div>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <div className={classes.paper}>
+                      <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">TERMINER</Button>
+                    </div>
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
-          </div>
-        )
+            </div>
+          )
         }
       </IncriptionProducerContext>
     );

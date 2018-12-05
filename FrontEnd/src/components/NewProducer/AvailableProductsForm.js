@@ -50,7 +50,6 @@ class AvailableProductsForm extends Component {
 
   render() {
     const { classes } = this.props;
-    const { item } = this.state;
     return (
       <IncriptionProducerContext>
         {({
@@ -94,38 +93,41 @@ class AvailableProductsForm extends Component {
                         </CardActionArea>
 
                       ) : (
-                        <CardActionArea onClick={addItem(product)}>
-                          <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
-                        </CardActionArea>
-
-                      )
+                          <CardActionArea onClick={addItem(product)}>
+                            <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
+                          </CardActionArea>
+                        )
                       }
 
                     </Card>
                     <div className={classes.paper}>
-                      <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
+                      <Typography className={classes.typo} variant="body1" gutterBottom>
+                        {product}
+                      </Typography>
                     </div>
                   </Grid>
 
                 ))}
 
-                <Grid container>
-                  <Grid item xs={6}>
-                    <div className={classes.paper}>
+                <Grid item xs={12}>
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Grid item xs={4}>
+                      <div className={classes.paper}>
 
-                      <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
-                    </div>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <div className={classes.paper}>
-                      <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
-                    </div>
+                        <Button variant="contained" onClick={(e) => { e.preventDefault(); prevStep(); }} color="inherit">PRÉCÉDENT</Button>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <div className={classes.paper}>
+                        <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
+                      </div>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </div>
 
-        )}
+          )}
       </IncriptionProducerContext>
     );
   }

@@ -58,16 +58,13 @@ const styles = theme => ({
 
 function ListItemProducer(props) {
   const { classes } = props;
-  const { salepoint } = props;
-  const { products } = props;
   const { producer } = props;
-  const place = 'Yverdon';
   //const link = `/producer/${salepoint.producers[0]}`; // TODO
 
   return (
     <Card className={classes.card}>
       <CardActionArea target="_blank">
-        <CardHeader title={producer.salesPoint.name} subheader={place} className={classes.titleItem} />
+        <CardHeader title={producer.salesPoint.name} subheader={producer.salesPoint.address.city} className={classes.titleItem} />
         <div className={classes.root}>
           <GridList className={classes.gridList}>
             {producer.products.map(item => (

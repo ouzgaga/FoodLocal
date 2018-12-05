@@ -15,6 +15,9 @@ const query = gql`
   producers {
     salesPoint {
       name 
+      address {
+        city
+      }
     }
     products {
       productType {
@@ -33,9 +36,7 @@ class PageMap extends React.Component {
         {({ data, loading, error }) => {
           if (error) return 'Oups an error occured. Please check the console';
           if (loading) return 'Loading...';
-          {console.log(data)}
           return (
-           
             <MainMap data={data} />
           );
         }}

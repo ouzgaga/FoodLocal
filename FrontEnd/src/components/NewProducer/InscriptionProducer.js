@@ -6,28 +6,27 @@ import Grid from '@material-ui/core/Grid';
 import DetailsInscriptionProducerForm from './DetailsInscriptionProducerForm';
 import AvailableProductsForm from './AvailableProductsForm';
 import ProductsDescriptionForm from './ProductsDescriptionForm';
-
+import ConfirmationForm from './ConfirmationForm';
 
 function getSteps() {
-  return ['Détails', 'Produits disponibles', 'Description des produits', 'Confirmation'];
+  return ['Détails', 'Produits disponibles', 'Description des produits'];
 }
 
 export const IncriptionProducerContext = React.createContext({});
 
-
 class InscriptionProducer extends Component {
   state = {
     step: 0,
-    salePointName: '',
-    addressRoad: '',
-    addressCity: '',
-    addressZip: '',
-    AddressCountryState: '',
-    AddressCountry: '',
-    phoneNumber: '',
-    scheduleActive: false,
-    website: '',
-    description: '',
+    name: '',
+    number: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    state: '',
+    country: '',
+    longitude: '',
+    latitude: '',
+
     monday: [],
     tuesday: [],
     wednesday: [],
@@ -35,6 +34,13 @@ class InscriptionProducer extends Component {
     friday: [],
     saturday: [],
     sunday: [],
+
+    phoneNumber: '',
+    website: '',
+    description: '',
+
+    showCompleteAddress: false,
+    scheduleActive: false,
     items: [],
   }
 
@@ -54,41 +60,44 @@ class InscriptionProducer extends Component {
     });
   };
 
-  // Handle fields change
-  handleChange = input => (e) => {
-    this.setState({ [input]: e.target.value });
+  // Change une propriété du point de vente
+  handleChangeProperty = (name, newValue) => {
+    this.setState({ [name]: newValue });
   };
 
-  // change the checkbox value
-  handleChangeCheckbox = name => (event) => {
-    this.setState({ [name]: event.target.checked });
-  };
+  addNewSchedule = dayName => () => {
+    const openingsHour = {
+      openingHour: '08:00',
+      closingHour: '12:00'
+    };
 
-  addNewSchedule = (day, dayName) => () => {
-    const schedule = { open: '08:00', close: '18:00' };
+    const { state } = this;
+    const dayTab = [...state[dayName], openingsHour];
 
     this.setState({
-      [dayName]: [...day, schedule]
+      [dayName]: dayTab
     });
   }
 
-  deleteLastSchedule = (dayTab, dayName) => () => {
-    const newSchedule = dayTab;
+  deleteLastSchedule = dayName => () => {
+    const { state } = this;
+    const dayTab = state[dayName];
 
-    newSchedule.pop();
+    dayTab.pop();
 
     this.setState({
-      [dayName]: newSchedule
+      [dayName]: dayTab
     });
   }
 
-  handleChangeSchedule = (day, dayName, index, type) => (event) => {
-    const newSchedule = day;
+  handleChangeSchedule = (dayName, index, type) => (event) => {
+    const { state } = this;
+    const dayTab = state[dayName];
 
-    newSchedule[index][type] = event.target.value;
+    dayTab[index][type] = event.target.value;
 
     this.setState({
-      [dayName]: newSchedule
+      [dayName]: dayTab
     });
   }
 
@@ -113,11 +122,11 @@ class InscriptionProducer extends Component {
 
   // change la descrpiton d'un produit
   handleChangeDescription = input => (e) => {
-    const newItems = [...this.state.items];
-    newItems.forEach((item) => {
-      if (item.item === input) {
-        console.log(item);
-        item.description = e.target.value;
+    const { state } = this;
+    const newItems = [...state.items];
+    newItems.forEach((product) => {
+      if (product.item === input) {
+        product.description = e.target.value;
       }
     });
 
@@ -139,17 +148,8 @@ class InscriptionProducer extends Component {
         return (
           <ProductsDescriptionForm />
         );
-      case 3:
-        return (
-          <AvailableProductsForm
-            nextStep={this.nextStep}
-            prevStep={this.prevStep}
-            handleChange={this.handleChange}
-            values={this.state}
-          />
-        );
       default:
-        return <div>Error</div>;
+        return <ConfirmationForm />;
     }
   }
 
@@ -161,13 +161,14 @@ class InscriptionProducer extends Component {
         value={{
           nextStep: this.nextStep,
           prevStep: this.prevStep,
-          handleChange: this.handleChange,
-          handleChangeCheckbox: this.handleChangeCheckbox,
-          addItem: this.addItem,
-          removeItem: this.removeItem,
+          handleChangeProperty: this.handleChangeProperty,
+
           addNewSchedule: this.addNewSchedule,
           deleteLastSchedule: this.deleteLastSchedule,
           handleChangeSchedule: this.handleChangeSchedule,
+
+          addItem: this.addItem,
+          removeItem: this.removeItem,
           handleChangeDescription: this.handleChangeDescription,
           values: this.state,
         }}
