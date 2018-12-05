@@ -30,6 +30,11 @@ const query = gql`
 `;
 
 class PageMap extends React.Component {
+  constructor(props) {
+    super(props);
+    document.title = 'Carte';
+  }
+
   render() {
     return (
       <Query query={query}>

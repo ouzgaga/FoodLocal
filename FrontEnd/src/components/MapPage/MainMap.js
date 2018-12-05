@@ -73,7 +73,7 @@ class MainMap extends React.Component {
 
     const drawer = (
       <div>
-        <Search data={data}/>
+        <Search data={data} />
       </div>
     );
 
@@ -90,7 +90,7 @@ class MainMap extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap data={data}/>
+          <MyMap data={data} />
 
         </main>
 
@@ -129,8 +129,8 @@ class MainMap extends React.Component {
 }
 
 MainMap.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
+  classes: PropTypes.shape().isRequired,
+  theme: PropTypes.shape().isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(MainMap);

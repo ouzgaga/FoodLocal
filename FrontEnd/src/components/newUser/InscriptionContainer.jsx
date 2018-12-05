@@ -216,6 +216,7 @@ class InscriptionContainer extends React.Component {
                           variant="contained"
                           color="primary"
                           type="submit"
+                          id="register-button-step"
                           className={classes.button}
                         >
                           {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}

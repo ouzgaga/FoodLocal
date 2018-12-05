@@ -124,6 +124,11 @@ const styles = theme => ({
 });
 
 class PageAbout extends Component {
+  constructor(props) {
+    super(props);
+    document.title = 'A propos';
+  }
+
   render() {
     const { classes } = this.props;
 
