@@ -39,7 +39,7 @@ function addProductTypeCategory(productTypeCategory) {
  *
  * @param productTypeCategory, un objet contenant l'id de la catégorie de produits à récupérer dans un champ nommé 'id'.
  */
-function getProductTypeCategoryById({ id }) {
+function getProductTypeCategoryById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
@@ -71,7 +71,7 @@ function updateProductTypeCategory(productTypeCategory) {
  *
  * @param {Integer} id, L'id de la catégorie de produits à supprimer.
  */
-function deleteProductTypeCategory({ id }) {
+function deleteProductTypeCategory(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
   }

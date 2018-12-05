@@ -62,7 +62,7 @@ async function addAllProductsInArray(productsArray) {
  *
  * @param {Integer} id, L'id du produit à récupérer.
  */
-function getProductById({ id }) {
+function getProductById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
@@ -100,7 +100,7 @@ async function updateProduct(product) {
  *
  * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct({ id }) {
+function deleteProduct(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   }

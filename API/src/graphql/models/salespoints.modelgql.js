@@ -37,9 +37,9 @@ const addressSchema = new mongoose.Schema(
 );
 
 /**
- * Schedule Schema
+ * DaySchedule Schema
  */
-const scheduleSchema = new mongoose.Schema(
+const dayScheduleSchema = new mongoose.Schema(
   {
     openingHour: {
       type: mongoose.Schema.Types.String,
@@ -53,26 +53,42 @@ const scheduleSchema = new mongoose.Schema(
 );
 
 /**
- * DailySchedule Schema
+ * Schedule Schema
  */
-const dailyScheduleSchema = new mongoose.Schema(
+const scheduleSchema = new mongoose.Schema(
   {
-    weekDay: {
-      type: mongoose.Schema.Types.String,
-      enum: [
-        'MONDAY',
-        'TUESDAY',
-        'WEDNESDAY',
-        'THURSDAY',
-        'FRIDAY',
-        'SATURSDAY',
-        'SUNDAY'
-      ],
+    monday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
       required: true
     },
-    schedule: {
-      type: [scheduleSchema],
-      minItems: 1,
+    tuesday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
+      required: true
+    },
+    wednesday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
+      required: true
+    },
+    thursday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
+      required: true
+    },
+    friday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
+      required: true
+    },
+    saturday: {
+      type: [dayScheduleSchema],
+      maxItems: 2,
+      required: true
+    },
+    sunday: {
+      type: [dayScheduleSchema],
       maxItems: 2,
       required: true
     }
@@ -93,9 +109,7 @@ const salesPointSchema = new mongoose.Schema(
       required: false
     },
     schedule: {
-      type: [dailyScheduleSchema],
-      minItems: 1,
-      maxItems: 7,
+      type: scheduleSchema,
       required: false
     }
   }

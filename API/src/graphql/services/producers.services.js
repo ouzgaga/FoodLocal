@@ -33,10 +33,10 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du producteur à récupérer.
+ * @param {String} id, L'id du producteur à récupérer.
  * @returns {*}
  */
-function getProducerById({ id }) {
+function getProducerById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
@@ -140,7 +140,7 @@ async function updateProducer(producer) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer({ id }) {
+function deleteProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }

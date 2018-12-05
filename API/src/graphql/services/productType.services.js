@@ -45,7 +45,7 @@ function addProductType(productType) {
  *
  * @param {Integer} id, L'id du type de produit à récupérer.
  */
-function getProductTypeById({ id }) {
+function getProductTypeById(id) {
   let objectId = id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
@@ -92,7 +92,7 @@ async function updateProductType(productType) {
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
-async function addProducerProducingThisProductType(idProductType, { id: idProducer }) {
+async function addProducerProducingThisProductType(idProductType, idProducer) {
   const productType = await getProductTypeById(idProductType);
   if (productType.producers !== null) {
     productType.producers.push(idProducer);
@@ -108,14 +108,14 @@ async function addProducerProducingThisProductType(idProductType, { id: idProduc
  *
  * @param productType, Les informations du type de produit à supprimer.
  */
-function deleteProductType(productType) {
-  if (!mongoose.Types.ObjectId.isValid(productType.id)) {
+function deleteProductType(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   }
 
   // FIXME: c'est quoi la différence entre findByIdAndDelete() et findByIdAndRemove() ?
   // FIXME: On retourne quoi après la suppression?
-  return ProductTypeModel.findByIdAndRemove(productType.id);
+  return ProductTypeModel.findByIdAndRemove(id);
 }
 
 module.exports = {
