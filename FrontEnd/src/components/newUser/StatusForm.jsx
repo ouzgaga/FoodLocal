@@ -64,7 +64,7 @@ function StatusForm(props) {
             value={value}
             onChange={onChange('status')}
           >
-            <FormControlLabel value="user" control={<Radio />} label="Utilisateur" />
+            <FormControlLabel value="user" autoFocus control={<Radio />} label="Utilisateur" />
             <FormControlLabel value="producer" control={<Radio />} label="Producteur" />
           </RadioGroup>
         </FormControl>

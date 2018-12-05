@@ -1,47 +1,37 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 
 import DialogContent from '@material-ui/core/DialogContent';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 
-class SimpleInfoDialog extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-
-
+class SimpleDialog extends React.Component {
   render() {
-    const { classes, open, handleClose, children} = this.props;
-
-    
+    const { classes, open, onClose, children, fullScreen } = this.props;
 
     return (
       <div>
         <Dialog
+          fullScreen={fullScreen}
           open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >          
-          <DialogContent>
-            {children}
-          </DialogContent>
+          onClose={onClose}
+        >  
+          {children}     
         </Dialog>
       </div>
     );
   }
 }
 
-SimpleInfoDialog.defaultProps = {
+SimpleDialog.propTypes = {
+  fullScreen: PropTypes.bool.isRequired,
 };
 
 
-export default SimpleInfoDialog;
+export default withMobileDialog()(SimpleDialog);

@@ -13,6 +13,7 @@ import UserContext from './UserContext';
 import MenuDrawer from './MenuDrawer';
 import LoginDialog from './LoginDialog';
 import SimpleDialog from './items/SimpleDialog';
+import InscriptionContainer from './newUser/InscriptionContainer';
 
 const styles = {
   root: {
@@ -42,19 +43,22 @@ const styles = {
 class MenuAppBar extends React.Component {
   state = {
     sConnected: null,
-    open      : false,
+    open: false,
     newAccountOpen: false,
   };
 
-  handleClickLogin = prop => () => {
-    this.setState({
-      [prop]: true
-    });
+  handleClickDrawer = prop => () => {
+    this.setState(state => ({
+      [prop]: !state[prop]
+    }));
   };
 
-  handleCloseLogin = prop => (value) => {
-    this.setState({ open: false });
-  };
+  handleOpenAndClose = () => {
+    this.setState({
+      open: false,
+      newAccountOpen: true,
+    });
+  }
 
   render() {
     const { classes, width } = this.props;
@@ -68,8 +72,10 @@ class MenuAppBar extends React.Component {
 
         {UserContext.Provider.name == null
           ? <>
-            <Link to="/newAccount" className={classes.LinkButton} readOnly tabIndex="-1"><Button>S'inscrire</Button></Link>
-            <Button color="inherit" onClick={this.handleClickLogin}>
+            <Button color="inherit" onClick={this.handleClickDrawer('newAccountOpen')}>
+              S'inscrire
+            </Button>
+            <Button color="inherit" onClick={this.handleClickDrawer('open')}>
               Se connecter
             </Button>
           </>
@@ -87,21 +93,28 @@ class MenuAppBar extends React.Component {
           <Toolbar>
             <Link to="/" readOnly tabIndex="-1"><img src={logo} className={classes.menuButton} alt="logo" readOnly tabIndex="-1" /></Link>
             <div className={classes.grow} />
-            {isWidthUp('sm', width) ? menuLarge : <MenuDrawer />}
+            {isWidthUp('sm', width) ? menuLarge : <MenuDrawer onClick={this.handleClickDrawer} />}
           </Toolbar>
 
-          <SimpleDialog
-            open={this.state.newAccountOpen}
-            onClose={this.handleCloseLogin('newAccountOpen').bind(this)}
-          >
-            hello
+          
 
-          </SimpleDialog>
+            <SimpleDialog
+              open={this.state.newAccountOpen}
+              onClose={this.handleClickDrawer('newAccountOpen')}
+            >
+              <InscriptionContainer
+                onClose={this.handleClickDrawer('newAccountOpen')}
+                onValidate={this.handleClickDrawer('newAccountOpen')}
+              />
+
+            </SimpleDialog> 
+
+          
           <LoginDialog
             classes={this.props}
             open={this.state.open}
-            onClose={this.handleCloseLogin('close').bind(this)}
-            // onClose={this.handleCloseLogin}
+            onClose={this.handleClickDrawer('close')}
+            onClick2={this.handleOpenAndClose}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {this.state.connectEmail}

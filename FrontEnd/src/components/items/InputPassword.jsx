@@ -1,9 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -18,7 +14,7 @@ import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   form: {
-    width: '100%', // Fix IE11 issue.
+    //width: '100%', // Fix IE11 issue.
     marginTop: theme.spacing.unit,
   },
 });
@@ -38,10 +34,10 @@ class InputPassword extends React.Component {
   };
 
   render() {
-    const { classes, label, required, onChange, id, value} = this.props;
+    const { classes, label, required, onChange, id, value } = this.props;
     const { showPassword } = this.state;
     return (
-      <React.Fragment className={classes.form}>
+      <React.Fragment> 
         <FormControl margin="normal" required={required} fullWidth>
           <InputLabel htmlFor="password">{label}</InputLabel>
           <Input
@@ -64,6 +60,7 @@ class InputPassword extends React.Component {
             )}
           />
         </FormControl>
+        
       </React.Fragment>
     );
   }

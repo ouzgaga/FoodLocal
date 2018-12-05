@@ -56,32 +56,16 @@ const styles = theme => ({
 class MyLogin extends React.Component {
 
 
-  state = {
-
-    a: 0,
-  };
-
-
-
   handleLogin = () => {
     console.info("OK men")
     UserContext.Provider.name = "UserIsLog"
-  }
-
-  handleNewAccount = () => {
-
-    this.props.onClose();
   }
 
   render() {
 
     //this.setState(this.state.a + 1);
 
-
-
-    console.log('MyLogin:' + this.state.a);
-
-    const { classes, onClose, ...other } = this.props;
+    const { classes, onClose, onClick2, ...other } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -91,15 +75,15 @@ class MyLogin extends React.Component {
               <LockIcon cplor="secondary" />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
-                        </Typography>
+              Connexion
+            </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="email">Email Address</InputLabel>
+                <InputLabel htmlFor="email">Adresse mail</InputLabel>
                 <Input id="email" name="email" autoComplete="email" autoFocus />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="password">Password</InputLabel>
+                <InputLabel htmlFor="password">Mot de passe</InputLabel>
                 <Input
                   name="password"
                   type="password"
@@ -110,7 +94,6 @@ class MyLogin extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
-
                     color="primary"
                     value="remember"
                   />
@@ -126,8 +109,8 @@ class MyLogin extends React.Component {
                 className={classes.submit}
                 onClick={this.handleLogin}
               >
-                Sign in
-                        </Button>
+                Se connecter
+              </Button>
 
 
 
@@ -136,10 +119,9 @@ class MyLogin extends React.Component {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={this.handleNewAccount}  >
-                <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1">
-                  Creat new account
-                        </Link>
+                onClick={onClick2}
+              >
+                Creat new accoun
               </Button>
 
 
@@ -156,7 +138,7 @@ class MyLogin extends React.Component {
 MyLogin.propTypes = {
   classes: PropTypes.object.isRequired,
   onClose: PropTypes.func,
-
+  onClick2: PropTypes.func,
 };
 
 export default withStyles(styles)(MyLogin);
