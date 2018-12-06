@@ -46,7 +46,7 @@ describe('tests productTypeCategory services', () => {
 
   describe('tests getProductTypeCategoryById', () => {
     it('should get one productTypeCategory', async() => {
-      let productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById({ id: ids[0] });
+      let productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById(ids[0]);
 
       productTypeCategoryGotInDB.should.be.an('object');
       productTypeCategoryGotInDB.should.be.not.null;
@@ -55,7 +55,7 @@ describe('tests productTypeCategory services', () => {
       productTypeCategoryGotInDB.name.should.be.equal(fruits.name);
       productTypeCategoryGotInDB.image.should.be.equal(fruits.image);
 
-      productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById({ id: ids[2] });
+      productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById(ids[2]);
       productTypeCategoryGotInDB.should.be.an('object');
       productTypeCategoryGotInDB.should.be.not.null;
       productTypeCategoryGotInDB._id.should.be.not.null;
@@ -65,7 +65,7 @@ describe('tests productTypeCategory services', () => {
     });
 
     it('should fail getting one productTypeCategory because no id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById({ id: '' });
+      const productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById('');
       productTypeCategoryGotInDB.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
   });

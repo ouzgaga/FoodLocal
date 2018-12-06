@@ -8,9 +8,11 @@ const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
 
 const Producer = require('./graphql/resolvers/producers.resolvers');
 const User = require('./graphql/resolvers/users.resolvers');
+const Utils = require('./graphql/resolvers/utils.resolvers');
 const Person = require('./graphql/resolvers/person.resolvers');
 const Product = require('./graphql/resolvers/products.resolvers');
 const Salespoint = require('./graphql/resolvers/salespoint.resolvers');
+const TokenValidationEmail = require('./graphql/resolvers/tokenValidationEmail.resolvers');
 const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
@@ -30,6 +32,8 @@ const resolvers = merge(
   User,
   Product,
   Salespoint,
+  Utils,
+  TokenValidationEmail,
 );
 
 const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));

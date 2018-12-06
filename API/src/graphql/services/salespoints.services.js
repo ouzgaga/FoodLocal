@@ -31,14 +31,7 @@ function getSalesPoints({ tags = undefined, limit = 50, page = 0 } = {}) {
  * @param {Integer} salespoint, Les informations du point de vente à ajouter.
  */
 function addSalesPoint(salespoint) {
-  // Si le point de vente ne possède pas d'id -> on l'ajoute à la DB
-  if (salespoint.id === undefined) {
-    return new SalespointsModel(salespoint).save();
-  } else {
-    // Si le product possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce product
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return salespoint;
-  }
+  return new SalespointsModel(salespoint).save();
 }
 
 /**
@@ -46,16 +39,12 @@ function addSalesPoint(salespoint) {
  *
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
-function getSalesPointById({ id }) {
-  let objectId = id;
+function getSalesPointById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received salespoint.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return SalespointsModel.findById(id);
   }
-
-  return SalespointsModel.findById(objectId);
 }
 
 /**
@@ -78,7 +67,7 @@ function updateSalesPoint(salespoint) {
  *
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
-function deleteSalesPoint({ id }) {
+function deleteSalesPoint(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received salespoint.id is invalid!');
   }

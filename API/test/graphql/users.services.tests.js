@@ -76,7 +76,7 @@ describe('tests users services', () => {
 
   describe('tests getUserById', () => {
     it('should get one user', async() => {
-      const user = await usersService.getUserById(benoit);
+      const user = await usersService.getUserById(benoit.id);
       user.should.be.not.null;
       user.id.should.be.not.null;
       user.firstname.should.be.not.null;
@@ -97,7 +97,7 @@ describe('tests users services', () => {
     });
 
     it('should fail getting one user because no id received', async() => {
-      const userGotInDB = await usersService.getUserById({ id: '' });
+      const userGotInDB = await usersService.getUserById('');
       userGotInDB.message.should.be.equal('Received user.id is invalid!');
     });
   });
@@ -238,6 +238,20 @@ describe('tests users services', () => {
       const updatedUser = await usersService.updateUser(addedUser);
 
       updatedUser.message.should.be.equal('Received user.id is invalid!');
+    });
+
+    it('should fail updating a user because id received not found in DB', async() => {
+      const addedUser = {
+        id: '675c04561e7209e21e582750', // id trop long (> 24 caractères)
+        firstname: 'Benoît',
+        lastname: 'Schopfer',
+        email: 'benoit.schopfer@heig-vd.ch',
+        password: '1234abcd',
+        image: 'ceci est une image encodée en base64!',
+        subscriptions: [],
+        emailValidated: false
+      };
+      const updatedUser = await usersService.updateUser(addedUser);
     });
   });
 
