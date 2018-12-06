@@ -2,6 +2,24 @@ require('../chai-config');
 
 const producersService = require('../../src/graphql/services/producers.services');
 const ProducersModel = require('../../src/graphql/models/producers.modelgql');
+const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+  '../../src/graphql/models/products.modelgql'
+);
+
+let productTypeCategory = {
+  name: 'Fruits',
+  image: 'ceci est une image de fruits encodée en base64!'
+};
+
+let productTypePomme = {
+  name: 'Pomme',
+  image: 'ceci est une image de pomme encodée en base64!'
+};
+
+let productTypePoire = {
+  name: 'Poire',
+  image: 'ceci est une image de poire encodée en base64!'
+};
 
 let benoit = {
   firstname: 'Benoît',
@@ -138,6 +156,42 @@ describe('tests producers services', () => {
     await ProducersModel.deleteMany();
 
     // on ajoute le contenu de départ
+
+    // on ajoute le productTypeCategory
+    productTypeCategory = await ProductTypeCategoryModel.create(productTypeCategory);
+
+    // on ajoute 2 productType
+    productTypePomme = {
+      name: productTypePomme.name,
+      image: productTypePomme.image,
+      categoryId: productTypeCategory.id,
+      producersIds: []
+    };
+    const addedProductTypePomme = await ProductTypeModel.create(productTypePomme);
+    productTypePomme = {
+      id: addedProductTypePomme.id,
+      name: addedProductTypePomme.name,
+      image: addedProductTypePomme.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePomme.producersIds
+    };
+
+    productTypePoire = {
+      name: productTypePoire.name,
+      image: productTypePoire.image,
+      categoryId: productTypeCategory.id,
+      producersIds: []
+    };
+    const addedProductTypePoire = await ProductTypeModel.create(productTypePoire);
+    productTypePoire = {
+      id: addedProductTypePoire.id,
+      name: addedProductTypePoire.name,
+      image: addedProductTypePoire.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePoire.producersIds
+    };
+
+    // on ajoute le contenu de départ
     // on ajoute 2 points de vente
     benoit = {
       firstname: 'Benoît',
@@ -193,11 +247,11 @@ describe('tests producers services', () => {
       products: [
         {
           description: 'Une pomme monnnnstre bonne!',
-          productTypeId: '5c050afa96f1ff3cca213d1f'
+          productTypeId: addedProductTypePomme.id
         },
         {
           description: 'Une poire de folie!',
-          productTypeId: '5c05ad449fdaf88060a42aef'
+          productTypeId: addedProductTypePoire.id
         }
       ]
     };
@@ -256,11 +310,11 @@ describe('tests producers services', () => {
       products: [
         {
           description: 'Une pomme monnnnstre bonne!',
-          productTypeId: '5c050afa96f1ff3cca213d1f'
+          productTypeId: addedProductTypePomme.id
         },
         {
           description: 'Une poire de folie!',
-          productTypeId: '5c05ad449fdaf88060a42aef'
+          productTypeId: addedProductTypePoire.id
         }
       ]
     };
@@ -399,11 +453,11 @@ describe('tests producers services', () => {
         productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
-            productTypeId: '5c050afa96f1ff3cca213d1f'
+            productTypeId: productTypePomme.id
           },
           {
             description: 'Une poire de folie!',
-            productTypeId: '5c05ad449fdaf88060a42aef'
+            productTypeId: productTypePoire.id
           }
         ]
       };
@@ -484,11 +538,11 @@ describe('tests producers services', () => {
         productsIds: [
           {
             description: 'Une pomme monnnnstre bonne!',
-            productTypeId: '5c050afa96f1ff3cca213d1f'
+            productTypeId: productTypePomme.id
           },
           {
             description: 'Une poire de folie!',
-            productTypeId: '5c05ad449fdaf88060a42aef'
+            productTypeId: productTypePoire.id
           }
         ]
       };

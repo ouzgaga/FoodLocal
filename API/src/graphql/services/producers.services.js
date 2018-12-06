@@ -4,7 +4,7 @@ const productsServices = require('../services/products.services');
 const salesPointsServices = require('../services/salespoints.services');
 const UtilsServices = require('../services/utils.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
-
+const productTypeServices = require('./productType.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -85,6 +85,11 @@ async function addProducer(producer) {
     };
 
     const producerAdded = await new ProducersModel(producerToAdd).save();
+
+    if (producer.products != null && producer.products.length !== 0) {
+      producer.products.map(p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
+    }
+
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else {

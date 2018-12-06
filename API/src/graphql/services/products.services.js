@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Products: ProductModel } = require('../models/products.modelgql');
+const productTypeServices = require('./productType.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -38,12 +39,18 @@ async function addProduct(product) {
   if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    const newProduct = {
-      description: product.description,
-      productTypeId: product.productTypeId
-    };
+    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
 
-    return new ProductModel(newProduct).save();
+    if (productType != null) {
+      const newProduct = {
+        description: product.description,
+        productTypeId: productType.id
+      };
+
+      return new ProductModel(newProduct).save();
+    } else {
+      throw new Error("This productType.id doesn't exist!");
+    }
   }
 }
 
