@@ -15,23 +15,31 @@ import InformationsForm from '../src/components/newUser/InformationsForm';
 import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionForm';
 import InputPassword from '../src/components/items/InputPassword';
 import BoxWithHeader from '../src/components/items/BoxWithHeader';
+import BorderedTextField from '../src/components/items/fields/BorderedTextField';
+import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
+import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
+import TableProducerItem from '../src/components/admin/TableProducerItem';
+
+
 
 function onChange(event){
+
+function onChange(event) {
 
 }
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
-    <RatingItem/>
+    <RatingItem />
   ))
   .add('value = 2', () => (
-    <RatingItem defaultValue={2}/>
+    <RatingItem defaultValue={2} />
   ))
   .add('value = 10', () => (
-    <RatingItem defaultValue={10}/>
+    <RatingItem defaultValue={10} />
   ))
   .add('readOnly = true', () => (
-    <RatingItem defaultValue={2} readOnly={true}/>
+    <RatingItem defaultValue={2} readOnly={true} />
   ));
 
 const post = 'Nullam sed felis sapien. Sed vitae purus vehicula tortor fringilla dictum. Donec suscipit, nunc et convallis laoreet, arcu leo suscipit est, quis tempus sapien eros sed lectus. Suspendisse et urna in eros scelerisque sodales. Morbi id neque sagittis ante consectetur posuere id sed nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porta nisl ipsum, in pulvinar purus porta ac. Nam maximus et leo id auctor. Vivamus rutrum fringilla nunc ac ullamcorper. Suspendisse pulvinar sem auctor, porttitor nisi non, elementum leo. In quis enim interdum, semper purus id, faucibus tellus.';
@@ -43,7 +51,7 @@ storiesOf('ProducerPost', module)
       post={post}
     />
   ));
-  
+
 const description = 'Nullam sed felis sapien. Sed vitae purus vehicula tortor fringilla dictum. Donec suscipit, nunc et convallis laoreet, arcu leo suscipit est, quis tempus sapien eros sed lectus. Suspendisse et urna in eros scelerisque sodales. Morbi id neque sagittis ante consectetur posuere id sed nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porta nisl ipsum, in pulvinar purus porta ac. Nam maximus et leo id auctor. Vivamus rutrum fringilla nunc ac ullamcorper. Suspendisse pulvinar sem auctor, porttitor nisi non, elementum leo. In quis enim interdum, semper purus id, faucibus tellus.';
 storiesOf('ProducerHeader', module)
   .add('Default', () => (
@@ -86,7 +94,7 @@ storiesOf('AdressContainer', module)
       city="2230 dfees"
       country="Suisse"
     />
-));
+  ));
 
 storiesOf('CenteredPaper', module)
   .add('Text element', () => (
@@ -114,47 +122,89 @@ storiesOf('InscriptionContainer', module)
 storiesOf('InformationsForm', module)
   .add('InformationsForm', () => (
     <InformationsForm
-    onChange={onChange}
+      onChange={onChange}
     />
   ));
 
 storiesOf('StatusForm', module)
   .add('StatusForm', () => (
     <StatusForm
-    onChange={onChange}/>
-));
+      onChange={onChange} />
+  ));
 
 storiesOf('InputPassword', module)
   .add('Default', () => (
-    <InputPassword 
-    onChange={onChange}
+    <InputPassword
+      onChange={onChange}
     />
   ))
   .add('label + required', () => (
-    <InputPassword 
+    <InputPassword
       label='Mot de passe'
       required
       onChange={onChange}
     />
   ));
 
-  storiesOf('GeneralsConditionForm', module)
+storiesOf('GeneralsConditionForm', module)
   .add('GeneralsConditionForm', () => (
     <GeneralsConditionForm
-    onChange={onChange}/>
-));
+      onChange={onChange} />
+  ));
 
 storiesOf('BoxWithHeader', module)
   .add('empty', () => (
     <BoxWithHeader />
-)).add('no header', () => (
-  <BoxWithHeader>
-    hello word
+  )).add('no header', () => (
+    <BoxWithHeader>
+      hello word
   </BoxWithHeader>
 )).add('child + header', () => (
   <BoxWithHeader
-    header="Header"
+    header="Informations personnels"
   >
-    hello word
+    <PersonalInformation />
   </BoxWithHeader>
-));
+  ));
+
+storiesOf('BorderedTextField', module)
+  .add('no data', () => (
+    <BorderedTextField />
+  ))
+  .add('Default value', () => (
+    <BorderedTextField
+      defaultValue="Hello word"
+    />
+  ))
+  .add('fullWidth', () => (
+    <BorderedTextField
+      defaultValue="Hello word"
+      fullWidth
+    />
+  ));
+
+storiesOf('BoxLeftRight', module)
+  .add('BoxLeftRight', () => (
+    <BoxLeftRight 
+      title="hello"
+    >
+      world
+    </BoxLeftRight>
+  ));
+
+
+storiesOf('PersonalInformation', module)
+  .add('PersonalInformation', () => (
+    <PersonalInformation />
+  ));
+
+
+  
+  
+
+
+  storiesOf('TableProducerItem', module)
+
+  .add('producer item', () => (
+      <TableProducerItem id={1234} name="La Ferme Du Bois" />
+  ));

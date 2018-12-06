@@ -65,7 +65,7 @@ class MyLogin extends React.Component {
 
     //this.setState(this.state.a + 1);
 
-    const { classes, onClose, onClick2, ...other } = this.props;
+    const { classes, onClose, onClick2 } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -121,7 +121,17 @@ class MyLogin extends React.Component {
                 className={classes.submit}
                 onClick={onClick2}
               >
-                Creat new accoun
+                Créer un nouveau compte
+              </Button>
+
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={onClose}
+              >
+                Fermer
               </Button>
 
 

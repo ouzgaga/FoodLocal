@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -21,7 +22,9 @@ class InputForm extends Component {
   }
 
   render() {
-    const { classes, handleChangeProperty, inputTitle, fieldNameToChange, value, multiline, placeholder } = this.props;
+    const {
+      classes, handleChangeProperty, inputTitle, fieldNameToChange, value, multiline, placeholder
+    } = this.props;
 
     return (
       <Fragment>
@@ -43,5 +46,16 @@ class InputForm extends Component {
     );
   }
 }
+
+
+InputForm.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  handleChangeProperty: PropTypes.func.isRequired,
+  inputTitle: PropTypes.string.isRequired,
+  fieldNameToChange: PropTypes.string.isRequired,
+  value: PropTypes.shape().isRequired,
+  multiline: PropTypes.bool.isRequired,
+  placeholder: PropTypes.string.isRequired,
+};
 
 export default withStyles(styles)(InputForm);

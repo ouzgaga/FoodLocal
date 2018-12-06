@@ -40,8 +40,10 @@ const styles = theme => ({
 });
 
 class PageProducer extends React.Component {
+  
   constructor(props) {
     super(props);
+    document.title = 'Détails Producteur';
 
     this.state = {
       //userId: props.match.params.producerId,

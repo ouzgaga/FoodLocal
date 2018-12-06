@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -8,11 +6,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import { IncriptionProducerContext } from './InscriptionProducer';
 import DaySchedule from './DaySchedule';
-import AddressForm from './Address/AddressForm';
+import AddressForm from './AddressForm';
 import InputForm from './InputForm';
 
 const styles = theme => ({

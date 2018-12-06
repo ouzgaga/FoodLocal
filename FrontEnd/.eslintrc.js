@@ -19,6 +19,7 @@ module.exports = {
     'no-plusplus'                    : 'off',
     'react/jsx-filename-extension'   : 'off',
     'no-return-assign'               : 'off',
+    'no-undef'                       : 'off',
   }
 
 };
