@@ -34,7 +34,7 @@ function addProductType(productType) {
   const newProductType = {
     ...productType,
     categoryId: productType.categoryId,
-    producers: []
+    producersIds: []
   };
   return new ProductTypeModel(newProductType).save();
 }
@@ -76,8 +76,8 @@ async function updateProductType(productType) {
     id: productType.id,
     name: productType.name,
     image: productType.image,
-    categoryId: productType.category.id,
-    producersIds: productType.producers.map(p => p.id)
+    categoryId: productType.categoryId,
+    producersIds: productType.producersIds != null ? productType.producersIds.map(p => p.id) : []
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
@@ -85,10 +85,10 @@ async function updateProductType(productType) {
 
 async function addProducerProducingThisProductType(idProductType, idProducer) {
   const productType = await getProductTypeById(idProductType);
-  if (productType.producers !== null) {
-    productType.producers.push(idProducer);
+  if (productType.producersIds != null) {
+    productType.producersIds.push(idProducer);
   } else {
-    productType.producer = [idProducer];
+    productType.producerIds = [idProducer];
   }
 
   return updateProductType(productType);
@@ -97,7 +97,7 @@ async function addProducerProducingThisProductType(idProductType, idProducer) {
 /**
  * Supprime le type de produit correspondant à l'id reçu. Ne supprime pas sa catégorie.
  *
- * @param productType, Les informations du type de produit à supprimer.
+ * @param id, Les informations du type de produit à supprimer.
  */
 function deleteProductType(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
