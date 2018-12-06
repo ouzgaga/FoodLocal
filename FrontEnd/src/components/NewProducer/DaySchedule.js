@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Checkbox from '@material-ui/core/Checkbox';
 import Hidden from '@material-ui/core/Hidden';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
@@ -13,11 +12,9 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import red from '@material-ui/core/colors/red';
 
-import CardMedia from '@material-ui/core/CardMedia';
-import MarkerCarotte from '../../img/MarkerCarotte.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
 
-const styles = theme => ({
+const styles = ({
   checkboxDay: {
     paddingTop: 0,
     paddingBottom: 0,
@@ -36,26 +33,28 @@ const styles = theme => ({
     height: 36,
     width: 36,
   },
-  typo:{
-    paddingTop:10,
+  typo: {
+    paddingTop: 10,
   },
   grid: {
-    padding:0,
+    padding: 0,
   }
 });
 
 class DaySchedule extends Component {
   render() {
-    const { classes, day, dayName, printName } = this.props;
+    const {
+      classes, day, dayName, printName
+    } = this.props;
     let i = -1;
     return (
       <IncriptionProducerContext>
         {({
           addNewSchedule, deleteLastSchedule, handleChangeSchedule
         }) => (
-            <Fragment>
-            <Grid item xs={12} className={classes.grid}> 
-              <Grid container spacing={24} style={{ marginBottom: '-30'}}>
+          <Fragment>
+            <Grid item xs={12} className={classes.grid}>
+              <Grid container spacing={24} style={{ marginBottom: '-30' }}>
                 <Grid item sm={2} xs={4} className={classes.grid}>
                   <Typography className={classes.typo} variant="body1">
                     {printName}
@@ -150,12 +149,19 @@ class DaySchedule extends Component {
                   )
                 }
               </Grid>
-              </Grid>
-            </Fragment>
+            </Grid>
+          </Fragment>
         )}
       </IncriptionProducerContext>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(DaySchedule);
+DaySchedule.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  day: PropTypes.shape().isRequired,
+  dayName: PropTypes.string.isRequired,
+  printName: PropTypes.string.isRequired,
+};
+
+export default withStyles(styles)(DaySchedule);

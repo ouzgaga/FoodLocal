@@ -12,6 +12,11 @@ const styles = {
 };
 
 class PageError404 extends Component {
+  constructor(props) {
+    super(props);
+    document.title = 'Error 404';
+  }
+  
   render() {
     const { classes, location } = this.props;
     return (

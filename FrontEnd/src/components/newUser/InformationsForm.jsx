@@ -25,64 +25,67 @@ const styles = theme => ({
 });
 
 function InformationsForm(props) {
-    const { classes, onChange, email, lastName, firstName, password, passwordConf } = props;
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <div className={classes.form}>
-        
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Adresse mail</InputLabel>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={onChange('email')}
-              value={email}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Nom de famille</InputLabel>
-            <Input
-              type="text"
-              id="lastNameInput"
-              name="lastNameInput"
-              autoComplete="lastNameInput"
-              onChange={onChange('lastName')}
-              value={lastName}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Prénom</InputLabel>
-            <Input
-              type="text"
-              id="firstNameInput"
-              name="firstNameInput"
-              autoComplete="firstNameInput"
-              onChange={onChange('firstName')}
-              value={firstName}
-            />
-          </FormControl>
-          <InputPassword
-            label={'Mot de passe'}
-            required
-            onChange={onChange}
-            id="password"
-            value={password}
+  document.title = 'Nouveau Compte - Informations'; // changement du titre de la page
+  const {
+    classes, onChange, email, lastName, firstName, password, passwordConf
+  } = props;
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <div className={classes.form}>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="email">Adresse mail</InputLabel>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={onChange('email')}
+            value={email}
           />
-          <InputPassword
-            label={'Confirmation du mot de passe'}
-            required
-            onChange={onChange}
-            id="passwordConf"
-            value={passwordConf}
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="email">Nom de famille</InputLabel>
+          <Input
+            type="text"
+            id="lastNameInput"
+            name="lastNameInput"
+            autoComplete="lastNameInput"
+            onChange={onChange('lastName')}
+            value={lastName}
           />
-        </div>
-      </React.Fragment>
-    );
-  }
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="email">Prénom</InputLabel>
+          <Input
+            type="text"
+            id="firstNameInput"
+            name="firstNameInput"
+            autoComplete="firstNameInput"
+            onChange={onChange('firstName')}
+            value={firstName}
+          />
+        </FormControl>
+        <InputPassword
+          label={'Mot de passe'}
+          required
+          onChange={onChange}
+          id="password"
+          value={password}
+        />
+        <InputPassword
+          label={'Confirmation du mot de passe'}
+          required
+          onChange={onChange}
+          id="passwordConf"
+          value={passwordConf}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
 
 
 InformationsForm.propTypes = {

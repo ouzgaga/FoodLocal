@@ -65,18 +65,18 @@ class MenuAppBar extends React.Component {
 
     const menuLarge = (
       <div>
-        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Accueil</Button></Link>
-        <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button>Carte</Button></Link>
-        <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button>A propos</Button></Link>
+        <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button id="accueilButton">Accueil</Button></Link>
+        <Link to="/map" className={classes.LinkButton} readOnly tabIndex="-1"><Button id="mapButton">Carte</Button></Link>
+        <Link to="/about" className={classes.LinkButton} readOnly tabIndex="-1"><Button id="aboutButton">A propos</Button></Link>
 
 
         {UserContext.Provider.name == null
           ? <>
-            <Button color="inherit" onClick={this.handleClickDrawer('newAccountOpen')}>
-              S'inscrire
+            <Button color="inherit" id="registerButton" onClick={this.handleClickDrawer('newAccountOpen')}>
+              {'S\'inscrire'}
             </Button>
-            <Button color="inherit" onClick={this.handleClickDrawer('open')}>
-              Se connecter
+            <Button color="inherit" id="connectionButton" onClick={this.handleClickDrawer('open')}>
+              {'Se connecter'}
             </Button>
           </>
           : (
@@ -113,7 +113,7 @@ class MenuAppBar extends React.Component {
           <LoginDialog
             classes={this.props}
             open={this.state.open}
-            onClose={this.handleClickDrawer('close')}
+            onClose={this.handleClickDrawer('open')}
             onClick2={this.handleOpenAndClose}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>

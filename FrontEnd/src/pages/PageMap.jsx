@@ -13,14 +13,18 @@ import MainMap from '../components/MapPage/MainMap';
 const query = gql`
 {
   producers {
+    id
     salesPoint {
-      name 
+      name
       address {
         city
+        latitude
+        longitude
       }
     }
     products {
       productType {
+        id
         name
         image
       }
@@ -30,6 +34,11 @@ const query = gql`
 `;
 
 class PageMap extends React.Component {
+  constructor(props) {
+    super(props);
+    document.title = 'Carte';
+  }
+
   render() {
     return (
       <Query query={query}>
