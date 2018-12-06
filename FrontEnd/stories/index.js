@@ -171,12 +171,12 @@ storiesOf('BorderedTextField', module)
   ))
   .add('Default value', () => (
     <BorderedTextField
-      defaultValue="Hello word"
+      defaultValue=""
     />
   ))
   .add('fullWidth', () => (
     <BorderedTextField
-      defaultValue="Hello word"
+      defaultValue=""
       fullWidth
     />
   ));

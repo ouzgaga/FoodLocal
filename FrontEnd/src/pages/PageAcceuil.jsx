@@ -63,7 +63,7 @@ class PageAcceuil extends Component {
           <div className={classes.resarch}>
             <Typography variant="h6" color="Primary">Rechercher un lieu</Typography>
             <Input
-              defaultValue="Hello world"
+              defaultValue=""
               className={classes.input}
               inputProps={{
                 'aria-label': 'Description',
