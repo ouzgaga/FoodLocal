@@ -77,6 +77,8 @@ class GeneralsConditionForm extends React.Component {
   constructor(props) {
     super(props);
 
+    document.title = 'Nouveau Compte - Conditions Générales'; // changement du titre de la page
+
     this.state = {
       value: false,
     };
