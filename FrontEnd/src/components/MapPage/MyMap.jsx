@@ -4,23 +4,11 @@ import {
   Map, TileLayer, Marker, Popup, CircleMarker,
 } from 'react-leaflet';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
 
-import ListItemProducer from './ListItemProducer';
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 import FilterProducts from './FilterProducts';
+import ItemProducerPopUp from './ItemProducerPopUp';
 
 const styles = {
   map: {
@@ -57,10 +45,9 @@ const myIcon = L.icon({
 const myIcon2 = L.icon({
   iconUrl: MarkerCarotte,
   iconSize: [100, 100],
-  iconAnchor: [20, 37],
+  iconAnchor: [50, 95],
   PopupAnchor: [-20, -20],
 });
-
 
 class MyMap extends React.Component {
   constructor(props) {
@@ -130,29 +117,17 @@ class MyMap extends React.Component {
     });
   }
 
-  loadProducer() {
-    return (
-      this.props.data.producers.map(tile => (
-        <Marker key={tile._id} position={[tile.address.latitude, tile.address.longitude]} icon={myIcon}>
-          <Popup key={tile._id} position={[tile.address.latitude, tile.address.longitude]} closeButton={false}>
-            <ListItemProducer salepoint={tile} />
-          </Popup>
-        </Marker>
-      ))
-    );
-  }
-
   render() {
     const { location, zoom, userHasALocation } = this.state;
     const { latitude, longitude } = location;
-    const { classes, data } = this.props;
+    const { classes, data, items, addItem, removeItem } = this.props;
 
 
     return (
 
       <div className={classes.map}>
 
-        <FilterProducts />
+        <FilterProducts items={items} addItem={addItem} removeItem={removeItem} />
         <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
 
           <TileLayer
@@ -175,13 +150,13 @@ class MyMap extends React.Component {
                 this.props.iconDrag === tile.id ? (
                   <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon2}>
                     <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
-                      <ListItemProducer producer={tile} />
+                      <ItemProducerPopUp producer={tile} />
                     </Popup>
                   </Marker>
                 ) : (
                     <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon}>
                       <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
-                        <ListItemProducer producer={tile} />
+                        <ItemProducerPopUp producer={tile} />
                       </Popup>
                     </Marker>
                   )
