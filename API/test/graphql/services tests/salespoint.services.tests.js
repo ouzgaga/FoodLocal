@@ -1,7 +1,7 @@
-require('../chai-config');
+require('../../chai-config');
 
-const salespointService = require('../../src/graphql/services/salespoints.services');
-const SalespointModel = require('../../src/graphql/models/salespoints.modelgql');
+const salespointService = require('../../../src/graphql/services/salespoints.services');
+const SalespointModel = require('../../../src/graphql/models/salespoints.modelgql');
 
 let magasin1 = {
   name: 'Chez moi',

@@ -11,7 +11,9 @@ const producerResolvers = {
 
     producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
 
-    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds)
+    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds),
+
+    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeId)
   },
 
   Mutation: {
@@ -29,8 +31,9 @@ const producerResolvers = {
 
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
-    salesPoint: (parent, args, context) => parent.salesPointId != null ? salesPointsServices.getSalesPointById(
-      parent.salesPointId) : null,
+    salesPoint: (parent, args, context) => (parent.salesPointId != null ? salesPointsServices.getSalesPointById(
+      parent.salesPointId
+    ) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
   }
