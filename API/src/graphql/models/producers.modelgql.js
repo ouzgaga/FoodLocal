@@ -8,7 +8,7 @@ const options = { discriminatorKey: 'kind' };
 
 const producerSchema = new mongoose.Schema(
   {
-    subscribedUsers: [
+    subscribedUsersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'
@@ -26,7 +26,7 @@ const producerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: false
     },
-    salesPoint: {
+    salesPointId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'salespoints',
       required: false
@@ -35,7 +35,7 @@ const producerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Boolean,
       required: true
     },
-    products: [
+    productsIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products'

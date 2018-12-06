@@ -1,14 +1,14 @@
 {
 	"producer": {
-		"firstname": "Antoine",
-		"lastname": "Rochat",
-		"email": "coucou4@cava.ch",
+		"firstname": "Benoît",
+		"lastname": "Schopfer",
+		"email": "benoit.schopfer5@heig-vd.ch",
 		"password": "1234abcd",
-		"image": "Ceci est l'image d'un tueur encodée en base64!",
+		"image": "Ceci est une image encodée en base64!",
 		"phoneNumber": "0761435196",
-		"description": "Un vrai boulet!",
-		"website": "websiteduteubé.ch",
-		"salespoint": {
+		"description": "Un chouet gaillard!",
+		"website": "benoitschopfer.ch",
+		"salesPoint": {
 			"name": "Chez moi",
 			"address": {
 				"number": 6,
@@ -16,51 +16,51 @@
 				"city": "Yverdon",
 				"postalCode": "1400",
 				"country": "Suisse",
-				"longitude": 6.6655123,
-				"latitude": 46.759914
+				"longitude": 1.1234567,
+				"latitude": 1.123456789
 			},
-			"schedule": [
-				{
-					"weekDay": "MONDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "12:00"
-						},
-						{
-							"openingHour": "13:00",
-							"closingHour": "18:00"
-						}
-					]
-				},
-				{
-					"weekDay": "TUESDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "18:00"
-						}
-					]
-				},
-				{
-					"weekDay": "WEDNESDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "12:00"
-						}
-					]
-				},
-				{
-					"weekDay": "FRIDAY",
-					"schedule": [
-						{
-							"openingHour": "13:00",
-							"closingHour": "18:00"
-						}
-					]
+			"schedule": {
+				"monday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					},
+					{
+						"openingHour": "13:00",
+						"closingHour": "18:00"
+					}
+				],
+				"tuesday": [],
+				"wednesday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					}
+				],
+				"thursday": [],
+				"friday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					}
+				],
+				"saturday": [],
+				"sunday": []
+			}
+		},
+		"products": [
+			{
+				"description": "Une pomme monnnnstre bonne!",
+				"productType": {
+					"id": "5c050afa96f1ff3cca213d1f"
 				}
-			]
-		}
+			},
+			{
+				"description": "Une poire de folie!",
+				"productType": {
+					"id": "5c05ad449fdaf88060a42aef"
+				}
+			}
+		]
 	}
 }
