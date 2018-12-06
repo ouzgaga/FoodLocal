@@ -39,5 +39,5 @@ input UserInputUpdate {
 	password: String!
 	image: String # faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!]  # pas obligatoire si vide
-	emailValidated: Boolean!
+	# emailValidated: Boolean!
 }
