@@ -1,9 +1,9 @@
-require('../chai-config');
+require('../../chai-config');
 
-const producersService = require('../../src/graphql/services/producers.services');
-const ProducersModel = require('../../src/graphql/models/producers.modelgql');
+const producersService = require('../../../src/graphql/services/producers.services');
+const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
 const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../src/graphql/models/products.modelgql'
+  '../../../src/graphql/models/products.modelgql'
 );
 
 let productTypeCategory = {
