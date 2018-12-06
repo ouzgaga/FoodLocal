@@ -56,6 +56,21 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return ProducersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
+async function filterProducers(byProductTypeIds) {
+  let filtredProducersIds;
+  if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
+    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
+    filtredProducersIds = await productTypeServices.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(byProductTypeIds);
+  }
+
+  if (filtredProducersIds != null && filtredProducersIds.length !== 0) {
+    return getAllProducersInReceivedIdList(filtredProducersIds);
+  } else {
+    // pas de filtre --> on retourne tous les producteurs
+    return getProducers();
+  }
+}
+
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -87,7 +102,7 @@ async function addProducer(producer) {
     const producerAdded = await new ProducersModel(producerToAdd).save();
 
     if (producer.products != null && producer.products.length !== 0) {
-      producer.products.map(p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
+      producer.products.map(async p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
     }
 
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
@@ -166,6 +181,7 @@ module.exports = {
   getProducerById,
   getAllProducerWaitingForValidation,
   getAllProducersInReceivedIdList,
+  filterProducers,
   addProducer,
   updateProducer,
   validateAProducer,

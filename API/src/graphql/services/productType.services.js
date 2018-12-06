@@ -60,6 +60,17 @@ function getProductTypeByCategory(productTypeCategoryId) {
   }
 }
 
+async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
+  // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
+  const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeIdsTab } });
+
+  const producersIds = [];
+
+  // on récupère tous les ids des producteurs proposant des produits de ces productTypes
+  productTypes.map(p => p.producersIds.map(id => producersIds.push(id)));
+  return producersIds;
+}
+
 /**
  * Met à jour le type de produit possédant l'id reçu avec les données
  * reçues. Remplace toutes les données du type de produit dans la base
@@ -112,6 +123,7 @@ function deleteProductType(id) {
 module.exports = {
   getProductTypes,
   getProductTypeByCategory,
+  getAllProducersIdsProposingProductsOfReceivedProductsTypeIds,
   addProductType,
   addProducerProducingThisProductType,
   getProductTypeById,
