@@ -20,8 +20,7 @@ import TextField from '@material-ui/core/TextField';
 
 import ListItemProducer from './ListItemProducer';
 import MarkerCarotte from '../../img/MarkerCarotte.png';
-
-const Products = require('../../Datas/Products.json');
+import FilterProducts from './FilterProducts';
 
 const styles = {
   map: {
@@ -55,15 +54,12 @@ const myIcon = L.icon({
   PopupAnchor: [-20, -20],
 });
 
-function has(items, product) {
-  let hasItem = false;
-  items.forEach((item) => {
-    if (item === product) {
-      hasItem = true;
-    }
-  });
-  return hasItem;
-}
+const myIcon2 = L.icon({
+  iconUrl: MarkerCarotte,
+  iconSize: [100, 100],
+  iconAnchor: [20, 37],
+  PopupAnchor: [-20, -20],
+});
 
 
 class MyMap extends React.Component {
@@ -72,8 +68,6 @@ class MyMap extends React.Component {
 
     this.state = {
       items: [],
-      openFiltres: false,
-      value: Products.products[0].items,
 
       location: {
         // par défaut, position de Lausanne
@@ -87,7 +81,6 @@ class MyMap extends React.Component {
   }
 
   componentDidMount() {
-
     this.setState({
       location: {
         // par défaut, position de Lausanne
@@ -121,7 +114,6 @@ class MyMap extends React.Component {
   };
 
   addItem = newItem => () => {
-    console.log(this.state.items);
     const { items } = this.state;
     this.setState({
       items: [...items, newItem]
@@ -153,99 +145,14 @@ class MyMap extends React.Component {
   render() {
     const { location, zoom, userHasALocation } = this.state;
     const { latitude, longitude } = location;
-    const { classes } = this.props;
-    const { fullScreen } = this.props;
+    const { classes, data } = this.props;
+
 
     return (
 
       <div className={classes.map}>
-        <div className={classes.filterBar}>
-          <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
-            {'Produits'}
-          </Button>
 
-          <Button variant="outlined" size="small" className={classes.margin} >
-            Filtres
-          </Button>
-          <TextField
-            id="outlined-with-placeholder"
-            label="With placeholder"
-            placeholder="Placeholder"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
-          <Dialog
-            fullScreen={fullScreen}
-            fullWidth
-            maxWidth={false}
-            open={this.state.openFiltres}
-            onClose={this.handleClose}
-            aria-labelledby="responsive-dialog-title"
-          >
-            <DialogTitle id="responsive-dialog-title">{"Séléctionnez les produits que vous cherchez"}</DialogTitle>
-            <DialogContent>
-              <div className={classes.root}>
-                <Grid container spacing={24}>
-                  {Products.products.map(product => (
-                    <Grid item xs={4} sm={2} key={product.name}>
-                      <div className={classes.paper}>
-                        <Card className={classes.media} style={{ margin: '0 auto' }}>
-                          <CardActionArea onClick={() => { this.setState({ value: product.items }); }}>
-                            {this.state.value === product.items
-                              ? (
-                                <CardMedia className={classes.media2} image={MarkerCarotte} title={product.name} />
-                              ) : (
-                                <CardMedia className={classes.media} image={MarkerCarotte} title={product.name} />
-                              )}
-                          </CardActionArea>
-                        </Card>
-
-                        <div className={classes.paper}>
-                          <Typography className={classes.typo} variant="body1" gutterBottom>
-                            {product.name}
-                          </Typography>
-                        </div>
-                      </div>
-                    </Grid>
-                  ))}
-                  <Grid item xs={12}>
-                    <Divider variant="middle" />
-                  </Grid>
-                  {this.state.value !== undefined && this.state.value.map(product => (
-                    <Grid item xs={4} sm={2}>
-
-                      <Card className={classes.media} style={{ margin: '0 auto' }}>
-
-                        {has(this.state.items, product) ? (
-                          <CardActionArea onClick={this.removeItem(product)}>
-
-                            <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
-                          </CardActionArea>
-
-                        ) : (
-                            <CardActionArea onClick={this.addItem(product)}>
-                              <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
-                            </CardActionArea>
-                          )
-                        }
-
-                      </Card>
-                      <div className={classes.paper}>
-                        <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
-                      </div>
-                    </Grid>
-                  ))}
-                </Grid>
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={this.handleClose} color="primary" autoFocus>
-                {'Voir les producteurs'}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
+        <FilterProducts />
         <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
 
           <TileLayer
@@ -261,6 +168,24 @@ class MyMap extends React.Component {
               <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
             )
           }
+
+          {
+            data.producers.map(tile => (
+              tile.salesPoint !== null && (
+                this.props.iconDrag === tile.id ? (
+                  <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon2}>
+                    <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
+                      <ListItemProducer producer={tile} />
+                    </Popup>
+                  </Marker>
+                ) : (
+                    <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon}>
+                      <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
+                        <ListItemProducer producer={tile} />
+                      </Popup>
+                    </Marker>
+                  )
+              )))}
         </Map>
       </div>
     );

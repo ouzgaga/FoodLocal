@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import L from 'leaflet';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -60,20 +61,34 @@ const styles = theme => ({
 });
 
 class MainMap extends React.Component {
-  state = {
-    mobileOpen: false,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false,
+      iconDrag: '',
+    };
+  }
+
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
+
+  handleHover = hover => () => {
+    this.setState({ iconDrag: hover });
+  }
+
+  resetHover = () => {
+    this.setState({ iconDrag: '' });
+  }
 
   render() {
     const { classes, theme, data } = this.props;
 
     const drawer = (
       <div>
-        <Search data={data} />
+        <Search data={data} handleHover={this.handleHover} resetHover={this.resetHover} />
       </div>
     );
 
@@ -90,7 +105,7 @@ class MainMap extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap data={data} />
+          <MyMap data={data} iconDrag={this.state.iconDrag} />
 
         </main>
 

@@ -13,14 +13,18 @@ import MainMap from '../components/MapPage/MainMap';
 const query = gql`
 {
   producers {
+    id
     salesPoint {
-      name 
+      name
       address {
         city
+        latitude
+        longitude
       }
     }
     products {
       productType {
+        id
         name
         image
       }

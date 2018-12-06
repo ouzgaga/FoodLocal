@@ -15,9 +15,9 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import {
   Map, TileLayer, Marker,
 } from 'react-leaflet';
-import MarkerCarotte from '../../../img/MarkerCarotte.png';
+import MarkerCarotte from '../../img/MarkerCarotte.png';
 
-import { IncriptionProducerContext } from '../InscriptionProducer';
+import { IncriptionProducerContext } from './InscriptionProducer';
 
 const myIcon = L.icon({
   iconUrl: MarkerCarotte,

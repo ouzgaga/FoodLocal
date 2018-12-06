@@ -12,10 +12,32 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 
 
-const Products = require('../../Datas/Products.json'); // TODO
+const query = gql`
+{
+  productTypeCategories {
+    id
+    name
+    image
+  }
+}
+`;
+
+const query2 = gql`
+  query Dog($productTypeCategoryId: ID!) {
+    productTypesOfCategory(productTypeCategoryId : $productTypeCategoryId) {
+      id
+      name
+      image
+    }
+  }
+`;
 
 const styles = {
   map: {
@@ -42,12 +64,7 @@ const styles = {
     backgroundColor: '#66CCCC',
   },
 };
-const myIcon = L.icon({
-  iconUrl: MarkerCarotte,
-  iconSize: [40, 40],
-  iconAnchor: [20, 37],
-  PopupAnchor: [-20, -20],
-});
+
 
 function has(items, product) {
   let hasItem = false;
@@ -66,19 +83,19 @@ class FilerProducts extends React.Component {
 
     this.state = {
       items: [],
-      openFiltresProducts: false,
-      value: Products.products[0].items,
+      openFiltres: false,
+      value: null,
     };
   }
 
   // ouvre le pop-up pour les filtres
   handleClickOpenFilters = () => {
-    this.setState({ openFiltresProducts: true }); // TODO :mettre ca au parent
+    this.setState({ openFiltres: true });
   };
 
   // ferme le pop-up des filtres
   handleClose = () => {
-    this.setState({ openFiltresProducts: false });
+    this.setState({ openFiltres: false });
   };
 
   addItem = newItem => () => {
@@ -98,82 +115,130 @@ class FilerProducts extends React.Component {
     });
   }
 
+  onclick = id => (event) => {
+    event.preventDefault();
+    this.setState({ value: id });
+  }
+
   render() {
     const { classes } = this.props;
     const { fullScreen } = this.props;
-
+    const { value, items } = this.state;
     return (
 
-      <Dialog
-        fullScreen={fullScreen}
-        fullWidth
-        maxWidth={false}
-        open={this.state.openFiltres}
-        onClose={this.handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">{"Séléctionnez les produits que vous cherchez"}</DialogTitle>
-        <DialogContent>
-          <div className={classes.root}>
-            <Grid container spacing={24}>
-              {Products.products.map(product => (
-                <Grid item xs={4} sm={2} key={product.name}>
-                  <div className={classes.paper}>
-                    <Card className={classes.media} style={{ margin: '0 auto' }}>
-                      <CardActionArea onClick={() => { this.setState({ value: product.items }); }}>
-                        {this.state.value === product.items
-                          ? (
-                            <CardMedia className={classes.media2} image={MarkerCarotte} title={product.name} />
-                          ) : (
-                            <CardMedia className={classes.media} image={MarkerCarotte} title={product.name} />
-                          )}
-                      </CardActionArea>
-                    </Card>
+      <div className={classes.filterBar}>
+        <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
+          {'Produits'}
+        </Button>
 
-                    <div className={classes.paper}>
-                      <Typography className={classes.typo} variant="body1" gutterBottom>
-                        {product.name}
-                      </Typography>
-                    </div>
-                  </div>
+        <Button variant="outlined" size="small" className={classes.margin} >
+          {'Filtres'}
+        </Button>
+        <TextField
+          id="outlined-with-placeholder"
+          label="With placeholder"
+          placeholder="Placeholder"
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <Dialog
+          fullScreen={fullScreen}
+          fullWidth
+          maxWidth={false}
+          open={this.state.openFiltres}
+          onClose={this.handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">Séléctionnez les produits que vous cherchez</DialogTitle>
+          <DialogContent>
+            <div className={classes.root}>
+              <Grid container spacing={24}>
+                <Query query={query}>
+                  {({ data, loading, error }) => {
+                    if (error) return 'Oups an error occured. Please check the console';
+                    if (loading) return 'Loading...';
+                    const { productTypeCategories } = data;
+
+                    return (
+                      productTypeCategories.map(product => (
+                        <Grid item xs={4} sm={2} key={product.id}>
+                          <div className={classes.paper}>
+                            <Card className={classes.media} style={{ margin: '0 auto' }}>
+                              <CardActionArea onClick={this.onclick(product.id)}>
+                                {value === product.id
+                                  ? (
+                                    <CardMedia className={classes.media2} image={product.image} title={product.name} />
+                                  ) : (
+                                    <CardMedia className={classes.media} image={product.image} title={product.name} />
+                                  )}
+                              </CardActionArea>
+                            </Card>
+
+                            <div className={classes.paper}>
+                              <Typography align="center" className={classes.typo} variant="body1" gutterBottom>
+                                {product.name}
+                              </Typography>
+                            </div>
+                          </div>
+                        </Grid>
+                      ))
+                    );
+                  }}
+                </Query>
+
+                <Grid item xs={12}>
+                  <Divider variant="middle" />
                 </Grid>
-              ))}
-              <Grid item xs={12}>
-                <Divider variant="middle" />
+                {value !== null && (
+
+                  <Query query={query2} variables={{ productTypeCategoryId: value }}>
+                    {({ data, loading, error }) => {
+                      if (error) return 'Oups an error occured.2 Please check the console';
+                      if (loading) return 'Loading...';
+                      const { productTypesOfCategory } = data;
+                      return (
+                        productTypesOfCategory.map(product => (
+                          <Grid item xs={4} sm={2}>
+
+                            <Card className={classes.media} style={{ margin: '0 auto' }}>
+
+                              {has(items, product.id) ? (
+                                <CardActionArea onClick={this.removeItem(product.id)}>
+
+                                  <CardMedia className={classes.media2} image={product.image} title={product.name} />
+                                </CardActionArea>
+
+                              ) : (
+                                  <CardActionArea onClick={this.addItem(product.id)}>
+                                    <CardMedia className={classes.media} image={product.image} title={product.name} />
+                                  </CardActionArea>
+                                )
+                              }
+
+                            </Card>
+                            <div className={classes.paper}>
+                              <Typography className={classes.typo} variant="body1" gutterBottom>
+                                {product.name}
+                              </Typography>
+                            </div>
+                          </Grid>
+                        ))
+                      );
+                    }}
+                  </Query>
+
+                )}
               </Grid>
-              {this.state.value !== undefined && this.state.value.map(product => (
-                <Grid item xs={4} sm={2}>
-
-                  <Card className={classes.media} style={{ margin: '0 auto' }}>
-
-                    {has(this.state.items, product) ? (
-                      <CardActionArea onClick={this.removeItem(product)}>
-
-                        <CardMedia className={classes.media2} image={MarkerCarotte} title={product} />
-                      </CardActionArea>
-
-                    ) : (
-                        <CardActionArea onClick={this.addItem(product)}>
-                          <CardMedia className={classes.media} image={MarkerCarotte} title={product} />
-                        </CardActionArea>
-                      )
-                    }
-
-                  </Card>
-                  <div className={classes.paper}>
-                    <Typography className={classes.typo} variant="body1" gutterBottom> {product} </Typography>
-                  </div>
-                </Grid>
-              ))}
-            </Grid>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={this.handleClose} color="primary" autoFocus>
-            {'Voir les producteurs'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={this.handleClose} color="primary" autoFocus>
+              {'Voir les producteurs'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
 }
