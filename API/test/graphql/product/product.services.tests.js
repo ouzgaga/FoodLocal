@@ -1,5 +1,6 @@
 require('../../chai-config');
 
+const mongoose = require('mongoose');
 const productService = require('../../../src/graphql/services/products.services');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
@@ -44,53 +45,53 @@ describe('tests product services', () => {
     productTypePomme = {
       name: productTypePomme.name,
       image: productTypePomme.image,
-      category: productTypeCategory.id,
-      producers: []
+      categoryId: productTypeCategory.id,
+      producersIds: []
     };
     const addedProductTypePomme = await ProductTypeModel.create(productTypePomme);
     productTypePomme = {
       id: addedProductTypePomme.id,
       name: addedProductTypePomme.name,
-      image: productTypePomme.image,
-      category: productTypeCategory.id,
-      producers: addedProductTypePomme.producers
+      image: addedProductTypePomme.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePomme.producersIds
     };
 
     productTypePoire = {
       name: productTypePoire.name,
       image: productTypePoire.image,
-      category: productTypeCategory.id,
-      producers: []
+      categoryId: productTypeCategory.id,
+      producersIds: []
     };
     const addedProductTypePoire = await ProductTypeModel.create(productTypePoire);
     productTypePoire = {
       id: addedProductTypePoire.id,
       name: addedProductTypePoire.name,
-      image: productTypePomme.image,
-      category: { id: productTypeCategory.id },
-      producers: addedProductTypePoire.producers
+      image: addedProductTypePoire.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePoire.producersIds
     };
     // on ajoute 2 produits
     maPomme = {
-      description: 'Viendez acheter ma belle pomme!',
-      productType: productTypePomme.id
+      description: maPomme.description,
+      productTypeId: productTypePomme.id
     };
     const addedPomme = await ProductModel.create(maPomme);
     maPomme = {
       id: addedPomme.id,
       description: addedPomme.description,
-      productType: { id: addedPomme.productType.id }
+      productTypeId: addedPomme.productTypeId
     };
 
     maPoire = {
-      description: 'Viendez acheter ma belle poire!',
-      productType: productTypePoire.id
+      description: maPoire.description,
+      productTypeId: productTypePoire.id
     };
     const addedPoire = await ProductModel.create(maPoire);
     maPoire = {
       id: addedPoire.id,
       description: addedPoire.description,
-      productType: { id: addedPoire.productType.id }
+      productTypeId: addedPoire.productTypeId
     };
   });
 
@@ -104,36 +105,32 @@ describe('tests product services', () => {
       product.should.be.not.null;
       product.id.should.be.not.null;
       product.description.should.be.not.null;
-      product.productType.should.be.not.null;
-      product.productType.should.be.an('object');
-      product.productType.id.should.be.not.null;
+      product.productTypeId.should.be.not.null;
+      product.productTypeId.should.be.an('object');
+      product.productTypeId.id.should.be.not.null;
     });
   });
 
   describe('tests getProductById', () => {
     it('should get one product', async() => {
-      let productGotInDB = await productService.getProductById(maPomme);
+      let productGotInDB = await productService.getProductById(maPomme.id);
 
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;
       productGotInDB.description.should.be.not.null;
       productGotInDB.description.should.be.equal(maPomme.description);
-      productGotInDB.productType.should.be.not.null;
-      productGotInDB.productType.should.be.an('object');
-      productGotInDB.productType.id.should.be.not.null;
-      productGotInDB.productType.id.should.be.eql(maPomme.productType.id);
+      productGotInDB.productTypeId.should.be.not.null;
+      productGotInDB.productTypeId.should.be.eql(maPomme.productTypeId);
 
-      productGotInDB = await productService.getProductById(maPoire);
+      productGotInDB = await productService.getProductById(maPoire.id);
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;
       productGotInDB.description.should.be.not.null;
       productGotInDB.description.should.be.equal(maPoire.description);
-      productGotInDB.productType.should.be.not.null;
-      productGotInDB.productType.should.be.an('object');
-      productGotInDB.productType.id.should.be.not.null;
-      productGotInDB.productType.id.should.be.eql(maPoire.productType.id);
+      productGotInDB.productTypeId.should.be.not.null;
+      productGotInDB.productTypeId.should.be.eql(maPoire.productTypeId);
     });
 
     it('should fail getting one product because no id received', async() => {
@@ -150,10 +147,8 @@ describe('tests product services', () => {
     addedProduct.id.should.be.not.null;
     addedProduct.description.should.be.not.null;
     addedProduct.description.should.be.equal(maPomme.description);
-    addedProduct.productType.should.be.an('object');
-    addedProduct.productType.should.be.not.null;
-    addedProduct.productType.id.should.be.not.null;
-    addedProduct.productType.id.should.be.equal(maPomme.productType.id);
+    addedProduct.productTypeId.should.be.not.null;
+    addedProduct.productTypeId.should.be.eql(new mongoose.Types.ObjectId(maPomme.productTypeId));
   });
 
   describe('tests updateProduct', () => {
@@ -162,7 +157,7 @@ describe('tests product services', () => {
       addedProduct = {
         id: addedProduct.id,
         description: maPoire.description,
-        productType: { id: productTypePoire.id }
+        productTypeId: productTypePoire.id
       };
       const updatedProduct = await productService.updateProduct(addedProduct);
       updatedProduct.should.be.an('object');
@@ -170,10 +165,9 @@ describe('tests product services', () => {
       updatedProduct.id.should.be.not.null;
       updatedProduct.description.should.be.not.null;
       updatedProduct.description.should.be.equal(maPoire.description);
-      updatedProduct.productType.should.be.an('object');
-      updatedProduct.productType.should.be.not.null;
-      updatedProduct.productType.id.should.be.not.null;
-      updatedProduct.productType.id.should.be.eql(maPoire.productType.id);
+      updatedProduct.productTypeId.should.be.an('object');
+      updatedProduct.productTypeId.should.be.not.null;
+      updatedProduct.productTypeId.should.be.eql(maPoire.productTypeId);
     });
 
     it('should fail updating a product because no id received', async() => {
@@ -215,10 +209,10 @@ describe('tests product services', () => {
     addedProduct.id.should.be.not.null;
     addedProduct.description.should.be.not.null;
     addedProduct.description.should.be.equal(maPomme.description);
-    addedProduct.productType.should.be.an('object');
-    addedProduct.productType.should.be.not.null;
-    addedProduct.productType.id.should.be.not.null;
-    addedProduct.productType.id.should.be.eql(maPomme.productType.id);
+    addedProduct.productTypeId.should.be.an('object');
+    addedProduct.productTypeId.should.be.not.null;
+    addedProduct.productTypeId.id.should.be.not.null;
+    // addedProduct.productTypeId.id.should.be.eql(maPomme.productType.id);
 
     let deleteProduct = await productService.deleteProduct(addedProduct);
 

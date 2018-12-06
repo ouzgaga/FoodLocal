@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
-const ProductTypeCategoryServices = require('./productTypeCategory.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -34,8 +33,8 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
 function addProductType(productType) {
   const newProductType = {
     ...productType,
-    category: productType.category.id,
-    producers: []
+    categoryId: productType.categoryId,
+    producersIds: []
   };
   return new ProductTypeModel(newProductType).save();
 }
@@ -45,28 +44,20 @@ function addProductType(productType) {
  *
  * @param {Integer} id, L'id du type de produit à récupérer.
  */
-function getProductTypeById({ id }) {
-  let objectId = id;
+function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductTypeModel.findById(id);
   }
-
-  return ProductTypeModel.findById(objectId);
 }
 
 function getProductTypeByCategory(productTypeCategoryId) {
-  let id = productTypeCategoryId;
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    // FIXME: je comprends pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    id = new mongoose.Types.ObjectId(productTypeCategoryId);
+    return ProductTypeModel.find({ categoryId: productTypeCategoryId });
   }
-
-  return ProductTypeModel.find({ category: id });
 }
 
 /**
@@ -85,19 +76,19 @@ async function updateProductType(productType) {
     id: productType.id,
     name: productType.name,
     image: productType.image,
-    category: productType.category.id,
-    producers: productType.producers.map(p => p.id)
+    categoryId: productType.categoryId,
+    producersIds: productType.producersIds != null ? productType.producersIds.map(p => p.id) : []
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
-async function addProducerProducingThisProductType(idProductType, { id: idProducer }) {
+async function addProducerProducingThisProductType(idProductType, idProducer) {
   const productType = await getProductTypeById(idProductType);
-  if (productType.producers !== null) {
-    productType.producers.push(idProducer);
+  if (productType.producersIds != null) {
+    productType.producersIds.push(idProducer);
   } else {
-    productType.producer = [idProducer];
+    productType.producerIds = [idProducer];
   }
 
   return updateProductType(productType);
@@ -106,16 +97,16 @@ async function addProducerProducingThisProductType(idProductType, { id: idProduc
 /**
  * Supprime le type de produit correspondant à l'id reçu. Ne supprime pas sa catégorie.
  *
- * @param productType, Les informations du type de produit à supprimer.
+ * @param id, Les informations du type de produit à supprimer.
  */
-function deleteProductType(productType) {
-  if (!mongoose.Types.ObjectId.isValid(productType.id)) {
+function deleteProductType(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   }
 
   // FIXME: c'est quoi la différence entre findByIdAndDelete() et findByIdAndRemove() ?
   // FIXME: On retourne quoi après la suppression?
-  return ProductTypeModel.findByIdAndRemove(productType.id);
+  return ProductTypeModel.findByIdAndRemove(id);
 }
 
 module.exports = {

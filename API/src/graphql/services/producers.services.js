@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
-const UsersModel = require('../models/user.modelgql');
-const SalesPointModel = require('../models/salespoints.modelgql');
 const productsServices = require('../services/products.services');
-const usersServices = require('../services/users.services');
 const salesPointsServices = require('../services/salespoints.services');
-
+const UtilsServices = require('../services/utils.services');
+const TokenValidationEmail = require('./tokenValidationEmail.services');
+const productTypeServices = require('./productType.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -33,19 +32,19 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du producteur à récupérer.
+ * @param {String} id, L'id du producteur à récupérer.
  * @returns {*}
  */
-function getProducerById({ id }) {
-  let objectId = id;
+function getProducerById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProducersModel.findById(id);
   }
+}
 
-  return ProducersModel.findById(objectId);
+function getAllProducerWaitingForValidation() {
+  return ProducersModel.find({ isValidated: false });
 }
 
 /**
@@ -57,13 +56,6 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return ProducersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
-const isEmailUnused = async(emailUser) => {
-  const existingUser = await UsersModel.findOne({ email: emailUser });
-  const existingProducer = await ProducersModel.findOne({ email: emailUser });
-
-  return existingUser === null && existingProducer === null;
-};
-
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -72,27 +64,34 @@ const isEmailUnused = async(emailUser) => {
  */
 async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await isEmailUnused(producer.email)) {
+  if (await UtilsServices.isEmailUnused(producer.email)) {
     let salespoint;
-    if (producer.salesPoint !== undefined) {
+    if (producer.salesPoint != null) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
     }
 
     let productsId;
-    if (producer.products !== undefined && producer.products.length !== 0) {
+    if (producer.products != null && producer.products.length !== 0) {
       productsId = await productsServices.addAllProductsInArray(producer.products);
     }
     const producerToAdd = {
       ...producer,
-      salesPoint: salespoint !== undefined ? salespoint.id : null,
+      salesPointId: salespoint != null ? salespoint.id : null,
       subscriptions: [],
       emailValidated: false,
       subscribedUsers: [],
       isValidated: false,
-      products: productsId !== undefined ? productsId : []
+      productsIds: productsId != null ? productsId : []
     };
 
-    return new ProducersModel(producerToAdd).save();
+    const producerAdded = await new ProducersModel(producerToAdd).save();
+
+    if (producer.products != null && producer.products.length !== 0) {
+      producer.products.map(p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
+    }
+
+    TokenValidationEmail.addTokenValidationEmail(producerAdded);
+    return producerAdded;
   } else {
     throw new Error('This email is already used.');
   }
@@ -121,18 +120,32 @@ async function updateProducer(producer) {
     email: producer.email,
     password: producer.password,
     image: producer.image,
-    subscriptions: producer.subscriptions !== undefined ? producer.subscriptions.map(s => s.id) : [],
+    subscriptions: producer.subscriptions != null ? producer.subscriptions.map(s => s.id) : [],
     emailValidated: producerValidations.emailValidated,
-    subscribedUsers: producer.subscribedUsers !== undefined ? producer.subscribedUsers.map(u => u.id) : [],
+    subscribedUsersIds: producer.subscribedUsers != null ? producer.subscribedUsers.map(u => u.id) : [],
     phoneNumber: producer.phoneNumber,
     description: producer.description,
     website: producer.website,
-    salesPoint: producer.salesPoint.id,
+    salesPointId: producer.salesPoint,
     isValidated: producerValidations.isValidated,
-    products: producer.products !== undefined ? producer.products.map(p => p.id) : []
+    productsIds: producer.products != null ? producer.products.map(p => p.id) : []
   };
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+}
+
+async function validateAProducer(producerId, validationState) {
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received producer.id is invalid!');
+  }
+
+  const producerToUpdate = await getProducerById(producerId);
+  if (producerToUpdate != null) {
+    producerToUpdate.isValidated = validationState;
+    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -140,7 +153,7 @@ async function updateProducer(producer) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer({ id }) {
+function deleteProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }
@@ -150,9 +163,11 @@ function deleteProducer({ id }) {
 
 module.exports = {
   getProducers,
-  addProducer,
   getProducerById,
+  getAllProducerWaitingForValidation,
+  getAllProducersInReceivedIdList,
+  addProducer,
   updateProducer,
-  deleteProducer,
-  getAllProducersInReceivedIdList
+  validateAProducer,
+  deleteProducer
 };

@@ -1,12 +1,12 @@
 type Query {
 	users: [User!]!
-	user(user: UserInputGetAndDelete!) : User
+	user(userId: ID!) : User
 }
 
 type Mutation {
 	addUser(user: UserInputAdd!): User!
 	updateUser(user: UserInputUpdate!): User
-	deleteUser(user: UserInputGetAndDelete!): User
+	deleteUser(userId: ID!): User
 }
 
 type User implements Person {
@@ -39,11 +39,5 @@ input UserInputUpdate {
 	password: String!
 	image: String # faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!]  # pas obligatoire si vide
-	emailValidated: Boolean!
+	# emailValidated: Boolean!
 }
-
-input UserInputGetAndDelete {
-	id: ID!
-}
-
-
