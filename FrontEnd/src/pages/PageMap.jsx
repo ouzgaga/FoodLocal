@@ -57,17 +57,27 @@ class PageMap extends React.Component {
   filter(data) {
     const tab = [];
 
-    if (this.state.items.length === 0) {
+    const lengthTab = this.state.items.length;
+
+    if (lengthTab === 0) {
       return data;
     }
 
-    data.producers.forEach(producer => producer.products.forEach((product) => {
-      if (this.state.items.includes(product.productType.id)) {
-        if (!tab.includes(producer)) {
-          tab.push(producer);
+
+    data.producers.forEach((producer) => {
+      let i = 0;
+      producer.products.forEach((product) => {
+        if (this.state.items.includes(product.productType.id)) {
+          i++;
         }
-      }
-    }));
+        if (i === lengthTab) {
+          if (!tab.includes(producer)) {
+            tab.push(producer);
+          }
+        }
+
+      });
+    });
 
     const tab2 = { producers: tab };
 
