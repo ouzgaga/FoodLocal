@@ -12,7 +12,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4040/graphql',
+  uri: 'https://api.foodlocal.ch/graphql',
 });
 
 const client = new ApolloClient({
