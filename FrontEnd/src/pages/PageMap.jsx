@@ -54,6 +54,26 @@ class PageMap extends React.Component {
     });
   }
 
+  filter(data) {
+    const tab = [];
+
+    if (this.state.items.length === 0) {
+      return data;
+    }
+
+    data.producers.forEach(producer => producer.products.forEach((product) => {
+      if (this.state.items.includes(product.productType.id)) {
+        if (!tab.includes(producer)) {
+          tab.push(producer);
+        }
+      }
+    }));
+
+    const tab2 = { producers: tab };
+
+    return tab2;
+  }
+
   render() {
     const { items } = this.state;
 
@@ -62,8 +82,11 @@ class PageMap extends React.Component {
         {({ data, loading, error }) => {
           if (error) return 'Oups an error occured. Please check the console';
           if (loading) return 'Loading...';
+
+          const tab = this.filter(data);
+
           return (
-            <MainMap data={data} items={items} addItem={this.addItem} removeItem={this.removeItem} />
+            <MainMap data={tab} items={items} addItem={this.addItem} removeItem={this.removeItem} />
           );
         }}
       </Query>
