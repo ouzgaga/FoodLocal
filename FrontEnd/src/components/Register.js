@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -19,46 +19,46 @@ import UserContext from './UserContext';
 
 const styles = theme => ({
     layout: {
-      width: 'auto',
-      display: 'block', // Fix IE11 issue.
-      //marginLeft: theme.spacing.unit * 3,
-      //marginRight: theme.spacing.unit * 3,
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
+        width: 'auto',
+        display: 'block', // Fix IE11 issue.
+        //marginLeft: theme.spacing.unit * 3,
+        //marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
     },
     paper: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     },
     avatar: {
-      margin: theme.spacing.unit,
-      backgroundColor: theme.palette.secondary.main,
+        margin: theme.spacing.unit,
+        backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: '100%', // Fix IE11 issue.
-      marginTop: theme.spacing.unit,
+        width: '100%', // Fix IE11 issue.
+        marginTop: theme.spacing.unit,
     },
     submit: {
-      marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 3,
     },
-    LinkButton:{
+    LinkButton: {
         textDecoration: 'none',
         color: 'inherit'
-      },
-  });
+    },
+});
 
 class MyLogin extends React.Component {
 
-    
-  state = {
 
-    a: 0,
-  };
+    state = {
+
+        a: 0,
+    };
 
 
 
@@ -68,81 +68,81 @@ class MyLogin extends React.Component {
     }
 
     handleNewAccount = () => {
-        
+
         this.props.onClose();
     }
 
-    render(){
+    render() {
 
         //this.setState(this.state.a + 1);
 
- 
+
 
         console.log('MyLogin:' + this.state.a);
 
-        const {classes, onClose, ...other } = this.props;
+        const { classes, onClose, ...other } = this.props;
         return (
             <React.Fragment>
                 <CssBaseline />
                 <main className={classes.layout}>
                     <Paper className={classes.paper}>
                         <Avatar className={classes.avatar}>
-                            <LockIcon cplor= "secondary"/>
+                            <LockIcon cplor="secondary" />
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Sign in
                         </Typography>
                         <form className={classes.form}>
-                        <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="email">Email Address</InputLabel>
-                        <Input id="email" name="email" autoComplete="email" autoFocus />
-                        </FormControl>
-                        <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="password">Password</InputLabel>
-                        <Input
-                            name="password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        </FormControl>
-                        <FormControlLabel
-                        control={
-                            <Checkbox
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="email">Email Address</InputLabel>
+                                <Input id="email" name="email" autoComplete="email" autoFocus />
+                            </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="password">Password</InputLabel>
+                                <Input
+                                    name="password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                />
+                            </FormControl>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
 
-                            color="primary" 
-                            value="remember"
+                                        color="primary"
+                                        value="remember"
+                                    />
+                                }
+                                label="remember"
                             />
-                        }
-                        label="remember"
-                        />
-                        
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick = {this.handleLogin}
-                        >
-                            Sign in
+
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                onClick={this.handleLogin}
+                            >
+                                Sign in
                         </Button>
 
-                    
-                    
-                        <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick = {this.handleNewAccount}  >
-                        <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1">
-                            Creat new account
+
+
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                onClick={this.handleNewAccount}  >
+                                <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1">
+                                    Creat new account
                         </Link>
-                        </Button> 
-                    
-                    
-                    </form>
+                            </Button>
+
+
+                        </form>
                     </Paper>
                 </main>
             </React.Fragment>
@@ -156,6 +156,6 @@ MyLogin.propTypes = {
     classes: PropTypes.object.isRequired,
     onClose: PropTypes.func,
 
-  };
+};
 
 export default withStyles(styles)(MyLogin);

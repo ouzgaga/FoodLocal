@@ -1,5 +1,4 @@
 import React from 'react';
-import { Divider } from '@material-ui/core';
 
 import red from '@material-ui/core/colors/red';
 import List from '@material-ui/core/List';

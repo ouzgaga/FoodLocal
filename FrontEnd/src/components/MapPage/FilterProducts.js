@@ -12,11 +12,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-
-import MarkerCarotte from '../../img/MarkerCarotte.png';
 
 
 const query = gql`
@@ -54,6 +51,11 @@ const styles = {
     width: '100%',
     borderBottom: '1px solid grey',
   },
+  filters: {
+    paddingTop:8,
+    paddingLeft:10,
+
+  },
   media: {
     height: 80,
     width: 80,
@@ -82,7 +84,6 @@ class FilerProducts extends React.Component {
     super(props);
 
     this.state = {
-      items: [],
       openFiltres: false,
       value: null,
     };
@@ -98,23 +99,6 @@ class FilerProducts extends React.Component {
     this.setState({ openFiltres: false });
   };
 
-  addItem = newItem => () => {
-    const { items } = this.state;
-    this.setState({
-      items: [...items, newItem]
-    });
-  }
-
-  // supprime un produit du tableau des produits
-  removeItem = itemToDelete => () => {
-    const { items } = this.state;
-    const newItems = items.filter(item => item !== itemToDelete);
-
-    this.setState({
-      items: [...newItems]
-    });
-  }
-
   onclick = id => (event) => {
     event.preventDefault();
     this.setState({ value: id });
@@ -123,25 +107,26 @@ class FilerProducts extends React.Component {
   render() {
     const { classes } = this.props;
     const { fullScreen } = this.props;
-    const { value, items } = this.state;
+    const { value } = this.state;
+    const { items, addItem, removeItem } = this.props;
     return (
 
       <div className={classes.filterBar}>
-        <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
-          {'Produits'}
-        </Button>
 
-        <Button variant="outlined" size="small" className={classes.margin} >
-          {'Filtres'}
-        </Button>
-        <TextField
-          id="outlined-with-placeholder"
-          label="With placeholder"
-          placeholder="Placeholder"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-        />
+        <div className={classes.filters}>
+          {items.length === 0 ? (
+            <Button onClick={this.handleClickOpenFilters} variant="outlined" size="small" className={classes.margin}>
+              {'Produits'}
+            </Button>
+          ) : (
+              <Button onClick={this.handleClickOpenFilters} variant="contained" size="small" className={classes.margin} color="primary">
+                {`Produits : ${items.length}`}
+              </Button>
+            )}
+</div>
+        
+        
+        
         <Dialog
           fullScreen={fullScreen}
           fullWidth
@@ -204,13 +189,13 @@ class FilerProducts extends React.Component {
                             <Card className={classes.media} style={{ margin: '0 auto' }}>
 
                               {has(items, product.id) ? (
-                                <CardActionArea onClick={this.removeItem(product.id)}>
+                                <CardActionArea onClick={removeItem(product.id)}>
 
                                   <CardMedia className={classes.media2} image={product.image} title={product.name} />
                                 </CardActionArea>
 
                               ) : (
-                                  <CardActionArea onClick={this.addItem(product.id)}>
+                                  <CardActionArea onClick={addItem(product.id)}>
                                     <CardMedia className={classes.media} image={product.image} title={product.name} />
                                   </CardActionArea>
                                 )

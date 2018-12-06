@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import TablePaginationActionsWrapped from './TablePaginationActions';
-import TableIssueItem from './TableProducerItem';
+import TableProducerItem from './TableProducerItem';
 
 const styles = theme => ({
   root: {
@@ -47,7 +47,7 @@ class TableIssues extends React.Component {
 
   render() {
     const {
-      classes, datas, username, repo, state,
+      classes, datas
     } = this.props;
     const {
       rowsPerPage, page,
@@ -61,22 +61,15 @@ class TableIssues extends React.Component {
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <TableBody>
-              {datas.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                <TableRow key={row.cursor} style={{ padding: 0 }}>
-                  <TableCell style={{ padding: 0 }}>
+              {datas.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row =>
+                row.salesPoint !== null && (
+                  <TableRow key={row.cursor} style={{ padding: 0 }}>
+                    <TableCell style={{ padding: 0 }}>
+                      <TableProducerItem id={row.id} name={row.salesPoint.name} />
 
-                    <TableIssueItem
-                      title={row.node.title}
-                      number={row.node.number}
-                      createdAt={row.node.createdAt}
-                      state={state}
-                      login={row.node.author.login}
-                      username={username}
-                      repo={repo}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 48 * emptyRows }}>
                   <TableCell colSpan={6} />
