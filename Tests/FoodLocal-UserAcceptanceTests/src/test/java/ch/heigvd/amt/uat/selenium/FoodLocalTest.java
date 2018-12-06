@@ -16,7 +16,7 @@ import java.nio.file.Path;
  */
 public class FoodLocalTest {
 
-    private String baseUrl = "http://localhost:3000/";
+    private String baseUrl = "https://foodlocal.ch/";
     private WebDriver driver;
 
     @Before
@@ -33,23 +33,37 @@ public class FoodLocalTest {
 
     @Test
     @ProbeTest(tags = "WebUI")
-    public void itShouldNotBePossibleToGoToTheMainPage() {
+    public void itShouldBePossibleToGoToTheMainPage() {
         driver.get(baseUrl);
         AccueilPage accueilPage = new AccueilPage(driver);
     }
 
     @Test
     @ProbeTest(tags = "WebUI")
-    public void itShouldNotBePossibleToGoToTheMapPage() {
+    public void itShouldBePossibleToGoToTheMapPage() {
         driver.get(baseUrl + "map/");
         MapPage mapPage = new MapPage(driver);
     }
 
     @Test
     @ProbeTest(tags = "WebUI")
-    public void itShouldNotBePossibleToGoToTheAboutPage() {
+    public void itShouldBePossibleToGoToTheAboutPage() {
         driver.get(baseUrl + "about/");
         AboutPage aboutPage = new AboutPage(driver);
+    }
+
+    @Test
+    @ProbeTest(tags = "WebUI")
+    public void aUserWhoIsLostWillArriveInAnError404Page() {
+        driver.get(baseUrl + "howDudeImLost/");
+        Error404Page error404Page = new Error404Page(driver);
+    }
+
+    @Test
+    @ProbeTest(tags = "WebUI")
+    public void itShouldNotBePossibleToGoToTheBecomeProducerPage() {
+        driver.get(baseUrl + "becomeProducer/");
+        ConnectionPage connectionPage = new ConnectionPage(driver);
     }
 
     @Test
@@ -100,7 +114,9 @@ public class FoodLocalTest {
         RegisterInformationPage registerInformationPage = tryToRegister("test@test.com", "Bonjour", "Je m'inscris", "1234", "1234");
         RegisterStatusPage registerStatusPage = (RegisterStatusPage) registerInformationPage.submitForm(RegisterStatusPage.class);
     }
-    
+
+
+
     @After
     public void closeBrowser() {
         driver.close();

@@ -122,7 +122,7 @@ class AvailableProductsForm extends Component {
 
                   <Query query={query2} variables={{ productTypeCategoryId: value }}>
                     {({ data, loading, error }) => {
-                      if (error) return 'Oups an error occured.2 Please check the console';
+                      if (error) return 'Oups an error occured. Please check the console';
                       if (loading) return 'Loading...';
                       const { productTypesOfCategory } = data;
                       return (

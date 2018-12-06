@@ -25,6 +25,7 @@ import {
   PageEmailValidation,
   PageError404,
   PageBecomeProducer,
+  PageAdmin,
 } from './pages/Pages';
 
 
@@ -84,6 +85,7 @@ class App extends React.Component {
                   <Route default path="/about" exact component={PageAbout} classes={classes} />
                   <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
                   <Route path="/becomeProducer" exct component={PageBecomeProducer} classes={classes} />
+                  <Route path="/admin" exct component={PageAdmin} classes={classes} />
                   <Route path="/map" exact component={PageMap} classes={classes} />
                   <Route path="/producer/:producerId" component={ProducerVue} />
                   <Route path="/validationEmail/:token" component={PageEmailValidation} />

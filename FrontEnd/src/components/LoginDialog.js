@@ -9,7 +9,7 @@ import MyLogin from './MyLogin';
 class LoginDialog extends React.Component {
 
   render() {
-    const { classes, open, onClose, onClick2 } = this.props;
+    const { open, onClose, onClick2 } = this.props;
     return (
 
       <Dialog
@@ -29,7 +29,6 @@ class LoginDialog extends React.Component {
 }
 
 LoginDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
   onClick2: PropTypes.func,
