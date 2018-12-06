@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import L from 'leaflet';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -70,12 +69,11 @@ class MainMap extends React.Component {
     };
   }
 
-
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  handleHover = hover => () => {
+  handleHover = (hover) => {
     this.setState({ iconDrag: hover });
   }
 
@@ -84,7 +82,9 @@ class MainMap extends React.Component {
   }
 
   render() {
-    const { classes, theme, data } = this.props;
+    const {
+      classes, theme, data, items, addItem, removeItem
+    } = this.props;
 
     const drawer = (
       <div>
@@ -96,7 +96,6 @@ class MainMap extends React.Component {
       <div className={classes.root}>
         <main className={classes.content}>
           <Button
-            variant="fab"
             color="inherit"
             aria-label="Add"
             className={classes.navIconHide}
@@ -105,7 +104,7 @@ class MainMap extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap data={data} iconDrag={this.state.iconDrag} />
+          <MyMap data={data} iconDrag={this.state.iconDrag} items={items} addItem={addItem} removeItem={removeItem} />
 
         </main>
 

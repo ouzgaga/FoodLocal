@@ -22,8 +22,6 @@ import TableProducerItem from '../src/components/admin/TableProducerItem';
 
 
 
-function onChange(event){
-
 function onChange(event) {
 
 }
@@ -159,12 +157,12 @@ storiesOf('BoxWithHeader', module)
     <BoxWithHeader>
       hello word
   </BoxWithHeader>
-)).add('child + header', () => (
-  <BoxWithHeader
-    header="Informations personnels"
-  >
-    <PersonalInformation />
-  </BoxWithHeader>
+  )).add('child + header', () => (
+    <BoxWithHeader
+      header="Informations personnels"
+    >
+      <PersonalInformation />
+    </BoxWithHeader>
   ));
 
 storiesOf('BorderedTextField', module)
@@ -185,7 +183,7 @@ storiesOf('BorderedTextField', module)
 
 storiesOf('BoxLeftRight', module)
   .add('BoxLeftRight', () => (
-    <BoxLeftRight 
+    <BoxLeftRight
       title="hello"
     >
       world
@@ -199,12 +197,12 @@ storiesOf('PersonalInformation', module)
   ));
 
 
-  
-  
 
 
-  storiesOf('TableProducerItem', module)
+
+
+storiesOf('TableProducerItem', module)
 
   .add('producer item', () => (
-      <TableProducerItem id={1234} name="La Ferme Du Bois" />
+    <TableProducerItem id={1234} name="La Ferme Du Bois" />
   ));

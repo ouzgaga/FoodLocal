@@ -9,7 +9,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import { Link } from 'react-router-dom';
 
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -55,6 +54,10 @@ const styles = theme => ({
 
 class MyLogin extends React.Component {
 
+  constructor(props) {
+    super(props);
+    document.title = 'Connexion'; // changement du titre de la page
+  }
 
   handleLogin = () => {
     console.info("OK men")
