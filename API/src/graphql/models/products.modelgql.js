@@ -29,9 +29,14 @@ const ProductTypeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: false
     },
-    category: {
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'productTypeCategory',
+      required: true
+    },
+    producersIds: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'producers',
       required: true
     }
   }
@@ -46,7 +51,7 @@ const ProductSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: false
     },
-    productType: {
+    productTypeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'productType',
       required: true

@@ -1,5 +1,6 @@
 require('../../chai-config');
 
+const mongoose = require('mongoose');
 const productService = require('../../../src/graphql/services/products.services');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
@@ -28,7 +29,7 @@ let maPoire = {
 };
 
 
-describe('tests productType services', () => {
+describe('tests product services', () => {
   beforeEach(async() => {
     // on supprime tout le contenu de la DB
     await ProductModel.deleteMany();
@@ -44,27 +45,54 @@ describe('tests productType services', () => {
     productTypePomme = {
       name: productTypePomme.name,
       image: productTypePomme.image,
-      category: productTypeCategory.id
+      categoryId: productTypeCategory.id,
+      producersIds: []
     };
-    productTypePomme = await ProductTypeModel.create(productTypePomme);
+    const addedProductTypePomme = await ProductTypeModel.create(productTypePomme);
+    productTypePomme = {
+      id: addedProductTypePomme.id,
+      name: addedProductTypePomme.name,
+      image: addedProductTypePomme.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePomme.producersIds
+    };
+
     productTypePoire = {
       name: productTypePoire.name,
       image: productTypePoire.image,
-      category: productTypeCategory.id
+      categoryId: productTypeCategory.id,
+      producersIds: []
     };
-    productTypePoire = await ProductTypeModel.create(productTypePoire);
-
+    const addedProductTypePoire = await ProductTypeModel.create(productTypePoire);
+    productTypePoire = {
+      id: addedProductTypePoire.id,
+      name: addedProductTypePoire.name,
+      image: addedProductTypePoire.image,
+      categoryId: productTypeCategory.id,
+      producersIds: addedProductTypePoire.producersIds
+    };
     // on ajoute 2 produits
     maPomme = {
-      description: 'Viendez acheter ma belle pomme!',
-      productType: productTypePomme.id
+      description: maPomme.description,
+      productTypeId: productTypePomme.id
     };
-    maPomme = await ProductModel.create(maPomme);
+    const addedPomme = await ProductModel.create(maPomme);
+    maPomme = {
+      id: addedPomme.id,
+      description: addedPomme.description,
+      productTypeId: addedPomme.productTypeId
+    };
+
     maPoire = {
-      description: 'Viendez acheter ma belle poire!',
-      productType: productTypePoire.id
+      description: maPoire.description,
+      productTypeId: productTypePoire.id
     };
-    maPoire = await ProductModel.create(maPoire);
+    const addedPoire = await ProductModel.create(maPoire);
+    maPoire = {
+      id: addedPoire.id,
+      description: addedPoire.description,
+      productTypeId: addedPoire.productTypeId
+    };
   });
 
   it('should get all product', async() => {
@@ -77,45 +105,41 @@ describe('tests productType services', () => {
       product.should.be.not.null;
       product.id.should.be.not.null;
       product.description.should.be.not.null;
-      product.productType.should.be.not.null;
-      product.productType.should.be.an('object');
-      product.productType.id.should.be.not.null;
+      product.productTypeId.should.be.not.null;
+      product.productTypeId.should.be.an('object');
+      product.productTypeId.id.should.be.not.null;
     });
   });
 
-  describe('tests getProductTypeById', () => {
-    it('should get one productType', async() => {
-      let productGotInDB = await productService.getProductById(maPomme);
+  describe('tests getProductById', () => {
+    it('should get one product', async() => {
+      let productGotInDB = await productService.getProductById(maPomme.id);
 
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;
       productGotInDB.description.should.be.not.null;
       productGotInDB.description.should.be.equal(maPomme.description);
-      productGotInDB.productType.should.be.not.null;
-      productGotInDB.productType.should.be.an('object');
-      productGotInDB.productType.id.should.be.not.null;
-      productGotInDB.productType.id.should.be.eql(maPomme.productType.id);
+      productGotInDB.productTypeId.should.be.not.null;
+      productGotInDB.productTypeId.should.be.eql(maPomme.productTypeId);
 
-      productGotInDB = await productService.getProductById(maPoire);
+      productGotInDB = await productService.getProductById(maPoire.id);
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;
       productGotInDB.description.should.be.not.null;
       productGotInDB.description.should.be.equal(maPoire.description);
-      productGotInDB.productType.should.be.not.null;
-      productGotInDB.productType.should.be.an('object');
-      productGotInDB.productType.id.should.be.not.null;
-      productGotInDB.productType.id.should.be.eql(maPoire.productType.id);
+      productGotInDB.productTypeId.should.be.not.null;
+      productGotInDB.productTypeId.should.be.eql(maPoire.productTypeId);
     });
 
-    it('should fail getting one productType because no id received', async() => {
+    it('should fail getting one product because no id received', async() => {
       const productTypeGotInDB = await productService.getProductById({ id: '' });
       productTypeGotInDB.message.should.be.equal('Received product.id is invalid!');
     });
   });
 
-  it('should add a new productType', async() => {
+  it('should add a new product', async() => {
     const addedProduct = await productService.addProduct(maPomme);
 
     addedProduct.should.be.an('object');
@@ -123,19 +147,17 @@ describe('tests productType services', () => {
     addedProduct.id.should.be.not.null;
     addedProduct.description.should.be.not.null;
     addedProduct.description.should.be.equal(maPomme.description);
-    addedProduct.productType.should.be.an('object');
-    addedProduct.productType.should.be.not.null;
-    addedProduct.productType.id.should.be.not.null;
-    addedProduct.productType.id.should.be.eql(maPomme.productType.id);
+    addedProduct.productTypeId.should.be.not.null;
+    addedProduct.productTypeId.should.be.eql(new mongoose.Types.ObjectId(maPomme.productTypeId));
   });
 
-  describe('tests updateProductType', () => {
-    it('should update a productType', async() => {
+  describe('tests updateProduct', () => {
+    it('should update a product', async() => {
       let addedProduct = await productService.addProduct(maPomme);
       addedProduct = {
         id: addedProduct.id,
-        description: 'Viendez acheter ma belle poire!',
-        productType: { id: productTypePoire.id }
+        description: maPoire.description,
+        productTypeId: productTypePoire.id
       };
       const updatedProduct = await productService.updateProduct(addedProduct);
       updatedProduct.should.be.an('object');
@@ -143,36 +165,35 @@ describe('tests productType services', () => {
       updatedProduct.id.should.be.not.null;
       updatedProduct.description.should.be.not.null;
       updatedProduct.description.should.be.equal(maPoire.description);
-      updatedProduct.productType.should.be.an('object');
-      updatedProduct.productType.should.be.not.null;
-      updatedProduct.productType.id.should.be.not.null;
-      updatedProduct.productType.id.should.be.eql(maPoire.productType.id);
+      updatedProduct.productTypeId.should.be.an('object');
+      updatedProduct.productTypeId.should.be.not.null;
+      updatedProduct.productTypeId.should.be.eql(maPoire.productTypeId);
     });
 
-    it('should fail updating a productType because no id received', async() => {
+    it('should fail updating a product because no id received', async() => {
       const addedProduct = {
-        id: '',
-        ...maPomme
+        ...maPomme,
+        id: ''
       };
       const updatedProduct = await productService.updateProduct(addedProduct);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
+    it('should fail updating a product because invalid id received', async() => {
       const addedProduct = {
-        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-        ...maPomme
+        ...maPomme,
+        id: '5c04561e7209e21e582750' // id trop court (<24 caractères)
       };
       const updatedProduct = await productService.updateProduct(addedProduct);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
+    it('should fail updating a product because invalid id received', async() => {
       const addedProduct = {
-        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-        ...maPomme
+        ...maPomme,
+        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3' // id trop long (> 24 caractères)
       };
       const updatedProduct = await productService.updateProduct(addedProduct);
 
@@ -180,7 +201,7 @@ describe('tests productType services', () => {
     });
   });
 
-  it('should delete a productType', async() => {
+  it('should delete a product', async() => {
     const addedProduct = await productService.addProduct(maPomme);
 
     addedProduct.should.be.an('object');
@@ -188,10 +209,10 @@ describe('tests productType services', () => {
     addedProduct.id.should.be.not.null;
     addedProduct.description.should.be.not.null;
     addedProduct.description.should.be.equal(maPomme.description);
-    addedProduct.productType.should.be.an('object');
-    addedProduct.productType.should.be.not.null;
-    addedProduct.productType.id.should.be.not.null;
-    addedProduct.productType.id.should.be.eql(maPomme.productType.id);
+    addedProduct.productTypeId.should.be.an('object');
+    addedProduct.productTypeId.should.be.not.null;
+    addedProduct.productTypeId.id.should.be.not.null;
+    // addedProduct.productTypeId.id.should.be.eql(maPomme.productType.id);
 
     let deleteProduct = await productService.deleteProduct(addedProduct);
 

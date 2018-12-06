@@ -1,13 +1,15 @@
 type Query {
 	producers: [Producer!]!
-	producer(producer: ProducerInputGetAndDelete!) : Producer
+	producer(producerId: ID!) : Producer
+	producersWaitingForValidation: [Producer!]!
 	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
 }
 
 type Mutation {
+	validateAProducer(producerId: ID!, validationState: Boolean!): Producer!
 	addProducer(producer: ProducerInputAdd!): Producer!
 	updateProducer(producer: ProducerInputUpdate!): Producer
-	deleteProducer(producer: ProducerInputGetAndDelete!): Producer
+	deleteProducer(producerId: ID!): Producer
 }
 
 type Producer implements Person {
@@ -17,7 +19,7 @@ type Producer implements Person {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[Producer!]!
+	subscriptions: [Producer!]!
 	emailValidated: Boolean!
 	subscribedUsers : [User!]!
 	phoneNumber: String
@@ -62,8 +64,4 @@ input ProducerInputUpdate {
 	salesPoint: SalesPointInputUpdate
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
 	products: [ProductInputUpdate!] # pas obligatoire si vide
-}
-
-input ProducerInputGetAndDelete {
-	id: ID!
 }

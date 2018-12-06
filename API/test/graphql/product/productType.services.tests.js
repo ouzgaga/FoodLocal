@@ -37,30 +37,39 @@ describe('tests productType services', () => {
     pomme = {
       name: pomme.name,
       image: pomme.image,
-      category: category.id
+      categoryId: category.id
     };
-    pomme = await ProductTypeModel.create(pomme);
+    const addedPomme = await ProductTypeModel.create(pomme);
+    pomme.id = addedPomme.id;
+    pomme.categoryId = category.id;
+
 
     poire = {
       name: poire.name,
       image: poire.image,
-      category: category.id
+      categoryId: category.id
     };
-    poire = await ProductTypeModel.create(poire);
+    const addedPoire = await ProductTypeModel.create(poire);
+    poire.id = addedPoire.id;
+    poire.categoryId = category.id;
 
     raisin = {
       name: raisin.name,
       image: raisin.image,
-      category: category.id
+      categoryId: category.id
     };
-    raisin = await ProductTypeModel.create(raisin);
+    const addedRaisin = await ProductTypeModel.create(raisin);
+    raisin.id = addedRaisin.id;
+    raisin.categoryId = category.id;
 
     courgette = {
       name: courgette.name,
       image: courgette.image,
-      category: category.id
+      categoryId: category.id
     };
-    courgette = await ProductTypeModel.create(courgette);
+    const addedCourgette = await ProductTypeModel.create(courgette);
+    courgette.id = addedCourgette.id;
+    courgette.categoryId = category.id;
   });
 
   it('should get all productType', async() => {
@@ -74,35 +83,34 @@ describe('tests productType services', () => {
       productType.id.should.be.not.null;
       productType.name.should.be.not.null;
       productType.image.should.be.not.null;
-      productType.category.should.be.not.null;
-      productType.category.id.should.be.not.null;
+      productType.categoryId.should.be.not.null;
     });
   });
 
   describe('tests getProductTypeById', () => {
     it('should get one productType', async() => {
-      let productTypeGotInDB = await productTypeService.getProductTypeById(pomme);
+      let productTypeGotInDB = await productTypeService.getProductTypeById(pomme.id);
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
-      productTypeGotInDB._id.should.be.not.null;
+      productTypeGotInDB.id.should.be.not.null;
 
       productTypeGotInDB.name.should.be.equal(pomme.name);
       productTypeGotInDB.image.should.be.equal(pomme.image);
-      productTypeGotInDB.category.id.should.be.eql(new mongoose.Types.ObjectId(category.id).id);
-      productTypeGotInDB = await productTypeService.getProductTypeById(raisin);
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
+      productTypeGotInDB = await productTypeService.getProductTypeById(raisin.id);
 
       productTypeGotInDB.should.be.an('object');
       productTypeGotInDB.should.be.not.null;
-      productTypeGotInDB._id.should.be.not.null;
+      productTypeGotInDB.id.should.be.not.null;
       productTypeGotInDB.name.should.be.equal(raisin.name);
 
       productTypeGotInDB.image.should.be.equal(raisin.image);
-      productTypeGotInDB.category.id.should.be.eql(new mongoose.Types.ObjectId(category.id).id);
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
     });
 
     it('should fail getting one productType because no id received', async() => {
-      const productTypeGotInDB = await productTypeService.getProductTypeById({ id: '' });
+      const productTypeGotInDB = await productTypeService.getProductTypeById('');
       productTypeGotInDB.message.should.be.equal('Received productType.id is invalid!');
     });
   });
@@ -112,7 +120,7 @@ describe('tests productType services', () => {
 
     addedProductType.should.be.an('object');
     addedProductType.should.be.not.null;
-    addedProductType._id.should.be.not.null;
+    addedProductType.id.should.be.not.null;
 
     addedProductType.name.should.be.equal(pomme.name);
     addedProductType.image.should.be.equal(pomme.image);
@@ -125,7 +133,8 @@ describe('tests productType services', () => {
         id: addedProductType.id,
         name: poire.name,
         image: poire.image,
-        category: { id: category.id }
+        category: { id: category.id },
+        producers: []
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -138,8 +147,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because no id received', async() => {
       const addedProductType = {
-        id: '',
-        ...poire
+        ...poire,
+        id: ''
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -148,8 +157,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because invalid id received', async() => {
       const addedProductType = {
-        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-        ...poire
+        ...poire,
+        id: '5c04561e7209e21e582750' // id trop court (<24 caractères)
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -158,8 +167,8 @@ describe('tests productType services', () => {
 
     it('should fail updating a productType because invalid id received', async() => {
       const addedProductType = {
-        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-        ...poire
+        ...poire,
+        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3' // id trop long (> 24 caractères)
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);
 
@@ -172,7 +181,7 @@ describe('tests productType services', () => {
 
     addedProductType.should.be.an('object');
     addedProductType.should.be.not.null;
-    addedProductType._id.should.be.not.null;
+    addedProductType.id.should.be.not.null;
 
     addedProductType.name.should.be.equal(pomme.name);
     addedProductType.image.should.be.equal(pomme.image);

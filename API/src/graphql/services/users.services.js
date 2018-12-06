@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const UsersModel = require('../models/user.modelgql');
+const UtilsServices = require('../services/utils.services');
 const ProducersModel = require('../models/producers.modelgql');
+const tokenValidationEmail = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -29,13 +31,6 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
   return UsersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
-const isEmailUnused = async(emailUser) => {
-  const existingUser = await UsersModel.findOne({ email: emailUser });
-  const existingProducer = await ProducersModel.findOne({ email: emailUser });
-
-  return existingUser === null && existingProducer === null;
-};
-
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -44,14 +39,16 @@ const isEmailUnused = async(emailUser) => {
  */
 async function addUser(user) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await isEmailUnused(user.email)) {
+  if (await UtilsServices.isEmailUnused(user.email)) {
     const userToAdd = {
       ...user,
       subscriptions: [],
       emailValidated: false
     };
 
-    return new UsersModel(userToAdd).save();
+    const userAdded = await new UsersModel(userToAdd).save();
+    tokenValidationEmail.addTokenValidationEmail(userAdded);
+    return userAdded;
   } else {
     throw new Error('This email is already used.');
   }
@@ -62,16 +59,12 @@ async function addUser(user) {
  *
  * @param {Integer} id, L'id du producteur à récupérer.
  */
-function getUserById({ id }) {
-  let objectId = id;
+function getUserById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return UsersModel.findById(id);
   }
-
-  return UsersModel.findById(objectId);
 }
 
 /**
@@ -81,17 +74,23 @@ function getUserById({ id }) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser(user) {
-  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+async function updateUser({
+  id, firstname, lastname, email, password, image, subscriptions, emailValidated 
+}) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
 
-  const usertoUpdate = {
-    ...user,
-    subscriptions: await getAllUsersInReceivedIdList(user.subscriptions)
+  const userToUpdate = {
+    firstname,
+    lastname,
+    email,
+    password,
+    image,
+    subscriptions: await getAllUsersInReceivedIdList(subscriptions),
+    emailValidated
   };
-
-  return UsersModel.findByIdAndUpdate(user.id, usertoUpdate, { new: true }); // retourne l'objet modifié
+  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
   // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
@@ -100,12 +99,23 @@ async function updateUser(user) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteUser({ id }) {
+function deleteUser(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
 
   return UsersModel.findByIdAndRemove(id);
+}
+
+async function validateEmailUserByToken(value) {
+  const token = await tokenValidationEmail.validateToken(value);
+  if (token !== null) {
+    const user = await getUserById(token.idUser);
+    user.emailValidated = true;
+    return updateUser(user) !== null;
+  } else {
+    return new Error("Token not valid");
+  }
 }
 
 module.exports = {
@@ -114,5 +124,6 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList
+  getAllUsersInReceivedIdList,
+  validateEmailUserByToken
 };

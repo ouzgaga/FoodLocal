@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Products: ProductModel } = require('../models/products.modelgql');
+const productTypeServices = require('./productType.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -35,17 +36,21 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
-  // Si le product ne possède pas d'id -> on l'ajoute à la DB
-  if (product.id === undefined) {
-    const newProduct = {
-      description: product.description,
-      productType: product.productType.id
-    };
-    return new ProductModel(newProduct).save();
+  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+    return new Error('Received productType.id is invalid!');
   } else {
-    // Si le product possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce product
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return product;
+    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
+
+    if (productType != null) {
+      const newProduct = {
+        description: product.description,
+        productTypeId: productType.id
+      };
+
+      return new ProductModel(newProduct).save();
+    } else {
+      throw new Error("This productType.id doesn't exist!");
+    }
   }
 }
 
@@ -61,16 +66,12 @@ async function addAllProductsInArray(productsArray) {
  *
  * @param {Integer} id, L'id du produit à récupérer.
  */
-function getProductById({ id }) {
-  let objectId = id;
+function getProductById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductModel.findById(id);
   }
-
-  return ProductModel.findById(objectId);
 }
 
 /**
@@ -88,7 +89,7 @@ async function updateProduct(product) {
 
   const updatedProduct = {
     ...product,
-    productType: product.productType.id
+    productTypeId: product.productTypeId
   };
 
   return ProductModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
@@ -99,7 +100,7 @@ async function updateProduct(product) {
  *
  * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct({ id }) {
+function deleteProduct(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   }

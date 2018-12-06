@@ -24,13 +24,6 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-async function addProducerProducingThisProductType(idProductTypeToModify, idProducerToAdd) {
-  const productType = await this.getProductTypeById(idProductTypeToModify);
-  productType.producers.push(idProducerToAdd);
-
-  return this.updateProductType(productType);
-}
-
 /**
  * Ajoute un nouveau type de produit dans la base de données.
  * Attention, doublons autorisés!
@@ -38,18 +31,12 @@ async function addProducerProducingThisProductType(idProductTypeToModify, idProd
  * @param {Integer} productType, Les informations du type de produit à ajouter.
  */
 function addProductType(productType) {
-  // Si le productType ne possède pas d'id -> on l'ajoute à la DB
-  if (productType.id === undefined) {
-    const newProductType = {
-      ...productType,
-      category: productType.category.id
-    };
-    return new ProductTypeModel(newProductType).save();
-  } else {
-    // Si le productType possède un id, il est déjà dans la DB -> pas besoin de l'ajouter -> on retourne simplement ce productType
-    // FIXME: ou bien on met à jour le contenu de la DB ...?
-    return productType;
-  }
+  const newProductType = {
+    ...productType,
+    categoryId: productType.categoryId,
+    producersIds: []
+  };
+  return new ProductTypeModel(newProductType).save();
 }
 
 /**
@@ -57,16 +44,20 @@ function addProductType(productType) {
  *
  * @param {Integer} id, L'id du type de produit à récupérer.
  */
-function getProductTypeById({ id }) {
-  let objectId = id;
+function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    // FIXME: je comprend pas pourquoi je dois faire ça....?! Sans ça, il ne trouve pas de résultat alors que yen a.....
-    objectId = new mongoose.Types.ObjectId(id);
+    return ProductTypeModel.findById(id);
   }
+}
 
-  return ProductTypeModel.findById(objectId);
+function getProductTypeByCategory(productTypeCategoryId) {
+  if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
+    return new Error('Received productTypeCategory.id is invalid!');
+  } else {
+    return ProductTypeModel.find({ categoryId: productTypeCategoryId });
+  }
 }
 
 /**
@@ -82,30 +73,45 @@ async function updateProductType(productType) {
   }
 
   const updatedProductType = {
-    ...productType,
-    category: productType.category.id
+    id: productType.id,
+    name: productType.name,
+    image: productType.image,
+    categoryId: productType.categoryId,
+    producersIds: productType.producersIds != null ? productType.producersIds.map(p => p.id) : []
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
+async function addProducerProducingThisProductType(idProductType, idProducer) {
+  const productType = await getProductTypeById(idProductType);
+  if (productType.producersIds != null) {
+    productType.producersIds.push(idProducer);
+  } else {
+    productType.producerIds = [idProducer];
+  }
+
+  return updateProductType(productType);
+}
+
 /**
  * Supprime le type de produit correspondant à l'id reçu. Ne supprime pas sa catégorie.
  *
- * @param productType, Les informations du type de produit à supprimer.
+ * @param id, Les informations du type de produit à supprimer.
  */
-function deleteProductType(productType) {
-  if (!mongoose.Types.ObjectId.isValid(productType.id)) {
+function deleteProductType(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   }
 
   // FIXME: c'est quoi la différence entre findByIdAndDelete() et findByIdAndRemove() ?
   // FIXME: On retourne quoi après la suppression?
-  return ProductTypeModel.findByIdAndRemove(productType.id);
+  return ProductTypeModel.findByIdAndRemove(id);
 }
 
 module.exports = {
   getProductTypes,
+  getProductTypeByCategory,
   addProductType,
   addProducerProducingThisProductType,
   getProductTypeById,

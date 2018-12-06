@@ -60,20 +60,35 @@ const styles = theme => ({
 });
 
 class MainMap extends React.Component {
-  state = {
-    mobileOpen: false,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false,
+      iconDrag: '',
+    };
+  }
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+  handleHover = (hover) => {
+    this.setState({ iconDrag: hover });
+  }
+
+  resetHover = () => {
+    this.setState({ iconDrag: '' });
+  }
+
   render() {
-    const { classes, theme, data } = this.props;
+    const {
+      classes, theme, data, items, addItem, removeItem
+    } = this.props;
 
     const drawer = (
       <div>
-        <Search data={data} />
+        <Search data={data} handleHover={this.handleHover} resetHover={this.resetHover} />
       </div>
     );
 
@@ -81,7 +96,6 @@ class MainMap extends React.Component {
       <div className={classes.root}>
         <main className={classes.content}>
           <Button
-            variant="fab"
             color="inherit"
             aria-label="Add"
             className={classes.navIconHide}
@@ -90,7 +104,7 @@ class MainMap extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap data={data} />
+          <MyMap data={data} iconDrag={this.state.iconDrag} items={items} addItem={addItem} removeItem={removeItem} />
 
         </main>
 

@@ -2,19 +2,21 @@ type Query {
 	#Retourne tous les produits de la base de données
 	products: [Product!]! #FIXME: ajouter pagination
 	#Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
-	product(product: ProductInputGetAndDelete!) : Product
+	product(productId: ID!) : Product
 
 
 	#Retourne tous les type de produits de la base de données
 	productTypes: [ProductType!]! #FIXME: ajouter pagination
-	#Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
-	productType(productType: ProductTypeInputGetAndDelete!): ProductType
-
+	#Retourne le type de produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
+	productType(productTypeId: ID!): ProductType
+	#Retourne tous les types de produits de la catégorie dont l'id est passé en paramètre.
+	productTypesOfCategory(productTypeCategoryId: ID!): [ProductType!]!
 
 	#Retourne toutes les catégories de produits de la base de données
 	productTypeCategories: [ProductTypeCategory!]! #FIXME: ajouter pagination
 	#Retourne la catégorie de produits correspondant à l'ide reçu en paramètre. Retourne null si elle n'existe pas dans la base de données.
-	productTypeCategory(productTypeCategory: ProductTypeCategoryInputGetAndDelete!): ProductTypeCategory
+	productTypeCategory(productTypeCategoryId: ID!): ProductTypeCategory
+
 }
 
 type Mutation {
@@ -23,17 +25,17 @@ type Mutation {
 	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
 	updateProduct(product: ProductInputUpdate!): Product
 	#Supprime le produit correspondant à l'id passée en paramètre. Ne supprime pas le 'productType'.
-	deleteProduct(product: ProductInputGetAndDelete!): Product
+	deleteProduct(productId: ID!): Product
 
 
 	#Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
 	addProductType(productType: ProductTypeInputAdd!): ProductType!
 	#Ajoute le producteur reçu en paramètre à la liste des producteurs proposant des produits du productType également reçu en paramètre.
-	addProducerProducingThisProductType(productTypeId: ProductTypeInputGetAndDelete!, producerId: ProducerInputGetAndDelete!): ProductType!
+	addProducerProducingThisProductType(productTypeId: ID!, producerId: ID!): ProductType!
 	#Met à jour les informations du type de produit passé en paramètre.
 	updateProductType(productType: ProductTypeInputUpdate!): ProductType
 	#Supprime le type de produit reçu en paramètre.
-	deleteProductType(productType: ProductTypeInputGetAndDelete!): ProductType
+	deleteProductType(productTypeId: ID!): ProductType
 
 
 	#Ajoute une nouvelle catégorie de produits à la base de données. N'ajoute rien si la catégorie de produits reçue contient un id.
@@ -41,7 +43,7 @@ type Mutation {
 	#Met à jour les informations de la catégorie de produits passée en paramètre.
 	updateProductTypeCategory(productTypeCategory: ProductTypeCategoryInputUpdate!): ProductTypeCategory
 	#Supprime la catégorie de produits reçue en paramètre.
-	deleteProductTypeCategory(productTypeCategory: ProductTypeCategoryInputGetAndDelete!): ProductTypeCategory
+	deleteProductTypeCategory(productTypeCategoryId: ID!): ProductTypeCategory
 }
 
 type Product {
@@ -53,17 +55,13 @@ type Product {
 
 input ProductInputAdd {
 	description: String
-	productType: ProductTypeInputGetAndDelete!
+	productTypeId: ID!
 }
 
 input ProductInputUpdate {
 	id: ID!
 	description: String
-	productType: ProductTypeInputGetAndDelete!
-}
-
-input ProductInputGetAndDelete {
-	id: ID!
+	productTypeId: ID!
 }
 
 type ProductType {
@@ -75,21 +73,16 @@ type ProductType {
 }
 
 input ProductTypeInputAdd {
-	id: ID
 	name: String!
 	image: String
-	category: ProductTypeCategoryInputGetAndDelete! #fixme: on ne peut pas ajouter une catégorie en même temps qu'un type de produit, ok?
+	categoryId: ID! #fixme: on ne peut pas ajouter une catégorie en même temps qu'un type de produit, ok?
 }
 
 input ProductTypeInputUpdate {
 	id: ID!
 	name: String!
 	image: String
-	category: ProductTypeCategoryInputGetAndDelete! #fixme: on ne peut pas mettre à jour une catégorie en même temps qu'un type de produit, ok?
-}
-
-input ProductTypeInputGetAndDelete {
-	id: ID!
+	categoryId: ID! #fixme: on ne peut pas mettre à jour une catégorie en même temps qu'un type de produit, ok?
 }
 
 type ProductTypeCategory{
@@ -99,7 +92,6 @@ type ProductTypeCategory{
 }
 
 input ProductTypeCategoryInputAdd {
-	id: ID
 	name: String!
 	image: String # fixme: faudra l'encoder en base64
 }
@@ -108,8 +100,4 @@ input ProductTypeCategoryInputUpdate {
 	id: ID!
 	name: String!
 	image: String # fixme: faudra l'encoder en base64
-}
-
-input ProductTypeCategoryInputGetAndDelete {
-	id: ID!
 }
