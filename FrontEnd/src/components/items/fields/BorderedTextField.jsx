@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 
 const styles = theme => ({
 
@@ -12,15 +17,6 @@ const styles = theme => ({
 });
 
 class BorderedTextField extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-     
-    };
-  }
-
   render() {
     const { classes, onChange, defaultValue, id, fullWidth } = this.props;
     
@@ -30,10 +26,10 @@ class BorderedTextField extends Component {
           id={`BorderedTextFiel-${id}`}
           className={classes.textField}
           defaultValue={defaultValue}
-          margin="normal"
           variant="outlined"
           onChange={onChange}
-          fullWidth
+          fullWidth={fullWidth}
+          InputProps
         />
       </>
     );

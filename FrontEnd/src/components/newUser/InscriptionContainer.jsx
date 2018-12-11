@@ -118,7 +118,7 @@ class InscriptionContainer extends React.Component {
             firstName={firstName}
             password={password}
             passwordConf={passwordConf}
-            onChange={this.handleChange}
+            onChange={this.handleChange()}
           />
         );
       case 1:

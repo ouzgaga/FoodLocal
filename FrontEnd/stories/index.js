@@ -16,7 +16,9 @@ import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionFo
 import InputPassword from '../src/components/items/InputPassword';
 import BoxWithHeader from '../src/components/items/BoxWithHeader';
 import BorderedTextField from '../src/components/items/fields/BorderedTextField';
+import BorderedPasswordField from '../src/components/items/fields/BorderedPasswordField';
 import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
+import ChangePassword from '../src/components/accouontCRUD/ChangePassword';
 import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
 
@@ -156,15 +158,23 @@ storiesOf('BoxWithHeader', module)
   )).add('no header', () => (
     <BoxWithHeader>
       hello word
-  </BoxWithHeader>
-  )).add('child + header', () => (
+    </BoxWithHeader>
+  )).add('PersonalInformation', () => (
     <BoxWithHeader
       header="Informations personnels"
     >
       <PersonalInformation />
     </BoxWithHeader>
+  ))
+  .add('ChangePassword', () => (
+    <BoxWithHeader
+      header="Changer de mot de passe"
+    >
+      <ChangePassword />
+    </BoxWithHeader>
   ));
 
+ 
 storiesOf('BorderedTextField', module)
   .add('no data', () => (
     <BorderedTextField />
@@ -180,6 +190,23 @@ storiesOf('BorderedTextField', module)
       fullWidth
     />
   ));
+
+storiesOf('BorderedPasswordField', module)
+  .add('no data', () => (
+    <BorderedPasswordField />
+  ))
+  .add('Default value', () => (
+    <BorderedPasswordField
+      defaultValue="Hello word"
+    />
+  ))
+  .add('fullWidth', () => (
+    <BorderedPasswordField
+      defaultValue="Hello word"
+      fullWidth
+    />
+  ));
+  
 
 storiesOf('BoxLeftRight', module)
   .add('BoxLeftRight', () => (

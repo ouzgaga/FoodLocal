@@ -60,11 +60,12 @@ class PersonalInformation extends Component {
           title="Nom"
         >
           <BorderedTextField
-              id="personal-information-lastName"
-              className={classes.textField}
-              onChange={this.handleChange('firstName')}
-              defaultValue={firstName}
-            />
+            id="personal-information-lastName"
+            className={classes.textField}
+            onChange={this.handleChange('firstName')}
+            defaultValue={firstName}
+            fullWidth
+          />  
         </BoxLeftRight>
         <BoxLeftRight
           title="Prénom"
@@ -74,16 +75,10 @@ class PersonalInformation extends Component {
             className={classes.textField}
             onChange={this.handleChange('lastName')}
             defaultValue={lastName}
+            fullWidth
           />
-        </BoxLeftRight>
-
-          {/*
-          <Grid item xs={12}>
-            
-          </Grid>
-          */}
-        
-        </>
+        </BoxLeftRight>        
+      </>
 
     );
   }

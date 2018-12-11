@@ -9,7 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 
 import ResearchMap from './ResearchMap';
-
+import BorderedCountField from '../items/fields/BorderedCountField';
 
 
 const styles = theme => ({
@@ -59,6 +59,7 @@ class NewPost extends React.Component {
     this.state = {
       showMap: false,
       charCount: 0,
+      body: '',
     };
   }
 
@@ -70,6 +71,7 @@ class NewPost extends React.Component {
 
   handleChangeText = (event) => {
     this.setState({
+      body: event.target.value,
       charCount: event.target.value.length
     });
   }
@@ -84,7 +86,7 @@ class NewPost extends React.Component {
 
   render() {
     const { classes, maxLenght } = this.props;   
-    const { showMap, charCount } = this.state;
+    const { showMap, charCount, body} = this.state;
     return (
       <Paper className={classes.root}>
         <FormControl
@@ -94,21 +96,20 @@ class NewPost extends React.Component {
           autoComplete="off"
           fullWidth
         >
-          <InputLabel shrink htmlFor="bootstrap-input" className={classes.bootstrapFormLabel}>
-            Publier un nouveau post.
-            <br />
-            {`${charCount} / ${maxLenght} caractères`}
-          </InputLabel>
-          <InputBase
+
+
+        
+          <BorderedCountField
+            header="Publier un nouveau post."
             id="new-post-input"
-            classes={{
-              root: classes.bootstrapRoot,
-              input: classes.bootstrapInput,
-            }}
-            multiline
-            margin="dense"
-            onChange={this.handleChangeText.bind(this)}
-            inputProps={{ maxLength: maxLenght }}
+            value={body}
+            
+      
+            
+            onChange={this.handleChangeText}
+            
+
+
           />
 
           <div>

@@ -23,6 +23,8 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
   },
 });
+passwordConf
+
 
 function InformationsForm(props) {
   document.title = 'Nouveau Compte - Informations'; // changement du titre de la page
@@ -42,7 +44,7 @@ function InformationsForm(props) {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={onChange('email')}
+            onChange={onChange()}
             value={email}
           />
         </FormControl>
