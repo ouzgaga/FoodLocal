@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, CardActionArea, Grid } from '@material-ui/core';
 
 function TableProducerItem(props) {
   const {
-    classes, id, name,
+    id, name,
   } = props;
 
   return (
@@ -25,7 +24,6 @@ function TableProducerItem(props) {
 }
 
 TableProducerItem.propTypes = {
-  classes: PropTypes.shape().isRequired,
   id: PropTypes.string.isRequired,
   name: PropTypes.number.isRequired,
 };

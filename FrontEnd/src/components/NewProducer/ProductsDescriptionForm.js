@@ -8,9 +8,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-
-
-import MarkerCarotte from '../../img/strawberry.png';
 import { IncriptionProducerContext } from './InscriptionProducer';
 
 const styles = theme => ({
@@ -40,15 +37,15 @@ class ProductsDescriptionForm extends Component {
               <Grid container spacing={24}>
                 <List subheader={<li />}>
                   {values.items.map(product => (
-                    <ListItem className={classes.root} key={product.item}>
+                    <ListItem className={classes.root} key={product.item.id}>
                       <Grid item xs={3}>
                         <Card className={classes.media}>
 
-                          <CardMedia className={classes.media2} image={MarkerCarotte} title={product.item} />
+                          <CardMedia className={classes.media2} image={product.item.image} title={product.item.id} />
                         </Card>
                         <div className={classes.paper}>
                           <Typography className={classes.typo} variant="body1" gutterBottom>
-                            {product.item}
+                            {product.item.name}
                           </Typography>
                         </div>
                       </Grid>

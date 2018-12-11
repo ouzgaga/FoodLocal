@@ -1,19 +1,14 @@
 {
 	"producer": {
-		"id": "5c05b88a17c26f87220e2904",
 		"firstname": "Benoît",
 		"lastname": "Schopfer",
-		"email": "benoit.schopfer4@heig-vd.ch",
+		"email": "benoit.schopfer5@heig-vd.ch",
 		"password": "1234abcd",
 		"image": "Ceci est une image encodée en base64!",
-		"subscriptions": [],
-		"emailValidated": false,
-		"subscribedUsers": [],
 		"phoneNumber": "0761435196",
 		"description": "Un chouet gaillard!",
 		"website": "benoitschopfer.ch",
 		"salesPoint": {
-			"id": "5c05b88a17c26f87220e28f7",
 			"name": "Chez moi",
 			"address": {
 				"number": 6,
@@ -24,59 +19,43 @@
 				"longitude": 1.1234567,
 				"latitude": 1.123456789
 			},
-			"schedule": [
-				{
-					"weekDay": "MONDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "12:00"
-						},
-						{
-							"openingHour": "13:00",
-							"closingHour": "18:00"
-						}
-					]
-				},
-				{
-					"weekDay": "TUESDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "18:00"
-						}
-					]
-				},
-				{
-					"weekDay": "WEDNESDAY",
-					"schedule": [
-						{
-							"openingHour": "08:00",
-							"closingHour": "12:00"
-						}
-					]
-				},
-				{
-					"weekDay": "FRIDAY",
-					"schedule": [
-						{
-							"openingHour": "13:00",
-							"closingHour": "18:00"
-						}
-					]
-				}
-			]
+			"schedule": {
+				"monday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					},
+					{
+						"openingHour": "13:00",
+						"closingHour": "18:00"
+					}
+				],
+				"tuesday": [],
+				"wednesday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					}
+				],
+				"thursday": [],
+				"friday": [
+					{
+						"openingHour": "08:00",
+						"closingHour": "12:00"
+					}
+				],
+				"saturday": [],
+				"sunday": []
+			}
 		},
 		"products": [
 			{
-				"id": "5c05b88a17c26f87220e2902",
 				"description": "Une pomme monnnnstre bonne!",
 				"productType": {
 					"id": "5c050afa96f1ff3cca213d1f"
 				}
 			},
 			{
-				"id": "5c05b88a17c26f87220e2903",
 				"description": "Une poire de folie!",
 				"productType": {
 					"id": "5c05ad449fdaf88060a42aef"

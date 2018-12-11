@@ -1,5 +1,4 @@
 import React from 'react';
-import { Divider } from '@material-ui/core';
 
 import red from '@material-ui/core/colors/red';
 import List from '@material-ui/core/List';
@@ -51,23 +50,19 @@ const styles = theme => ({
 });
 
 class Search extends React.Component {
-  
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    const { classes, data } = this.props;
+    const { classes, data, handleHover, resetHover } = this.props;
     return (
       <div className={classes.list}>
-       
+
         <List key="list" className={classes.list}>
 
-          {this.props.data.producers.map(tile => (
+          {data.producers.map(tile => (
 
-            <ListItem className={classes.listItem} key={tile._id}>
+            <ListItem className={classes.listItem} key={tile.id}>
 
-              <ListItemProducer key={tile._id} salepoint={tile} producer={tile}/>
+              <ListItemProducer key={tile.id} salepoint={tile} producer={tile} handleHover={handleHover} resetHover={resetHover}/>
 
             </ListItem>
           ))

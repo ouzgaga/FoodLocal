@@ -27,6 +27,28 @@ Helm and Tiller is a package manager for Kubernetes.
 
 To install them, please follow the official documentation: https://docs.helm.sh/using_helm/
 
+## Install nginx-ingress
+
+### Reason
+
+We have to deploy a `nginx-ingress` loadbalancer to handle the http to https redirection. GCE loadbalancer do not handle this.
+
+### Install
+
+To install `nginx-ingress` we used helm.
+
+```bash
+helm install --name nginx-ingress --set \ controller.service.loadBalancerIP="<staticIP>" stable/nginx-ingress
+```
+
+Where `staticIP` is a static IP address reserved on the same region of the cluster.
+
+Install your `ingress configuration`:
+
+```bash
+kubectl apply -f ingress.yml
+```
+
 ## Install Cert-Manager
 
 You can find all scripts to install, update, remove in the folder `./script`

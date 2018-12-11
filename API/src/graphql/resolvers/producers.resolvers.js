@@ -7,17 +7,23 @@ const producerResolvers = {
   Query: {
     producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => producersServices.getProducerById(args.producer),
+    producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
-    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds)
+    producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
+
+    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(args.productsIds),
+
+    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeId)
   },
 
   Mutation: {
+    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
+
     addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
 
     updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
 
-    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producer)
+    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId)
   },
 
   Producer: {
@@ -25,9 +31,11 @@ const producerResolvers = {
 
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
-    salesPoint: (parent, args, context) => parent.salesPoint !== null ? salesPointsServices.getSalesPointById({ id: parent.salesPoint }) : null,
+    salesPoint: (parent, args, context) => (parent.salesPointId != null ? salesPointsServices.getSalesPointById(
+      parent.salesPointId
+    ) : null),
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.products)
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
   }
 };
 
