@@ -53,24 +53,26 @@ describe('tests users services', () => {
     antoine = await UsersModel.create(antoine);
   });
 
-  it('should get all users', async() => {
-    const allusers = await usersService.getUsers();
+  describe('tests getUsers', () => {
+    it('should get all users', async() => {
+      const allusers = await usersService.getUsers();
 
-    allusers.should.be.an('array');
-    allusers.length.should.be.equal(2);
-    allusers.map((user) => {
-      user.should.be.not.null;
-      user.id.should.be.not.null;
-      user.firstname.should.be.not.null;
-      user.lastname.should.be.not.null;
-      user.email.should.be.not.null;
-      user.password.should.be.not.null;
-      user.image.should.be.not.null;
-      user.subscriptions.should.be.not.null;
-      user.subscriptions.should.be.an('array');
-      user.subscriptions.length.should.be.equal(0);
-      user.emailValidated.should.be.not.null;
-      user.emailValidated.should.be.equal(false);
+      allusers.should.be.an('array');
+      allusers.length.should.be.equal(2);
+      allusers.map((user) => {
+        user.should.be.not.null;
+        user.id.should.be.not.null;
+        user.firstname.should.be.not.null;
+        user.lastname.should.be.not.null;
+        user.email.should.be.not.null;
+        user.password.should.be.not.null;
+        user.image.should.be.not.null;
+        user.subscriptions.should.be.not.null;
+        user.subscriptions.should.be.an('array');
+        user.subscriptions.length.should.be.equal(0);
+        user.emailValidated.should.be.not.null;
+        user.emailValidated.should.be.equal(false);
+      });
     });
   });
 
@@ -255,13 +257,14 @@ describe('tests users services', () => {
     });
   });
 
-  it('should delete a user', async() => {
-    let deleteUser = await usersService.deleteUser(benoit);
+  describe('tests deleteUser', () => {
+    it('should delete a user', async() => {
+      let deleteUser = await usersService.deleteUser(benoit);
 
-    deleteUser.should.be.not.null;
+      deleteUser.should.be.not.null;
 
-    deleteUser = await usersService.getUserById(deleteUser);
-    expect(deleteUser).to.be.null;
-
+      deleteUser = await usersService.getUserById(deleteUser);
+      expect(deleteUser).to.be.null;
+    });
   });
 });
