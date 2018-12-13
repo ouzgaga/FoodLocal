@@ -5,8 +5,8 @@ const UsersModel = require('../../../src/graphql/models/users.modelgql');
 
 let benoit = {
   firstname: 'Benoît',
-  lastname: 'Schopfer',
-  email: 'benoit.schopfer@heig-vd.ch',
+  lastname: 'Schöpfli',
+  email: 'benoit@paysan.ch',
   password: '1234abcd',
   image: 'ceci est une image encodée en base64!',
   subscriptions: [],
@@ -15,8 +15,8 @@ let benoit = {
 
 let antoine = {
   firstname: 'Antoine',
-  lastname: 'Rochat',
-  email: 'antoine.rochat@heig-vd.ch',
+  lastname: 'Rochaille',
+  email: 'antoine.@paysan.ch',
   password: '1234abcd',
   image: 'ceci est l\'image d\'un tueur encodée en base64!',
   subscriptions: [],
@@ -32,8 +32,8 @@ describe('tests users services', () => {
     // on ajoute 2 points de vente
     benoit = {
       firstname: 'Benoît',
-      lastname: 'Schopfer',
-      email: 'benoit.schopfer@heig-vd.ch',
+      lastname: 'Schöpfli',
+      email: 'benoit@paysan.ch',
       password: '1234abcd',
       image: 'ceci est une image encodée en base64!',
       subscriptions: [],
@@ -43,8 +43,8 @@ describe('tests users services', () => {
 
     antoine = {
       firstname: 'Antoine',
-      lastname: 'Rochat',
-      email: 'antoine.rochat@heig-vd.ch',
+      lastname: 'Rochaille',
+      email: 'antoine.@paysan.ch',
       password: '1234abcd',
       image: 'ceci est l\'image d\'un tueur encodée en base64!',
       subscriptions: [],
@@ -111,8 +111,8 @@ describe('tests users services', () => {
 
       const newUser = {
         firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer@heig-vd.ch',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'ceci est une image encodée en base64!',
         subscriptions: [],
@@ -145,8 +145,8 @@ describe('tests users services', () => {
 
       const newUser = {
         firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer@heig-vd.ch',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'ceci est une image encodée en base64!',
         subscriptions: [],
@@ -185,8 +185,8 @@ describe('tests users services', () => {
       const addedUser = {
         id: antoine.id,
         firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer@heig-vd.ch',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'ceci est une image encodée en base64!',
         subscriptions: [],
@@ -246,8 +246,8 @@ describe('tests users services', () => {
       const addedUser = {
         id: '675c04561e7209e21e582750', // id trop long (> 24 caractères)
         firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer@heig-vd.ch',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'ceci est une image encodée en base64!',
         subscriptions: [],

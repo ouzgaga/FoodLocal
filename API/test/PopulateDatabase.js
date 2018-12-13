@@ -280,7 +280,7 @@ describe('Add ProductTypeCategory', () => {
     const producer1 = await producerService.addProducer(
       {
         firstname: 'Antoine',
-        lastname: 'Rochat',
+        lastname: 'Rochaille',
         email: 'antoine@paysan.ch',
         password: '1234abcd',
         image: 'Ceci est une image encodée en base64!',
@@ -339,7 +339,7 @@ describe('Add ProductTypeCategory', () => {
     const producer2 = await producerService.addProducer(
       {
         firstname: 'Benoît',
-        lastname: 'Schopfer',
+        lastname: 'Schöpfli',
         email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'Ceci est une image encodée en base64!',

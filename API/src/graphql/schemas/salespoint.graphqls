@@ -14,7 +14,7 @@ type SalesPoint {
 	id: ID!
 	name: String!
 	address: Address
-	schedule: Schedule!
+	schedule: Schedule
 	# FIXME: est-ce qu'on enregistre aussi l'ID du producteur pour avoir le lien dans les 2 sens?
 }
 

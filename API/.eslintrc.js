@@ -8,7 +8,9 @@ module.exports = {
     'no-plusplus': 'off',
     'no-else-return': 'off',
     'no-trailing-spaces': 'off',
-    'no-unused-expressions': 'off'
+    'no-unused-expressions': 'off',
+    'no-use-before-define': 'off',
+    'no-underscore-dangle': 'off'
   },
   'env': {
     'mocha': true
