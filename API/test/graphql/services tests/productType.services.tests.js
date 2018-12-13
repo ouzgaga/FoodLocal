@@ -71,18 +71,20 @@ describe('tests productType services', () => {
     courgette.categoryId = category.id;
   });
 
-  it('should get all productType', async() => {
-    const allProductType = await productTypeService.getProductTypes();
+  describe('tests getProductTypes', () => {
+    it('should get all productType', async() => {
+      const allProductType = await productTypeService.getProductTypes();
 
-    allProductType.should.be.an('array');
-    allProductType.length.should.be.equal(4);
+      allProductType.should.be.an('array');
+      allProductType.length.should.be.equal(4);
 
-    allProductType.forEach((productType) => {
-      productType.should.be.not.null;
-      productType.id.should.be.not.null;
-      productType.name.should.be.not.null;
-      productType.image.should.be.not.null;
-      productType.categoryId.should.be.not.null;
+      allProductType.forEach((productType) => {
+        productType.should.be.not.null;
+        productType.id.should.be.not.null;
+        productType.name.should.be.not.null;
+        productType.image.should.be.not.null;
+        productType.categoryId.should.be.not.null;
+      });
     });
   });
 
@@ -114,15 +116,17 @@ describe('tests productType services', () => {
     });
   });
 
-  it('should add a new productType', async() => {
-    const addedProductType = await productTypeService.addProductType(pomme);
+  describe('tests addProductType', () => {
+    it('should add a new productType', async() => {
+      const addedProductType = await productTypeService.addProductType(pomme);
 
-    addedProductType.should.be.an('object');
-    addedProductType.should.be.not.null;
-    addedProductType.id.should.be.not.null;
+      addedProductType.should.be.an('object');
+      addedProductType.should.be.not.null;
+      addedProductType.id.should.be.not.null;
 
-    addedProductType.name.should.be.equal(pomme.name);
-    addedProductType.image.should.be.equal(pomme.image);
+      addedProductType.name.should.be.equal(pomme.name);
+      addedProductType.image.should.be.equal(pomme.image);
+    });
   });
 
   describe('tests updateProductType', () => {
@@ -175,21 +179,23 @@ describe('tests productType services', () => {
     });
   });
 
-  it('should delete a productType', async() => {
-    const addedProductType = await productTypeService.addProductType(pomme);
+  describe('tests deleteProductType', () => {
+    it('should delete a productType', async() => {
+      const addedProductType = await productTypeService.addProductType(pomme);
 
-    addedProductType.should.be.an('object');
-    addedProductType.should.be.not.null;
-    addedProductType.id.should.be.not.null;
+      addedProductType.should.be.an('object');
+      addedProductType.should.be.not.null;
+      addedProductType.id.should.be.not.null;
 
-    addedProductType.name.should.be.equal(pomme.name);
-    addedProductType.image.should.be.equal(pomme.image);
+      addedProductType.name.should.be.equal(pomme.name);
+      addedProductType.image.should.be.equal(pomme.image);
 
-    let deleteProductType = await productTypeService.deleteProductType(addedProductType);
+      let deleteProductType = await productTypeService.deleteProductType(addedProductType);
 
-    deleteProductType.should.be.not.null;
+      deleteProductType.should.be.not.null;
 
-    deleteProductType = await productTypeService.getProductTypeById(deleteProductType);
-    expect(deleteProductType).to.be.null;
+      deleteProductType = await productTypeService.getProductTypeById(deleteProductType);
+      expect(deleteProductType).to.be.null;
+    });
   });
 });

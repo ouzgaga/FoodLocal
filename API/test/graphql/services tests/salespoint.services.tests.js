@@ -182,33 +182,35 @@ describe('tests salespoints services', () => {
     magasin2 = await SalespointModel.create(magasin2);
   });
 
-  it('should get all salespoints', async() => {
-    const allSalespoints = await salespointService.getSalesPoints();
+  describe('tests getSalesPoints', () => {
+    it('should get all salespoints', async() => {
+      const allSalespoints = await salespointService.getSalesPoints();
 
-    allSalespoints.should.be.an('array');
-    allSalespoints.length.should.be.equal(2);
-    allSalespoints.map((salespoint) => {
-      salespoint.should.be.not.null;
-      salespoint.id.should.be.not.null;
-      salespoint.name.should.be.not.null;
-      salespoint.address.should.be.not.null;
-      salespoint.address.should.be.an('object');
-      salespoint.address.street.should.be.not.null;
-      salespoint.address.city.should.be.not.null;
-      salespoint.address.postalCode.should.be.not.null;
-      salespoint.address.country.should.be.not.null;
-      salespoint.address.longitude.should.be.not.null;
-      salespoint.address.latitude.should.be.not.null;
+      allSalespoints.should.be.an('array');
+      allSalespoints.length.should.be.equal(2);
+      allSalespoints.map((salespoint) => {
+        salespoint.should.be.not.null;
+        salespoint.id.should.be.not.null;
+        salespoint.name.should.be.not.null;
+        salespoint.address.should.be.not.null;
+        salespoint.address.should.be.an('object');
+        salespoint.address.street.should.be.not.null;
+        salespoint.address.city.should.be.not.null;
+        salespoint.address.postalCode.should.be.not.null;
+        salespoint.address.country.should.be.not.null;
+        salespoint.address.longitude.should.be.not.null;
+        salespoint.address.latitude.should.be.not.null;
 
-      salespoint.schedule.should.be.not.null;
-      salespoint.schedule.should.be.an('object');
-      salespoint.schedule.monday.should.be.an('array');
-      salespoint.schedule.tuesday.should.be.an('array');
-      salespoint.schedule.wednesday.should.be.an('array');
-      salespoint.schedule.thursday.should.be.an('array');
-      salespoint.schedule.friday.should.be.an('array');
-      salespoint.schedule.saturday.should.be.an('array');
-      salespoint.schedule.sunday.should.be.an('array');
+        salespoint.schedule.should.be.not.null;
+        salespoint.schedule.should.be.an('object');
+        salespoint.schedule.monday.should.be.an('array');
+        salespoint.schedule.tuesday.should.be.an('array');
+        salespoint.schedule.wednesday.should.be.an('array');
+        salespoint.schedule.thursday.should.be.an('array');
+        salespoint.schedule.friday.should.be.an('array');
+        salespoint.schedule.saturday.should.be.an('array');
+        salespoint.schedule.sunday.should.be.an('array');
+      });
     });
   });
 
@@ -275,60 +277,62 @@ describe('tests salespoints services', () => {
     });
   });
 
-  it('should add a new salespoint', async() => {
-    const addedSalespoint = await salespointService.addSalesPoint(magasin1);
-    addedSalespoint.should.be.an('object');
-    addedSalespoint.should.be.not.null;
-    addedSalespoint.id.should.be.equal(magasin1.id);
-    addedSalespoint.name.should.be.equal(magasin1.name);
-    addedSalespoint.address.should.be.not.null;
-    addedSalespoint.address.should.be.an('object');
-    addedSalespoint.address.number.should.be.equal(magasin1.address.number);
-    addedSalespoint.address.street.should.be.equal(magasin1.address.street);
-    addedSalespoint.address.city.should.be.equal(magasin1.address.city);
-    addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
-    addedSalespoint.address.country.should.be.equal(magasin1.address.country);
-    addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
-    addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
+  describe('tests addSalesPoint', () => {
+    it('should add a new salespoint', async() => {
+      const addedSalespoint = await salespointService.addSalesPoint(magasin1);
+      addedSalespoint.should.be.an('object');
+      addedSalespoint.should.be.not.null;
+      addedSalespoint.id.should.be.equal(magasin1.id);
+      addedSalespoint.name.should.be.equal(magasin1.name);
+      addedSalespoint.address.should.be.not.null;
+      addedSalespoint.address.should.be.an('object');
+      addedSalespoint.address.number.should.be.equal(magasin1.address.number);
+      addedSalespoint.address.street.should.be.equal(magasin1.address.street);
+      addedSalespoint.address.city.should.be.equal(magasin1.address.city);
+      addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
+      addedSalespoint.address.country.should.be.equal(magasin1.address.country);
+      addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
+      addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
 
-    addedSalespoint.schedule.should.be.not.null;
-    addedSalespoint.schedule.should.be.an('object');
-    addedSalespoint.schedule.monday.should.be.an('array');
-    addedSalespoint.schedule.tuesday.should.be.an('array');
-    addedSalespoint.schedule.wednesday.should.be.an('array');
-    addedSalespoint.schedule.thursday.should.be.an('array');
-    addedSalespoint.schedule.friday.should.be.an('array');
-    addedSalespoint.schedule.saturday.should.be.an('array');
-    addedSalespoint.schedule.sunday.should.be.an('array');
+      addedSalespoint.schedule.should.be.not.null;
+      addedSalespoint.schedule.should.be.an('object');
+      addedSalespoint.schedule.monday.should.be.an('array');
+      addedSalespoint.schedule.tuesday.should.be.an('array');
+      addedSalespoint.schedule.wednesday.should.be.an('array');
+      addedSalespoint.schedule.thursday.should.be.an('array');
+      addedSalespoint.schedule.friday.should.be.an('array');
+      addedSalespoint.schedule.saturday.should.be.an('array');
+      addedSalespoint.schedule.sunday.should.be.an('array');
 
-    for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
-      addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-      addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
-      addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-      addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
-      addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-      addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
-      addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-      addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
-      addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-      addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
-      addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-      addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
-      addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-      addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
-    }
+      for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
+        addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
+        addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
+        addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
+        addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
+        addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
+        addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
+        addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
+        addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
+        addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
+        addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
+        addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
+        addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
+        addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
+        addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
+      }
+    });
   });
 
   describe('tests updateSalesPoint', () => {
@@ -460,66 +464,68 @@ describe('tests salespoints services', () => {
     });
   });
 
-  it('should delete a salesPoint', async() => {
-    const addedSalespoint = await salespointService.addSalesPoint(magasin1);
-    addedSalespoint.should.be.an('object');
-    addedSalespoint.should.be.not.null;
-    addedSalespoint.id.should.be.equal(magasin1.id);
-    addedSalespoint.name.should.be.equal(magasin1.name);
-    addedSalespoint.address.should.be.not.null;
-    addedSalespoint.address.should.be.an('object');
-    addedSalespoint.address.number.should.be.equal(magasin1.address.number);
-    addedSalespoint.address.street.should.be.equal(magasin1.address.street);
-    addedSalespoint.address.city.should.be.equal(magasin1.address.city);
-    addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
-    addedSalespoint.address.country.should.be.equal(magasin1.address.country);
-    addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
-    addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
+  describe('tests deleteSalesPoint', () => {
+    it('should delete a salesPoint', async() => {
+      const addedSalespoint = await salespointService.addSalesPoint(magasin1);
+      addedSalespoint.should.be.an('object');
+      addedSalespoint.should.be.not.null;
+      addedSalespoint.id.should.be.equal(magasin1.id);
+      addedSalespoint.name.should.be.equal(magasin1.name);
+      addedSalespoint.address.should.be.not.null;
+      addedSalespoint.address.should.be.an('object');
+      addedSalespoint.address.number.should.be.equal(magasin1.address.number);
+      addedSalespoint.address.street.should.be.equal(magasin1.address.street);
+      addedSalespoint.address.city.should.be.equal(magasin1.address.city);
+      addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
+      addedSalespoint.address.country.should.be.equal(magasin1.address.country);
+      addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
+      addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
 
-    addedSalespoint.schedule.should.be.not.null;
-    addedSalespoint.schedule.should.be.an('object');
-    addedSalespoint.schedule.monday.should.be.an('array');
-    addedSalespoint.schedule.tuesday.should.be.an('array');
-    addedSalespoint.schedule.wednesday.should.be.an('array');
-    addedSalespoint.schedule.thursday.should.be.an('array');
-    addedSalespoint.schedule.friday.should.be.an('array');
-    addedSalespoint.schedule.saturday.should.be.an('array');
-    addedSalespoint.schedule.sunday.should.be.an('array');
+      addedSalespoint.schedule.should.be.not.null;
+      addedSalespoint.schedule.should.be.an('object');
+      addedSalespoint.schedule.monday.should.be.an('array');
+      addedSalespoint.schedule.tuesday.should.be.an('array');
+      addedSalespoint.schedule.wednesday.should.be.an('array');
+      addedSalespoint.schedule.thursday.should.be.an('array');
+      addedSalespoint.schedule.friday.should.be.an('array');
+      addedSalespoint.schedule.saturday.should.be.an('array');
+      addedSalespoint.schedule.sunday.should.be.an('array');
 
-    for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
-      addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-      addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
-      addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-      addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
-      addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-      addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
-      addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-      addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
-      addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-      addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
-      addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-      addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
-      addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-      addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
-    }
+      for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
+        addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
+        addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
+        addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
+        addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
+        addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
+        addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
+        addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
+        addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
+        addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
+        addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
+        addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
+        addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
+      }
+      for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
+        addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
+        addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
+      }
 
-    let deleteSalespoint = await salespointService.deleteSalesPoint(addedSalespoint);
+      let deleteSalespoint = await salespointService.deleteSalesPoint(addedSalespoint);
 
-    deleteSalespoint.should.be.not.null;
+      deleteSalespoint.should.be.not.null;
 
-    deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
-    expect(deleteSalespoint).to.be.null;
+      deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
+      expect(deleteSalespoint).to.be.null;
+    });
   });
 });

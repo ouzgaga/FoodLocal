@@ -28,17 +28,19 @@ describe('tests productTypeCategory services', () => {
     ids = res.map(p => p.id);
   });
 
-  it('should get all productTypeCategory', async() => {
-    const allProductTypeCategory = await productTypeCategoryService.getProductsCategories();
+  describe('tests getProductsCategories', () => {
+    it('should get all productTypeCategory', async() => {
+      const allProductTypeCategory = await productTypeCategoryService.getProductsCategories();
 
-    allProductTypeCategory.should.be.an('array');
-    allProductTypeCategory.length.should.be.equal(4);
+      allProductTypeCategory.should.be.an('array');
+      allProductTypeCategory.length.should.be.equal(4);
 
-    allProductTypeCategory.map((productTypeCategory) => {
-      productTypeCategory.should.be.not.null;
-      productTypeCategory.id.should.be.not.null;
-      productTypeCategory.name.should.be.not.null;
-      productTypeCategory.image.should.be.not.null;
+      allProductTypeCategory.map((productTypeCategory) => {
+        productTypeCategory.should.be.not.null;
+        productTypeCategory.id.should.be.not.null;
+        productTypeCategory.name.should.be.not.null;
+        productTypeCategory.image.should.be.not.null;
+      });
     });
   });
 
@@ -68,15 +70,17 @@ describe('tests productTypeCategory services', () => {
     });
   });
 
-  it('should add a new productTypeCategory', async() => {
-    const addedProductTypeCategory = await productTypeCategoryService.addProductTypeCategory(fruits);
+  describe('tests addProductTypeCategory', () => {
+    it('should add a new productTypeCategory', async() => {
+      const addedProductTypeCategory = await productTypeCategoryService.addProductTypeCategory(fruits);
 
-    addedProductTypeCategory.should.be.an('object');
-    addedProductTypeCategory.should.be.not.null;
-    addedProductTypeCategory._id.should.be.not.null;
+      addedProductTypeCategory.should.be.an('object');
+      addedProductTypeCategory.should.be.not.null;
+      addedProductTypeCategory._id.should.be.not.null;
 
-    addedProductTypeCategory.name.should.be.equal(fruits.name);
-    addedProductTypeCategory.image.should.be.equal(fruits.image);
+      addedProductTypeCategory.name.should.be.equal(fruits.name);
+      addedProductTypeCategory.image.should.be.equal(fruits.image);
+    });
   });
 
   describe('tests updateProductTypeCategory', () => {
@@ -126,21 +130,23 @@ describe('tests productTypeCategory services', () => {
     });
   });
 
-  it('should delete a productTypeCategory', async() => {
-    const addedProductTypeCategory = await productTypeCategoryService.addProductTypeCategory(fruits);
+  describe('tests deleteProductTypeCategory', () => {
+    it('should delete a productTypeCategory', async() => {
+      const addedProductTypeCategory = await productTypeCategoryService.addProductTypeCategory(fruits);
 
-    addedProductTypeCategory.should.be.an('object');
-    addedProductTypeCategory.should.be.not.null;
-    addedProductTypeCategory._id.should.be.not.null;
+      addedProductTypeCategory.should.be.an('object');
+      addedProductTypeCategory.should.be.not.null;
+      addedProductTypeCategory._id.should.be.not.null;
 
-    addedProductTypeCategory.name.should.be.equal(fruits.name);
-    addedProductTypeCategory.image.should.be.equal(fruits.image);
+      addedProductTypeCategory.name.should.be.equal(fruits.name);
+      addedProductTypeCategory.image.should.be.equal(fruits.image);
 
-    let deleteProductTypeCategory = await productTypeCategoryService.deleteProductTypeCategory(addedProductTypeCategory);
+      let deleteProductTypeCategory = await productTypeCategoryService.deleteProductTypeCategory(addedProductTypeCategory);
 
-    deleteProductTypeCategory.should.be.not.null;
+      deleteProductTypeCategory.should.be.not.null;
 
-    deleteProductTypeCategory = await productTypeCategoryService.getProductTypeCategoryById(deleteProductTypeCategory);
-    expect(deleteProductTypeCategory).to.be.null;
+      deleteProductTypeCategory = await productTypeCategoryService.getProductTypeCategoryById(deleteProductTypeCategory);
+      expect(deleteProductTypeCategory).to.be.null;
+    });
   });
 });

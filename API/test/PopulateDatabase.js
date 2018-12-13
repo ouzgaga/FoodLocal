@@ -4,6 +4,7 @@ const productTypeCategoryService = require('../src/graphql/services/productTypeC
 const productTypeService = require('../src/graphql/services/productType.services');
 const productService = require('../src/graphql/services/products.services');
 const producerService = require('../src/graphql/services/producers.services');
+const userService = require('../src/graphql/services/users.services');
 
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../src/graphql/models/products.modelgql'
@@ -457,6 +458,15 @@ describe('Add ProductTypeCategory', () => {
     );
     allPromises.push(producer4);
 
+    const user = await userService.addUser(
+      {
+        firstname: 'Jérémie',
+        lastname: 'Châtillon',
+        email: 'jeremUser@paysan.ch',
+        password: '1234abcd'
+      }
+    );
+    allPromises.push(user);
 
     await Promise.all(allPromises);
   });

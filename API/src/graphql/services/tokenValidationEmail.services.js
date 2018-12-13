@@ -46,7 +46,7 @@ async function addTokenValidationEmail (user) {
   const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
   const token = {
     value: tokenGen.generate(),
-    idUser: user.id
+    idPerson: user.id
   };
   // insert in the database
   const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UsersModel = require('../models/user.modelgql');
+const UsersModel = require('../models/users.modelgql');
 const UtilsServices = require('../services/utils.services');
 const ProducersModel = require('../models/producers.modelgql');
 const tokenValidationEmail = require('./tokenValidationEmail.services');
@@ -75,7 +75,7 @@ function getUserById(id) {
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
 async function updateUser({
-  id, firstname, lastname, email, password, image, subscriptions, emailValidated 
+  id, firstname, lastname, email, password, image, subscriptions, emailValidated
 }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
@@ -110,7 +110,7 @@ function deleteUser(id) {
 async function validateEmailUserByToken(value) {
   const token = await tokenValidationEmail.validateToken(value);
   if (token !== null) {
-    const user = await getUserById(token.idUser);
+    const user = await getUserById(token.idPerson);
     user.emailValidated = true;
     return updateUser(user) !== null;
   } else {

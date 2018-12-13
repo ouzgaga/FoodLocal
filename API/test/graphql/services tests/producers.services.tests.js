@@ -4,7 +4,7 @@ const producersService = require('../../../src/graphql/services/producers.servic
 const productsService = require('../../../src/graphql/services/products.services');
 const productTypeService = require('../../../src/graphql/services/productType.services');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const userModel = require('../../../src/graphql/models/user.modelgql');
+const userModel = require('../../../src/graphql/models/users.modelgql');
 const salespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
 const tokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
@@ -491,7 +491,6 @@ describe('tests producers services', () => {
     });
   });
 
-
   describe('tests addProducer', () => {
     it('should add a new producer', async() => {
       const newProducer = {
@@ -602,189 +601,189 @@ describe('tests producers services', () => {
 
       await Promise.all(promises, subscribedUserPromises);
     });
-  });
 
-  it('should fail adding a new producer with an already used email', async() => {
-    const newProducer = {
-      firstname: 'Benoît',
-      lastname: 'Schopfer',
-      email: 'benoit.schopfer@heig-vd.ch',
-      password: '1234abcd',
-      image: 'Ceci est une image encodée en base64!',
-      phoneNumber: '0761435196',
-      description: 'Un chouet gaillard!',
-      website: 'benoitschopfer.ch',
-      salesPointId: {
-        name: 'Chez moi',
-        address: {
-          number: 6,
-          street: 'Chemin de par ici',
-          city: 'Yverdon',
-          postalCode: '1400',
-          country: 'Suisse',
-          longitude: 1.1234567,
-          latitude: 1.123456789
+    it('should fail adding a new producer with an already used email', async() => {
+      const newProducer = {
+        firstname: 'Benoît',
+        lastname: 'Schopfer',
+        email: 'benoit.schopfer@heig-vd.ch',
+        password: '1234abcd',
+        image: 'Ceci est une image encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un chouet gaillard!',
+        website: 'benoitschopfer.ch',
+        salesPointId: {
+          name: 'Chez moi',
+          address: {
+            number: 6,
+            street: 'Chemin de par ici',
+            city: 'Yverdon',
+            postalCode: '1400',
+            country: 'Suisse',
+            longitude: 1.1234567,
+            latitude: 1.123456789
+          },
+          schedule: {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
         },
-        schedule: {
-          monday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            },
-            {
-              openingHour: '13:00',
-              closingHour: '18:00'
-            }
-          ],
-          tuesday: [],
-          wednesday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          thursday: [],
-          friday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          saturday: [],
-          sunday: []
-        }
-      },
-      productsIds: [
-        {
-          description: 'Une pomme monnnnstre bonne!',
-          productTypeId: productTypePomme.id
-        },
-        {
-          description: 'Une poire de folie!',
-          productTypeId: productTypePoire.id
-        }
-      ]
-    };
+        productsIds: [
+          {
+            description: 'Une pomme monnnnstre bonne!',
+            productTypeId: productTypePomme.id
+          },
+          {
+            description: 'Une poire de folie!',
+            productTypeId: productTypePoire.id
+          }
+        ]
+      };
 
-    let addedProducer = await producersService.addProducer(newProducer);
-    addedProducer.should.be.not.null;
-    addedProducer.id.should.be.not.null;
-    addedProducer.firstname.should.be.not.null;
-    addedProducer.firstname.should.be.equal(benoit.firstname);
-    addedProducer.lastname.should.be.not.null;
-    addedProducer.lastname.should.be.equal(benoit.lastname);
-    addedProducer.email.should.be.not.null;
-    addedProducer.email.should.be.equal('benoit.schopfer@heig-vd.ch');
-    addedProducer.password.should.be.not.null;
-    addedProducer.password.should.be.equal(benoit.password);
-    addedProducer.image.should.be.not.null;
-    addedProducer.image.should.be.equal(benoit.image);
-    addedProducer.subscriptions.should.be.not.null;
-    addedProducer.subscriptions.should.be.an('array');
-    addedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-    addedProducer.emailValidated.should.be.not.null;
-    addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+      let addedProducer = await producersService.addProducer(newProducer);
+      addedProducer.should.be.not.null;
+      addedProducer.id.should.be.not.null;
+      addedProducer.firstname.should.be.not.null;
+      addedProducer.firstname.should.be.equal(benoit.firstname);
+      addedProducer.lastname.should.be.not.null;
+      addedProducer.lastname.should.be.equal(benoit.lastname);
+      addedProducer.email.should.be.not.null;
+      addedProducer.email.should.be.equal('benoit.schopfer@heig-vd.ch');
+      addedProducer.password.should.be.not.null;
+      addedProducer.password.should.be.equal(benoit.password);
+      addedProducer.image.should.be.not.null;
+      addedProducer.image.should.be.equal(benoit.image);
+      addedProducer.subscriptions.should.be.not.null;
+      addedProducer.subscriptions.should.be.an('array');
+      addedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      addedProducer.emailValidated.should.be.not.null;
+      addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
 
-    try {
-      addedProducer = await producersService.addProducer(newProducer);
-    } catch (e) {
-      e.message.should.be.equal('This email is already used.');
-    }
-  });
-});
-
-describe('tests updateProducer', () => {
-  it('should update a producer', async() => {
-    const addedProducer = await producersService.getProducerById(benoit.id);
-    const producerToUpdate = {
-      ...addedProducer
-
-    };
-    const updatedProducer = await producersService.updateProducer(addedProducer);
-    updatedProducer.should.be.not.null;
-    updatedProducer.id.should.be.not.null;
-    updatedProducer.firstname.should.be.not.null;
-    updatedProducer.firstname.should.be.equal(benoit.firstname);
-    updatedProducer.lastname.should.be.not.null;
-    updatedProducer.lastname.should.be.equal(benoit.lastname);
-    updatedProducer.email.should.be.not.null;
-    updatedProducer.email.should.be.equal(benoit.email);
-    updatedProducer.password.should.be.not.null;
-    updatedProducer.password.should.be.equal(benoit.password);
-    updatedProducer.image.should.be.not.null;
-    updatedProducer.image.should.be.equal(benoit.image);
-    updatedProducer.subscriptions.should.be.not.null;
-    updatedProducer.subscriptions.should.be.an('array');
-    updatedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-    updatedProducer.emailValidated.should.be.not.null;
-    updatedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+      try {
+        addedProducer = await producersService.addProducer(newProducer);
+      } catch (e) {
+        e.message.should.be.equal('This email is already used.');
+      }
+    });
   });
 
-  it('should fail updating a producer because no id received', async() => {
-    const addedProducer = {
-      id: '',
-      ...benoit
-    };
-    const updatedProducer = await producersService.updateProducer(addedProducer);
+  describe('tests updateProducer', () => {
+    it('should update a producer', async() => {
+      const addedProducer = await producersService.getProducerById(benoit.id);
+      const producerToUpdate = {
+        ...addedProducer
 
-    updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+      };
+      const updatedProducer = await producersService.updateProducer(addedProducer);
+      updatedProducer.should.be.not.null;
+      updatedProducer.id.should.be.not.null;
+      updatedProducer.firstname.should.be.not.null;
+      updatedProducer.firstname.should.be.equal(benoit.firstname);
+      updatedProducer.lastname.should.be.not.null;
+      updatedProducer.lastname.should.be.equal(benoit.lastname);
+      updatedProducer.email.should.be.not.null;
+      updatedProducer.email.should.be.equal(benoit.email);
+      updatedProducer.password.should.be.not.null;
+      updatedProducer.password.should.be.equal(benoit.password);
+      updatedProducer.image.should.be.not.null;
+      updatedProducer.image.should.be.equal(benoit.image);
+      updatedProducer.subscriptions.should.be.not.null;
+      updatedProducer.subscriptions.should.be.an('array');
+      updatedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      updatedProducer.emailValidated.should.be.not.null;
+      updatedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+    });
+
+    it('should fail updating a producer because no id received', async() => {
+      const addedProducer = {
+        id: '',
+        ...benoit
+      };
+      const updatedProducer = await producersService.updateProducer(addedProducer);
+
+      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+    });
+
+    it('should fail updating a producer because invalid id received', async() => {
+      const addedProducer = {
+        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
+        ...benoit
+      };
+      const updatedProducer = await producersService.updateProducer(addedProducer);
+
+      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+    });
+
+    it('should fail updating a producer because invalid id received', async() => {
+      const addedProducer = {
+        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
+        ...benoit
+      };
+      const updatedProducer = await producersService.updateProducer(addedProducer);
+
+      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+    });
   });
 
-  it('should fail updating a producer because invalid id received', async() => {
-    const addedProducer = {
-      id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-      ...benoit
-    };
-    const updatedProducer = await producersService.updateProducer(addedProducer);
+  describe('tests validateAProducer', () => {
+    it('should unvalidate a validated producer', async() => {
+      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
 
-    updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+      // on valide un producteur
+      let validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.true;
+
+      // on invalide ce même producteur
+      validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.false;
+    });
+
+    // fixme: le beforeEach ne s'exécute pas entre 2 it() du même describe???!
+    // si j'inverse ces 2 describes, ça marche plus....!
+    it('should validate a producer', async() => {
+      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+
+      // on valide un producteur
+      const validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.true;
+    });
   });
 
-  it('should fail updating a producer because invalid id received', async() => {
-    const addedProducer = {
-      id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-      ...benoit
-    };
-    const updatedProducer = await producersService.updateProducer(addedProducer);
+  describe('tests deleteProducer', () => {
+    it('should delete a producer', async() => {
+      let deleteProducer = await producersService.deleteProducer(benoit.id);
 
-    updatedProducer.message.should.be.equal('Received producer.id is invalid!');
-  });
-});
+      deleteProducer.should.be.not.null;
 
-describe('tests validateAProducer', () => {
-  it('should unvalidate a validated producer', async() => {
-    const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
-
-    // on valide un producteur
-    let validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
-    validatedProducer.should.be.not.null;
-    validatedProducer.isValidated.should.be.true;
-
-    // on invalide ce même producteur
-    validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
-    validatedProducer.should.be.not.null;
-    validatedProducer.isValidated.should.be.false;
-  });
-
-  // fixme: le beforeEach ne s'exécute pas entre 2 it() du même describe???!
-  // si j'inverse ces 2 describes, ça marche plus....!
-  it('should validate a producer', async() => {
-    const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
-
-    // on valide un producteur
-    const validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
-    validatedProducer.should.be.not.null;
-    validatedProducer.isValidated.should.be.true;
-  });
-});
-
-describe('tests deleteProducer', () => {
-  it('should delete a producer', async() => {
-    let deleteProducer = await producersService.deleteProducer(benoit.id);
-
-    deleteProducer.should.be.not.null;
-
-    deleteProducer = await producersService.getProducerById(deleteProducer.id);
-    expect(deleteProducer).to.be.null;
+      deleteProducer = await producersService.getProducerById(deleteProducer.id);
+      expect(deleteProducer).to.be.null;
+    });
   });
 });
