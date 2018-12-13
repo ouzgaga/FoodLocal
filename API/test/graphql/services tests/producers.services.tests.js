@@ -606,13 +606,10 @@ describe('tests producers services', () => {
   });
 
   it('should fail adding a new producer with an already used email', async() => {
-    // on supprime tout le contenu de la DB
-    await ProducersModel.deleteMany();
-
     const newProducer = {
       firstname: 'Benoît',
       lastname: 'Schopfer',
-      email: 'benoit.schopfer5@heig-vd.ch',
+      email: 'benoit.schopfer@heig-vd.ch',
       password: '1234abcd',
       image: 'Ceci est une image encodée en base64!',
       phoneNumber: '0761435196',
@@ -678,7 +675,7 @@ describe('tests producers services', () => {
     addedProducer.lastname.should.be.not.null;
     addedProducer.lastname.should.be.equal(benoit.lastname);
     addedProducer.email.should.be.not.null;
-    addedProducer.email.should.be.equal(benoit.email);
+    addedProducer.email.should.be.equal('benoit.schopfer@heig-vd.ch');
     addedProducer.password.should.be.not.null;
     addedProducer.password.should.be.equal(benoit.password);
     addedProducer.image.should.be.not.null;
@@ -752,6 +749,33 @@ describe('tests updateProducer', () => {
     const updatedProducer = await producersService.updateProducer(addedProducer);
 
     updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+  });
+});
+
+describe('tests validateAProducer', () => {
+  it('should unvalidate a validated producer', async() => {
+    const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+
+    // on valide un producteur
+    let validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+    validatedProducer.should.be.not.null;
+    validatedProducer.isValidated.should.be.true;
+
+    // on invalide ce même producteur
+    validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+    validatedProducer.should.be.not.null;
+    validatedProducer.isValidated.should.be.false;
+  });
+
+  // fixme: le beforeEach ne s'exécute pas entre 2 it() du même describe???!
+  // si j'inverse ces 2 describes, ça marche plus....!
+  it('should validate a producer', async() => {
+    const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+
+    // on valide un producteur
+    const validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+    validatedProducer.should.be.not.null;
+    validatedProducer.isValidated.should.be.true;
   });
 });
 

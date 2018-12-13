@@ -116,7 +116,7 @@ async function addProducer(producer) {
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else {
-    throw new Error('This email is already used.');
+    return new Error('This email is already used.');
   }
 }
 
