@@ -1,5 +1,3 @@
-require('../../chai-config');
-
 const salespointService = require('../../../src/graphql/services/salespoints.services');
 const SalespointModel = require('../../../src/graphql/models/salespoints.modelgql');
 

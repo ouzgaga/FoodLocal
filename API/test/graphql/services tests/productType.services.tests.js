@@ -1,4 +1,3 @@
-require('../../chai-config');
 const mongoose = require('mongoose');
 
 const productTypeService = require('../../../src/graphql/services/productType.services');

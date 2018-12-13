@@ -1,5 +1,3 @@
-require('../../chai-config');
-
 const mongoose = require('mongoose');
 const producersService = require('../../../src/graphql/services/producers.services');
 const productsService = require('../../../src/graphql/services/products.services');
@@ -177,7 +175,7 @@ describe('tests product services', () => {
     addedProduct.productTypeId.should.be.eql(new mongoose.Types.ObjectId(maPomme.productTypeId));
   });
 
-  it.only('should add a new product for all product in received array', async() => {
+  it('should add a new product for all product in received array', async() => {
     const addedProducts = await productsService.addAllProductsInArray([maPomme, maPoire]);
 
     const promises = addedProducts.map((async(productId) => {

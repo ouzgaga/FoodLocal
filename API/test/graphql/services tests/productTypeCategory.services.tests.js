@@ -1,5 +1,3 @@
-require('../../chai-config');
-
 const productTypeCategoryService = require('../../../src/graphql/services/productTypeCategory.services');
 const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
 
