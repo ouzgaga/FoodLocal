@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 /**
- * User Schema
+ * Person Schema
  */
 const options = { discriminatorKey: 'kind' };
 
-const userSchema = new mongoose.Schema(
+const personSchema = new mongoose.Schema(
   {
     firstname     : {
       type    : mongoose.Schema.Types.String,
@@ -43,10 +43,9 @@ const userSchema = new mongoose.Schema(
     }
   }, options
 );
-// FIXME: C'est normal que le 'kind' n'apparaisse dans la DB que pour les producers mais pas pour les users ?
 
 /**
- * @typedef Producer
+ * @typedef Person
  */
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('persons', personSchema);

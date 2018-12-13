@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserSchema = require('./user.modelgql');
+const PersonSchema = require('./persons.modelgql');
 
 /**
  * Producer Schema (hérite du contenu du schéma 'users')
@@ -48,4 +48,4 @@ const producerSchema = new mongoose.Schema(
  * @typedef Producer
  */
 
-module.exports = UserSchema.discriminator('producers', producerSchema);
+module.exports = PersonSchema.discriminator('producers', producerSchema);

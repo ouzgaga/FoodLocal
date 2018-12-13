@@ -11,9 +11,9 @@ const TokenValidationEmail = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
-    idUser: {
+    idPerson: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user', // FIXME: voir comment référencer aussi le schéma producers
+      ref: 'persons',
       required: true
     },
     dateCreation: {

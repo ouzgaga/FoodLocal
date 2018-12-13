@@ -4,7 +4,8 @@ const passportLocal = require('passport-local');
 const passportJWT = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const ProducersModel = require('../models/producers.modelgql');
-const UsersModel = require('../models/user.modelgql');
+const PersonsModel = require('../models/persons.modelgql');
+const UsersModel = require('../models/users.modelgql');
 const config = require('../../config/config');
 
 const LocalStrategy = passportLocal.Strategy;
@@ -17,8 +18,7 @@ passport.use(new LocalStrategy(
     passwordField: 'password'
   },
   (email, password, done) => {
-    // FIXME: comment faire une recherche dans tous le contenu de user (user et producers)?
-    const user = UsersModel.find(
+    const user = PersonsModel.find(
       {
         email,
         password

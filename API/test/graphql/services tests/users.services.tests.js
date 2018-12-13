@@ -1,7 +1,7 @@
 require('../../chai-config');
 
 const usersService = require('../../../src/graphql/services/users.services');
-const UsersModel = require('../../../src/graphql/models/user.modelgql');
+const UsersModel = require('../../../src/graphql/models/users.modelgql');
 
 let benoit = {
   firstname: 'Benoît',
