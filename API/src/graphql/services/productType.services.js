@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
+const utilsServices = require('./utils.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -48,6 +49,7 @@ function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
+    id = utilsServices.castIdInObjectId(id);
     return ProductTypeModel.findById(id);
   }
 }
@@ -61,13 +63,15 @@ function getProductTypeByCategory(productTypeCategoryId) {
 }
 
 async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
+  const productTypeObjectIdsTab = utilsServices.castTabOfIdsInTabOfObjectIds(productTypeIdsTab);
+
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeIdsTab } });
+  const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
 
   const producersIds = [];
 
   // on récupère tous les ids des producteurs proposant des produits de ces productTypes
-  productTypes.map(p => p.producersIds.map(id => producersIds.push(id)));
+  productTypes.forEach(p => p.producersIds.forEach(id => producersIds.push(id)));
   return producersIds;
 }
 
@@ -78,7 +82,7 @@ async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(prod
  *
  * @param {ProductType} productType, Les informations du type de produit à mettre à jour.
  */
-async function updateProductType(productType) {
+function updateProductType(productType) {
   if (!mongoose.Types.ObjectId.isValid(productType.id)) {
     return new Error('Received productType.id is invalid!');
   }
@@ -88,20 +92,23 @@ async function updateProductType(productType) {
     name: productType.name,
     image: productType.image,
     categoryId: productType.categoryId,
-    producersIds: productType.producersIds != null ? productType.producersIds.map(p => p.id) : []
+    producersIds: productType.producersIds != null ? productType.producersIds : []
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
 async function addProducerProducingThisProductType(idProductType, idProducer) {
+  idProductType = utilsServices.castIdInObjectId(idProductType);
+  idProducer = utilsServices.castIdInObjectId(idProducer);
+
   const productType = await getProductTypeById(idProductType);
   if (productType.producersIds != null) {
+    // fixme: checker si producer est déjà dans le tableau avant de l'ajouter!
     productType.producersIds.push(idProducer);
   } else {
-    productType.producerIds = [idProducer];
+    productType.producersIds = [idProducer];
   }
-
   return updateProductType(productType);
 }
 

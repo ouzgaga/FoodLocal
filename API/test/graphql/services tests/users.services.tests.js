@@ -261,6 +261,7 @@ describe('tests users services', () => {
     deleteUser.should.be.not.null;
 
     deleteUser = await usersService.getUserById(deleteUser);
-    it.should.be.null = deleteUser; // Fixme: Ca marche de faire ça ??
+    expect(deleteUser).to.be.null;
+
   });
 });

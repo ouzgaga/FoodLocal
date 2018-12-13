@@ -5,6 +5,7 @@ const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
 const path = require('path');
 const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
+const passport = require('passport');
 
 const Producer = require('./graphql/resolvers/producers.resolvers');
 const User = require('./graphql/resolvers/users.resolvers');
@@ -25,6 +26,9 @@ const app = express();
 
 // Active CORS pour le client
 app.use(cors());
+
+// initialisation de passport
+app.use(passport.initialize());
 
 const resolvers = merge(
   Person,

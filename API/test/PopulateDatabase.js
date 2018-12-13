@@ -5,20 +5,18 @@ const productTypeService = require('../src/graphql/services/productType.services
 const productService = require('../src/graphql/services/products.services');
 const producerService = require('../src/graphql/services/producers.services');
 
-const { productTypeCategory: ProductTypeCategoryModel, productType: ProductTypeModel, product: ProductModel } = require(
+const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../src/graphql/models/products.modelgql'
 );
 const ProducerModel = require('../src/graphql/models/producers.modelgql');
 
 describe('Add ProductTypeCategory', () => {
-  /*
-  before(async() => {
+  beforeEach(async() => {
     await ProductTypeCategoryModel.deleteMany();
     await ProductTypeModel.deleteMany();
     await ProductModel.deleteMany();
     await ProducerModel.deleteMany();
   });
-  */
 
   it('should populate the database!', async() => {
     const allPromises = [];
@@ -70,6 +68,7 @@ describe('Add ProductTypeCategory', () => {
 
     // ajout des productType
     // ajout des autres produits
+    /*
     const productTypeBoisDeFeu = await productTypeService.addProductType(
       {
         name: 'Bois de Feu',
@@ -86,6 +85,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeFleurs);
+    */
     const productTypeFromagesProduitsLaitiers = await productTypeService.addProductType(
       {
         name: 'Fromages / Produits laitiers',
@@ -94,6 +94,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeFromagesProduitsLaitiers);
+    /*
     const productTypeHuiles = await productTypeService.addProductType(
       {
         name: 'Huiles',
@@ -142,9 +143,11 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeSapin);
+    */
 
 
     // ajout des boissons
+    /*
     const productTypeAlcoolsForts = await productTypeService.addProductType(
       {
         name: 'Alcools forts',
@@ -153,6 +156,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeAlcoolsForts);
+    */
     const productTypeBiereCidre = await productTypeService.addProductType(
       {
         name: 'Bières / Cidres',
@@ -177,6 +181,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeLait);
+    /*
     const productTypeMousseux = await productTypeService.addProductType(
       {
         name: 'Mousseux',
@@ -193,9 +198,11 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeVin);
+    */
 
 
     // ajout des céréales
+    /*
     const productTypeFarine = await productTypeService.addProductType(
       {
         name: 'Farine',
@@ -204,6 +211,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeFarine);
+    */
     const productTypePolenta = await productTypeService.addProductType(
       {
         name: 'Polenta',
@@ -212,6 +220,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypePolenta);
+    /*
     const productTypeQuinoa = await productTypeService.addProductType(
       {
         name: 'Quinoa',
@@ -220,6 +229,7 @@ describe('Add ProductTypeCategory', () => {
       }
     );
     allPromises.push(productTypeQuinoa);
+    */
     const productTypePates = await productTypeService.addProductType(
       {
         name: 'Pâtes',
@@ -448,7 +458,6 @@ describe('Add ProductTypeCategory', () => {
     allPromises.push(producer4);
 
 
-    Promise.all(allPromises);
+    await Promise.all(allPromises);
   });
-})
-;
+});

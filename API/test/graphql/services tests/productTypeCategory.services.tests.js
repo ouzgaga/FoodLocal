@@ -143,6 +143,6 @@ describe('tests productTypeCategory services', () => {
     deleteProductTypeCategory.should.be.not.null;
 
     deleteProductTypeCategory = await productTypeCategoryService.getProductTypeCategoryById(deleteProductTypeCategory);
-    it.should.be.null = deleteProductTypeCategory; // Fixme: Ca marche de faire ça ??
+    expect(deleteProductTypeCategory).to.be.null;
   });
 });

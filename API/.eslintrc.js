@@ -7,9 +7,13 @@ module.exports = {
     'max-len': 'off',
     'no-plusplus': 'off',
     'no-else-return': 'off',
-    'no-trailing-spaces': 'off'
+    'no-trailing-spaces': 'off',
+    'no-unused-expressions': 'off'
   },
   'env': {
     'mocha': true
+  },
+  'globals': {
+    'expect': true
   }
 };

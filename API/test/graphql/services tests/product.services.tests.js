@@ -101,7 +101,7 @@ describe('tests product services', () => {
     allProducts.should.be.an('array');
     allProducts.length.should.be.equal(2);
 
-    allProducts.map((product) => {
+    allProducts.forEach((product) => {
       product.should.be.not.null;
       product.id.should.be.not.null;
       product.description.should.be.not.null;
@@ -219,6 +219,6 @@ describe('tests product services', () => {
     deleteProduct.should.be.not.null;
 
     deleteProduct = await productService.getProductById(deleteProduct);
-    it.should.be.null = deleteProduct; // Fixme: Ca marche de faire ça ??
+    expect(deleteProduct).to.be.null;
   });
 });

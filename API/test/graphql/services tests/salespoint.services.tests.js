@@ -522,6 +522,6 @@ describe('tests salespoints services', () => {
     deleteSalespoint.should.be.not.null;
 
     deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
-    it.should.be.null = deleteSalespoint; // Fixme: Ca marche de faire ça ??
+    expect(deleteSalespoint).to.be.null;
   });
 });

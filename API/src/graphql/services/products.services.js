@@ -55,10 +55,11 @@ async function addProduct(product) {
 }
 
 async function addAllProductsInArray(productsArray) {
+  // FIXME: Comment faire pour ne récupérer que l'objet souhaité (celui qui est dans _doc) sans tous les champs de mongoose...?
   const promises = [];
-  productsArray.map(product => promises.push(addProduct(product)));
+  productsArray.forEach(product => promises.push(addProduct(product)));
   const resolvedPromises = await Promise.all(promises);
-  return resolvedPromises.map(res => res.id);
+  return resolvedPromises.map(addedProduct => addedProduct.id);
 }
 
 /**

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
 const productsServices = require('../services/products.services');
 const salesPointsServices = require('../services/salespoints.services');
-const UtilsServices = require('../services/utils.services');
+const utilsServices = require('../services/utils.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
 
@@ -57,14 +57,14 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
 }
 
 async function filterProducers(byProductTypeIds) {
-  let filtredProducersIds;
+  let filtredProducersObjectIds;
   if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
     // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    filtredProducersIds = await productTypeServices.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(byProductTypeIds);
+    filtredProducersObjectIds = await productTypeServices.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(byProductTypeIds);
   }
 
-  if (filtredProducersIds != null && filtredProducersIds.length !== 0) {
-    return getAllProducersInReceivedIdList(filtredProducersIds);
+  if (filtredProducersObjectIds != null && filtredProducersObjectIds.length !== 0) {
+    return getAllProducersInReceivedIdList(filtredProducersObjectIds);
   } else {
     // pas de filtre --> on retourne tous les producteurs
     return getProducers();
@@ -79,7 +79,7 @@ async function filterProducers(byProductTypeIds) {
  */
 async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await UtilsServices.isEmailUnused(producer.email)) {
+  if (await utilsServices.isEmailUnused(producer.email)) {
     let salespoint;
     if (producer.salesPoint != null) {
       salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
@@ -90,11 +90,18 @@ async function addProducer(producer) {
       productsId = await productsServices.addAllProductsInArray(producer.products);
     }
     const producerToAdd = {
-      ...producer,
-      salesPointId: salespoint != null ? salespoint.id : null,
+      firstname: producer.firstname,
+      lastname: producer.lastname,
+      email: producer.email,
+      password: producer.password,
+      image: producer.image,
       subscriptions: [],
       emailValidated: false,
-      subscribedUsers: [],
+      subscribedUsersIds: [],
+      phoneNumber: producer.phoneNumber,
+      description: producer.description,
+      website: producer.website,
+      salesPointId: salespoint != null ? salespoint.id : null,
       isValidated: false,
       productsIds: productsId != null ? productsId : []
     };
@@ -102,7 +109,8 @@ async function addProducer(producer) {
     const producerAdded = await new ProducersModel(producerToAdd).save();
 
     if (producer.products != null && producer.products.length !== 0) {
-      producer.products.map(async p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
+      const promises = producer.products.map(product => productTypeServices.addProducerProducingThisProductType(product.productTypeId, producerAdded.id));
+      await Promise.all(promises);
     }
 
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
@@ -125,6 +133,7 @@ async function updateProducer(producer) {
   if (!mongoose.Types.ObjectId.isValid(producer.id)) {
     return new Error('Received producer.id is invalid!');
   }
+  // FIXME: pourquoi les ids doivent parfois être casté en ObjectId mais parfois pas?!
 
   const producerValidations = await ProducersModel.findById(producer.id, 'emailValidated isValidated');
 

@@ -3,7 +3,7 @@ type Query {
 	producer(producerId: ID!) : Producer
 	producersWaitingForValidation: [Producer!]!
 	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
-	filterProducers(byProductTypeId: [ID!]): [Producer!]!
+	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
