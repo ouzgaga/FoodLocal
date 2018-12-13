@@ -1,6 +1,5 @@
 require('../../chai-config');
 
-const mongoose = require('mongoose');
 const producersService = require('../../../src/graphql/services/producers.services');
 const productsService = require('../../../src/graphql/services/products.services');
 const productTypeService = require('../../../src/graphql/services/productType.services');
@@ -414,7 +413,7 @@ describe('tests producers services', () => {
     });
   });
 
-  describe('tests getAllProducersInReceivedIdList', () => {
+  describe('tests getAllProducerWaitingForValidation', () => {
     it('should get all producers waiting for validation', async() => {
       // on récupère tous les producteurs non validés (isValidated = false)
       let allProducersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();

@@ -25,8 +25,26 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
+/**
+ * Retourne tous les produits dont l'id se trouve dans la liste passée en paramètre.
+ * @param listOfIdToGet, liste contenant les ids des produits que l'on cherche.
+ * @returns {*}
+ */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
   return ProductModel.find({ _id: { $in: listOfIdToGet } });
+}
+
+/**
+ * Retourne le produit correspondant à l'id reçu.
+ *
+ * @param {Integer} id, L'id du produit à récupérer.
+ */
+function getProductById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received product.id is invalid!');
+  } else {
+    return ProductModel.findById(id);
+  }
 }
 
 /**
@@ -60,19 +78,6 @@ async function addAllProductsInArray(productsArray) {
   productsArray.forEach(product => promises.push(addProduct(product)));
   const resolvedPromises = await Promise.all(promises);
   return resolvedPromises.map(addedProduct => addedProduct.id);
-}
-
-/**
- * Retourne le produit correspondant à l'id reçu.
- *
- * @param {Integer} id, L'id du produit à récupérer.
- */
-function getProductById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
-  } else {
-    return ProductModel.findById(id);
-  }
 }
 
 /**

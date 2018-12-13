@@ -1,7 +1,13 @@
 require('../../chai-config');
 
 const mongoose = require('mongoose');
-const productService = require('../../../src/graphql/services/products.services');
+const producersService = require('../../../src/graphql/services/producers.services');
+const productsService = require('../../../src/graphql/services/products.services');
+const productTypeService = require('../../../src/graphql/services/productType.services');
+const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
+const userModel = require('../../../src/graphql/models/user.modelgql');
+const salespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const tokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
@@ -32,9 +38,13 @@ let maPoire = {
 describe('tests product services', () => {
   beforeEach(async() => {
     // on supprime tout le contenu de la DB
+    await ProducersModel.deleteMany();
     await ProductModel.deleteMany();
     await ProductTypeModel.deleteMany();
     await ProductTypeCategoryModel.deleteMany();
+    await userModel.deleteMany();
+    await salespointsModel.deleteMany();
+    await tokensValidationEmailModel.deleteMany();
 
     // on ajoute le contenu de départ
 
@@ -95,25 +105,41 @@ describe('tests product services', () => {
     };
   });
 
-  it('should get all product', async() => {
-    const allProducts = await productService.getProducts();
+  describe('tests getProducts', () => {
+    it('should get all product', async() => {
+      const allProducts = await productsService.getProducts();
 
-    allProducts.should.be.an('array');
-    allProducts.length.should.be.equal(2);
+      allProducts.should.be.an('array');
+      allProducts.length.should.be.equal(2);
 
-    allProducts.forEach((product) => {
-      product.should.be.not.null;
-      product.id.should.be.not.null;
-      product.description.should.be.not.null;
-      product.productTypeId.should.be.not.null;
-      product.productTypeId.should.be.an('object');
-      product.productTypeId.id.should.be.not.null;
+      allProducts.forEach((product) => {
+        product.should.be.not.null;
+        product.id.should.be.not.null;
+        product.description.should.be.not.null;
+        product.productTypeId.should.be.not.null;
+        product.productTypeId.should.be.an('object');
+        product.productTypeId.id.should.be.not.null;
+      });
+    });
+  });
+
+  describe('tests getAllProductsInReceivedIdList', () => {
+    it('should get all product with id in received list', async() => {
+      let products = await productsService.getAllProductsInReceivedIdList([maPoire.id, maPomme.id]);
+      products.should.be.not.null;
+      products.should.be.an('array');
+      products.length.should.be.equal(2);
+
+      products = await productsService.getAllProductsInReceivedIdList([maPomme.id]);
+      products.should.be.not.null;
+      products.should.be.an('array');
+      products.length.should.be.equal(1);
     });
   });
 
   describe('tests getProductById', () => {
     it('should get one product', async() => {
-      let productGotInDB = await productService.getProductById(maPomme.id);
+      let productGotInDB = await productsService.getProductById(maPomme.id);
 
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
@@ -123,7 +149,7 @@ describe('tests product services', () => {
       productGotInDB.productTypeId.should.be.not.null;
       productGotInDB.productTypeId.should.be.eql(maPomme.productTypeId);
 
-      productGotInDB = await productService.getProductById(maPoire.id);
+      productGotInDB = await productsService.getProductById(maPoire.id);
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
       productGotInDB.id.should.be.not.null;
@@ -134,13 +160,13 @@ describe('tests product services', () => {
     });
 
     it('should fail getting one product because no id received', async() => {
-      const productTypeGotInDB = await productService.getProductById({ id: '' });
+      const productTypeGotInDB = await productsService.getProductById({ id: '' });
       productTypeGotInDB.message.should.be.equal('Received product.id is invalid!');
     });
   });
 
   it('should add a new product', async() => {
-    const addedProduct = await productService.addProduct(maPomme);
+    const addedProduct = await productsService.addProduct(maPomme);
 
     addedProduct.should.be.an('object');
     addedProduct.should.be.not.null;
@@ -151,15 +177,31 @@ describe('tests product services', () => {
     addedProduct.productTypeId.should.be.eql(new mongoose.Types.ObjectId(maPomme.productTypeId));
   });
 
+  it.only('should add a new product for all product in received array', async() => {
+    const addedProducts = await productsService.addAllProductsInArray([maPomme, maPoire]);
+
+    const promises = addedProducts.map((async(productId) => {
+      const product = await productsService.getProductById(productId);
+      product.should.be.an('object');
+      product.should.be.not.null;
+      product.id.should.be.not.null;
+      product.description.should.be.not.null;
+      product.description.should.be.equal(maPomme.description);
+      product.productTypeId.should.be.not.null;
+      product.productTypeId.should.be.eql(new mongoose.Types.ObjectId(maPomme.productTypeId));
+    }));
+    await Promise.all(promises);
+  });
+
   describe('tests updateProduct', () => {
     it('should update a product', async() => {
-      let addedProduct = await productService.addProduct(maPomme);
+      let addedProduct = await productsService.addProduct(maPomme);
       addedProduct = {
         id: addedProduct.id,
         description: maPoire.description,
         productTypeId: productTypePoire.id
       };
-      const updatedProduct = await productService.updateProduct(addedProduct);
+      const updatedProduct = await productsService.updateProduct(addedProduct);
       updatedProduct.should.be.an('object');
       updatedProduct.should.be.not.null;
       updatedProduct.id.should.be.not.null;
@@ -175,7 +217,7 @@ describe('tests product services', () => {
         ...maPomme,
         id: ''
       };
-      const updatedProduct = await productService.updateProduct(addedProduct);
+      const updatedProduct = await productsService.updateProduct(addedProduct);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
@@ -185,7 +227,7 @@ describe('tests product services', () => {
         ...maPomme,
         id: '5c04561e7209e21e582750' // id trop court (<24 caractères)
       };
-      const updatedProduct = await productService.updateProduct(addedProduct);
+      const updatedProduct = await productsService.updateProduct(addedProduct);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
@@ -195,14 +237,14 @@ describe('tests product services', () => {
         ...maPomme,
         id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3' // id trop long (> 24 caractères)
       };
-      const updatedProduct = await productService.updateProduct(addedProduct);
+      const updatedProduct = await productsService.updateProduct(addedProduct);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
   });
 
   it('should delete a product', async() => {
-    const addedProduct = await productService.addProduct(maPomme);
+    const addedProduct = await productsService.addProduct(maPomme);
 
     addedProduct.should.be.an('object');
     addedProduct.should.be.not.null;
@@ -211,14 +253,13 @@ describe('tests product services', () => {
     addedProduct.description.should.be.equal(maPomme.description);
     addedProduct.productTypeId.should.be.an('object');
     addedProduct.productTypeId.should.be.not.null;
-    addedProduct.productTypeId.id.should.be.not.null;
-    // addedProduct.productTypeId.id.should.be.eql(maPomme.productType.id);
+    addedProduct.productTypeId.should.be.eql(maPomme.productTypeId);
 
-    let deleteProduct = await productService.deleteProduct(addedProduct);
+    let deleteProduct = await productsService.deleteProduct(addedProduct);
 
     deleteProduct.should.be.not.null;
 
-    deleteProduct = await productService.getProductById(deleteProduct);
+    deleteProduct = await productsService.getProductById(deleteProduct);
     expect(deleteProduct).to.be.null;
   });
 });
