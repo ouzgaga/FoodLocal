@@ -7,4 +7,5 @@ interface Person {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions:[Producer!]!
 	emailValidated: Boolean!
+	isAdmin: Boolean!
 }

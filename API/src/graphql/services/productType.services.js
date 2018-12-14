@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
+const utilsServices = require('./utils.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -18,25 +19,10 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return ProductTypeModel.find({ tags })
+  return ProductTypeModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
-}
-
-/**
- * Ajoute un nouveau type de produit dans la base de données.
- * Attention, doublons autorisés!
- *
- * @param {Integer} productType, Les informations du type de produit à ajouter.
- */
-function addProductType(productType) {
-  const newProductType = {
-    ...productType,
-    categoryId: productType.categoryId,
-    producersIds: []
-  };
-  return new ProductTypeModel(newProductType).save();
 }
 
 /**
@@ -56,19 +42,52 @@ function getProductTypeByCategory(productTypeCategoryId) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    return ProductTypeModel.find({ categoryId: productTypeCategoryId });
+    return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
   }
 }
 
+// todo: à ajouter dans les test!
 async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
+
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeIdsTab } });
+  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
+  // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
+
 
   const producersIds = [];
 
   // on récupère tous les ids des producteurs proposant des produits de ces productTypes
-  productTypes.map(p => p.producersIds.map(id => producersIds.push(id)));
+  productTypes.forEach(p => p.producersIds.forEach(id => producersIds.push(id)));
   return producersIds;
+}
+
+/**
+ * Ajoute un nouveau type de produit dans la base de données.
+ * Attention, doublons autorisés!
+ *
+ * @param {Integer} productType, Les informations du type de produit à ajouter.
+ */
+function addProductType(productType) {
+  const newProductType = {
+    name: productType.name,
+    image: productType.image,
+    categoryId: productType.categoryId,
+    producersIds: []
+  };
+  return new ProductTypeModel(newProductType).save();
+}
+
+async function addProducerProducingThisProductType(idProductType, idProducer) {
+  // fixme: checker si idProducer est présent dans la DB! (puis adapter les tests qui ne passeront plus... ^^)
+
+  const productType = await getProductTypeById(idProductType);
+  if (productType.producersIds != null) {
+    // fixme: checker si producer est déjà dans le tableau avant de l'ajouter!
+    productType.producersIds.push(idProducer);
+  } else {
+    productType.producersIds = [idProducer];
+  }
+  return updateProductType(productType);
 }
 
 /**
@@ -78,7 +97,7 @@ async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(prod
  *
  * @param {ProductType} productType, Les informations du type de produit à mettre à jour.
  */
-async function updateProductType(productType) {
+function updateProductType(productType) {
   if (!mongoose.Types.ObjectId.isValid(productType.id)) {
     return new Error('Received productType.id is invalid!');
   }
@@ -88,21 +107,10 @@ async function updateProductType(productType) {
     name: productType.name,
     image: productType.image,
     categoryId: productType.categoryId,
-    producersIds: productType.producersIds != null ? productType.producersIds.map(p => p.id) : []
+    producersIds: productType.producersIds != null ? productType.producersIds : []
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
-}
-
-async function addProducerProducingThisProductType(idProductType, idProducer) {
-  const productType = await getProductTypeById(idProductType);
-  if (productType.producersIds != null) {
-    productType.producersIds.push(idProducer);
-  } else {
-    productType.producerIds = [idProducer];
-  }
-
-  return updateProductType(productType);
 }
 
 /**
@@ -115,8 +123,6 @@ function deleteProductType(id) {
     return new Error('Received productType.id is invalid!');
   }
 
-  // FIXME: c'est quoi la différence entre findByIdAndDelete() et findByIdAndRemove() ?
-  // FIXME: On retourne quoi après la suppression?
   return ProductTypeModel.findByIdAndRemove(id);
 }
 

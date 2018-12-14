@@ -1,9 +1,14 @@
-require('../../chai-config');
-
 const salespointService = require('../../../src/graphql/services/salespoints.services');
-const SalespointModel = require('../../../src/graphql/models/salespoints.modelgql');
+const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
+const PersonModel = require('../../../src/graphql/models/persons.modelgql');
+const UserModel = require('../../../src/graphql/models/users.modelgql');
+const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
+const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+  '../../../src/graphql/models/products.modelgql'
+);
 
-let magasin1 = {
+let salespointWithSchedule = {
   name: 'Chez moi',
   address: {
     number: 6,
@@ -46,7 +51,7 @@ let magasin1 = {
     }
 };
 
-let magasin2 = {
+let salespointWithoutSchedule = {
   name: 'Chez toi',
   address: {
     number: 12,
@@ -57,471 +62,393 @@ let magasin2 = {
     country: 'Suisse',
     longitude: 1.1234567,
     latitude: 1.123456789
-  },
-  schedule:
-    {
-      monday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        },
-        {
-          openingHour: '13:00',
-          closingHour: '18:00'
-        }
-      ],
-      tuesday: [],
-      wednesday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      thursday: [],
-      friday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      saturday: [],
-      sunday: []
-    }
+  }
+};
+
+let tabSalespoints = [];
+
+const clearAndPopulateDB = async() => {
+  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
+  await ProducersModel.deleteMany();
+  await ProductModel.deleteMany();
+  await ProductTypeModel.deleteMany();
+  await ProductTypeCategoryModel.deleteMany();
+  await PersonModel.deleteMany();
+  await UserModel.deleteMany();
+  await SalespointsModel.deleteMany();
+  await TokensValidationEmailModel.deleteMany();
+
+
+  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+  // on ajoute 1 point de vente avec un horaire
+  salespointWithSchedule = (await SalespointsModel.create(salespointWithSchedule)).toObject();
+
+  salespointWithoutSchedule = (await SalespointsModel.create(salespointWithoutSchedule)).toObject();
+
+  tabSalespoints = [salespointWithSchedule, salespointWithoutSchedule];
 };
 
 describe('tests salespoints services', () => {
-  beforeEach(async() => {
-    // on supprime tout le contenu de la DB
-    await SalespointModel.deleteMany();
+  beforeEach(() => clearAndPopulateDB());
 
-    // on ajoute le contenu de départ
-    // on ajoute 2 points de vente
-    magasin1 = {
-      name: 'Chez moi',
-      address: {
-        number: 6,
-        street: 'Chemin de par ici',
-        city: 'Yverdon',
-        postalCode: '1400',
-        state: 'Vaud',
-        country: 'Suisse',
-        longitude: 1.1234567,
-        latitude: 1.123456789
-      },
-      schedule:
-        {
-          monday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            },
-            {
-              openingHour: '13:00',
-              closingHour: '18:00'
-            }
-          ],
-          tuesday: [],
-          wednesday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          thursday: [],
-          friday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          saturday: [],
-          sunday: []
+  describe('tests getSalesPoints', () => {
+    it('should get all salespoints', async() => {
+      // on récupère un tableau contenant tous les salespoints
+      let allSalespoints = await salespointService.getSalesPoints();
+
+      // on transforme chaque salespoint du tableau en un objet
+      allSalespoints = allSalespoints.map(producer => producer.toObject());
+      allSalespoints.should.be.an('array');
+      allSalespoints.length.should.be.equal(2);
+      const promisesSalespoints = allSalespoints.map(async(salespoint, index) => {
+        salespoint.should.be.not.null;
+        salespoint.id.should.be.equal(tabSalespoints[index].id);
+        salespoint.name.should.be.equal(tabSalespoints[index].name);
+        salespoint.address.should.be.not.null;
+        salespoint.address.should.be.an('object');
+        if (tabSalespoints[index].address.number) {
+          salespoint.address.number.should.be.equal(tabSalespoints[index].address.number);
         }
-    };
-    magasin1 = await SalespointModel.create(magasin1);
-    magasin2 = {
-      name: 'Chez toi',
-      address: {
-        number: 12,
-        street: 'Chemin de par là-bas',
-        city: 'Yverdon',
-        postalCode: '1400',
-        state: 'Vaud',
-        country: 'Suisse',
-        longitude: 1.1234567,
-        latitude: 1.123456789
-      },
-      schedule:
-        {
-          monday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            },
-            {
-              openingHour: '13:00',
-              closingHour: '18:00'
-            }
-          ],
-          tuesday: [],
-          wednesday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          thursday: [],
-          friday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          saturday: [],
-          sunday: []
+        salespoint.address.street.should.be.equal(tabSalespoints[index].address.street);
+        salespoint.address.city.should.be.equal(tabSalespoints[index].address.city);
+        salespoint.address.postalCode.should.be.equal(tabSalespoints[index].address.postalCode);
+        salespoint.address.state.should.be.equal(tabSalespoints[index].address.state);
+        salespoint.address.country.should.be.equal(tabSalespoints[index].address.country);
+        salespoint.address.longitude.should.be.equal(tabSalespoints[index].address.longitude);
+        salespoint.address.latitude.should.be.equal(tabSalespoints[index].address.latitude);
+
+        if (tabSalespoints[index].schedule) {
+          salespoint.schedule.should.be.not.null;
+          salespoint.schedule.should.be.an('object');
+          salespoint.schedule.monday.should.be.an('array');
+          const mondayPromise = salespoint.schedule.monday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.monday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.monday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.tuesday.should.be.an('array');
+          const tuesdayPromise = salespoint.schedule.tuesday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.tuesday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.tuesday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.wednesday.should.be.an('array');
+          const wednesdayPromise = salespoint.schedule.wednesday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.wednesday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.wednesday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.thursday.should.be.an('array');
+          const thursdayPromise = salespoint.schedule.thursday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.thursday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.thursday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.friday.should.be.an('array');
+          const fridayPromise = salespoint.schedule.friday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.friday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.friday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.saturday.should.be.an('array');
+          const saturdayPromise = salespoint.schedule.saturday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.saturday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.saturday[dayScheduleIndex].closingHour);
+          });
+          salespoint.schedule.sunday.should.be.an('array');
+          const sundayPromise = salespoint.schedule.sunday.map((daySchedule, dayScheduleIndex) => {
+            daySchedule.openingHour.should.be.equal(tabSalespoints[index].schedule.sunday[dayScheduleIndex].openingHour);
+            daySchedule.closingHour.should.be.equal(tabSalespoints[index].schedule.sunday[dayScheduleIndex].closingHour);
+          });
+
+          await Promise.all(mondayPromise, tuesdayPromise, wednesdayPromise, thursdayPromise, fridayPromise, saturdayPromise, sundayPromise);
         }
-    };
-    magasin2 = await SalespointModel.create(magasin2);
-  });
-
-  it('should get all salespoints', async() => {
-    const allSalespoints = await salespointService.getSalesPoints();
-
-    allSalespoints.should.be.an('array');
-    allSalespoints.length.should.be.equal(2);
-    allSalespoints.map((salespoint) => {
-      salespoint.should.be.not.null;
-      salespoint.id.should.be.not.null;
-      salespoint.name.should.be.not.null;
-      salespoint.address.should.be.not.null;
-      salespoint.address.should.be.an('object');
-      salespoint.address.street.should.be.not.null;
-      salespoint.address.city.should.be.not.null;
-      salespoint.address.postalCode.should.be.not.null;
-      salespoint.address.country.should.be.not.null;
-      salespoint.address.longitude.should.be.not.null;
-      salespoint.address.latitude.should.be.not.null;
-
-      salespoint.schedule.should.be.not.null;
-      salespoint.schedule.should.be.an('object');
-      salespoint.schedule.monday.should.be.an('array');
-      salespoint.schedule.tuesday.should.be.an('array');
-      salespoint.schedule.wednesday.should.be.an('array');
-      salespoint.schedule.thursday.should.be.an('array');
-      salespoint.schedule.friday.should.be.an('array');
-      salespoint.schedule.saturday.should.be.an('array');
-      salespoint.schedule.sunday.should.be.an('array');
+      });
+      await Promise.all(promisesSalespoints);
     });
   });
 
   describe('tests getSalesPointById', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should get one salespoint', async() => {
-      const salespointGotInDB = await salespointService.getSalesPointById(magasin1.id);
-      salespointGotInDB.should.be.an('object');
+      const salespointGotInDB = (await salespointService.getSalesPointById(salespointWithSchedule.id)).toObject();
       salespointGotInDB.should.be.not.null;
-      salespointGotInDB.id.should.be.equal(magasin1.id);
-      salespointGotInDB.name.should.be.equal(magasin1.name);
+      salespointGotInDB.id.should.be.equal(salespointWithSchedule.id);
+      salespointGotInDB.name.should.be.equal(salespointWithSchedule.name);
       salespointGotInDB.address.should.be.not.null;
       salespointGotInDB.address.should.be.an('object');
-      salespointGotInDB.address.number.should.be.equal(magasin1.address.number);
-      salespointGotInDB.address.street.should.be.equal(magasin1.address.street);
-      salespointGotInDB.address.city.should.be.equal(magasin1.address.city);
-      salespointGotInDB.address.postalCode.should.be.equal(magasin1.address.postalCode);
-      salespointGotInDB.address.country.should.be.equal(magasin1.address.country);
-      salespointGotInDB.address.longitude.should.be.equal(magasin1.address.longitude);
-      salespointGotInDB.address.latitude.should.be.equal(magasin1.address.latitude);
+      if (salespointWithSchedule.address.number) {
+        salespointGotInDB.address.number.should.be.equal(salespointWithSchedule.address.number);
+      }
+      salespointGotInDB.address.street.should.be.equal(salespointWithSchedule.address.street);
+      salespointGotInDB.address.city.should.be.equal(salespointWithSchedule.address.city);
+      salespointGotInDB.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
+      salespointGotInDB.address.state.should.be.equal(salespointWithSchedule.address.state);
+      salespointGotInDB.address.country.should.be.equal(salespointWithSchedule.address.country);
+      salespointGotInDB.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
+      salespointGotInDB.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
 
-      salespointGotInDB.schedule.should.be.not.null;
-      salespointGotInDB.schedule.should.be.an('object');
-      salespointGotInDB.schedule.monday.should.be.an('array');
-      salespointGotInDB.schedule.tuesday.should.be.an('array');
-      salespointGotInDB.schedule.wednesday.should.be.an('array');
-      salespointGotInDB.schedule.thursday.should.be.an('array');
-      salespointGotInDB.schedule.friday.should.be.an('array');
-      salespointGotInDB.schedule.saturday.should.be.an('array');
-      salespointGotInDB.schedule.sunday.should.be.an('array');
+      if (salespointWithSchedule.schedule) {
+        salespointGotInDB.schedule.should.be.not.null;
+        salespointGotInDB.schedule.should.be.an('object');
+        salespointGotInDB.schedule.monday.should.be.an('array');
+        const mondayPromise = salespointGotInDB.schedule.monday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].closingHour);
+        });
+        salespointGotInDB.schedule.tuesday.should.be.an('array');
+        const tuesdayPromise = salespointGotInDB.schedule.tuesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].closingHour);
+        });
+        salespointGotInDB.schedule.wednesday.should.be.an('array');
+        const wednesdayPromise = salespointGotInDB.schedule.wednesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].closingHour);
+        });
+        salespointGotInDB.schedule.thursday.should.be.an('array');
+        const thursdayPromise = salespointGotInDB.schedule.thursday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].closingHour);
+        });
+        salespointGotInDB.schedule.friday.should.be.an('array');
+        const fridayPromise = salespointGotInDB.schedule.friday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].closingHour);
+        });
+        salespointGotInDB.schedule.saturday.should.be.an('array');
+        const saturdayPromise = salespointGotInDB.schedule.saturday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].closingHour);
+        });
+        salespointGotInDB.schedule.sunday.should.be.an('array');
+        const sundayPromise = salespointGotInDB.schedule.sunday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].closingHour);
+        });
 
-      for (let i = 0; i < salespointGotInDB.schedule.monday.length; i++) {
-        salespointGotInDB.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-        salespointGotInDB.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.tuesday.length; i++) {
-        salespointGotInDB.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-        salespointGotInDB.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.wednesday.length; i++) {
-        salespointGotInDB.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-        salespointGotInDB.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.thursday.length; i++) {
-        salespointGotInDB.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-        salespointGotInDB.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.friday.length; i++) {
-        salespointGotInDB.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-        salespointGotInDB.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.saturday.length; i++) {
-        salespointGotInDB.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-        salespointGotInDB.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-      }
-      for (let i = 0; i < salespointGotInDB.schedule.sunday.length; i++) {
-        salespointGotInDB.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-        salespointGotInDB.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
+        await Promise.all(mondayPromise, tuesdayPromise, wednesdayPromise, thursdayPromise, fridayPromise, saturdayPromise, sundayPromise);
       }
     });
 
     it('should fail getting one salespoint because no id received', async() => {
-      const productTypeGotInDB = await salespointService.getSalesPointById('');
-      productTypeGotInDB.message.should.be.equal('Received salespoint.id is invalid!');
+      const salespoint = await salespointService.getSalesPointById('');
+      salespoint.message.should.be.equal('Received salespoint.id is invalid!');
+    });
+
+    it('should fail getting one salespoint because invalid id received', async() => {
+      const salespoint = await salespointService.getSalesPointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
+      salespoint.message.should.be.equal('Received salespoint.id is invalid!');
+    });
+
+    it('should fail getting one salespoint because unknown id received', async() => {
+      const salespoint = await salespointService.getSalesPointById('abcdefabcdefabcdefabcdef');
+      expect(salespoint).to.be.null;
     });
   });
 
-  it('should add a new salespoint', async() => {
-    const addedSalespoint = await salespointService.addSalesPoint(magasin1);
-    addedSalespoint.should.be.an('object');
-    addedSalespoint.should.be.not.null;
-    addedSalespoint.id.should.be.equal(magasin1.id);
-    addedSalespoint.name.should.be.equal(magasin1.name);
-    addedSalespoint.address.should.be.not.null;
-    addedSalespoint.address.should.be.an('object');
-    addedSalespoint.address.number.should.be.equal(magasin1.address.number);
-    addedSalespoint.address.street.should.be.equal(magasin1.address.street);
-    addedSalespoint.address.city.should.be.equal(magasin1.address.city);
-    addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
-    addedSalespoint.address.country.should.be.equal(magasin1.address.country);
-    addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
-    addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
+  describe('tests addSalesPoint', () => {
+    it('should add a new salespoint with a schedule', async() => {
+      salespointWithSchedule._id = undefined;
+      const addedSalespoint = (await salespointService.addSalesPoint(salespointWithSchedule)).toObject();
+      addedSalespoint.should.be.not.null;
+      addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
+      addedSalespoint.name.should.be.equal(salespointWithSchedule.name);
+      addedSalespoint.address.should.be.not.null;
+      addedSalespoint.address.should.be.an('object');
+      if (salespointWithSchedule.address.number) {
+        addedSalespoint.address.number.should.be.equal(salespointWithSchedule.address.number);
+      }
+      addedSalespoint.address.street.should.be.equal(salespointWithSchedule.address.street);
+      addedSalespoint.address.city.should.be.equal(salespointWithSchedule.address.city);
+      addedSalespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
+      addedSalespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
+      addedSalespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
+      addedSalespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
+      addedSalespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
 
-    addedSalespoint.schedule.should.be.not.null;
-    addedSalespoint.schedule.should.be.an('object');
-    addedSalespoint.schedule.monday.should.be.an('array');
-    addedSalespoint.schedule.tuesday.should.be.an('array');
-    addedSalespoint.schedule.wednesday.should.be.an('array');
-    addedSalespoint.schedule.thursday.should.be.an('array');
-    addedSalespoint.schedule.friday.should.be.an('array');
-    addedSalespoint.schedule.saturday.should.be.an('array');
-    addedSalespoint.schedule.sunday.should.be.an('array');
+      if (salespointWithSchedule.schedule) {
+        addedSalespoint.schedule.should.be.not.null;
+        addedSalespoint.schedule.should.be.an('object');
+        addedSalespoint.schedule.monday.should.be.an('array');
+        const mondayPromise = addedSalespoint.schedule.monday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].closingHour);
+        });
+        addedSalespoint.schedule.tuesday.should.be.an('array');
+        const tuesdayPromise = addedSalespoint.schedule.tuesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].closingHour);
+        });
+        addedSalespoint.schedule.wednesday.should.be.an('array');
+        const wednesdayPromise = addedSalespoint.schedule.wednesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].closingHour);
+        });
+        addedSalespoint.schedule.thursday.should.be.an('array');
+        const thursdayPromise = addedSalespoint.schedule.thursday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].closingHour);
+        });
+        addedSalespoint.schedule.friday.should.be.an('array');
+        const fridayPromise = addedSalespoint.schedule.friday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].closingHour);
+        });
+        addedSalespoint.schedule.saturday.should.be.an('array');
+        const saturdayPromise = addedSalespoint.schedule.saturday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].closingHour);
+        });
+        addedSalespoint.schedule.sunday.should.be.an('array');
+        const sundayPromise = addedSalespoint.schedule.sunday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].closingHour);
+        });
 
-    for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
-      addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-      addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
-      addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-      addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
-      addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-      addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
-      addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-      addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
-      addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-      addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
-      addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-      addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
-      addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-      addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
-    }
+        await Promise.all(mondayPromise, tuesdayPromise, wednesdayPromise, thursdayPromise, fridayPromise, saturdayPromise, sundayPromise);
+      }
+    });
+
+    it('should add a new salespoint without schedule', async() => {
+      salespointWithoutSchedule._id = undefined;
+      const addedSalespoint = (await salespointService.addSalesPoint(salespointWithoutSchedule)).toObject();
+      addedSalespoint.should.be.not.null;
+      addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithoutSchedule.id
+      addedSalespoint.name.should.be.equal(salespointWithoutSchedule.name);
+      addedSalespoint.address.should.be.not.null;
+      addedSalespoint.address.should.be.an('object');
+      if (salespointWithoutSchedule.address.number) {
+        addedSalespoint.address.number.should.be.equal(salespointWithoutSchedule.address.number);
+      }
+      addedSalespoint.address.street.should.be.equal(salespointWithoutSchedule.address.street);
+      addedSalespoint.address.city.should.be.equal(salespointWithoutSchedule.address.city);
+      addedSalespoint.address.postalCode.should.be.equal(salespointWithoutSchedule.address.postalCode);
+      addedSalespoint.address.state.should.be.equal(salespointWithoutSchedule.address.state);
+      addedSalespoint.address.country.should.be.equal(salespointWithoutSchedule.address.country);
+      addedSalespoint.address.longitude.should.be.equal(salespointWithoutSchedule.address.longitude);
+      addedSalespoint.address.latitude.should.be.equal(salespointWithoutSchedule.address.latitude);
+
+      expect(addedSalespoint.schedule).to.be.null;
+    });
+
+    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests updateSalesPoint', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should update a salespoint', async() => {
-      let addedProduct = await salespointService.addSalesPoint(magasin2);
-      addedProduct = {
-        id: addedProduct.id,
-        name: 'Chez moi',
-        address: {
-          number: 6,
-          street: 'Chemin de par ici',
-          city: 'Yverdon',
-          postalCode: '1400',
-          country: 'Suisse',
-          longitude: 1.1234567,
-          latitude: 1.123456789
-        },
-        schedule: {
-          monday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            },
-            {
-              openingHour: '13:00',
-              closingHour: '18:00'
-            }
-          ],
-          tuesday: [],
-          wednesday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          thursday: [],
-          friday: [
-            {
-              openingHour: '08:00',
-              closingHour: '12:00'
-            }
-          ],
-          saturday: [],
-          sunday: []
-        }
+      // on récupère un salespoint
+      let salespoint = (await salespointService.getSalesPointById(salespointWithoutSchedule.id)).toObject();
+      // on le modifie
+      salespoint = {
+        ...salespointWithSchedule,
+        id: salespoint.id,
+        _id: salespoint._id
       };
-      const updatedSalespoint = await salespointService.updateSalesPoint(addedProduct);
-      updatedSalespoint.should.be.an('object');
+      const updatedSalespoint = await salespointService.updateSalesPoint(salespoint);
       updatedSalespoint.should.be.not.null;
-      updatedSalespoint.name.should.be.equal(magasin1.name);
+      updatedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
+      updatedSalespoint.name.should.be.equal(salespointWithSchedule.name);
       updatedSalespoint.address.should.be.not.null;
       updatedSalespoint.address.should.be.an('object');
-      updatedSalespoint.address.number.should.be.equal(magasin1.address.number);
-      updatedSalespoint.address.street.should.be.equal(magasin1.address.street);
-      updatedSalespoint.address.city.should.be.equal(magasin1.address.city);
-      updatedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
-      updatedSalespoint.address.country.should.be.equal(magasin1.address.country);
-      updatedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
-      updatedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
+      if (salespointWithSchedule.address.number) {
+        updatedSalespoint.address.number.should.be.equal(salespointWithSchedule.address.number);
+      }
+      updatedSalespoint.address.street.should.be.equal(salespointWithSchedule.address.street);
+      updatedSalespoint.address.city.should.be.equal(salespointWithSchedule.address.city);
+      updatedSalespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
+      updatedSalespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
+      updatedSalespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
+      updatedSalespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
+      updatedSalespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
 
-      updatedSalespoint.schedule.should.be.not.null;
-      updatedSalespoint.schedule.should.be.an('object');
-      updatedSalespoint.schedule.monday.should.be.an('array');
-      updatedSalespoint.schedule.tuesday.should.be.an('array');
-      updatedSalespoint.schedule.wednesday.should.be.an('array');
-      updatedSalespoint.schedule.thursday.should.be.an('array');
-      updatedSalespoint.schedule.friday.should.be.an('array');
-      updatedSalespoint.schedule.saturday.should.be.an('array');
-      updatedSalespoint.schedule.sunday.should.be.an('array');
+      if (salespointWithSchedule.schedule) {
+        updatedSalespoint.schedule.should.be.not.null;
+        updatedSalespoint.schedule.should.be.an('object');
+        updatedSalespoint.schedule.monday.should.be.an('array');
+        const mondayPromise = updatedSalespoint.schedule.monday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].closingHour);
+        });
+        updatedSalespoint.schedule.tuesday.should.be.an('array');
+        const tuesdayPromise = updatedSalespoint.schedule.tuesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].closingHour);
+        });
+        updatedSalespoint.schedule.wednesday.should.be.an('array');
+        const wednesdayPromise = updatedSalespoint.schedule.wednesday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].closingHour);
+        });
+        updatedSalespoint.schedule.thursday.should.be.an('array');
+        const thursdayPromise = updatedSalespoint.schedule.thursday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].closingHour);
+        });
+        updatedSalespoint.schedule.friday.should.be.an('array');
+        const fridayPromise = updatedSalespoint.schedule.friday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].closingHour);
+        });
+        updatedSalespoint.schedule.saturday.should.be.an('array');
+        const saturdayPromise = updatedSalespoint.schedule.saturday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].closingHour);
+        });
+        updatedSalespoint.schedule.sunday.should.be.an('array');
+        const sundayPromise = updatedSalespoint.schedule.sunday.map((daySchedule, index) => {
+          daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].openingHour);
+          daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].closingHour);
+        });
 
-      for (let i = 0; i < updatedSalespoint.schedule.monday.length; i++) {
-        updatedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-        updatedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.tuesday.length; i++) {
-        updatedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-        updatedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.wednesday.length; i++) {
-        updatedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-        updatedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.thursday.length; i++) {
-        updatedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-        updatedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.friday.length; i++) {
-        updatedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-        updatedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.saturday.length; i++) {
-        updatedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-        updatedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-      }
-      for (let i = 0; i < updatedSalespoint.schedule.sunday.length; i++) {
-        updatedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-        updatedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
+        await Promise.all(mondayPromise, tuesdayPromise, wednesdayPromise, thursdayPromise, fridayPromise, saturdayPromise, sundayPromise);
       }
     });
 
-    it('should fail updating a salesPoint because no id received', async() => {
-      const addedSalespoint = {
-        id: '',
-        ...magasin1
-      };
-      const updatedProduct = await salespointService.updateSalesPoint(addedSalespoint);
+    it('should fail updating a salespoint because no id received', async() => {
+      salespointWithSchedule.id = '';
+      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
-    it('should fail updating a salesPoint because invalid id received', async() => {
-      const addedSalespoint = {
-        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-        ...magasin1
-      };
-      const updatedProduct = await salespointService.updateSalesPoint(addedSalespoint);
+    it('should fail updating a salespoint because invalid id received', async() => {
+      salespointWithSchedule.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
+      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
-    it('should fail updating a salesPoint because invalid id received', async() => {
-      const addedSalespoint = {
-        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-        ...magasin1
-      };
-      const updatedProduct = await salespointService.updateSalesPoint(addedSalespoint);
+    it('should fail updating a salespoint because invalid id received', async() => {
+      salespointWithSchedule.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
+      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
+    });
+
+    it('should fail updating a salespoint because unknown id received', async() => {
+      salespointWithSchedule.id = 'abcdefabcdefabcdefabcdef';
+      const updatedProducer = await salespointService.updateSalesPoint(salespointWithSchedule);
+      expect(updatedProducer).to.be.null;
     });
   });
 
-  it('should delete a salesPoint', async() => {
-    const addedSalespoint = await salespointService.addSalesPoint(magasin1);
-    addedSalespoint.should.be.an('object');
-    addedSalespoint.should.be.not.null;
-    addedSalespoint.id.should.be.equal(magasin1.id);
-    addedSalespoint.name.should.be.equal(magasin1.name);
-    addedSalespoint.address.should.be.not.null;
-    addedSalespoint.address.should.be.an('object');
-    addedSalespoint.address.number.should.be.equal(magasin1.address.number);
-    addedSalespoint.address.street.should.be.equal(magasin1.address.street);
-    addedSalespoint.address.city.should.be.equal(magasin1.address.city);
-    addedSalespoint.address.postalCode.should.be.equal(magasin1.address.postalCode);
-    addedSalespoint.address.country.should.be.equal(magasin1.address.country);
-    addedSalespoint.address.longitude.should.be.equal(magasin1.address.longitude);
-    addedSalespoint.address.latitude.should.be.equal(magasin1.address.latitude);
+  describe('tests deleteSalesPoint', () => {
+    beforeEach(() => clearAndPopulateDB());
 
-    addedSalespoint.schedule.should.be.not.null;
-    addedSalespoint.schedule.should.be.an('object');
-    addedSalespoint.schedule.monday.should.be.an('array');
-    addedSalespoint.schedule.tuesday.should.be.an('array');
-    addedSalespoint.schedule.wednesday.should.be.an('array');
-    addedSalespoint.schedule.thursday.should.be.an('array');
-    addedSalespoint.schedule.friday.should.be.an('array');
-    addedSalespoint.schedule.saturday.should.be.an('array');
-    addedSalespoint.schedule.sunday.should.be.an('array');
+    it('should delete a salespoint', async() => {
+      // on supprime un salespoint
+      let deleteSalespoint = (await salespointService.deleteSalesPoint(salespointWithSchedule.id)).toObject();
+      deleteSalespoint.should.be.not.null;
+      deleteSalespoint.id.should.be.eql(salespointWithSchedule.id);
 
-    for (let i = 0; i < addedSalespoint.schedule.monday.length; i++) {
-      addedSalespoint.schedule.monday[i].openingHour.should.equal(magasin1.schedule.monday[i].openingHour);
-      addedSalespoint.schedule.monday[i].closingHour.should.equal(magasin1.schedule.monday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.tuesday.length; i++) {
-      addedSalespoint.schedule.tuesday[i].openingHour.should.equal(magasin1.schedule.tuesday[i].openingHour);
-      addedSalespoint.schedule.tuesday[i].closingHour.should.equal(magasin1.schedule.tuesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.wednesday.length; i++) {
-      addedSalespoint.schedule.wednesday[i].openingHour.should.equal(magasin1.schedule.wednesday[i].openingHour);
-      addedSalespoint.schedule.wednesday[i].closingHour.should.equal(magasin1.schedule.wednesday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.thursday.length; i++) {
-      addedSalespoint.schedule.thursday[i].openingHour.should.equal(magasin1.schedule.thursday[i].openingHour);
-      addedSalespoint.schedule.thursday[i].closingHour.should.equal(magasin1.schedule.thursday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.friday.length; i++) {
-      addedSalespoint.schedule.friday[i].openingHour.should.equal(magasin1.schedule.friday[i].openingHour);
-      addedSalespoint.schedule.friday[i].closingHour.should.equal(magasin1.schedule.friday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.saturday.length; i++) {
-      addedSalespoint.schedule.saturday[i].openingHour.should.equal(magasin1.schedule.saturday[i].openingHour);
-      addedSalespoint.schedule.saturday[i].closingHour.should.equal(magasin1.schedule.saturday[i].closingHour);
-    }
-    for (let i = 0; i < addedSalespoint.schedule.sunday.length; i++) {
-      addedSalespoint.schedule.sunday[i].openingHour.should.equal(magasin1.schedule.sunday[i].openingHour);
-      addedSalespoint.schedule.sunday[i].closingHour.should.equal(magasin1.schedule.sunday[i].closingHour);
-    }
+      // on tente de récupérer le même salespoint -> retourne null car le salespoint est introuvable dans la DB
+      deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
+      expect(deleteSalespoint).to.be.null;
+    });
 
-    let deleteSalespoint = await salespointService.deleteSalesPoint(addedSalespoint);
-
-    deleteSalespoint.should.be.not.null;
-
-    deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
-    it.should.be.null = deleteSalespoint; // Fixme: Ca marche de faire ça ??
+    it('should fail deleting a salespoint because given id not found in DB', async() => {
+      // on supprime un salepoint inexistant
+      const deleteSalesPoint = await salespointService.deleteSalesPoint('abcdefabcdefabcdefabcdef');
+      expect(deleteSalesPoint).to.be.null;
+    });
   });
 });
