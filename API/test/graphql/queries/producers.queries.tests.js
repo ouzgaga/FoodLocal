@@ -9,7 +9,7 @@ const tokensValidationEmailModel = require('../../../src/graphql/models/tokensVa
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
-
+const { queryObjAllProducers, queryObjProducerWithCorrectId } = require('./Objects/QueryObjsProducers');
 
 let benoit = {};
 let antoine = {};
@@ -102,11 +102,11 @@ const beforeEachFunc = () => async() => {
     },
     products: [
       {
-        description: 'Une pomme monnnnstre bonne!',
+        description: 'Une pomme moins bonne que celle d\'antoine!',
         productTypeId: pomme.id
       },
       {
-        description: 'Une poire de folie!',
+        description: 'Une poire bof bof!',
         productTypeId: poire.id
       }
     ]
@@ -135,7 +135,7 @@ const beforeEachFunc = () => async() => {
     },
     products: [
       {
-        description: 'Une pomme monnnnstre bonne!',
+        description: 'Une pomme meilleure que celle de Benoit!',
         productTypeId: pomme.id
       }
     ]
@@ -147,13 +147,13 @@ const beforeEachFunc = () => async() => {
 
 const afterEachFunc = () => async () => {
   // on supprime tout le contenu de la DB
-  await ProducersModel.remove({});
-  await ProductModel.remove({});
-  await ProductTypeModel.remove({});
-  await ProductTypeCategoryModel.remove({});
-  await userModel.remove({});
-  await salespointsModel.remove({});
-  await tokensValidationEmailModel.remove({});
+  await ProducersModel.deleteMany();
+  await ProductModel.deleteMany();
+  await ProductTypeModel.deleteMany();
+  await ProductTypeCategoryModel.deleteMany();
+  await userModel.deleteMany();
+  await salespointsModel.deleteMany();
+  await tokensValidationEmailModel.deleteMany();
 };
 
 describe('Testing query producer Graphql', () => {
@@ -163,204 +163,32 @@ describe('Testing query producer Graphql', () => {
     beforeEach(beforeEachFunc());
     afterEach(afterEachFunc());
     it('sucess - query: getting firstname and lastname of all producers', async() => {
-      const queryObj = {
-        query: `
-          query{
-            producers{
-              firstname
-              lastname
-            }
-          }
-        `,
-        variables: {},
-        context: {},
-        expected: {
-          data: {
-            producers: [
-              {
-                firstname: 'Benoît',
-                lastname: 'Schopfer'
-              },
-              {
-                firstname: 'Antoine',
-                lastname: 'Rochat'
-              },
-
-            ]
-          }
-        }
-      };
       const {
         query, variables, context, expected
-      } = queryObj;
+      } = queryObjAllProducers;
       const result = await graphql(schema, query, null, context, variables);
       return result.should.be.eql(expected);
     });
+  });
+  describe('Getting producer by id', () => {
+    beforeEach(beforeEachFunc());
+    afterEach(afterEachFunc());
 
     it('sucess - getting producer with a correct id', async() => {
-      const queryObj = {
-        query: `
-          query($id: ID!){
-            producer(producerId: $id){
-              id
-              firstname
-              lastname
-              email
-              password
-              image
-              emailValidated
-              phoneNumber
-              description
-              website
-              isValidated
-              products{
-                description
-                productType{
-                  name
-                  image
-                  category{
-                    name
-                    image
-                  }
-                }
-              }
-              salesPoint{
-                name
-                address{
-                  number
-                  street
-                  city
-                  postalCode
-                  country
-                  longitude
-                  latitude
-                }
-                schedule {
-                  monday {
-                    openingHour
-                    closingHour
-                  }
-                  tuesday{
-                    openingHour
-                    closingHour
-                  }
-                  wednesday{
-                    openingHour
-                    closingHour
-                  }
-                  thursday{
-                    openingHour
-                    closingHour
-                  }
-                  friday{
-                    openingHour
-                    closingHour
-                  }
-                  saturday{
-                    openingHour
-                    closingHour
-                  }
-                  sunday{
-                    openingHour
-                    closingHour
-                  }
-                }
-              }
-            }
-          }`,
-        variables:
-          {
-            id: benoit.id
-          },
-        context: {},
-        expected: {
-          data: {
-            producer: {
-              firstname: 'Benoît',
-              lastname: 'Schopfer',
-              email: 'benoit.schopfer5@heig-vd.ch',
-              password: '1234abcd',
-              image: 'Ceci est une image encodée en base64!',
-              emailValidated: false,
-              phoneNumber: '0761435196',
-              description: 'Un chouet gaillard!',
-              website: 'benoitschopfer.ch',
-              isValidated: false,
-              products: [
-                {
-                  description: 'Une pomme monnnnstre bonne!',
-                  productType: {
-                    name: 'Pomme',
-                    image: 'ceci est une image de pomme encodée en base64!',
-                    category: {
-                      name: 'Fruits',
-                      image: 'ceci est une image de fruits encodée en base64!'
-                    }
-                  }
-                },
-                {
-                  description: 'Une poire de folie!',
-                  productType: {
-                    name: 'Poire',
-                    image: 'ceci est une image de poire encodée en base64!',
-                    category: {
-                      name: 'Fruits',
-                      image: 'ceci est une image de fruits encodée en base64!'
-                    }
-                  }
-                }
-              ],
-              salesPoint: {
-                name: 'Chez moi',
-                address: {
-                  number: 6,
-                  street: 'Chemin de par ici',
-                  city: 'Yverdon',
-                  postalCode: '1400',
-                  country: 'Suisse',
-                  longitude: 1.1234567,
-                  latitude: 1.123456789
-                },
-                schedule: {
-                  monday: [
-                    {
-                      openingHour: '08:00',
-                      closingHour: '12:00'
-                    },
-                    {
-                      openingHour: '13:00',
-                      closingHour: '18:00'
-                    }
-                  ],
-                  tuesday: [],
-                  wednesday: [
-                    {
-                      openingHour: '08:00',
-                      closingHour: '12:00'
-                    }
-                  ],
-                  thursday: [],
-                  friday: [
-                    {
-                      openingHour: '08:00',
-                      closingHour: '12:00'
-                    }
-                  ],
-                  saturday: [],
-                  sunday: []
-                }
-              }
-            }
-          }
-        }
-      };
+      queryObjProducerWithCorrectId.variables.id = benoit.id;
       const {
         query, variables, context, expected 
-      } = queryObj;
+      } = queryObjProducerWithCorrectId;
 
       expected.data.producer.id = benoit.id;
+
       const result = await graphql(schema, query, null, context, variables);
-      return result.should.be.eql(expected);
+      expect(result).to.be.not.null;
+      expect(result.data).to.be.not.null;
+      expect(result.data.producer.products).to.be.an('array');
+      expect(result.data.producer.products.length).to.be.equal(queryObjProducerWithCorrectId.expected.data.producer.products.length);
+      expect(result.data.producer.products).
+
     });
 
     it('sucess - getting a producer without schedule on his sale point', async() => {
@@ -454,7 +282,7 @@ describe('Testing query producer Graphql', () => {
               isValidated: false,
               products: [
                 {
-                  description: 'Une pomme monnnnstre bonne!',
+                  description: 'Une pomme meilleure que celle de Benoit!',
                   productType: {
                     name: 'Pomme',
                     image: 'ceci est une image de pomme encodée en base64!',
@@ -522,13 +350,13 @@ describe('Testing query producer Graphql', () => {
     it('failed - getting firstname and lastname of an invalid id', async() => {
       const queryObj = {
         query: `
-      query($id: ID!){
-        producer(producerId: $id){
-          firstname
-          lastname
-        }
-      }
-    `,
+          query($id: ID!){
+            producer(producerId: $id){
+              firstname
+              lastname
+            }
+          }
+        `,
         variables:
           {
             id: 'badid' // incorrect id
@@ -542,7 +370,7 @@ describe('Testing query producer Graphql', () => {
         query, variables, context
       } = queryObj;
       const result = await graphql(schema, query, null, context, variables);
-      return result.errors[0].message.should.be.equals('The received id (badid) is invalid!');
+      return result.errors[0].message.should.be.equals('Received producer.id is invalid!');
     });
   });
 });
