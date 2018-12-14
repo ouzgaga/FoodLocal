@@ -27,6 +27,19 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
+/**
+ * Retourne le producteur correspondant à l'id reçu.
+ *
+ * @param {Integer} id, L'id du producteur à récupérer.
+ */
+function getUserById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  } else {
+    return UsersModel.findById(id);
+  }
+}
+
 function getAllUsersInReceivedIdList(listOfIdToGet) {
   return UsersModel.find({ _id: { $in: listOfIdToGet } });
 }
@@ -38,7 +51,6 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser(user) {
-  // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await UtilsServices.isEmailUnused(user.email)) {
     const userToAdd = {
       ...user,
@@ -50,20 +62,7 @@ async function addUser(user) {
     tokenValidationEmail.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
-    throw new Error('This email is already used.');
-  }
-}
-
-/**
- * Retourne le producteur correspondant à l'id reçu.
- *
- * @param {Integer} id, L'id du producteur à récupérer.
- */
-function getUserById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
-  } else {
-    return UsersModel.findById(id);
+    return new Error('This email is already used.');
   }
 }
 
@@ -91,7 +90,6 @@ async function updateUser({
     emailValidated
   };
   return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
-  // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
 /**
@@ -107,6 +105,7 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
+// todo: à déplacer dans un fichier Person.services, faire la recherche sur toutes les personnes et faire les tests des tokens!
 async function validateEmailUserByToken(value) {
   const token = await tokenValidationEmail.validateToken(value);
   if (token !== null) {
@@ -114,7 +113,7 @@ async function validateEmailUserByToken(value) {
     user.emailValidated = true;
     return updateUser(user) !== null;
   } else {
-    return new Error("Token not valid");
+    return new Error('Token not valid');
   }
 }
 

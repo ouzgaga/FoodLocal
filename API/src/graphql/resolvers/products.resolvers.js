@@ -16,7 +16,7 @@ const productResolvers = {
 
     productTypesOfCategory: (parent, args, context) => productTypeServices.getProductTypeByCategory(args.productTypeCategoryId),
 
-    productTypeCategories: () => productTypeCategoryServices.getProductsCategories(),
+    productTypeCategories: () => productTypeCategoryServices.getProductTypeCategories(),
 
     productTypeCategory: (parent, args, contet) => productTypeCategoryServices.getProductTypeCategoryById(args.productTypeCategoryId)
 

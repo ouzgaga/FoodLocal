@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
 const productsServices = require('../services/products.services');
-const salesPointsServices = require('../services/salespoints.services');
+const salespointsServices = require('../services/salespoints.services');
 const utilsServices = require('../services/utils.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
@@ -36,7 +36,6 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
  * @returns {*}
  */
 function getProducerById(id) {
-  // fixme: demander à Paul la façon la plus jolie de convertir tous les id en ObjectId (dans les resolver, dans les fonction, ...?)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   } else {
@@ -94,9 +93,9 @@ async function addProducer(producer) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
   if (await utilsServices.isEmailUnused(producer.email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
     let salespoint;
-    if (producer.salesPoint != null) { // le producteur contient un point de vente
+    if (producer.salespoint != null) { // le producteur contient un point de vente
       // on enregistre le point de vente dans la DB
-      salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
+      salespoint = await salespointsServices.addSalesPoint(producer.salespoint);
     }
 
     let productsIds;
@@ -119,7 +118,7 @@ async function addProducer(producer) {
       phoneNumber: producer.phoneNumber,
       description: producer.description,
       website: producer.website,
-      salesPointId: salespoint != null ? salespoint.id : null, // on récupère juste l'id du point de vente
+      salespointId: salespoint != null ? salespoint.id : null, // on récupère juste l'id du point de vente
       isValidated: false,
       productsIds: productsIds != null ? productsIds : []
     };
@@ -172,7 +171,7 @@ async function updateProducer(producer) {
       phoneNumber: producer.phoneNumber,
       description: producer.description,
       website: producer.website,
-      salesPointId: producer.salesPointId != null ? producer.salesPointId : producer.salesPoint,
+      salespointId: producer.salespointId != null ? producer.salespointId : producer.salespoint,
       isValidated: producerValidations.isValidated,
       productsIds: producer.products != null ? producer.products.map(p => p.id) : []
     };

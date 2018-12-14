@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const options = {
+  toObject: { virtuals: true }
+};
+
 /**
  * ProductTypeCategory Schema
  */
@@ -13,7 +17,7 @@ const ProductTypeCategorySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: false
     }
-  }
+  }, options
 );
 
 /**
@@ -39,7 +43,7 @@ const ProductTypeSchema = new mongoose.Schema(
       ref: 'producers',
       required: true
     }
-  }
+  }, options
 );
 
 /**
@@ -56,7 +60,7 @@ const ProductSchema = new mongoose.Schema(
       ref: 'productType',
       required: true
     }
-  }
+  }, options
 );
 
 /**

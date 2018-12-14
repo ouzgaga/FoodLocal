@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const options = {
+  toObject: { virtuals: true }
+};
+
 /**
  * Address Schema
  */
@@ -37,7 +41,7 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Number,
       required: true
     }
-  }
+  }, options
 );
 
 /**
@@ -53,7 +57,7 @@ const dayScheduleSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     }
-  }
+  }, options
 );
 
 /**
@@ -96,13 +100,13 @@ const scheduleSchema = new mongoose.Schema(
       maxItems: 2,
       required: true
     }
-  }
+  }, options
 );
 
 /**
- * salesPoint Schema
+ * salespoint Schema
  */
-const salesPointSchema = new mongoose.Schema(
+const salespointSchema = new mongoose.Schema(
   {
     name: {
       type: mongoose.Schema.Types.String,
@@ -116,11 +120,11 @@ const salesPointSchema = new mongoose.Schema(
       type: scheduleSchema,
       required: false
     }
-  }
+  }, options
 );
 
 /**
  * @typedef salespoints
  */
 
-module.exports = mongoose.model('salespoints', salesPointSchema);
+module.exports = mongoose.model('salespoints', salespointSchema);

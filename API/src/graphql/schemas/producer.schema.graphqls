@@ -26,7 +26,7 @@ type Producer implements Person {
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPoint
+	salespoint: SalesPoint
 	isValidated: Boolean! # validation côté serveur uniquement
 	products: [Product!]!
 }
@@ -44,7 +44,7 @@ input ProducerInputAdd {
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputAdd
+	salespoint: SalesPointInputAdd
 	# isValidated: Boolean!
 	products: [ProductInputAdd!] # pas obligatoire si vide
 }
@@ -62,7 +62,7 @@ input ProducerInputUpdate {
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputUpdate
+	salespoint: SalesPointInputUpdate
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
 	products: [ProductInputUpdate!] # pas obligatoire si vide
 }

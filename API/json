@@ -8,7 +8,7 @@
 		"phoneNumber": "0761435196",
 		"description": "Un chouet gaillard!",
 		"website": "benoitpaysan.ch",
-		"salesPoint": {
+		"salespoint": {
 			"name": "Chez moi",
 			"address": {
 				"number": 6,

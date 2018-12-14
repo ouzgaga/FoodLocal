@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 /**
  * Person Schema
  */
-const options = { discriminatorKey: 'kind' };
+const options = {
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true }
+};
 
 const personSchema = new mongoose.Schema(
   {

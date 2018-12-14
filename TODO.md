@@ -7,11 +7,9 @@
 - Ajouter Rating dans producers (ajouter table séparée et garder la moyenne et le nombre total de vote dans le producer)
 - Ajouter *totalCount* + pagination pour tous les tableaux 
   - Passer les tableaux sous forme d'objets avec *TotalCount*, *pagination*, *tableau*
-
 - Limiter taille de chaque string entrée par les users
 - Ajouter le contrôle des saisies utilisateur!
-
-
+- Ajouter un booléen isAdmin dans Person (non modifiable pour le moment -> que via la DB)
 
 
 

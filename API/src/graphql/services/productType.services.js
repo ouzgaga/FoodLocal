@@ -34,7 +34,6 @@ function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    id = utilsServices.castIdInObjectId(id);
     return ProductTypeModel.findById(id);
   }
 }
@@ -43,16 +42,15 @@ function getProductTypeByCategory(productTypeCategoryId) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    return ProductTypeModel.find({ categoryId: productTypeCategoryId });
+    return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
   }
 }
 
 // todo: à ajouter dans les test!
 async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
-  const productTypeObjectIdsTab = utilsServices.castTabOfIdsInTabOfObjectIds(productTypeIdsTab);
 
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeObjectIdsTab } } });
+  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
   // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
 
 
@@ -71,7 +69,8 @@ async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(prod
  */
 function addProductType(productType) {
   const newProductType = {
-    ...productType,
+    name: productType.name,
+    image: productType.image,
     categoryId: productType.categoryId,
     producersIds: []
   };
@@ -79,8 +78,7 @@ function addProductType(productType) {
 }
 
 async function addProducerProducingThisProductType(idProductType, idProducer) {
-  idProductType = utilsServices.castIdInObjectId(idProductType);
-  idProducer = utilsServices.castIdInObjectId(idProducer);
+  // fixme: checker si idProducer est présent dans la DB! (puis adapter les tests qui ne passeront plus... ^^)
 
   const productType = await getProductTypeById(idProductType);
   if (productType.producersIds != null) {
