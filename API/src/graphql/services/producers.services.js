@@ -157,9 +157,12 @@ async function updateProducer({ id, firstname, lastname, email, password, image,
     return new Error('Received producer.id is invalid!');
   }
 
-  const { emailValidated, isValidated, isAdmin } = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
+  const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
-  if (isAdmin != null) { // si isAdmin n'est pas nul -> l'utilisateur existe dans la DB, sinon, il n'existe pas car isAdmin est obligatoire
+  if (producerValidation != null) {
+    // si producerValidation n'est pas nul -> l'utilisateur existe dans la DB
+    const { emailValidated, isValidated, isAdmin } = producerValidation;
+
     const producerToUpdate = {
       id,
       firstname,

@@ -507,7 +507,6 @@ describe('tests producers services', () => {
     it('should fail updating a producer because unknown id received', async() => {
       benoit.id = 'abcdefabcdefabcdefabcdef';
       const updatedProducer = await producersService.updateProducer(benoit);
-
       updatedProducer.message.should.be.equal('The received id is not in the database!');
     });
   });

@@ -55,7 +55,7 @@ const queryObjProducerWithCorrectId = {
                   }
                 }
               }
-              salesPoint{
+              salespoint{
                 name
                 address{
                   number
@@ -138,7 +138,7 @@ const queryObjProducerWithCorrectId = {
             }
           }
         ],
-        salesPoint: {
+        salespoint: {
           name: 'Chez moi',
           address: {
             number: 6,

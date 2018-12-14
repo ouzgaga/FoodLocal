@@ -192,14 +192,14 @@ describe('tests users services', () => {
 
     it('should update a user', async() => {
       // on récupère un utilisateur
-      let user = (await usersService.getUserById(antoine.id)).toObject();
+      let user = await usersService.getUserById(antoine.id);
       // on le modifie
       user = {
         ...benoit,
         id: user.id
       };
       // on met à jour dans la DB
-      const updatedUser = (await usersService.updateUser(user)).toObject();
+      const updatedUser = await usersService.updateUser(user);
       // on test son nouveau contenu
       updatedUser.should.be.not.null;
       updatedUser.id.should.be.equal(user.id);
@@ -240,7 +240,7 @@ describe('tests users services', () => {
     it('should fail updating a user because unknown id received', async() => {
       benoit.id = 'abcdefabcdefabcdefabcdef';
       const updatedUser = await usersService.updateUser(benoit);
-      expect(updatedUser).to.be.null;
+      updatedUser.message.should.be.equal('The received id is not in the database!');
     });
   });
 

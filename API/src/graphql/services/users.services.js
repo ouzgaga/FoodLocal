@@ -82,19 +82,25 @@ async function updateUser({ id, firstname, lastname, email, password, image, sub
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
-  const { emailValidated, isAdmin } = await ProducersModel.findById(id, 'emailValidated isAdmin');
+  const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
-  const userToUpdate = {
-    firstname,
-    lastname,
-    email,
-    password,
-    image,
-    subscriptions: await getAllUsersInReceivedIdList(subscriptions),
-    emailValidated,
-    isAdmin
-  };
-  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  if (userValidation != null) {
+    // si usrValidation n'est pas nul -> l'utilisateur existe dans la DB
+    const { emailValidated, isAdmin } = userValidation;
+    const userToUpdate = {
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
+      subscriptions: await getAllUsersInReceivedIdList(subscriptions),
+      emailValidated,
+      isAdmin
+    };
+    return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('The received id is not in the database!');
+  }
 }
 
 /**
