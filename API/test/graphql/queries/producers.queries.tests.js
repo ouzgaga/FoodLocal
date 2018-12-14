@@ -187,7 +187,7 @@ describe('Testing query producer Graphql', () => {
       expect(result.data).to.be.not.null;
       expect(result.data.producer.products).to.be.an('array');
       expect(result.data.producer.products.length).to.be.equal(queryObjProducerWithCorrectId.expected.data.producer.products.length);
-      expect(result.data.producer.products).
+      // expect(result.data.producer.products).
 
     });
 
