@@ -413,7 +413,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/salesPoint'
+                  $ref: '#/components/schemas/salespoint'
         default:
           description: Erreur! Impossible de récupérer les points de vente de la base de données.
           content:
@@ -431,14 +431,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/salesPoint'
+              $ref: '#/components/schemas/salespoint'
       responses:
         '200':
           description: Le point de vente a bien été ajouté à la base de données.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/salesPoint'
+                $ref: '#/components/schemas/salespoint'
         default:
           description: Erreur! Impossible d'ajouter le point de vente à la base de données.
           content:
@@ -466,7 +466,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/salesPoint'
+                $ref: '#/components/schemas/salespoint'
         default:
           description: Erreur! Impossible de récupérer le point de vente correspondant à l'id reçu dans la base de données.
           content:
@@ -493,14 +493,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/salesPoint'
+              $ref: '#/components/schemas/salespoint'
       responses:
         '200':
           description: Le point de vente a bien été mis à jour.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/salesPoint'
+                $ref: '#/components/schemas/salespoint'
         default:
           description: Erreur! Impossible de mettre à jour le point de vente reçu.
           content:
@@ -604,7 +604,7 @@ components:
         isValidated:
           type: boolean
 
-    salesPoint:
+    salespoint:
       type: object
       description: Lieu où les produits du producteurs sont vendus.
       properties:

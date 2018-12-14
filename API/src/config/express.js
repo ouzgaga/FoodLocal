@@ -7,7 +7,7 @@ const httpStatus = require('http-status');
 
 const productsController = require('../app/controllers/products.controller');
 const producersController = require('../app/controllers/producers.controller');
-const salesPointsController = require('../app/controllers/salespoints.controller');
+const salespointsController = require('../app/controllers/salespoints.controller');
 
 module.exports = (app, config) => {
   const env = process.env.NODE_ENV || 'development';
@@ -30,7 +30,7 @@ module.exports = (app, config) => {
    */
   // app.use('/products', productsController);
   // app.use('/producers', producersController);
-  // app.use('/salesPoints', salesPointsController);
+  // app.use('/salespoints', salespointsController);
 
   app.use('/', (req, res, next) => {
     res.sendFile(`${config.root}/specAPI/index.html`);

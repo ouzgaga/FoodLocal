@@ -598,7 +598,7 @@ definitions:
         description: ''
         type: string
   SalesPoint:
-    title: salesPoint
+    title: salespoint
     description: Lieu où les produits du producteurs sont vendus.
     type: object
     properties:

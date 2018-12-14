@@ -1,7 +1,7 @@
 const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
 const usersServices = require('../services/users.services');
-const salesPointsServices = require('../services/salespoints.services');
+const salespointsServices = require('../services/salespoints.services');
 const utilsServices = require('../services/utils.services');
 
 const producerResolvers = {
@@ -34,8 +34,8 @@ const producerResolvers = {
 
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
-    salesPoint: (parent, args, context) => (parent.salesPointId != null ? salesPointsServices.getSalesPointById(
-      parent.salesPointId
+    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalesPointById(
+      parent.salespointId
     ) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)

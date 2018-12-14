@@ -1,11 +1,10 @@
 require('../../chai-config');
-
 const productsService = require('../../../src/graphql/services/products.services');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
 const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const userModel = require('../../../src/graphql/models/users.modelgql');
-const salespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const tokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
+const UserModel = require('../../../src/graphql/models/users.modelgql');
+const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
@@ -42,24 +41,23 @@ const clearAndPopulateDB = async() => {
   await ProductTypeModel.deleteMany();
   await ProductTypeCategoryModel.deleteMany();
   await PersonModel.deleteMany();
-  await userModel.deleteMany();
-  await salespointsModel.deleteMany();
-  await tokensValidationEmailModel.deleteMany();
+  await UserModel.deleteMany();
+  await SalespointsModel.deleteMany();
+  await TokensValidationEmailModel.deleteMany();
 
   // on ajoute 1 productTypeCategory
   productTypeCategory = (await ProductTypeCategoryModel.create(productTypeCategory)).toObject();
 
   // on ajoute 2 productType
-  // FIXME: Paul: ya un moyen de transformer le _id en id lorsqu'on fait un toObject() ? --> juste id n'est plus reconnu après un toObject()...
-  productTypePomme.categoryId = productTypeCategory._id;
+  productTypePomme.categoryId = productTypeCategory.id;
   productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
-  productTypePoire.categoryId = productTypeCategory._id;
+  productTypePoire.categoryId = productTypeCategory.id;
   productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
 
   // on ajoute 2 produits
-  productPomme.productTypeId = productTypePomme._id;
+  productPomme.productTypeId = productTypePomme.id;
   productPomme = (await ProductModel.create(productPomme)).toObject();
-  productPoire.productTypeId = productTypePoire._id;
+  productPoire.productTypeId = productTypePoire.id;
   productPoire = (await ProductModel.create(productPoire)).toObject();
 
   tabProducts = [productPomme, productPoire];
@@ -81,7 +79,7 @@ describe('tests product services', () => {
       // pour chaque produit
       const promises = await allProducts.map(async(product, index) => {
         product.should.be.not.null;
-        product._id.should.be.eql(tabProducts[index]._id);
+        product.id.should.be.eql(tabProducts[index].id);
         product.productTypeId.should.be.not.null;
         product.productTypeId.should.be.an('object');
       });
@@ -92,13 +90,13 @@ describe('tests product services', () => {
   describe('tests getAllProductsInReceivedIdList', () => {
     it('should get all product with id in received list', async() => {
       // on récupère 2 produits
-      let products = await productsService.getAllProductsInReceivedIdList([productPoire._id, productPomme._id]);
+      let products = await productsService.getAllProductsInReceivedIdList([productPoire.id, productPomme.id]);
       products.should.be.not.null;
       products.should.be.an('array');
       products.length.should.be.equal(2);
 
       // on récupère 1 seul produit
-      products = await productsService.getAllProductsInReceivedIdList([productPomme._id]);
+      products = await productsService.getAllProductsInReceivedIdList([productPomme.id]);
       products.should.be.not.null;
       products.should.be.an('array');
       products.length.should.be.equal(1);
@@ -116,12 +114,12 @@ describe('tests product services', () => {
 
     it('should get one product', async() => {
       // on récupère le produit correspondant à l'id donné
-      const productGotInDB = (await productsService.getProductById(productPomme._id)).toObject();
+      const productGotInDB = (await productsService.getProductById(productPomme.id)).toObject();
 
       // on test son contenu
       productGotInDB.should.be.not.null;
       productGotInDB.should.be.an('object');
-      productGotInDB._id.should.be.eql(productPomme._id);
+      productGotInDB.id.should.be.eql(productPomme.id);
       productGotInDB.description.should.be.equal(productPomme.description);
       productGotInDB.productTypeId.should.be.eql(productPomme.productTypeId);
     });
@@ -133,7 +131,6 @@ describe('tests product services', () => {
 
     it('should fail getting one product because unknown id received', async() => {
       const productGotInDB = await productsService.getProductById('abcdefabcdefabcdefabcdef');
-      // FIXME: Paul: est-ce que c'est la meilleure façon de tester si un element est nul? -> faire elem.should.be.null lève une erreur...
       expect(productGotInDB).to.be.null;
     });
   });
@@ -146,7 +143,7 @@ describe('tests product services', () => {
       // on test son contenu
       addedProduct.should.be.not.null;
       addedProduct.should.be.an('object');
-      addedProduct._id.should.be.not.null; // ne peut pas être le même que productPomme._id
+      addedProduct.id.should.be.not.null; // ne peut pas être le même que productPomme.id
       addedProduct.description.should.be.equal(productPomme.description);
       addedProduct.productTypeId.should.be.eql(productPomme.productTypeId);
     });
@@ -172,7 +169,7 @@ describe('tests product services', () => {
       const promises = addedProducts.map((async(productId, index) => {
         const product = await productsService.getProductById(productId);
         product.should.be.not.null;
-        product._id.should.be.not.null;
+        product.id.should.be.not.null;
         product.description.should.be.equal(tabProducts[index].description);
         product.productTypeId.should.be.eql(tabProducts[index].productTypeId);
       }));
@@ -184,15 +181,17 @@ describe('tests product services', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should update a product', async() => {
-      const addedProduct = await productsService.addProduct(productPomme);
-
-      // on copie l'id du product dans productPoire --> revient à mettre à jour l'ensemble des données (sauf l'id) de 'addedProduct'
-      productPoire._id = addedProduct._id;
-
-      // on crée le champ id car on en a besoin dans updateProduct()
-      productPoire.id = productPoire._id;
-
-      const updatedProduct = await productsService.updateProduct(productPoire);
+      // on récupère un produit
+      let product = await productsService.getProductById(productPomme.id);
+      // on le modifie
+      product = {
+        ...productPoire,
+        id: product.id,
+        _id: product._id
+      };
+      // on le met à jour
+      const updatedProduct = await productsService.updateProduct(product);
+      // on test son nouveau contenu
       updatedProduct.should.be.not.null;
       updatedProduct.id.should.be.not.null;
       updatedProduct.description.should.be.not.null;
@@ -202,7 +201,6 @@ describe('tests product services', () => {
     });
 
     it('should fail updating a product because no id received', async() => {
-
       productPomme.id = '';
       const updatedProduct = await productsService.updateProduct(productPomme);
 
@@ -232,18 +230,24 @@ describe('tests product services', () => {
   });
 
   describe('tests deleteProduct', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should delete a product', async() => {
       // on supprime le produit
-      let deleteProduct = (await productsService.deleteProduct(productPomme._id)).toObject();
+      let deleteProduct = (await productsService.deleteProduct(productPomme.id)).toObject();
 
       // on test le contenu du produit qui vient d'être supprimé
       deleteProduct.should.be.not.null;
-      deleteProduct._id.should.be.eql(productPomme._id);
+      deleteProduct.id.should.be.eql(productPomme.id);
 
       // on tente de re-supprimer le produit -> retourne null car le produit est introuvable dans la DB
       deleteProduct = await productsService.getProductById(deleteProduct);
+      expect(deleteProduct).to.be.null;
+    });
 
-      // FIXME: Paul: est-ce que c'est la meilleure façon de tester si un element est nul? -> faire elem.should.be.null lève une erreur...
+    it('should fail deleting a product because given id not found in DB', async() => {
+      // on supprime un product inexistant
+      const deleteProduct = await productsService.deleteProduct('abcdefabcdefabcdefabcdef');
       expect(deleteProduct).to.be.null;
     });
   });

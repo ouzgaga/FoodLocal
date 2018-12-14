@@ -287,7 +287,7 @@ describe('Add ProductTypeCategory', () => {
         phoneNumber: '0761435196',
         description: 'description',
         website: 'foodlocal.ch',
-        salesPoint: {
+        salespoint: {
           name: 'Chez moi',
           address: {
             number: 6,
@@ -346,7 +346,7 @@ describe('Add ProductTypeCategory', () => {
         phoneNumber: '0761435196',
         description: 'description',
         website: 'foodlocal.ch',
-        salesPoint: {
+        salespoint: {
           name: 'Chez moi',
           address: {
             number: 12,
@@ -404,7 +404,7 @@ describe('Add ProductTypeCategory', () => {
         phoneNumber: '0761435196',
         description: 'description',
         website: 'foodlocal.ch',
-        salesPoint: {
+        salespoint: {
           name: 'Chez moi',
           address: {
             number: 6,

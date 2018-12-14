@@ -4,7 +4,10 @@ const PersonSchema = require('./persons.modelgql');
 /**
  * Producer Schema (hérite du contenu du schéma 'users')
  */
-const options = { discriminatorKey: 'kind' };
+const options = {
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true }
+};
 
 const producerSchema = new mongoose.Schema(
   {
@@ -26,7 +29,7 @@ const producerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: false
     },
-    salesPointId: {
+    salespointId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'salespoints',
       required: false

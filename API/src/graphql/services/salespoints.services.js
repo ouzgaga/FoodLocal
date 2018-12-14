@@ -25,16 +25,6 @@ function getSalesPoints({ tags = undefined, limit = 50, page = 0 } = {}) {
 }
 
 /**
- * Ajoute un nouveau point de vente dans la base de données.
- * Doublons autorisés!
- *
- * @param {Integer} salespoint, Les informations du point de vente à ajouter.
- */
-function addSalesPoint(salespoint) {
-  return new SalespointsModel(salespoint).save();
-}
-
-/**
  * Retourne le point de vente correspondant à l'id reçu.
  *
  * @param {Integer} id, L'id du point de vente à récupérer.
@@ -45,6 +35,16 @@ function getSalesPointById(id) {
   } else {
     return SalespointsModel.findById(id);
   }
+}
+
+/**
+ * Ajoute un nouveau point de vente dans la base de données.
+ * Doublons autorisés!
+ *
+ * @param {Integer} salespoint, Les informations du point de vente à ajouter.
+ */
+function addSalesPoint(salespoint) {
+  return new SalespointsModel(salespoint).save();
 }
 
 /**

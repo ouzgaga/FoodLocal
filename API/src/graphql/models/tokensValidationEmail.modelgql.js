@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const options = {
+  toObject: { virtuals: true }
+};
 
 /**
  * TokenValidationEmail Schema
@@ -20,7 +23,7 @@ const TokenValidationEmail = new mongoose.Schema(
       type: mongoose.Schema.Types.Date,
       default: mongoose.Schema.Types.Date.now
     }
-  }
+  }, options
 );
 
 /**

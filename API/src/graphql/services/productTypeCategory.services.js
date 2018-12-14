@@ -12,7 +12,7 @@ const { ProductTypeCategory: ProductTypeCategoryModel } = require('../models/pro
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" catégories de produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 catégories de produits, soit les catégories de produits 41 à 60.
  */
-function getProductsCategories({ tags = undefined, limit = 50, page = 0 } = {}) {
+function getProductTypeCategories({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
@@ -22,16 +22,6 @@ function getProductsCategories({ tags = undefined, limit = 50, page = 0 } = {}) 
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
-}
-
-/**
- * Ajoute une nouvelle catégorie de produits dans la base de données.
- * Attention, doublons autorisés!
- *
- * @param productTypeCategory, Les informations de la catégorie de produits à ajouter.
- */
-function addProductTypeCategory(productTypeCategory) {
-  return new ProductTypeCategoryModel(productTypeCategory).save();
 }
 
 /**
@@ -45,6 +35,16 @@ function getProductTypeCategoryById(id) {
   } else {
     return ProductTypeCategoryModel.findById(id);
   }
+}
+
+/**
+ * Ajoute une nouvelle catégorie de produits dans la base de données.
+ * Attention, doublons autorisés!
+ *
+ * @param productTypeCategory, Les informations de la catégorie de produits à ajouter.
+ */
+function addProductTypeCategory(productTypeCategory) {
+  return new ProductTypeCategoryModel(productTypeCategory).save();
 }
 
 /**
@@ -76,7 +76,7 @@ function deleteProductTypeCategory(id) {
 }
 
 module.exports = {
-  getProductsCategories,
+  getProductTypeCategories,
   addProductTypeCategory,
   getProductTypeCategoryById,
   updateProductTypeCategory,

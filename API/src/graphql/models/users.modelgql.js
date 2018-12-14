@@ -4,8 +4,10 @@ const PersonSchema = require('./persons.modelgql');
 /**
  * User Schema
  */
-const options = { discriminatorKey: 'kind' };
-
+const options = {
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true }
+};
 const userSchema = new mongoose.Schema(
   {}, options
 );
