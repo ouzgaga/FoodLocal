@@ -58,7 +58,7 @@ const beforeEachFunc = () => async() => {
     phoneNumber: '0761435196',
     description: 'Un chouet gaillard!',
     website: 'benoitschopfer.ch',
-    salesPoint: {
+    salespoint: {
       name: 'Chez moi',
       address: {
         number: 6,
@@ -120,7 +120,7 @@ const beforeEachFunc = () => async() => {
     image: 'Ceci est l\'image d\'un tueur encodée en base64!',
     phoneNumber: '0761435196',
     description: 'Un vrai payouz!',
-    salesPoint: {
+    salespoint: {
       name: 'Chez lui, perdu au milieu de rien',
       address: {
         number: 12,
@@ -217,7 +217,7 @@ describe('Testing query producer Graphql', () => {
                   }
                 }
               }
-              salesPoint{
+              salespoint{
                 name
                 address{
                   number
@@ -292,7 +292,7 @@ describe('Testing query producer Graphql', () => {
                   }
                 }
               ],
-              salesPoint: {
+              salespoint: {
                 name: 'Chez lui, perdu au milieu de rien',
                 address: {
                   number: 12,
