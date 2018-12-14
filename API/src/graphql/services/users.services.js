@@ -50,12 +50,17 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  *
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
-async function addUser(user) {
-  if (await UtilsServices.isEmailUnused(user.email)) {
+async function addUser({ firstname, lastname, email, password, image }) {
+  if (await UtilsServices.isEmailUnused(email)) {
     const userToAdd = {
-      ...user,
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
       subscriptions: [],
-      emailValidated: false
+      emailValidated: false,
+      isAdmin: false
     };
 
     const userAdded = await new UsersModel(userToAdd).save();
@@ -73,12 +78,11 @@ async function addUser(user) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({
-  id, firstname, lastname, email, password, image, subscriptions, emailValidated
-}) {
+async function updateUser({ id, firstname, lastname, email, password, image, subscriptions }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+  const { emailValidated, isAdmin } = await ProducersModel.findById(id, 'emailValidated isAdmin');
 
   const userToUpdate = {
     firstname,
@@ -87,7 +91,8 @@ async function updateUser({
     password,
     image,
     subscriptions: await getAllUsersInReceivedIdList(subscriptions),
-    emailValidated
+    emailValidated,
+    isAdmin
   };
   return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
 }

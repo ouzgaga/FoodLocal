@@ -10,7 +10,8 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'no-unused-expressions': 'off',
     'no-use-before-define': 'off',
-    'no-underscore-dangle': 'off'
+    'no-underscore-dangle': 'off',
+    'object-curly-newline': 'off'
   },
   'env': {
     'mocha': true

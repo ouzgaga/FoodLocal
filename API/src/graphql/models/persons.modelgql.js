@@ -10,29 +10,29 @@ const options = {
 
 const personSchema = new mongoose.Schema(
   {
-    firstname     : {
-      type    : mongoose.Schema.Types.String,
+    firstname: {
+      type: mongoose.Schema.Types.String,
       required: true
     },
-    lastname      : {
-      type    : mongoose.Schema.Types.String,
+    lastname: {
+      type: mongoose.Schema.Types.String,
       required: true
     },
-    email         : {
-      type    : mongoose.Schema.Types.String,
+    email: {
+      type: mongoose.Schema.Types.String,
       required: true
     },
-    password      : {
-      type    : mongoose.Schema.Types.String,
+    password: {
+      type: mongoose.Schema.Types.String,
       required: true
     },
     // l'image doit être encodée en base64
-    image         : {
-      type    : mongoose.Schema.Types.String,
+    image: {
+      type: mongoose.Schema.Types.String,
       required: false
     },
-    subscriptions : {
-      type    : [
+    subscriptions: {
+      type: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'producers'
@@ -41,7 +41,11 @@ const personSchema = new mongoose.Schema(
       required: true
     },
     emailValidated: {
-      type    : mongoose.Schema.Types.Boolean,
+      type: mongoose.Schema.Types.Boolean,
+      required: true
+    },
+    isAdmin: {
+      type: mongoose.Schema.Types.Boolean,
       required: true
     }
   }, options

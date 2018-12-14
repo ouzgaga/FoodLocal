@@ -177,7 +177,7 @@ describe('Testing query producer Graphql', () => {
     it('sucess - getting producer with a correct id', async() => {
       queryObjProducerWithCorrectId.variables.id = benoit.id;
       const {
-        query, variables, context, expected 
+        query, variables, context, expected
       } = queryObjProducerWithCorrectId;
 
       expected.data.producer.id = benoit.id;
@@ -187,11 +187,10 @@ describe('Testing query producer Graphql', () => {
       expect(result.data).to.be.not.null;
       expect(result.data.producer.products).to.be.an('array');
       expect(result.data.producer.products.length).to.be.equal(queryObjProducerWithCorrectId.expected.data.producer.products.length);
-      expect(result.data.producer.products).
-
+      // expect(result.data.producer.products).
     });
 
-    it('sucess - getting a producer without schedule on his sale point', async() => {
+    it('sucess - getting a producer without schedule on his salespoint', async() => {
       const queryObj = {
         query: `
           query($id: ID!){
@@ -341,7 +340,7 @@ describe('Testing query producer Graphql', () => {
         }
       };
       const {
-        query, variables, context, expected 
+        query, variables, context, expected
       } = queryObj;
       const result = await graphql(schema, query, null, context, variables);
       return result.should.be.eql(expected);
