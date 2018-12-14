@@ -3,7 +3,7 @@ type Query {
 	producer(producerId: ID!) : Producer
 	producersWaitingForValidation: [Producer!]!
 	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
-	filterProducers(byProductTypeId: [ID!]): [Producer!]!
+	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
@@ -22,11 +22,12 @@ type Producer implements Person {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions: [Producer!]!
 	emailValidated: Boolean!
-	subscribedUsers : [User!]!
+	isAdmin: Boolean!
+	subscribedUsers : [Person!]!
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPoint
+	salespoint: SalesPoint
 	isValidated: Boolean! # validation côté serveur uniquement
 	products: [Product!]!
 }
@@ -40,11 +41,12 @@ input ProducerInputAdd {
 	image: String # fixme: faudra l'encoder en base64
 	# subscriptions:[ProducerInputAdd!]!
 	# emailValidated: Boolean!
+	# isAdmin: Boolean!
 	# subscribedUsers : [UserInputAdd!]!
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputAdd
+	salespoint: SalesPointInputAdd
 	# isValidated: Boolean!
 	products: [ProductInputAdd!] # pas obligatoire si vide
 }
@@ -58,11 +60,12 @@ input ProducerInputUpdate {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
+	# isAdmin: Boolean! # ne peut pas être modifié par le client
 	subscribedUsers : [UserInputUpdate!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputUpdate
+	salespoint: SalesPointInputUpdate
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
 	products: [ProductInputUpdate!] # pas obligatoire si vide
 }

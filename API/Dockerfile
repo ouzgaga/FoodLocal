@@ -1,7 +1,7 @@
 # Use latest node version
 FROM node:8.12.0-alpine
 
-MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch>
+MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch.ch>
 
 # create api directory in container
 RUN mkdir -p /api

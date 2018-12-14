@@ -8,7 +8,7 @@ const producerResolvers = {
   Mutation: {
     validateToken: (parent, args, context) => usersService.validateEmailUserByToken(args.token),
     askNewToken: (parent, args, context) => {
-      const token = tokenValidationEmailServices.addTokenValidationEmail(args.idUser);
+      const token = tokenValidationEmailServices.addTokenValidationEmail(args.idPerson);
       if (token === null) {
         return false;
       } else {

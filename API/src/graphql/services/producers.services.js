@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
 const productsServices = require('../services/products.services');
-const salesPointsServices = require('../services/salespoints.services');
-const UtilsServices = require('../services/utils.services');
+const salespointsServices = require('../services/salespoints.services');
+const utilsServices = require('../services/utils.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
 
@@ -43,10 +43,6 @@ function getProducerById(id) {
   }
 }
 
-function getAllProducerWaitingForValidation() {
-  return ProducersModel.find({ isValidated: false });
-}
-
 /**
  * Retourne tous les producteurs dont l'id se trouve dans la liste passée en paramètre.
  * @param listOfIdToGet, liste contenant les ids des producteurs que l'on cherche.
@@ -56,15 +52,31 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return ProducersModel.find({ _id: { $in: listOfIdToGet } });
 }
 
+/**
+ * Retourne tous les producteurs qui n'ont pas encore été validés (isValidated = false)
+ * @returns {*}
+ */
+function getAllProducerWaitingForValidation() {
+  return ProducersModel.find({ isValidated: false });
+}
+
+/**
+ * Filtre tous les producteurs en fonction des productTypeId reçus.
+ * Seul les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu sont retournés.
+ * Si aucun producteur ne produit ce type de produit, alors tous les producteurs sont retournés.
+ *
+ * @param byProductTypeIds, tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
+ * @returns {Promise<*>}
+ */
 async function filterProducers(byProductTypeIds) {
-  let filtredProducersIds;
+  let filtredProducersObjectIds;
   if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
     // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    filtredProducersIds = await productTypeServices.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(byProductTypeIds);
+    filtredProducersObjectIds = await productTypeServices.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(byProductTypeIds);
   }
 
-  if (filtredProducersIds != null && filtredProducersIds.length !== 0) {
-    return getAllProducersInReceivedIdList(filtredProducersIds);
+  if (filtredProducersObjectIds != null && filtredProducersObjectIds.length !== 0) {
+    return getAllProducersInReceivedIdList(filtredProducersObjectIds);
   } else {
     // pas de filtre --> on retourne tous les producteurs
     return getProducers();
@@ -77,76 +89,101 @@ async function filterProducers(byProductTypeIds) {
  *
  * @param {Integer} producer, Les informations du producteur à ajouter.
  */
-async function addProducer(producer) {
+async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website, salespoint: receivedSalespoint, products, productsIds: productsTab }) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await UtilsServices.isEmailUnused(producer.email)) {
-    let salespoint;
-    if (producer.salesPoint != null) {
-      salespoint = await salesPointsServices.addSalesPoint(producer.salesPoint);
+  if (await utilsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
+    let salespoint = receivedSalespoint;
+    if (salespoint != null) { // le producteur contient un point de vente
+      // on enregistre le point de vente dans la DB
+      salespoint = await salespointsServices.addSalesPoint(salespoint);
     }
 
-    let productsId;
-    if (producer.products != null && producer.products.length !== 0) {
-      productsId = await productsServices.addAllProductsInArray(producer.products);
+    let productsIds = productsTab;
+    // fixme: checker si les deux if sont vraiment nécessaires!
+    if (products != null && products.length !== 0) {
+      // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
+      productsIds = await productsServices.addAllProductsInArray(products);
+    } else if (productsIds != null && productsIds.length !== 0) {
+      // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
+      productsIds = await productsServices.addAllProductsInArray(productsIds);
     }
     const producerToAdd = {
-      ...producer,
-      salesPointId: salespoint != null ? salespoint.id : null,
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
       subscriptions: [],
       emailValidated: false,
-      subscribedUsers: [],
+      isAdmin: false,
+      subscribedUsersIds: [],
+      phoneNumber,
+      description,
+      website,
+      salespointId: salespoint != null ? salespoint.id : null, // on récupère juste l'id du point de vente
       isValidated: false,
-      productsIds: productsId != null ? productsId : []
+      productsIds: productsIds != null ? productsIds : []
     };
 
+    // on enregistre le producteur dans la DB
     const producerAdded = await new ProducersModel(producerToAdd).save();
 
-    if (producer.products != null && producer.products.length !== 0) {
-      producer.products.map(async p => productTypeServices.addProducerProducingThisProductType(p.productTypeId, producerAdded.id));
+    if (products != null && products.length !== 0) {
+      // le producteur contient au moins un produit qui a/ont été enregistrés précédemment dans la DB
+
+      // on ajoute l'id du producteur dans le productType correspondant à chaque produit
+      const promises = products.map(product => productTypeServices.addProducerProducingThisProductType(product.productTypeId, producerAdded.id));
+      await Promise.all(promises);
     }
 
+    // on envoie un mail au producteur avec un token de validation de l'adresse email et on enregistre le token généré dans la DB
     TokenValidationEmail.addTokenValidationEmail(producerAdded);
     return producerAdded;
-  } else {
-    throw new Error('This email is already used.');
+  } else { // l'email est déjà utilisé -> on ne peut pas ajouter ce producteur!
+    return new Error('This email is already used.');
   }
 }
 
 /**
- * Met à jour le producteur possédant l'id reçu avec les
- * données reçues. Remplace toutes les données du producteur
+ * Met à jour le producteur possédant l'id reçu avec les données reçues. Remplace toutes les données du producteur
  * dans la base de données par celles reçues!
  *
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
-async function updateProducer(producer) {
+async function updateProducer({ id, firstname, lastname, email, password, image, subscriptions, subscribedUsers, phoneNumber, description, website, salespointId, salespoint, products }) {
   // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
 
-  if (!mongoose.Types.ObjectId.isValid(producer.id)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }
 
-  const producerValidations = await ProducersModel.findById(producer.id, 'emailValidated isValidated');
+  const { emailValidated, isValidated, isAdmin } = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
-  const producerToUpdate = {
-    id: producer.id,
-    firstname: producer.firstname,
-    lastname: producer.lastname,
-    email: producer.email,
-    password: producer.password,
-    image: producer.image,
-    subscriptions: producer.subscriptions != null ? producer.subscriptions.map(s => s.id) : [],
-    emailValidated: producerValidations.emailValidated,
-    subscribedUsersIds: producer.subscribedUsers != null ? producer.subscribedUsers.map(u => u.id) : [],
-    phoneNumber: producer.phoneNumber,
-    description: producer.description,
-    website: producer.website,
-    salesPointId: producer.salesPoint,
-    isValidated: producerValidations.isValidated,
-    productsIds: producer.products != null ? producer.products.map(p => p.id) : []
-  };
+  if (isAdmin != null) { // si isAdmin n'est pas nul -> l'utilisateur existe dans la DB, sinon, il n'existe pas car isAdmin est obligatoire
+    const producerToUpdate = {
+      id,
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
+      subscriptions: subscriptions != null ? subscriptions.map(s => s.id) : [],
+      emailValidated,
+      isAdmin,
+      subscribedUsersIds: subscribedUsers != null ? subscribedUsers.map(u => u.id) : [],
+      phoneNumber,
+      description,
+      website,
+      salespointId: salespointId != null ? salespointId : salespoint,
+      isValidated,
+      // fixme: vérifier qu'on reçoit bien products et non pas productsIds!
+      productsIds: products != null ? products.map(p => p.id) : []
+    };
 
-  return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('The received id is not in the database!');
+  }
 }
 
 async function validateAProducer(producerId, validationState) {

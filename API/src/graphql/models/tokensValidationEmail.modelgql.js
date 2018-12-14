@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const options = {
+  toObject: { virtuals: true }
+};
 
 /**
  * TokenValidationEmail Schema
@@ -11,16 +14,16 @@ const TokenValidationEmail = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
-    idUser: {
+    idPerson: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user', // FIXME: voir comment référencer aussi le schéma producers
+      ref: 'persons',
       required: true
     },
     dateCreation: {
       type: mongoose.Schema.Types.Date,
       default: mongoose.Schema.Types.Date.now
     }
-  }
+  }, options
 );
 
 /**

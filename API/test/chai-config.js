@@ -2,20 +2,15 @@ require('dotenv').config();
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const dirty = require('dirty-chai');
-
-chai.use(chaiHttp);
-chai.should();
-
 const mongoose = require('mongoose');
 const config = require('../src/config/config');
 mongoose.Promise = require('bluebird');
 
-mongoose.connect(config.db, { useNewUrlParser: true });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, `unable to connect to database at ${config.db}`));
-db.once('open', () => {
-  console.log(`Connecté à la DB ${config.db}\n`);
-});
+mongoose.connect(config.db, { useNewUrlParser: true })
+  .then(() => console.log(`connecté à la base de donnée de ${process.env.NODE_ENV} --> ${config.db}`))
+  .catch(error => console.log(`la connexion à la database ${config.db} a échoué\n${error.message}`));
 
+chai.use(chaiHttp);
 chai.should();
 chai.use(dirty);
+global.expect = chai.expect;

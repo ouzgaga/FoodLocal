@@ -900,7 +900,7 @@
   },
   "description" : "Tags autorisés permettant de filtrer la recherche de produits dans la base de données."
 };
-            defs.salesPoint = {
+            defs.salespoint = {
   "type" : "object",
   "properties" : {
     "id" : {
@@ -1111,7 +1111,7 @@ public class ProducerApiExample {
     public static void main(String[] args) {
         
         ProducerApi apiInstance = new ProducerApi();
-        Producer body = ; // Producer | 
+        Producer body = ; // Producer |
         try {
             producer result = apiInstance.addProducer(body);
             System.out.println(result);
@@ -1130,7 +1130,7 @@ public class ProducerApiExample {
 
     public static void main(String[] args) {
         ProducerApi apiInstance = new ProducerApi();
-        Producer body = ; // Producer | 
+        Producer body = ; // Producer |
         try {
             producer result = apiInstance.addProducer(body);
             System.out.println(result);
@@ -1146,7 +1146,7 @@ public class ProducerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Producer-addProducer-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Producer *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">Producer *body = ; //
 
 ProducerApi *apiInstance = [[ProducerApi alloc] init];
 
@@ -1167,7 +1167,7 @@ ProducerApi *apiInstance = [[ProducerApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProducerApi()
-var body = ; // {{Producer}} 
+var body = ; // {{Producer}}
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1198,7 +1198,7 @@ namespace Example
         {
 
             var apiInstance = new ProducerApi();
-            var body = new Producer(); // Producer | 
+            var body = new Producer(); // Producer |
 
             try
             {
@@ -1221,7 +1221,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // Producer | 
+$body = ; // Producer |
 
 try {
     $result = $api_instance->addProducer($body);
@@ -1238,9 +1238,9 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ProducerApi;
 
 my $api_instance = WWW::SwaggerClient::ProducerApi->new();
-my $body = WWW::SwaggerClient::Object::Producer->new(); # Producer | 
+my $body = WWW::SwaggerClient::Object::Producer->new(); # Producer |
 
-eval { 
+eval {
     my $result = $api_instance->addProducer(body => $body);
     print Dumper($result);
 };
@@ -1258,9 +1258,9 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ProducerApi()
-body =  # Producer | 
+body =  # Producer |
 
-try: 
+try:
     # Ajoute un nouveau producteur dans la base de données.
     api_response = api_instance.add_producer(body)
     pprint(api_response)
@@ -1577,7 +1577,7 @@ use WWW::SwaggerClient::ProducerApi;
 my $api_instance = WWW::SwaggerClient::ProducerApi->new();
 my $id = 789; # Long | L'id du producteur à supprimer.
 
-eval { 
+eval {
     $api_instance->deleteProducer(id => $id);
 };
 if ($@) {
@@ -1596,7 +1596,7 @@ from pprint import pprint
 api_instance = swagger_client.ProducerApi()
 id = 789 # Long | L'id du producteur à supprimer.
 
-try: 
+try:
     # Supprime le producteur correspondant à l'id reçu.
     api_instance.delete_producer(id)
 except ApiException as e:
@@ -1879,7 +1879,7 @@ use WWW::SwaggerClient::ProducerApi;
 my $api_instance = WWW::SwaggerClient::ProducerApi->new();
 my $id = 789; # Long | L'id du producteur à récupérer.
 
-eval { 
+eval {
     my $result = $api_instance->getProducerById(id => $id);
     print Dumper($result);
 };
@@ -1899,7 +1899,7 @@ from pprint import pprint
 api_instance = swagger_client.ProducerApi()
 id = 789 # Long | L'id du producteur à récupérer.
 
-try: 
+try:
     # Retourne le producteur correspondant à l'id reçu.
     api_response = api_instance.get_producer_by_id(id)
     pprint(api_response)
@@ -2096,7 +2096,7 @@ public class ProducerApiExample {
         producerTags tags = ; // producerTags | Tags à utiliser pour filtrer les résultats.
         Integer limit = 56; // Integer | Nombre maximum de producteurs à retourner.
         Integer page = 56; // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-        Double lat = 1.2; // Double | 
+        Double lat = 1.2; // Double |
         Double long = 1.2; // Double | La longitude de l'utilisateur
         Integer zoom = 56; // Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
         try {
@@ -2120,7 +2120,7 @@ public class ProducerApiExample {
         producerTags tags = ; // producerTags | Tags à utiliser pour filtrer les résultats.
         Integer limit = 56; // Integer | Nombre maximum de producteurs à retourner.
         Integer page = 56; // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-        Double lat = 1.2; // Double | 
+        Double lat = 1.2; // Double |
         Double long = 1.2; // Double | La longitude de l'utilisateur
         Integer zoom = 56; // Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
         try {
@@ -2169,11 +2169,11 @@ ProducerApi *apiInstance = [[ProducerApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProducerApi()
-var opts = { 
+var opts = {
   'tags': , // {{producerTags}} Tags à utiliser pour filtrer les résultats.
   'limit': 56, // {{Integer}} Nombre maximum de producteurs à retourner.
   'page': 56, // {{Integer}} Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-  'lat': 1.2, // {{Double}} 
+  'lat': 1.2, // {{Double}}
   'long': 1.2, // {{Double}} La longitude de l'utilisateur
   'zoom': 56 // {{Integer}} Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
 };
@@ -2206,12 +2206,12 @@ namespace Example
         {
 
             var apiInstance = new ProducerApi();
-            var tags = new producerTags(); // producerTags | Tags à utiliser pour filtrer les résultats. (optional) 
-            var limit = 56;  // Integer | Nombre maximum de producteurs à retourner. (optional) 
-            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60. (optional) 
-            var lat = 1.2;  // Double |  (optional) 
-            var long = 1.2;  // Double | La longitude de l'utilisateur (optional) 
-            var zoom = 56;  // Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage. (optional) 
+            var tags = new producerTags(); // producerTags | Tags à utiliser pour filtrer les résultats. (optional)
+            var limit = 56;  // Integer | Nombre maximum de producteurs à retourner. (optional)
+            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60. (optional)
+            var lat = 1.2;  // Double |  (optional)
+            var long = 1.2;  // Double | La longitude de l'utilisateur (optional)
+            var zoom = 56;  // Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage. (optional)
 
             try
             {
@@ -2237,7 +2237,7 @@ $api_instance = new Swagger\Client\Api{{classname}}();
 $tags = ; // producerTags | Tags à utiliser pour filtrer les résultats.
 $limit = 56; // Integer | Nombre maximum de producteurs à retourner.
 $page = 56; // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-$lat = 1.2; // Double | 
+$lat = 1.2; // Double |
 $long = 1.2; // Double | La longitude de l'utilisateur
 $zoom = 56; // Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
 
@@ -2259,11 +2259,11 @@ my $api_instance = WWW::SwaggerClient::ProducerApi->new();
 my $tags = ; # producerTags | Tags à utiliser pour filtrer les résultats.
 my $limit = 56; # Integer | Nombre maximum de producteurs à retourner.
 my $page = 56; # Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" producteurs. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
-my $lat = 1.2; # Double | 
+my $lat = 1.2; # Double |
 my $long = 1.2; # Double | La longitude de l'utilisateur
 my $zoom = 56; # Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage.
 
-eval { 
+eval {
     my $result = $api_instance->getProducers(tags => $tags, limit => $limit, page => $page, lat => $lat, long => $long, zoom => $zoom);
     print Dumper($result);
 };
@@ -2288,7 +2288,7 @@ lat = 1.2 # Double |  (optional)
 long = 1.2 # Double | La longitude de l'utilisateur (optional)
 zoom = 56 # Integer | Le zoom actuel de la map de l'utilisateur. Permet à l'API de déterminer la zone vue par l'utilisateur et donc quels producteurs retourner pour l'affichage. (optional)
 
-try: 
+try:
     # Retourne tous les producteurs de la base de données.
     api_response = api_instance.get_producers(tags=tags, limit=limit, page=page, lat=lat, long=long, zoom=zoom)
     pprint(api_response)
@@ -2586,7 +2586,7 @@ public class ProducerApiExample {
     public static void main(String[] args) {
         
         ProducerApi apiInstance = new ProducerApi();
-        Producer body = ; // Producer | 
+        Producer body = ; // Producer |
         Long id = 789; // Long | L'id du producteur à mettre à jour.
         try {
             producer result = apiInstance.updateProducer(body, id);
@@ -2606,7 +2606,7 @@ public class ProducerApiExample {
 
     public static void main(String[] args) {
         ProducerApi apiInstance = new ProducerApi();
-        Producer body = ; // Producer | 
+        Producer body = ; // Producer |
         Long id = 789; // Long | L'id du producteur à mettre à jour.
         try {
             producer result = apiInstance.updateProducer(body, id);
@@ -2623,7 +2623,7 @@ public class ProducerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Producer-updateProducer-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Producer *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">Producer *body = ; //
 Long *id = 789; // L'id du producteur à mettre à jour.
 
 ProducerApi *apiInstance = [[ProducerApi alloc] init];
@@ -2646,7 +2646,7 @@ ProducerApi *apiInstance = [[ProducerApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProducerApi()
-var body = ; // {{Producer}} 
+var body = ; // {{Producer}}
 var id = 789; // {{Long}} L'id du producteur à mettre à jour.
 
 var callback = function(error, data, response) {
@@ -2678,7 +2678,7 @@ namespace Example
         {
 
             var apiInstance = new ProducerApi();
-            var body = new Producer(); // Producer | 
+            var body = new Producer(); // Producer |
             var id = 789;  // Long | L'id du producteur à mettre à jour.
 
             try
@@ -2702,7 +2702,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // Producer | 
+$body = ; // Producer |
 $id = 789; // Long | L'id du producteur à mettre à jour.
 
 try {
@@ -2720,10 +2720,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ProducerApi;
 
 my $api_instance = WWW::SwaggerClient::ProducerApi->new();
-my $body = WWW::SwaggerClient::Object::Producer->new(); # Producer | 
+my $body = WWW::SwaggerClient::Object::Producer->new(); # Producer |
 my $id = 789; # Long | L'id du producteur à mettre à jour.
 
-eval { 
+eval {
     my $result = $api_instance->updateProducer(body => $body, id => $id);
     print Dumper($result);
 };
@@ -2741,10 +2741,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ProducerApi()
-body =  # Producer | 
+body =  # Producer |
 id = 789 # Long | L'id du producteur à mettre à jour.
 
-try: 
+try:
     # Met à jour le producteur possédant l'id reçu.
     api_response = api_instance.update_producer(body, id)
     pprint(api_response)
@@ -2974,7 +2974,7 @@ public class ProductsApiExample {
     public static void main(String[] args) {
         
         ProductsApi apiInstance = new ProductsApi();
-        Product body = ; // Product | 
+        Product body = ; // Product |
         try {
             product result = apiInstance.addProduct(body);
             System.out.println(result);
@@ -2993,7 +2993,7 @@ public class ProductsApiExample {
 
     public static void main(String[] args) {
         ProductsApi apiInstance = new ProductsApi();
-        Product body = ; // Product | 
+        Product body = ; // Product |
         try {
             product result = apiInstance.addProduct(body);
             System.out.println(result);
@@ -3009,7 +3009,7 @@ public class ProductsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Products-addProduct-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Product *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">Product *body = ; //
 
 ProductsApi *apiInstance = [[ProductsApi alloc] init];
 
@@ -3030,7 +3030,7 @@ ProductsApi *apiInstance = [[ProductsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProductsApi()
-var body = ; // {{Product}} 
+var body = ; // {{Product}}
 
 var callback = function(error, data, response) {
   if (error) {
@@ -3061,7 +3061,7 @@ namespace Example
         {
 
             var apiInstance = new ProductsApi();
-            var body = new Product(); // Product | 
+            var body = new Product(); // Product |
 
             try
             {
@@ -3084,7 +3084,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // Product | 
+$body = ; // Product |
 
 try {
     $result = $api_instance->addProduct($body);
@@ -3101,9 +3101,9 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ProductsApi;
 
 my $api_instance = WWW::SwaggerClient::ProductsApi->new();
-my $body = WWW::SwaggerClient::Object::Product->new(); # Product | 
+my $body = WWW::SwaggerClient::Object::Product->new(); # Product |
 
-eval { 
+eval {
     my $result = $api_instance->addProduct(body => $body);
     print Dumper($result);
 };
@@ -3121,9 +3121,9 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ProductsApi()
-body =  # Product | 
+body =  # Product |
 
-try: 
+try:
     # Ajoute un nouveau produit dans la base de données.
     api_response = api_instance.add_product(body)
     pprint(api_response)
@@ -3440,7 +3440,7 @@ use WWW::SwaggerClient::ProductsApi;
 my $api_instance = WWW::SwaggerClient::ProductsApi->new();
 my $id = 789; # Long | L'id du produit à supprimer
 
-eval { 
+eval {
     $api_instance->deleteProduct(id => $id);
 };
 if ($@) {
@@ -3459,7 +3459,7 @@ from pprint import pprint
 api_instance = swagger_client.ProductsApi()
 id = 789 # Long | L'id du produit à supprimer
 
-try: 
+try:
     # Supprime le produit correspondant à l'id reçu.
     api_instance.delete_product(id)
 except ApiException as e:
@@ -3742,7 +3742,7 @@ use WWW::SwaggerClient::ProductsApi;
 my $api_instance = WWW::SwaggerClient::ProductsApi->new();
 my $id = 789; # Long | L'id du produit à récupérer.
 
-eval { 
+eval {
     my $result = $api_instance->getProductById(id => $id);
     print Dumper($result);
 };
@@ -3762,7 +3762,7 @@ from pprint import pprint
 api_instance = swagger_client.ProductsApi()
 id = 789 # Long | L'id du produit à récupérer.
 
-try: 
+try:
     # Retourne le produit correspondant à l'id reçu.
     api_response = api_instance.get_product_by_id(id)
     pprint(api_response)
@@ -4020,7 +4020,7 @@ ProductsApi *apiInstance = [[ProductsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProductsApi()
-var opts = { 
+var opts = {
   'tags': , // {{productTags}} Tags à utiliser pour filtrer les résultats.
   'limit': 56, // {{Integer}} Nombre maximum de produits à retourner.
   'page': 56 // {{Integer}} Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
@@ -4054,9 +4054,9 @@ namespace Example
         {
 
             var apiInstance = new ProductsApi();
-            var tags = new productTags(); // productTags | Tags à utiliser pour filtrer les résultats. (optional) 
-            var limit = 56;  // Integer | Nombre maximum de produits à retourner. (optional) 
-            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60. (optional) 
+            var tags = new productTags(); // productTags | Tags à utiliser pour filtrer les résultats. (optional)
+            var limit = 56;  // Integer | Nombre maximum de produits à retourner. (optional)
+            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60. (optional)
 
             try
             {
@@ -4102,7 +4102,7 @@ my $tags = ; # productTags | Tags à utiliser pour filtrer les résultats.
 my $limit = 56; # Integer | Nombre maximum de produits à retourner.
 my $page = 56; # Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
 
-eval { 
+eval {
     my $result = $api_instance->getProducts(tags => $tags, limit => $limit, page => $page);
     print Dumper($result);
 };
@@ -4124,7 +4124,7 @@ tags =  # productTags | Tags à utiliser pour filtrer les résultats. (optional)
 limit = 56 # Integer | Nombre maximum de produits à retourner. (optional)
 page = 56 # Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60. (optional)
 
-try: 
+try:
     # Retourne tous les produits de la base de données.
     api_response = api_instance.get_products(tags=tags, limit=limit, page=page)
     pprint(api_response)
@@ -4359,7 +4359,7 @@ public class ProductsApiExample {
     public static void main(String[] args) {
         
         ProductsApi apiInstance = new ProductsApi();
-        Product body = ; // Product | 
+        Product body = ; // Product |
         Long id = 789; // Long | L'id du produit à mettre à jour.
         try {
             product result = apiInstance.updateProduct(body, id);
@@ -4379,7 +4379,7 @@ public class ProductsApiExample {
 
     public static void main(String[] args) {
         ProductsApi apiInstance = new ProductsApi();
-        Product body = ; // Product | 
+        Product body = ; // Product |
         Long id = 789; // Long | L'id du produit à mettre à jour.
         try {
             product result = apiInstance.updateProduct(body, id);
@@ -4396,7 +4396,7 @@ public class ProductsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Products-updateProduct-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Product *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">Product *body = ; //
 Long *id = 789; // L'id du produit à mettre à jour.
 
 ProductsApi *apiInstance = [[ProductsApi alloc] init];
@@ -4419,7 +4419,7 @@ ProductsApi *apiInstance = [[ProductsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.ProductsApi()
-var body = ; // {{Product}} 
+var body = ; // {{Product}}
 var id = 789; // {{Long}} L'id du produit à mettre à jour.
 
 var callback = function(error, data, response) {
@@ -4451,7 +4451,7 @@ namespace Example
         {
 
             var apiInstance = new ProductsApi();
-            var body = new Product(); // Product | 
+            var body = new Product(); // Product |
             var id = 789;  // Long | L'id du produit à mettre à jour.
 
             try
@@ -4475,7 +4475,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // Product | 
+$body = ; // Product |
 $id = 789; // Long | L'id du produit à mettre à jour.
 
 try {
@@ -4493,10 +4493,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ProductsApi;
 
 my $api_instance = WWW::SwaggerClient::ProductsApi->new();
-my $body = WWW::SwaggerClient::Object::Product->new(); # Product | 
+my $body = WWW::SwaggerClient::Object::Product->new(); # Product |
 my $id = 789; # Long | L'id du produit à mettre à jour.
 
-eval { 
+eval {
     my $result = $api_instance->updateProduct(body => $body, id => $id);
     print Dumper($result);
 };
@@ -4514,10 +4514,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ProductsApi()
-body =  # Product | 
+body =  # Product |
 id = 789 # Long | L'id du produit à mettre à jour.
 
-try: 
+try:
     # Met à jour le produit possédant l'id reçu.
     api_response = api_instance.update_product(body, id)
     pprint(api_response)
@@ -4747,9 +4747,9 @@ public class SalespointsApiExample {
     public static void main(String[] args) {
         
         SalespointsApi apiInstance = new SalespointsApi();
-        SalesPoint body = ; // SalesPoint | 
+        SalesPoint body = ; // SalesPoint |
         try {
-            salesPoint result = apiInstance.addSalespoint(body);
+            salespoint result = apiInstance.addSalespoint(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#addSalespoint");
@@ -4766,9 +4766,9 @@ public class SalespointsApiExample {
 
     public static void main(String[] args) {
         SalespointsApi apiInstance = new SalespointsApi();
-        SalesPoint body = ; // SalesPoint | 
+        SalesPoint body = ; // SalesPoint |
         try {
-            salesPoint result = apiInstance.addSalespoint(body);
+            salespoint result = apiInstance.addSalespoint(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#addSalespoint");
@@ -4782,13 +4782,13 @@ public class SalespointsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Salespoints-addSalespoint-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">SalesPoint *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">SalesPoint *body = ; //
 
 SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
 
 // Ajoute un nouveau point de vente dans la base de données.
 [apiInstance addSalespointWith:body
-              completionHandler: ^(salesPoint output, NSError* error) {
+              completionHandler: ^(salespoint output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -4803,7 +4803,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.SalespointsApi()
-var body = ; // {{SalesPoint}} 
+var body = ; // {{SalesPoint}}
 
 var callback = function(error, data, response) {
   if (error) {
@@ -4834,12 +4834,12 @@ namespace Example
         {
 
             var apiInstance = new SalespointsApi();
-            var body = new SalesPoint(); // SalesPoint | 
+            var body = new SalesPoint(); // SalesPoint |
 
             try
             {
                 // Ajoute un nouveau point de vente dans la base de données.
-                salesPoint result = apiInstance.addSalespoint(body);
+                salespoint result = apiInstance.addSalespoint(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -4857,7 +4857,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // SalesPoint | 
+$body = ; // SalesPoint |
 
 try {
     $result = $api_instance->addSalespoint($body);
@@ -4874,9 +4874,9 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SalespointsApi;
 
 my $api_instance = WWW::SwaggerClient::SalespointsApi->new();
-my $body = WWW::SwaggerClient::Object::SalesPoint->new(); # SalesPoint | 
+my $body = WWW::SwaggerClient::Object::SalesPoint->new(); # SalesPoint |
 
-eval { 
+eval {
     my $result = $api_instance->addSalespoint(body => $body);
     print Dumper($result);
 };
@@ -4894,9 +4894,9 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SalespointsApi()
-body =  # SalesPoint | 
+body =  # SalesPoint |
 
-try: 
+try:
     # Ajoute un nouveau point de vente dans la base de données.
     api_response = api_instance.add_salespoint(body)
     pprint(api_response)
@@ -4965,7 +4965,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/salesPoint"
+        "$ref" : "#/components/schemas/salespoint"
       }
     }
   }
@@ -5213,7 +5213,7 @@ use WWW::SwaggerClient::SalespointsApi;
 my $api_instance = WWW::SwaggerClient::SalespointsApi->new();
 my $id = 789; # Long | L'id du point de vente à supprimer.
 
-eval { 
+eval {
     $api_instance->deleteSalesPoint(id => $id);
 };
 if ($@) {
@@ -5232,7 +5232,7 @@ from pprint import pprint
 api_instance = swagger_client.SalespointsApi()
 id = 789 # Long | L'id du point de vente à supprimer.
 
-try: 
+try:
     # Supprime le point de vente correspondant à l'id reçu.
     api_instance.delete_sales_point(id)
 except ApiException as e:
@@ -5388,7 +5388,7 @@ public class SalespointsApiExample {
         SalespointsApi apiInstance = new SalespointsApi();
         Long id = 789; // Long | L'id du point de vente à récupérer.
         try {
-            salesPoint result = apiInstance.getSalesPointById(id);
+            salespoint result = apiInstance.getSalesPointById(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#getSalesPointById");
@@ -5407,7 +5407,7 @@ public class SalespointsApiExample {
         SalespointsApi apiInstance = new SalespointsApi();
         Long id = 789; // Long | L'id du point de vente à récupérer.
         try {
-            salesPoint result = apiInstance.getSalesPointById(id);
+            salespoint result = apiInstance.getSalesPointById(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#getSalesPointById");
@@ -5427,7 +5427,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
 
 // Retourne le points de vente correspondant à l'id reçu.
 [apiInstance getSalesPointByIdWith:id
-              completionHandler: ^(salesPoint output, NSError* error) {
+              completionHandler: ^(salespoint output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5478,7 +5478,7 @@ namespace Example
             try
             {
                 // Retourne le points de vente correspondant à l'id reçu.
-                salesPoint result = apiInstance.getSalesPointById(id);
+                salespoint result = apiInstance.getSalesPointById(id);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5515,7 +5515,7 @@ use WWW::SwaggerClient::SalespointsApi;
 my $api_instance = WWW::SwaggerClient::SalespointsApi->new();
 my $id = 789; # Long | L'id du point de vente à récupérer.
 
-eval { 
+eval {
     my $result = $api_instance->getSalesPointById(id => $id);
     print Dumper($result);
 };
@@ -5535,7 +5535,7 @@ from pprint import pprint
 api_instance = swagger_client.SalespointsApi()
 id = 789 # Long | L'id du point de vente à récupérer.
 
-try: 
+try:
     # Retourne le points de vente correspondant à l'id reçu.
     api_response = api_instance.get_sales_point_by_id(id)
     pprint(api_response)
@@ -5603,7 +5603,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/salesPoint"
+        "$ref" : "#/components/schemas/salespoint"
       }
     }
   }
@@ -5733,7 +5733,7 @@ public class SalespointsApiExample {
         Integer limit = 56; // Integer | Nombre maximum de points de vente à retourner.
         Integer page = 56; // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
         try {
-            array[salesPoint] result = apiInstance.getSalespoints(tags, limit, page);
+            array[salespoint] result = apiInstance.getSalespoints(tags, limit, page);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#getSalespoints");
@@ -5754,7 +5754,7 @@ public class SalespointsApiExample {
         Integer limit = 56; // Integer | Nombre maximum de points de vente à retourner.
         Integer page = 56; // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
         try {
-            array[salesPoint] result = apiInstance.getSalespoints(tags, limit, page);
+            array[salespoint] result = apiInstance.getSalespoints(tags, limit, page);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#getSalespoints");
@@ -5778,7 +5778,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
 [apiInstance getSalespointsWith:tags
     limit:limit
     page:page
-              completionHandler: ^(array[salesPoint] output, NSError* error) {
+              completionHandler: ^(array[salespoint] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5793,7 +5793,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.SalespointsApi()
-var opts = { 
+var opts = {
   'tags': , // {{salespointsTags}} Tags à utiliser pour filtrer les résultats.
   'limit': 56, // {{Integer}} Nombre maximum de points de vente à retourner.
   'page': 56 // {{Integer}} Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
@@ -5827,14 +5827,14 @@ namespace Example
         {
 
             var apiInstance = new SalespointsApi();
-            var tags = new salespointsTags(); // salespointsTags | Tags à utiliser pour filtrer les résultats. (optional) 
-            var limit = 56;  // Integer | Nombre maximum de points de vente à retourner. (optional) 
-            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60. (optional) 
+            var tags = new salespointsTags(); // salespointsTags | Tags à utiliser pour filtrer les résultats. (optional)
+            var limit = 56;  // Integer | Nombre maximum de points de vente à retourner. (optional)
+            var page = 56;  // Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60. (optional)
 
             try
             {
                 // Retourne tous les points de vente de la base de données.
-                array[salesPoint] result = apiInstance.getSalespoints(tags, limit, page);
+                array[salespoint] result = apiInstance.getSalespoints(tags, limit, page);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5875,7 +5875,7 @@ my $tags = ; # salespointsTags | Tags à utiliser pour filtrer les résultats.
 my $limit = 56; # Integer | Nombre maximum de points de vente à retourner.
 my $page = 56; # Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
 
-eval { 
+eval {
     my $result = $api_instance->getSalespoints(tags => $tags, limit => $limit, page => $page);
     print Dumper($result);
 };
@@ -5897,7 +5897,7 @@ tags =  # salespointsTags | Tags à utiliser pour filtrer les résultats. (optio
 limit = 56 # Integer | Nombre maximum de points de vente à retourner. (optional)
 page = 56 # Integer | Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60. (optional)
 
-try: 
+try:
     # Retourne tous les points de vente de la base de données.
     api_response = api_instance.get_salespoints(tags=tags, limit=limit, page=page)
     pprint(api_response)
@@ -6005,7 +6005,7 @@ except ApiException as e:
       "schema" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/salesPoint"
+          "$ref" : "#/components/schemas/salespoint"
         }
       }
     }
@@ -6132,10 +6132,10 @@ public class SalespointsApiExample {
     public static void main(String[] args) {
         
         SalespointsApi apiInstance = new SalespointsApi();
-        SalesPoint body = ; // SalesPoint | 
+        SalesPoint body = ; // SalesPoint |
         Long id = 789; // Long | L'id du point de vente à mettre à jour.
         try {
-            salesPoint result = apiInstance.updateSalesPoint(body, id);
+            salespoint result = apiInstance.updateSalesPoint(body, id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#updateSalesPoint");
@@ -6152,10 +6152,10 @@ public class SalespointsApiExample {
 
     public static void main(String[] args) {
         SalespointsApi apiInstance = new SalespointsApi();
-        SalesPoint body = ; // SalesPoint | 
+        SalesPoint body = ; // SalesPoint |
         Long id = 789; // Long | L'id du point de vente à mettre à jour.
         try {
-            salesPoint result = apiInstance.updateSalesPoint(body, id);
+            salespoint result = apiInstance.updateSalesPoint(body, id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SalespointsApi#updateSalesPoint");
@@ -6169,7 +6169,7 @@ public class SalespointsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Salespoints-updateSalesPoint-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">SalesPoint *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">SalesPoint *body = ; //
 Long *id = 789; // L'id du point de vente à mettre à jour.
 
 SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
@@ -6177,7 +6177,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
 // Met à jour le point de vente possédant l'id reçu avec les données reçues.
 [apiInstance updateSalesPointWith:body
     id:id
-              completionHandler: ^(salesPoint output, NSError* error) {
+              completionHandler: ^(salespoint output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -6192,7 +6192,7 @@ SalespointsApi *apiInstance = [[SalespointsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var LocalFood = require('local_food');
 
 var api = new LocalFood.SalespointsApi()
-var body = ; // {{SalesPoint}} 
+var body = ; // {{SalesPoint}}
 var id = 789; // {{Long}} L'id du point de vente à mettre à jour.
 
 var callback = function(error, data, response) {
@@ -6224,13 +6224,13 @@ namespace Example
         {
 
             var apiInstance = new SalespointsApi();
-            var body = new SalesPoint(); // SalesPoint | 
+            var body = new SalesPoint(); // SalesPoint |
             var id = 789;  // Long | L'id du point de vente à mettre à jour.
 
             try
             {
                 // Met à jour le point de vente possédant l'id reçu avec les données reçues.
-                salesPoint result = apiInstance.updateSalesPoint(body, id);
+                salespoint result = apiInstance.updateSalesPoint(body, id);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -6248,7 +6248,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api{{classname}}();
-$body = ; // SalesPoint | 
+$body = ; // SalesPoint |
 $id = 789; // Long | L'id du point de vente à mettre à jour.
 
 try {
@@ -6266,10 +6266,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SalespointsApi;
 
 my $api_instance = WWW::SwaggerClient::SalespointsApi->new();
-my $body = WWW::SwaggerClient::Object::SalesPoint->new(); # SalesPoint | 
+my $body = WWW::SwaggerClient::Object::SalesPoint->new(); # SalesPoint |
 my $id = 789; # Long | L'id du point de vente à mettre à jour.
 
-eval { 
+eval {
     my $result = $api_instance->updateSalesPoint(body => $body, id => $id);
     print Dumper($result);
 };
@@ -6287,10 +6287,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SalespointsApi()
-body =  # SalesPoint | 
+body =  # SalesPoint |
 id = 789 # Long | L'id du point de vente à mettre à jour.
 
-try: 
+try:
     # Met à jour le point de vente possédant l'id reçu avec les données reçues.
     api_response = api_instance.update_sales_point(body, id)
     pprint(api_response)
@@ -6391,7 +6391,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/salesPoint"
+        "$ref" : "#/components/schemas/salespoint"
       }
     }
   }

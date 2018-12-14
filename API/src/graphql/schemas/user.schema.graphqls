@@ -18,6 +18,7 @@ type User implements Person {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions:[Producer!]!
 	emailValidated: Boolean!
+	isAdmin: Boolean!
 }
 
 input UserInputAdd {
@@ -29,6 +30,7 @@ input UserInputAdd {
 	image: String # fixme: faudra l'encoder en base64
 	# subscriptions:[Producer!]!
 	# emailValidated: Boolean!
+	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
 
 input UserInputUpdate {
@@ -40,4 +42,5 @@ input UserInputUpdate {
 	image: String # faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!]  # pas obligatoire si vide
 	# emailValidated: Boolean!
+	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }

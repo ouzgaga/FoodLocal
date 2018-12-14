@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UsersModel = require('../models/user.modelgql');
+const UsersModel = require('../models/users.modelgql');
 const UtilsServices = require('../services/utils.services');
 const ProducersModel = require('../models/producers.modelgql');
 const tokenValidationEmail = require('./tokenValidationEmail.services');
@@ -27,33 +27,6 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return UsersModel.find({ _id: { $in: listOfIdToGet } });
-}
-
-/**
- * Ajoute un nouveau producteur dans la base de données.
- * Doublons autorisés!
- *
- * @param {Integer} user, Les informations du producteur à ajouter.
- */
-async function addUser(user) {
-  // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await UtilsServices.isEmailUnused(user.email)) {
-    const userToAdd = {
-      ...user,
-      subscriptions: [],
-      emailValidated: false
-    };
-
-    const userAdded = await new UsersModel(userToAdd).save();
-    tokenValidationEmail.addTokenValidationEmail(userAdded);
-    return userAdded;
-  } else {
-    throw new Error('This email is already used.');
-  }
-}
-
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
@@ -67,6 +40,37 @@ function getUserById(id) {
   }
 }
 
+function getAllUsersInReceivedIdList(listOfIdToGet) {
+  return UsersModel.find({ _id: { $in: listOfIdToGet } });
+}
+
+/**
+ * Ajoute un nouveau producteur dans la base de données.
+ * Doublons autorisés!
+ *
+ * @param {Integer} user, Les informations du producteur à ajouter.
+ */
+async function addUser({ firstname, lastname, email, password, image }) {
+  if (await UtilsServices.isEmailUnused(email)) {
+    const userToAdd = {
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
+      subscriptions: [],
+      emailValidated: false,
+      isAdmin: false
+    };
+
+    const userAdded = await new UsersModel(userToAdd).save();
+    tokenValidationEmail.addTokenValidationEmail(userAdded);
+    return userAdded;
+  } else {
+    return new Error('This email is already used.');
+  }
+}
+
 /**
  * Met à jour le producteur possédant l'id reçu avec les
  * données reçues. Remplace toutes les données du producteur
@@ -74,12 +78,11 @@ function getUserById(id) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({
-  id, firstname, lastname, email, password, image, subscriptions, emailValidated 
-}) {
+async function updateUser({ id, firstname, lastname, email, password, image, subscriptions }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+  const { emailValidated, isAdmin } = await ProducersModel.findById(id, 'emailValidated isAdmin');
 
   const userToUpdate = {
     firstname,
@@ -88,10 +91,10 @@ async function updateUser({
     password,
     image,
     subscriptions: await getAllUsersInReceivedIdList(subscriptions),
-    emailValidated
+    emailValidated,
+    isAdmin
   };
   return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
-  // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
 }
 
 /**
@@ -107,14 +110,15 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
+// todo: à déplacer dans un fichier Person.services, faire la recherche sur toutes les personnes et faire les tests des tokens!
 async function validateEmailUserByToken(value) {
   const token = await tokenValidationEmail.validateToken(value);
   if (token !== null) {
-    const user = await getUserById(token.idUser);
+    const user = await getUserById(token.idPerson);
     user.emailValidated = true;
     return updateUser(user) !== null;
   } else {
-    return new Error("Token not valid");
+    return new Error('Token not valid');
   }
 }
 

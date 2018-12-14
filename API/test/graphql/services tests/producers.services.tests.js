@@ -1,8 +1,13 @@
 require('../../chai-config');
-
 const producersService = require('../../../src/graphql/services/producers.services');
+const productsService = require('../../../src/graphql/services/products.services');
+const productTypeService = require('../../../src/graphql/services/productType.services');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+const PersonModel = require('../../../src/graphql/models/persons.modelgql');
+const UserModel = require('../../../src/graphql/models/users.modelgql');
+const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
+const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
 
@@ -21,623 +26,537 @@ let productTypePoire = {
   image: 'ceci est une image de poire encodée en base64!'
 };
 
+const productPomme = {
+  description: 'Une pomme monnnnstre bonne!'
+};
+
+const productPoire = {
+  description: 'Une poire de folie!'
+};
+
+const salespointBenoit = {
+  name: 'Chez moi',
+  address: {
+    number: 6,
+    street: 'Chemin de par ici',
+    city: 'Yverdon',
+    postalCode: '1400',
+    state: 'Vaud',
+    country: 'Suisse',
+    longitude: 1.1234567,
+    latitude: 1.123456789
+  },
+  schedule:
+    {
+      monday: [
+        {
+          openingHour: '08:00',
+          closingHour: '12:00'
+        },
+        {
+          openingHour: '13:00',
+          closingHour: '18:00'
+        }
+      ],
+      tuesday: [],
+      wednesday: [
+        {
+          openingHour: '08:00',
+          closingHour: '12:00'
+        }
+      ],
+      thursday: [],
+      friday: [
+        {
+          openingHour: '08:00',
+          closingHour: '12:00'
+        }
+      ],
+      saturday: [],
+      sunday: []
+    }
+};
+
 let benoit = {
   firstname: 'Benoît',
-  lastname: 'Schopfer',
-  email: 'benoit.schopfer5@heig-vd.ch',
+  lastname: 'Schöpfli',
+  email: 'benoit@paysan.ch',
   password: '1234abcd',
   image: 'Ceci est une image encodée en base64!',
   phoneNumber: '0761435196',
   description: 'Un chouet gaillard!',
-  website: 'benoitschopfer.ch',
-  salesPoint: {
-    name: 'Chez moi',
-    address: {
-      number: 6,
-      street: 'Chemin de par ici',
-      city: 'Yverdon',
-      postalCode: '1400',
-      state: 'Vaud',
-      country: 'Suisse',
-      longitude: 1.1234567,
-      latitude: 1.123456789
-    },
-    schedule:
-      {
-        monday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          },
-          {
-            openingHour: '13:00',
-            closingHour: '18:00'
-          }
-        ],
-        tuesday: [],
-        wednesday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          }
-        ],
-        thursday: [],
-        friday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          }
-        ],
-        saturday: [],
-        sunday: []
-      }
-  },
-  products: [
-    {
-      description: 'Une pomme monnnnstre bonne!',
-      productTypeId: {
-        id: '5c050afa96f1ff3cca213d1f'
-      }
-    },
-    {
-      description: 'Une poire de folie!',
-      productTypeId: '5c05ad449fdaf88060a42aef'
-    }
-  ]
+  website: 'benoitpaysan.ch',
+  salespoint: salespointBenoit,
+  productsIds: []
 };
 
 let antoine = {
   firstname: 'Antoine',
-  lastname: 'Rochat',
-  email: 'antoine.rochat5@heig-vd.ch',
+  lastname: 'Rochaille',
+  email: 'antoine@paysan.ch',
   password: '1234abcd',
   image: 'Ceci est l\'image d\'un tueur encodée en base64!',
   phoneNumber: '0761435196',
   description: 'Un vrai payouz!',
-  salesPoint: {
-    name: 'Chez lui, perdu au milieu de rien',
-    address: {
-      number: 12,
-      street: 'Chemin de par ici',
-      city: 'Quelque part par là-bas',
-      postalCode: '1234',
-      state: 'Vaud',
-      country: 'Suisse',
-      longitude: 1.1234796,
-      latitude: 1.123418029
-    },
-    schedule:
-      {
-        monday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          },
-          {
-            openingHour: '13:00',
-            closingHour: '18:00'
-          }
-        ],
-        tuesday: [],
-        wednesday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          }
-        ],
-        thursday: [],
-        friday: [
-          {
-            openingHour: '08:00',
-            closingHour: '12:00'
-          }
-        ],
-        saturday: [],
-        sunday: []
-      }
-  },
-  products: [
-    {
-      description: 'Une pomme monnnnstre bonne!',
-      productTypeId: {
-        id: '5c050afa96f1ff3cca213d1f'
-      }
-    },
-    {
-      description: 'Une poire de folie!',
-      productTypeId: '5c05ad449fdaf88060a42aef'
-    }
-  ]
+  productsIds: []
+};
+
+let tabProducers = [benoit, antoine];
+
+const clearAndPopulateDB = async() => {
+  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
+  await ProducersModel.deleteMany();
+  await ProductModel.deleteMany();
+  await ProductTypeModel.deleteMany();
+  await ProductTypeCategoryModel.deleteMany();
+  await PersonModel.deleteMany();
+  await UserModel.deleteMany();
+  await SalespointsModel.deleteMany();
+  await TokensValidationEmailModel.deleteMany();
+
+  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+  // on ajoute 1 productTypeCategory
+  productTypeCategory = (await ProductTypeCategoryModel.create(productTypeCategory)).toObject();
+
+  // on ajoute 2 productType
+  productTypePomme.categoryId = productTypeCategory.id;
+  productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
+  productTypePoire.categoryId = productTypeCategory.id;
+  productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
+
+  // on set le productTypeId avec les id de productType qu'on vient d'ajouter
+  productPomme.productTypeId = productTypePomme.id;
+  productPoire.productTypeId = productTypePoire.id;
+
+  // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
+  benoit.products = [];
+  benoit.products.push(productPomme);
+  benoit.products.push(productPoire);
+  benoit.salespoint = salespointBenoit;
+  benoit = (await producersService.addProducer(benoit)).toObject();
+
+  // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
+  antoine.products = [];
+  antoine.products.push(productPomme);
+  antoine = (await producersService.addProducer(antoine)).toObject();
+
+  tabProducers = [benoit, antoine];
 };
 
 describe('tests producers services', () => {
-  beforeEach(async() => {
-    // on supprime tout le contenu de la DB
-    await ProducersModel.deleteMany();
+  beforeEach(() => clearAndPopulateDB());
 
-    // on ajoute le contenu de départ
+  describe('tests getProducers', () => {
+    it('should get all producers', async() => {
+      // on récupère un tableau contenant tous les producteurs
+      let allProducers = await producersService.getProducers();
 
-    // on ajoute le productTypeCategory
-    productTypeCategory = await ProductTypeCategoryModel.create(productTypeCategory);
+      // on transforme chaque producteur du tableau en un objet
+      allProducers = allProducers.map(producer => producer.toObject());
+      allProducers.should.be.an('array');
+      allProducers.length.should.be.equal(2);
 
-    // on ajoute 2 productType
-    productTypePomme = {
-      name: productTypePomme.name,
-      image: productTypePomme.image,
-      categoryId: productTypeCategory.id,
-      producersIds: []
-    };
-    const addedProductTypePomme = await ProductTypeModel.create(productTypePomme);
-    productTypePomme = {
-      id: addedProductTypePomme.id,
-      name: addedProductTypePomme.name,
-      image: addedProductTypePomme.image,
-      categoryId: productTypeCategory.id,
-      producersIds: addedProductTypePomme.producersIds
-    };
+      // pour chaque producteur, on test les éléments critiques
+      const promises = await allProducers.map(async(producer, index) => {
+        producer.id.should.be.eql(tabProducers[index].id);
 
-    productTypePoire = {
-      name: productTypePoire.name,
-      image: productTypePoire.image,
-      categoryId: productTypeCategory.id,
-      producersIds: []
-    };
-    const addedProductTypePoire = await ProductTypeModel.create(productTypePoire);
-    productTypePoire = {
-      id: addedProductTypePoire.id,
-      name: addedProductTypePoire.name,
-      image: addedProductTypePoire.image,
-      categoryId: productTypeCategory.id,
-      producersIds: addedProductTypePoire.producersIds
-    };
+        // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
+        producer.subscriptions.should.be.not.null;
+        producer.subscriptions.should.be.an('array');
 
-    // on ajoute le contenu de départ
-    // on ajoute 2 points de vente
-    benoit = {
-      firstname: 'Benoît',
-      lastname: 'Schopfer',
-      email: 'benoit.schopfer5@heig-vd.ch',
-      password: '1234abcd',
-      image: 'Ceci est une image encodée en base64!',
-      phoneNumber: '0761435196',
-      description: 'Un chouet gaillard!',
-      website: 'benoitschopfer.ch',
-      salesPoint: {
-        name: 'Chez moi',
-        address: {
-          number: 6,
-          street: 'Chemin de par ici',
-          city: 'Yverdon',
-          postalCode: '1400',
-          state: 'Vaud',
-          country: 'Suisse',
-          longitude: 1.1234567,
-          latitude: 1.123456789
-        },
-        schedule:
-          {
-            monday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              },
-              {
-                openingHour: '13:00',
-                closingHour: '18:00'
-              }
-            ],
-            tuesday: [],
-            wednesday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            thursday: [],
-            friday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            saturday: [],
-            sunday: []
-          }
-      },
-      products: [
-        {
-          description: 'Une pomme monnnnstre bonne!',
-          productTypeId: addedProductTypePomme.id
-        },
-        {
-          description: 'Une poire de folie!',
-          productTypeId: addedProductTypePoire.id
-        }
-      ]
-    };
-    benoit = await producersService.addProducer(benoit);
+        // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+        producer.subscribedUsersIds.should.be.not.null;
+        producer.subscribedUsersIds.should.be.an('array');
 
-    antoine = {
-      firstname: 'Antoine',
-      lastname: 'Rochat',
-      email: 'antoine.rochat5@heig-vd.ch',
-      password: '1234abcd',
-      image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-      phoneNumber: '0761435196',
-      description: 'Un vrai payouz!',
-      salesPoint: {
-        name: 'Chez lui, perdu au milieu de rien',
-        address: {
-          number: 12,
-          street: 'Chemin de par ici',
-          city: 'Quelque part par là-bas',
-          postalCode: '1234',
-          state: 'Vaud',
-          country: 'Suisse',
-          longitude: 1.1234796,
-          latitude: 1.123418029
-        },
-        schedule:
-          {
-            monday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              },
-              {
-                openingHour: '13:00',
-                closingHour: '18:00'
-              }
-            ],
-            tuesday: [],
-            wednesday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            thursday: [],
-            friday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            saturday: [],
-            sunday: []
-          }
-      },
-      products: [
-        {
-          description: 'Une pomme monnnnstre bonne!',
-          productTypeId: addedProductTypePomme.id
-        },
-        {
-          description: 'Une poire de folie!',
-          productTypeId: addedProductTypePoire.id
-        }
-      ]
-    };
-    antoine = await producersService.addProducer(antoine);
-  });
+        expect(producer.salespointId)
+          .to
+          .be
+          .eql(tabProducers[index].salespointId);
 
-  it('should get all producers', async() => {
-    const allproducers = await producersService.getProducers();
+        const promisesTestsProductsIds = producer.productsIds.map((async(productId) => {
+          // on récupère les infos du produit correspondant
+          const product = (await productsService.getProductById(productId)).toObject();
 
-    allproducers.should.be.an('array');
-    allproducers.length.should.be.equal(2);
-    allproducers.map((producer) => {
-      producer.should.be.not.null;
-      producer.id.should.be.not.null;
-      producer.firstname.should.be.not.null;
-      producer.lastname.should.be.not.null;
-      producer.email.should.be.not.null;
-      producer.password.should.be.not.null;
-      producer.image.should.be.not.null;
-      producer.subscriptions.should.be.not.null;
-      producer.subscriptions.should.be.an('array');
-      producer.subscriptions.length.should.be.equal(0);
-      producer.emailValidated.should.be.not.null;
-      producer.emailValidated.should.be.equal(false);
-      producer.subscribedUsersIds.should.be.not.null;
-      producer.subscribedUsersIds.should.be.an('array');
-      producer.subscribedUsersIds.map((subscribedUser) => {
-        subscribedUser.id.should.be.not.null;
-        subscribedUser.firstname.should.be.not.null;
-        subscribedUser.lastname.should.be.not.null;
-        subscribedUser.email.should.be.not.null;
-        subscribedUser.password.should.be.not.null;
+          // on récupère les infos du productType correspondant au produit
+          const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+          productType.should.be.not.null;
+          productType.producersIds.should.be.not.null;
+          const addedProducerId = producer.id.toString();
+
+          // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
+          const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+          filtredTab.length.should.be.equal(1);
+        }));
+        await Promise.all(promisesTestsProductsIds);
       });
-      producer.phoneNumber.should.be.not.null;
-      producer.description.should.be.not.null;
-      producer.salesPointId.should.be.not.null;
-      producer.salesPointId.id.should.be.not.null;
+      await Promise.all(promises);
     });
   });
 
   describe('tests getProducerById', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should get one producer', async() => {
-      const producer = await producersService.getProducerById(benoit.id);
+      // on récupère le producteur corresondant à l'id donné
+      const producer = (await producersService.getProducerById(benoit.id)).toObject();
+
+      // on test son contenu
       producer.should.be.not.null;
-      producer.id.should.be.not.null;
-      producer.firstname.should.be.not.null;
+      producer.id.should.be.eql(benoit.id);
       producer.firstname.should.be.equal(benoit.firstname);
-      producer.lastname.should.be.not.null;
       producer.lastname.should.be.equal(benoit.lastname);
-      producer.email.should.be.not.null;
       producer.email.should.be.equal(benoit.email);
-      producer.password.should.be.not.null;
       producer.password.should.be.equal(benoit.password);
-      producer.image.should.be.not.null;
       producer.image.should.be.equal(benoit.image);
-      producer.subscriptions.should.be.not.null;
+
+      // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
       producer.subscriptions.should.be.an('array');
       producer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-      producer.emailValidated.should.be.not.null;
+
       producer.emailValidated.should.be.equal(benoit.emailValidated);
-      producer.subscribedUsersIds.should.be.not.null;
       producer.subscribedUsersIds.should.be.an('array');
-      producer.subscribedUsersIds.map((subscribedUser) => {
+      producer.subscribedUsersIds.length.should.be.equal(benoit.subscribedUsersIds.length);
+      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      /*
+      // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
+      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;
         subscribedUser.email.should.be.not.null;
         subscribedUser.password.should.be.not.null;
       });
-      producer.phoneNumber.should.be.not.null;
-      producer.description.should.be.not.null;
-      producer.salesPointId.should.be.not.null;
-      producer.salesPointId.id.should.be.not.null;
+      */
+      producer.phoneNumber.should.be.equal(benoit.phoneNumber);
+      producer.description.should.be.equal(benoit.description);
+      producer.website.should.be.equal(benoit.website);
+      producer.salespointId.should.be.eql(benoit.salespointId);
+      producer.isValidated.should.be.equal(benoit.isValidated);
+
+      // on test le tableau productsIds et son contenu
+      const promisesTestsProductsIds = producer.productsIds.map((async(productId, index) => {
+        productId.should.be.eql(benoit.productsIds[index]);
+
+        // on récupère les infos du produit correspondant
+        const product = (await productsService.getProductById(productId)).toObject();
+
+        // on récupère les infos du productType correspondant au produit
+        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        productType.should.be.not.null;
+        productType.producersIds.should.be.not.null;
+        const addedProducerId = producer.id.toString();
+
+        // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
+        const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+        filtredTab.length.should.be.equal(1);
+      }));
+      await Promise.all(promisesTestsProductsIds);
     });
 
-    it('should fail getting one user because no id received', async() => {
+    it('should fail getting one producer because no id received', async() => {
       const producerGotInDB = await producersService.getProducerById('');
       producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
+    });
+
+    it('should fail getting one producer because invalid id received', async() => {
+      const producerGotInDB = await producersService.getProducerById(benoit.id + benoit.id);
+      producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
+    });
+
+    it('should fail getting one producer because unknown id received', async() => {
+      const producerGotInDB = await producersService.getProducerById('abcdefabcdefabcdefabcdef');
+      expect(producerGotInDB).to.be.null;
+    });
+  });
+
+  describe('tests getAllProducerWaitingForValidation', () => {
+    it('should get all producers waiting for validation', async() => {
+      // on récupère tous les producteurs non validés (isValidated = false)
+      let allProducersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      allProducersWaitingForValidation.should.be.an('array');
+      allProducersWaitingForValidation.length.should.be.equal(2);
+      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
+
+      // on valide un des producteurs non validé
+      await producersService.validateAProducer(allProducersWaitingForValidation[0].id, true);
+
+      // on récupère tous les producteurs non validés --> il y en a bien un de moins
+      allProducersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      allProducersWaitingForValidation.should.be.an('array');
+      allProducersWaitingForValidation.length.should.be.equal(1);
+      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
+    });
+  });
+
+  describe('tests getAllProducersInReceivedIdList', () => {
+    it('should get all producers with id in received list', async() => {
+      // on récupère 2 producteurs
+      let producers = await producersService.getAllProducersInReceivedIdList([benoit.id, antoine.id]);
+      producers.should.be.an('array');
+      producers.length.should.be.equal(2);
+
+      // on récupère 1 seul producteur
+      producers = await producersService.getAllProducersInReceivedIdList([benoit.id]);
+      producers.should.be.not.null;
+      producers.should.be.an('array');
+      producers.length.should.be.equal(1);
+
+      // on récupère aucun producteur
+      producers = await producersService.getAllProducersInReceivedIdList([]);
+      producers.should.be.not.null;
+      producers.should.be.an('array');
+      producers.length.should.be.equal(0);
+    });
+  });
+
+  describe('tests filterProducers by productTypeIds', () => {
+    it('should return only producers that produce some products of the given productTypeIds', async() => {
+      // on récupère tous les producteurs produisant des produits de la catégorie 'productTypePomme'
+      let producersOfPommes = await producersService.filterProducers([productTypePomme.id]);
+      producersOfPommes.should.be.an('array');
+      producersOfPommes.length.should.be.equal(2);
+
+      // on récupère tous les producteurs produisant des produits de la catégorie 'productTypePoire'
+      producersOfPommes = await producersService.filterProducers([productTypePoire.id]);
+      producersOfPommes.should.be.an('array');
+      producersOfPommes.length.should.be.equal(1);
     });
   });
 
   describe('tests addProducer', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should add a new producer', async() => {
-      // on supprime tout le contenu de la DB
-      await ProducersModel.deleteMany();
+      benoit.email = 'benoit1@paysan.ch';
+      benoit.products = [];
+      benoit.products.push(productPomme);
+      benoit.products.push(productPoire);
+      benoit.salespoint = salespointBenoit;
 
-      const newProducer = {
-        firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer5@heig-vd.ch',
-        password: '1234abcd',
-        image: 'Ceci est une image encodée en base64!',
-        phoneNumber: '0761435196',
-        description: 'Un chouet gaillard!',
-        website: 'benoitschopfer.ch',
-        salesPointId: {
-          name: 'Chez moi',
-          address: {
-            number: 6,
-            street: 'Chemin de par ici',
-            city: 'Yverdon',
-            postalCode: '1400',
-            country: 'Suisse',
-            longitude: 1.1234567,
-            latitude: 1.123456789
-          },
-          schedule: {
-            monday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              },
-              {
-                openingHour: '13:00',
-                closingHour: '18:00'
-              }
-            ],
-            tuesday: [],
-            wednesday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            thursday: [],
-            friday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            saturday: [],
-            sunday: []
-          }
-        },
-        productsIds: [
-          {
-            description: 'Une pomme monnnnstre bonne!',
-            productTypeId: productTypePomme.id
-          },
-          {
-            description: 'Une poire de folie!',
-            productTypeId: productTypePoire.id
-          }
-        ]
-      };
-
-      const addedProducer = await producersService.addProducer(newProducer);
+      // on ajoute un nouveau producteur
+      const addedProducer = await producersService.addProducer(benoit);
+      // on test son contenu
       addedProducer.should.be.not.null;
-      addedProducer.id.should.be.not.null;
-      addedProducer.firstname.should.be.not.null;
+      addedProducer.id.should.be.not.null; // ne peut pas être égal à benoit.id !
       addedProducer.firstname.should.be.equal(benoit.firstname);
-      addedProducer.lastname.should.be.not.null;
       addedProducer.lastname.should.be.equal(benoit.lastname);
-      addedProducer.email.should.be.not.null;
       addedProducer.email.should.be.equal(benoit.email);
-      addedProducer.password.should.be.not.null;
       addedProducer.password.should.be.equal(benoit.password);
-      addedProducer.image.should.be.not.null;
       addedProducer.image.should.be.equal(benoit.image);
-      addedProducer.subscriptions.should.be.not.null;
+
+      // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
       addedProducer.subscriptions.should.be.an('array');
       addedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-      addedProducer.emailValidated.should.be.not.null;
+
       addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+      addedProducer.subscribedUsersIds.should.be.an('array');
+      addedProducer.subscribedUsersIds.length.should.be.equal(benoit.subscribedUsersIds.length);
+      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      /*
+      // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
+      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
+        subscribedUser.id.should.be.not.null;
+        subscribedUser.firstname.should.be.not.null;
+        subscribedUser.lastname.should.be.not.null;
+        subscribedUser.email.should.be.not.null;
+        subscribedUser.password.should.be.not.null;
+      });
+      */
+      addedProducer.phoneNumber.should.be.equal(benoit.phoneNumber);
+      addedProducer.description.should.be.equal(benoit.description);
+      addedProducer.website.should.be.equal(benoit.website);
+      addedProducer.salespointId.should.be.not.null; // ne peut pas être égal à benoit.salespointId !
+      addedProducer.isValidated.should.be.equal(benoit.isValidated);
+
+      // on test le tableau productsIds et son contenu
+      const promisesTestsProductsIds = addedProducer.productsIds.map((async(productId) => {
+        productId.should.be.not.null;
+
+        // on récupère les infos du produit correspondant
+        const product = (await productsService.getProductById(productId)).toObject();
+
+        // on récupère les infos du productType correspondant au produit
+        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        productType.should.be.not.null;
+        productType.producersIds.should.be.not.null;
+        const addedProducerId = addedProducer.id.toString();
+
+        // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
+        const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+        filtredTab.length.should.be.equal(1);
+      }));
+      await Promise.all(promisesTestsProductsIds);
     });
 
-    it('should fail adding a new producer with an already used email', async() => {
-      // on supprime tout le contenu de la DB
-      await ProducersModel.deleteMany();
+    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
 
-      const newProducer = {
-        firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer5@heig-vd.ch',
-        password: '1234abcd',
-        image: 'Ceci est une image encodée en base64!',
-        phoneNumber: '0761435196',
-        description: 'Un chouet gaillard!',
-        website: 'benoitschopfer.ch',
-        salesPointId: {
-          name: 'Chez moi',
-          address: {
-            number: 6,
-            street: 'Chemin de par ici',
-            city: 'Yverdon',
-            postalCode: '1400',
-            country: 'Suisse',
-            longitude: 1.1234567,
-            latitude: 1.123456789
-          },
-          schedule: {
-            monday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              },
-              {
-                openingHour: '13:00',
-                closingHour: '18:00'
-              }
-            ],
-            tuesday: [],
-            wednesday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            thursday: [],
-            friday: [
-              {
-                openingHour: '08:00',
-                closingHour: '12:00'
-              }
-            ],
-            saturday: [],
-            sunday: []
-          }
-        },
-        productsIds: [
-          {
-            description: 'Une pomme monnnnstre bonne!',
-            productTypeId: productTypePomme.id
-          },
-          {
-            description: 'Une poire de folie!',
-            productTypeId: productTypePoire.id
-          }
-        ]
+    it('should fail adding a new producer with an already used email', async() => {
+      const productsIds = [];
+      productsIds.push(productPomme);
+      productsIds.push(productPoire);
+
+      const producerToAdd = {
+        ...benoit,
+        email: 'benoit2@paysan.ch',
+        salespoint: salespointBenoit,
+        productsIds
       };
 
-      let addedProducer = await producersService.addProducer(newProducer);
+      // on ajoute un nouveau producteur
+      const addedProducer = (await producersService.addProducer(producerToAdd)).toObject();
       addedProducer.should.be.not.null;
       addedProducer.id.should.be.not.null;
-      addedProducer.firstname.should.be.not.null;
-      addedProducer.firstname.should.be.equal(benoit.firstname);
-      addedProducer.lastname.should.be.not.null;
-      addedProducer.lastname.should.be.equal(benoit.lastname);
-      addedProducer.email.should.be.not.null;
-      addedProducer.email.should.be.equal(benoit.email);
-      addedProducer.password.should.be.not.null;
-      addedProducer.password.should.be.equal(benoit.password);
-      addedProducer.image.should.be.not.null;
-      addedProducer.image.should.be.equal(benoit.image);
-      addedProducer.subscriptions.should.be.not.null;
-      addedProducer.subscriptions.should.be.an('array');
-      addedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-      addedProducer.emailValidated.should.be.not.null;
-      addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+      addedProducer.firstname.should.be.equal(producerToAdd.firstname);
+      addedProducer.lastname.should.be.equal(producerToAdd.lastname);
+      addedProducer.email.should.be.equal(producerToAdd.email);
 
-      try {
-        addedProducer = await producersService.addProducer(newProducer);
-      } catch (e) {
-        e.message.should.be.equal('This email is already used.');
-      }
+      // on tente d'ajouter à nouveau le même producteur -> erreur car l'email est déjà utilisé
+      const res = await producersService.addProducer(producerToAdd);
+      res.should.be.not.null;
+      res.message.should.be.equal('This email is already used.');
     });
   });
 
   describe('tests updateProducer', () => {
-    it('should update a producer', async() => {
-      const addedProducer = await producersService.getProducerById(benoit.id);
-      const producerToUpdate = {
-        ...addedProducer
+    beforeEach(() => clearAndPopulateDB());
 
+    it('should update a producer', async() => {
+      // on récupère un producteur
+      let producer = (await producersService.getProducerById(antoine.id)).toObject();
+      // on le modifie
+      producer = {
+        ...benoit,
+        id: producer.id
       };
-      const updatedProducer = await producersService.updateProducer(addedProducer);
+      // on met à jour dans la DB
+      const updatedProducer = (await producersService.updateProducer(producer)).toObject();
+      // on test son nouveau contenu
       updatedProducer.should.be.not.null;
-      updatedProducer.id.should.be.not.null;
-      updatedProducer.firstname.should.be.not.null;
-      updatedProducer.firstname.should.be.equal(benoit.firstname);
-      updatedProducer.lastname.should.be.not.null;
-      updatedProducer.lastname.should.be.equal(benoit.lastname);
-      updatedProducer.email.should.be.not.null;
-      updatedProducer.email.should.be.equal(benoit.email);
-      updatedProducer.password.should.be.not.null;
-      updatedProducer.password.should.be.equal(benoit.password);
-      updatedProducer.image.should.be.not.null;
-      updatedProducer.image.should.be.equal(benoit.image);
-      updatedProducer.subscriptions.should.be.not.null;
+      updatedProducer.id.should.be.equal(producer.id);
+      updatedProducer.firstname.should.be.equal(producer.firstname);
+      updatedProducer.lastname.should.be.equal(producer.lastname);
+      updatedProducer.email.should.be.equal(producer.email);
+      updatedProducer.password.should.be.equal(producer.password);
+      updatedProducer.image.should.be.equal(producer.image);
+
+      // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
       updatedProducer.subscriptions.should.be.an('array');
-      updatedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
-      updatedProducer.emailValidated.should.be.not.null;
-      updatedProducer.emailValidated.should.be.equal(benoit.emailValidated);
+      updatedProducer.subscriptions.length.should.be.equal(producer.subscriptions.length);
+
+      updatedProducer.emailValidated.should.be.equal(producer.emailValidated);
+      updatedProducer.subscribedUsersIds.should.be.an('array');
+      updatedProducer.subscribedUsersIds.length.should.be.equal(producer.subscribedUsersIds.length);
+      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      /*
+      // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
+      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
+        subscribedUser.id.should.be.not.null;
+        subscribedUser.firstname.should.be.not.null;
+        subscribedUser.lastname.should.be.not.null;
+        subscribedUser.email.should.be.not.null;
+        subscribedUser.password.should.be.not.null;
+      });
+      */
+      updatedProducer.phoneNumber.should.be.equal(producer.phoneNumber);
+      updatedProducer.description.should.be.equal(producer.description);
+      updatedProducer.website.should.be.equal(producer.website);
+      updatedProducer.salespointId.should.be.eql(producer.salespointId);
+      updatedProducer.isValidated.should.be.equal(producer.isValidated);
+
+      // on test le tableau productsIds et son contenu
+      const promisesTestsProductsIds = updatedProducer.productsIds.map((async(productId, index) => {
+        productId.should.be.eql(producer.productsIds[index]);
+
+        // on récupère les infos du produit correspondant
+        const product = (await productsService.getProductById(productId)).toObject();
+
+        // on récupère les infos du productType correspondant au produit
+        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        productType.should.be.not.null;
+        productType.producersIds.should.be.not.null;
+        const addedProducerId = updatedProducer.id.toString();
+
+        // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
+        const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
+        filtredTab.length.should.be.equal(1);
+      }));
+      await Promise.all(promisesTestsProductsIds);
     });
 
     it('should fail updating a producer because no id received', async() => {
-      const addedProducer = {
-        id: '',
-        ...benoit
-      };
-      const updatedProducer = await producersService.updateProducer(addedProducer);
+      benoit.id = '';
+      const updatedProducer = await producersService.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail updating a producer because invalid id received', async() => {
-      const addedProducer = {
-        id: '5c04561e7209e21e582750', // id trop court (<24 caractères)
-        ...benoit
-      };
-      const updatedProducer = await producersService.updateProducer(addedProducer);
+      benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
+      const updatedProducer = await producersService.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail updating a producer because invalid id received', async() => {
-      const addedProducer = {
-        id: '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3', // id trop long (> 24 caractères)
-        ...benoit
-      };
-      const updatedProducer = await producersService.updateProducer(addedProducer);
+      benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
+      const updatedProducer = await producersService.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+    });
+
+    it('should fail updating a producer because unknown id received', async() => {
+      benoit.id = 'abcdefabcdefabcdefabcdef';
+      const updatedProducer = await producersService.updateProducer(benoit);
+
+      updatedProducer.message.should.be.equal('The received id is not in the database!');
     });
   });
 
-  it('should delete a producer', async() => {
-    let deleteProducer = await producersService.deleteProducer(benoit.id);
+  describe('tests validateAProducer', () => {
+    beforeEach(() => clearAndPopulateDB());
 
-    deleteProducer.should.be.not.null;
+    it('should validate a producer', async() => {
+      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
 
-    deleteProducer = await producersService.getProducerById(deleteProducer.id);
-    it.should.be.null = deleteProducer; // Fixme: Ca marche de faire ça ??
+      // on valide un producteur
+      const validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.true;
+    });
+
+    it('should unvalidate a validated producer', async() => {
+      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+
+      // on valide un producteur
+      let validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.true;
+
+      // on invalide ce même producteur
+      validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer.should.be.not.null;
+      validatedProducer.isValidated.should.be.false;
+    });
+  });
+
+  describe('tests deleteProducer', () => {
+    it('should delete a producer', async() => {
+      // on supprime un producteur
+      let deleteProducer = (await producersService.deleteProducer(benoit.id)).toObject();
+      deleteProducer.should.be.not.null;
+      deleteProducer.id.should.be.eql(benoit.id);
+
+      // on tente de récupérer le même producteur -> retourne null car le producteur est introuvable dans la DB
+      deleteProducer = await producersService.getProducerById(deleteProducer.id);
+
+      expect(deleteProducer).to.be.null;
+    });
+
+    it('should fail deleting a producer because given id not found in DB', async() => {
+      // on supprime un producer inexistant -> retourne null car le producer est introuvable dans la DB
+      const deleteProducer = await producersService.deleteProducer('abcdefabcdefabcdefabcdef');
+
+      expect(deleteProducer).to.be.null;
+    });
   });
 });

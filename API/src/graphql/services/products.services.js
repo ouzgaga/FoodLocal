@@ -25,40 +25,14 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductModel.find({ _id: { $in: listOfIdToGet } });
-}
-
 /**
- * Ajoute un nouveau produit dans la base de données.
- * Attention, doublons autorisés!
- *
- * @param {Integer} product, Les informations du produit à ajouter.
+ * Retourne tous les produits dont l'id se trouve dans la liste passée en paramètre.
+ * @param listOfIdToGet, liste contenant les ids des produits que l'on cherche.
+ * @returns {*}
  */
-async function addProduct(product) {
-  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
-
-    if (productType != null) {
-      const newProduct = {
-        description: product.description,
-        productTypeId: productType.id
-      };
-
-      return new ProductModel(newProduct).save();
-    } else {
-      throw new Error("This productType.id doesn't exist!");
-    }
-  }
-}
-
-async function addAllProductsInArray(productsArray) {
-  const promises = [];
-  productsArray.map(product => promises.push(addProduct(product)));
-  const resolvedPromises = await Promise.all(promises);
-  return resolvedPromises.map(res => res.id);
+function getAllProductsInReceivedIdList(listOfIdToGet) {
+  return ProductModel.find({ _id: { $in: listOfIdToGet } })
+    .sort({ _id: 1 });
 }
 
 /**
@@ -71,6 +45,43 @@ function getProductById(id) {
     return new Error('Received product.id is invalid!');
   } else {
     return ProductModel.findById(id);
+  }
+}
+
+/**
+ * Ajoute un nouveau produit dans la base de données.
+ * Attention, doublons autorisés!
+ *
+ * @param {Integer} product, Les informations du produit à ajouter.
+ */
+async function addProduct(product) {
+  // FIXME: il faud ajouter l'appel à la fonction productTypeServices.addProducerProducingThisProductType()!!
+  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+    return new Error('Received productType.id is invalid!');
+  } else {
+    // on récupère les infos du productType du produit que l'on souhaite ajouter
+    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
+
+    if (productType != null) { // si ce productType existe
+      const newProduct = {
+        description: product.description,
+        productTypeId: productType.id
+      };
+
+      return new ProductModel(newProduct).save();
+    } else {
+      return new Error("This productType.id doesn't exist!");
+    }
+  }
+}
+
+async function addAllProductsInArray(productsArray) {
+  if (productsArray != null && productsArray.length !== 0) {
+    const promisesAddProducts = productsArray.map(product => addProduct(product));
+    const resolvedPromises = await Promise.all(promisesAddProducts);
+    return resolvedPromises.map(addedProduct => addedProduct.id);
+  } else {
+    return new Error('function addAllProductsInArray: received productsArray is null or empty!');
   }
 }
 
