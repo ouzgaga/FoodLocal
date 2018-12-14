@@ -1,11 +1,23 @@
 const mongoose = require('mongoose');
 
 const productTypeService = require('../../../src/graphql/services/productType.services');
-const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
+const producersService = require('../../../src/graphql/services/producers.services');
+const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
+const userModel = require('../../../src/graphql/models/users.modelgql');
+const salespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const tokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
+const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+  '../../../src/graphql/models/products.modelgql'
+);
 
-let category = {
+let categoryFruits = {
   name: 'Fruits',
   image: 'ceci est une image de fruits encodée en base64!'
+};
+
+let categoryVegetable = {
+  name: 'Légumes',
+  image: 'ceci est une image de légume encodée en base64!'
 };
 
 let pomme = {
@@ -28,47 +40,54 @@ let courgette = {
 describe('tests productType services', () => {
   beforeEach(async() => {
     // on supprime tout le contenu de la DB
+    await ProducersModel.deleteMany();
+    await ProductModel.deleteMany();
     await ProductTypeModel.deleteMany();
     await ProductTypeCategoryModel.deleteMany();
+    await userModel.deleteMany();
+    await salespointsModel.deleteMany();
+    await tokensValidationEmailModel.deleteMany();
+
 
     // on ajoute le contenu de départ
-    category = await ProductTypeCategoryModel.create(category);
+    categoryFruits = await ProductTypeCategoryModel.create(categoryFruits);
+    categoryVegetable = await ProductTypeCategoryModel.create(categoryVegetable);
+
     pomme = {
       name: pomme.name,
       image: pomme.image,
-      categoryId: category.id
+      categoryId: categoryFruits.id
     };
     const addedPomme = await ProductTypeModel.create(pomme);
     pomme.id = addedPomme.id;
-    pomme.categoryId = category.id;
-
+    pomme.categoryId = categoryFruits.id;
 
     poire = {
       name: poire.name,
       image: poire.image,
-      categoryId: category.id
+      categoryId: categoryFruits.id
     };
     const addedPoire = await ProductTypeModel.create(poire);
     poire.id = addedPoire.id;
-    poire.categoryId = category.id;
+    poire.categoryId = categoryFruits.id;
 
     raisin = {
       name: raisin.name,
       image: raisin.image,
-      categoryId: category.id
+      categoryId: categoryFruits.id
     };
     const addedRaisin = await ProductTypeModel.create(raisin);
     raisin.id = addedRaisin.id;
-    raisin.categoryId = category.id;
+    raisin.categoryId = categoryFruits.id;
 
     courgette = {
       name: courgette.name,
       image: courgette.image,
-      categoryId: category.id
+      categoryId: categoryVegetable.id
     };
     const addedCourgette = await ProductTypeModel.create(courgette);
     courgette.id = addedCourgette.id;
-    courgette.categoryId = category.id;
+    courgette.categoryId = categoryVegetable.id;
   });
 
   describe('tests getProductTypes', () => {
@@ -98,7 +117,7 @@ describe('tests productType services', () => {
 
       productTypeGotInDB.name.should.be.equal(pomme.name);
       productTypeGotInDB.image.should.be.equal(pomme.image);
-      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(categoryFruits.id));
       productTypeGotInDB = await productTypeService.getProductTypeById(raisin.id);
 
       productTypeGotInDB.should.be.an('object');
@@ -107,12 +126,113 @@ describe('tests productType services', () => {
       productTypeGotInDB.name.should.be.equal(raisin.name);
 
       productTypeGotInDB.image.should.be.equal(raisin.image);
-      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(category.id));
+      productTypeGotInDB.categoryId.should.be.eql(new mongoose.Types.ObjectId(categoryFruits.id));
     });
 
     it('should fail getting one productType because no id received', async() => {
       const productTypeGotInDB = await productTypeService.getProductTypeById('');
       productTypeGotInDB.message.should.be.equal('Received productType.id is invalid!');
+    });
+  });
+
+  describe('tests getProductTypeByCategory', () => {
+    it('should get all products of the category corresponding to the received id', async() => {
+      let productTypeTab = [courgette];
+
+      let productTypes = await productTypeService.getProductTypeByCategory(categoryVegetable.id);
+      productTypes.should.be.not.null;
+      productTypes.should.be.an('array');
+
+      let promises = productTypes.map((async(productType, index) => {
+        productType.should.be.not.null;
+        productType.id.should.be.equal(productTypeTab[index].id);
+        productType.name.should.be.equal(productTypeTab[index].name);
+        productType.image.should.be.equal(productTypeTab[index].image);
+        const promisesProducers = productType.producersIds.map((async(producerId) => {
+          producerId.should.be.not.null;
+        }));
+
+        await Promise.all(promisesProducers);
+      }));
+
+      await Promise.all(promises);
+
+      productTypeTab = [pomme, poire, raisin];
+
+      productTypes = await productTypeService.getProductTypeByCategory(categoryFruits.id);
+      productTypes.should.be.not.null;
+      productTypes.should.be.an('array');
+
+      promises = productTypes.map((async(productType, index) => {
+        productType.should.be.not.null;
+        productType.id.should.be.equal(productTypeTab[index].id);
+        productType.name.should.be.equal(productTypeTab[index].name);
+        productType.image.should.be.equal(productTypeTab[index].image);
+        const promisesProducers = productType.producersIds.map((async(producerId) => {
+          producerId.should.be.not.null;
+        }));
+
+        await Promise.all(promisesProducers);
+      }));
+
+      await Promise.all(promises);
+    });
+  });
+
+  describe('tests getAllProducersIdsProposingProductsOfReceivedProductsTypeIds', () => {
+    it('should get all producers producing one or more products of one or more of the received productTypeIds', async() => {
+
+      let benoit = {
+        firstname: 'Benoît',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
+        password: '1234abcd',
+        image: 'Ceci est une image encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un chouet gaillard!',
+        website: 'benoitpaysan.ch',
+        products: [
+          {
+            description: 'Une pomme monnnnstre bonne!',
+            productTypeId: pomme.id
+          },
+          {
+            description: 'Une poire de folie!',
+            productTypeId: poire.id
+          }
+        ]
+      };
+
+      let antoine = {
+        firstname: 'Antoine',
+        lastname: 'Rochaille',
+        email: 'antoine.@paysan.ch',
+        password: '1234abcd',
+        image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un vrai payouz!',
+        products: [
+          {
+            description: 'Une pomme monnnnstre bonne!',
+            productTypeId: pomme.id
+          }
+        ]
+      };
+
+      benoit = await producersService.addProducer(benoit);
+
+      antoine = await producersService.addProducer(antoine);
+
+      let producersOfFruits = await productTypeService.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds([poire.id]);
+      producersOfFruits.should.be.not.null;
+      producersOfFruits.should.be.an('array');
+      producersOfFruits.length.should.be.equal(1);
+
+
+      producersOfFruits = await productTypeService.getAllProducersIdsProposingProductsOfReceivedProductsTypeIds([pomme.id]);
+      producersOfFruits.should.be.not.null;
+      producersOfFruits.should.be.an('array');
+      producersOfFruits.length.should.be.equal(2);
     });
   });
 
@@ -126,6 +246,7 @@ describe('tests productType services', () => {
 
       addedProductType.name.should.be.equal(pomme.name);
       addedProductType.image.should.be.equal(pomme.image);
+      addedProductType.categoryId.toString().should.be.equal(pomme.categoryId.toString());
     });
   });
 
@@ -136,7 +257,7 @@ describe('tests productType services', () => {
         id: addedProductType.id,
         name: poire.name,
         image: poire.image,
-        category: { id: category.id },
+        category: { id: categoryFruits.id },
         producers: []
       };
       const updatedProductType = await productTypeService.updateProductType(addedProductType);

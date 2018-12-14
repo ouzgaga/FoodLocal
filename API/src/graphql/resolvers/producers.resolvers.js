@@ -8,7 +8,7 @@ const producerResolvers = {
   Query: {
     producers: () => producersServices.getProducers(),
 
-    producer: (parent, args, context) => producersServices.getProducerById(utilsServices.castIdInObjectId(args.producerId)),
+    producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
     producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
 
@@ -16,17 +16,17 @@ const producerResolvers = {
       utilsServices.castTabOfIdsInTabOfObjectIds(args.productsIds)
     ),
 
-    filterProducers: async(parent, args, context) => producersServices.filterProducers(utilsServices.castTabOfIdsInTabOfObjectIds(args.byProductTypeIds))
+    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeIds)
   },
 
   Mutation: {
-    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(utilsServices.castIdInObjectId(args.producerId), args.validationState),
+    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
 
     addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
 
     updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
 
-    deleteProducer: (parent, args, context) => producersServices.deleteProducer(utilsServices.castIdInObjectId(args.producerId))
+    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId)
   },
 
   Producer: {
@@ -35,10 +35,10 @@ const producerResolvers = {
     subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
 
     salesPoint: (parent, args, context) => (parent.salesPointId != null ? salesPointsServices.getSalesPointById(
-      utilsServices.castIdInObjectId(parent.salesPointId)
+      parent.salesPointId
     ) : null),
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(utilsServices.castTabOfIdsInTabOfObjectIds(parent.productsIds))
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
   }
 };
 

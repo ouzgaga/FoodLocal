@@ -100,9 +100,12 @@ async function addProducer(producer) {
     }
 
     let productsIds;
-    if (producer.products != null && producer.products.length !== 0) { // le producteur contient au moins un produit
-      // on enregistre chaque produits dans la DB et on récupère les ids correspondants
+    if (producer.products != null && producer.products.length !== 0) {
+      // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
       productsIds = await productsServices.addAllProductsInArray(producer.products);
+    } else if (producer.productsIds != null && producer.productsIds.length !== 0) {
+      // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
+      productsIds = await productsServices.addAllProductsInArray(producer.productsIds);
     }
     const producerToAdd = {
       firstname: producer.firstname,
@@ -152,29 +155,32 @@ async function updateProducer(producer) {
   if (!mongoose.Types.ObjectId.isValid(producer.id)) {
     return new Error('Received producer.id is invalid!');
   }
-  // FIXME: Paul : pourquoi les ids doivent parfois être casté en ObjectId mais parfois pas?!
 
   const producerValidations = await ProducersModel.findById(producer.id, 'emailValidated isValidated');
 
-  const producerToUpdate = {
-    id: producer.id,
-    firstname: producer.firstname,
-    lastname: producer.lastname,
-    email: producer.email,
-    password: producer.password,
-    image: producer.image,
-    subscriptions: producer.subscriptions != null ? producer.subscriptions.map(s => s.id) : [],
-    emailValidated: producerValidations.emailValidated,
-    subscribedUsersIds: producer.subscribedUsers != null ? producer.subscribedUsers.map(u => u.id) : [],
-    phoneNumber: producer.phoneNumber,
-    description: producer.description,
-    website: producer.website,
-    salesPointId: producer.salesPoint,
-    isValidated: producerValidations.isValidated,
-    productsIds: producer.products != null ? producer.products.map(p => p.id) : []
-  };
+  if(producerValidations != null) {
+    const producerToUpdate = {
+      id: producer.id,
+      firstname: producer.firstname,
+      lastname: producer.lastname,
+      email: producer.email,
+      password: producer.password,
+      image: producer.image,
+      subscriptions: producer.subscriptions != null ? producer.subscriptions.map(s => s.id) : [],
+      emailValidated: producerValidations.emailValidated,
+      subscribedUsersIds: producer.subscribedUsers != null ? producer.subscribedUsers.map(u => u.id) : [],
+      phoneNumber: producer.phoneNumber,
+      description: producer.description,
+      website: producer.website,
+      salesPointId: producer.salesPointId != null ? producer.salesPointId : producer.salesPoint,
+      isValidated: producerValidations.isValidated,
+      productsIds: producer.products != null ? producer.products.map(p => p.id) : []
+    };
 
-  return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('The received id is not in the database!');
+  }
 }
 
 async function validateAProducer(producerId, validationState) {

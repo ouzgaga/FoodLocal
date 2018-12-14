@@ -1,13 +1,13 @@
 {
 	"producer": {
 		"firstname": "Benoît",
-		"lastname": "Schopfer",
-		"email": "benoit.schopfer5@heig-vd.ch",
+		"lastname": "Schöpfli",
+		"email": "benoit@paysan.ch",
 		"password": "1234abcd",
 		"image": "Ceci est une image encodée en base64!",
 		"phoneNumber": "0761435196",
 		"description": "Un chouet gaillard!",
-		"website": "benoitschopfer.ch",
+		"website": "benoitpaysan.ch",
 		"salesPoint": {
 			"name": "Chez moi",
 			"address": {

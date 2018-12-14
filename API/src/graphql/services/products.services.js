@@ -31,7 +31,8 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+  return ProductModel.find({ _id: { $in: listOfIdToGet } })
+    .sort({ _id: 1 });
 }
 
 /**
@@ -54,12 +55,14 @@ function getProductById(id) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
+  // FIXME: il faud ajouter l'appel à la fonction productTypeServices.addProducerProducingThisProductType()!!
   if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
+    // on récupère les infos du productType du produit que l'on souhaite ajouter
     const productType = await productTypeServices.getProductTypeById(product.productTypeId);
 
-    if (productType != null) {
+    if (productType != null) { // si ce productType existe
       const newProduct = {
         description: product.description,
         productTypeId: productType.id
@@ -67,17 +70,19 @@ async function addProduct(product) {
 
       return new ProductModel(newProduct).save();
     } else {
-      throw new Error("This productType.id doesn't exist!");
+      return new Error("This productType.id doesn't exist!");
     }
   }
 }
 
 async function addAllProductsInArray(productsArray) {
-  // FIXME: Comment faire pour ne récupérer que l'objet souhaité (celui qui est dans _doc) sans tous les champs de mongoose...?
-  const promises = [];
-  productsArray.forEach(product => promises.push(addProduct(product)));
-  const resolvedPromises = await Promise.all(promises);
-  return resolvedPromises.map(addedProduct => addedProduct.id);
+  if (productsArray != null && productsArray.length !== 0) {
+    const promisesAddProducts = productsArray.map(product => addProduct(product));
+    const resolvedPromises = await Promise.all(promisesAddProducts);
+    return resolvedPromises.map(addedProduct => addedProduct.id);
+  } else {
+    return new Error('function addAllProductsInArray: received productsArray is null or empty!');
+  }
 }
 
 /**

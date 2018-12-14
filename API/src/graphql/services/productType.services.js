@@ -19,25 +19,10 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return ProductTypeModel.find({ tags })
+  return ProductTypeModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
-}
-
-/**
- * Ajoute un nouveau type de produit dans la base de données.
- * Attention, doublons autorisés!
- *
- * @param {Integer} productType, Les informations du type de produit à ajouter.
- */
-function addProductType(productType) {
-  const newProductType = {
-    ...productType,
-    categoryId: productType.categoryId,
-    producersIds: []
-  };
-  return new ProductTypeModel(newProductType).save();
 }
 
 /**
@@ -62,17 +47,49 @@ function getProductTypeByCategory(productTypeCategoryId) {
   }
 }
 
+// todo: à ajouter dans les test!
 async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
   const productTypeObjectIdsTab = utilsServices.castTabOfIdsInTabOfObjectIds(productTypeIdsTab);
 
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
+  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeObjectIdsTab } } });
+  // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
+
 
   const producersIds = [];
 
   // on récupère tous les ids des producteurs proposant des produits de ces productTypes
   productTypes.forEach(p => p.producersIds.forEach(id => producersIds.push(id)));
   return producersIds;
+}
+
+/**
+ * Ajoute un nouveau type de produit dans la base de données.
+ * Attention, doublons autorisés!
+ *
+ * @param {Integer} productType, Les informations du type de produit à ajouter.
+ */
+function addProductType(productType) {
+  const newProductType = {
+    ...productType,
+    categoryId: productType.categoryId,
+    producersIds: []
+  };
+  return new ProductTypeModel(newProductType).save();
+}
+
+async function addProducerProducingThisProductType(idProductType, idProducer) {
+  idProductType = utilsServices.castIdInObjectId(idProductType);
+  idProducer = utilsServices.castIdInObjectId(idProducer);
+
+  const productType = await getProductTypeById(idProductType);
+  if (productType.producersIds != null) {
+    // fixme: checker si producer est déjà dans le tableau avant de l'ajouter!
+    productType.producersIds.push(idProducer);
+  } else {
+    productType.producersIds = [idProducer];
+  }
+  return updateProductType(productType);
 }
 
 /**
@@ -98,20 +115,6 @@ function updateProductType(productType) {
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
-async function addProducerProducingThisProductType(idProductType, idProducer) {
-  idProductType = utilsServices.castIdInObjectId(idProductType);
-  idProducer = utilsServices.castIdInObjectId(idProducer);
-
-  const productType = await getProductTypeById(idProductType);
-  if (productType.producersIds != null) {
-    // fixme: checker si producer est déjà dans le tableau avant de l'ajouter!
-    productType.producersIds.push(idProducer);
-  } else {
-    productType.producersIds = [idProducer];
-  }
-  return updateProductType(productType);
-}
-
 /**
  * Supprime le type de produit correspondant à l'id reçu. Ne supprime pas sa catégorie.
  *
@@ -122,8 +125,6 @@ function deleteProductType(id) {
     return new Error('Received productType.id is invalid!');
   }
 
-  // FIXME: c'est quoi la différence entre findByIdAndDelete() et findByIdAndRemove() ?
-  // FIXME: On retourne quoi après la suppression?
   return ProductTypeModel.findByIdAndRemove(id);
 }
 
