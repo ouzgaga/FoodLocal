@@ -31,5 +31,5 @@ spec:
               value: "mongo"
             - name: MONGODB_DBNAME_PROD
               value: "api_foodlocal_production"
-		  	- name: JWT_SECRET
-		  	  value: "OlKErnp3uszpFVELIUZv5kvlxu7v15"
+		  	#- name: JWT_SECRET
+		  	#  value: "OlKErnp3uszpFVELIUZv5kvlxu7v15"
