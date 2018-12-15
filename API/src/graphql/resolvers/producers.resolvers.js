@@ -6,7 +6,7 @@ const utilsServices = require('../services/utils.services');
 
 const producerResolvers = {
   Query: {
-    producers: () => producersServices.getProducers(),
+    producers: (parent, args, context) => producersServices.getProducers(),
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
