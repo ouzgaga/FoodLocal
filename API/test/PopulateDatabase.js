@@ -397,7 +397,7 @@ describe('Add ProductTypeCategory', () => {
     const producer3 = await producerService.addProducer(
       {
         firstname: 'James',
-        lastname: 'Smith',
+        lastname: 'submith',
         email: 'james@paysan.ch',
         password: '1234abcd',
         image: 'Ceci est une image encodée en base64!',
@@ -447,11 +447,12 @@ describe('Add ProductTypeCategory', () => {
         }
       }
     );
+    allPromises.push(producer3);
 
     const producer4 = await producerService.addProducer(
       {
         firstname: 'Jérémie',
-        lastname: 'Châtillon',
+        lastname: 'Chaton',
         email: 'jerem@paysan.ch',
         password: '1234abcd'
       }
@@ -461,7 +462,7 @@ describe('Add ProductTypeCategory', () => {
     const user = await userService.addUser(
       {
         firstname: 'Jérémie',
-        lastname: 'Châtillon',
+        lastname: 'Chaton',
         email: 'jeremUser@paysan.ch',
         password: '1234abcd'
       }

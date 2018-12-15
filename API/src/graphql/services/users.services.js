@@ -50,12 +50,17 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  *
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
-async function addUser(user) {
-  if (await UtilsServices.isEmailUnused(user.email)) {
+async function addUser({ firstname, lastname, email, password, image }) {
+  if (await UtilsServices.isEmailUnused(email)) {
     const userToAdd = {
-      ...user,
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
       subscriptions: [],
-      emailValidated: false
+      emailValidated: false,
+      isAdmin: false
     };
 
     const userAdded = await new UsersModel(userToAdd).save();
@@ -73,23 +78,29 @@ async function addUser(user) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({
-  id, firstname, lastname, email, password, image, subscriptions, emailValidated
-}) {
+async function updateUser({ id, firstname, lastname, email, password, image, subscriptions }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+  const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
-  const userToUpdate = {
-    firstname,
-    lastname,
-    email,
-    password,
-    image,
-    subscriptions: await getAllUsersInReceivedIdList(subscriptions),
-    emailValidated
-  };
-  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  if (userValidation != null) {
+    // si usrValidation n'est pas nul -> l'utilisateur existe dans la DB
+    const { emailValidated, isAdmin } = userValidation;
+    const userToUpdate = {
+      firstname,
+      lastname,
+      email,
+      password,
+      image,
+      subscriptions: await getAllUsersInReceivedIdList(subscriptions),
+      emailValidated,
+      isAdmin
+    };
+    return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('The received id is not in the database!');
+  }
 }
 
 /**

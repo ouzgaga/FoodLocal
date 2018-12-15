@@ -3,12 +3,14 @@ const { graphql } = require('graphql');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const producersService = require('../../../src/graphql/services/producers.services');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const userModel = require('../../../src/graphql/models/users.modelgql');
-const salespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const tokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
+const PersonModel = require('../../../src/graphql/models/persons.modelgql');
+const UserModel = require('../../../src/graphql/models/users.modelgql');
+const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
+
 const { queryObjAllProducers, queryObjProducerWithCorrectId } = require('./Objects/QueryObjsProducers');
 
 let benoit = {};
@@ -17,16 +19,25 @@ let pomme = {};
 let poire = {};
 
 const beforeEachFunc = () => async() => {
+  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
+  await ProducersModel.deleteMany();
+  await ProductModel.deleteMany();
+  await ProductTypeModel.deleteMany();
+  await ProductTypeCategoryModel.deleteMany();
+  await PersonModel.deleteMany();
+  await UserModel.deleteMany();
+  await SalespointsModel.deleteMany();
+  await TokensValidationEmailModel.deleteMany();
+
+  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // Création du type Fruit
   let productTypeCategory = {
     name: 'Fruits',
     image: 'ceci est une image de fruits encodée en base64!'
   };
 
-  // on ajoute le contenu de départ
   // on ajoute le productTypeCategory
-  productTypeCategory = await new ProductTypeCategoryModel(productTypeCategory).save();
-
+  productTypeCategory = (await new ProductTypeCategoryModel(productTypeCategory).save()).toObject();
 
   // on ajoute 2 productType
   const productTypePomme = {
@@ -35,7 +46,7 @@ const beforeEachFunc = () => async() => {
     categoryId: productTypeCategory.id,
     producersIds: []
   };
-  pomme = await new ProductTypeModel(productTypePomme).save();
+  pomme = (await new ProductTypeModel(productTypePomme).save()).toObject();
 
   const productTypePoire = {
     name: 'Poire',
@@ -43,22 +54,22 @@ const beforeEachFunc = () => async() => {
     categoryId: productTypeCategory.id,
     producersIds: []
   };
-  poire = await ProductTypeModel(productTypePoire).save();
+  poire = (await ProductTypeModel(productTypePoire)
+    .save()).toObject();
 
   // on ajoute le contenu de départ
   // on ajoute 2 producteur avec leur point de vente
 
-
   benoit = {
     firstname: 'Benoît',
-    lastname: 'Schopfer',
-    email: 'benoit.schopfer5@heig-vd.ch',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
     password: '1234abcd',
     image: 'Ceci est une image encodée en base64!',
     phoneNumber: '0761435196',
     description: 'Un chouet gaillard!',
-    website: 'benoitschopfer.ch',
-    salesPoint: {
+    website: 'benoit-paysan.ch',
+    salespoint: {
       name: 'Chez moi',
       address: {
         number: 6,
@@ -114,13 +125,13 @@ const beforeEachFunc = () => async() => {
 
   antoine = {
     firstname: 'Antoine',
-    lastname: 'Rochat',
-    email: 'antoine.rochat5@heig-vd.ch',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
     password: '1234abcd',
     image: 'Ceci est l\'image d\'un tueur encodée en base64!',
     phoneNumber: '0761435196',
     description: 'Un vrai payouz!',
-    salesPoint: {
+    salespoint: {
       name: 'Chez lui, perdu au milieu de rien',
       address: {
         number: 12,
@@ -135,25 +146,26 @@ const beforeEachFunc = () => async() => {
     },
     products: [
       {
-        description: 'Une pomme meilleure que celle de Benoit!',
+        description: 'Une pomme meilleure que celle de Benoît!',
         productTypeId: pomme.id
       }
     ]
   };
-  benoit = await producersService.addProducer(benoit);
+  benoit = (await producersService.addProducer(benoit)).toObject();
 
-  antoine = await producersService.addProducer(antoine);
+  antoine = (await producersService.addProducer(antoine)).toObject();
 };
 
 const afterEachFunc = () => async () => {
-  // on supprime tout le contenu de la DB
+  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
   await ProducersModel.deleteMany();
   await ProductModel.deleteMany();
   await ProductTypeModel.deleteMany();
   await ProductTypeCategoryModel.deleteMany();
-  await userModel.deleteMany();
-  await salespointsModel.deleteMany();
-  await tokensValidationEmailModel.deleteMany();
+  await PersonModel.deleteMany();
+  await UserModel.deleteMany();
+  await SalespointsModel.deleteMany();
+  await TokensValidationEmailModel.deleteMany();
 };
 
 describe('Testing query producer Graphql', () => {
@@ -161,7 +173,7 @@ describe('Testing query producer Graphql', () => {
   const schema = makeExecutableSchema({ typeDefs, resolvers });
   describe('Getting all producers', () => {
     beforeEach(beforeEachFunc());
-    afterEach(afterEachFunc());
+    // afterEach(afterEachFunc());
     it('sucess - query: getting firstname and lastname of all producers', async() => {
       const {
         query, variables, context, expected
@@ -172,12 +184,12 @@ describe('Testing query producer Graphql', () => {
   });
   describe('Getting producer by id', () => {
     beforeEach(beforeEachFunc());
-    afterEach(afterEachFunc());
+    // afterEach(afterEachFunc());
 
     it('sucess - getting producer with a correct id', async() => {
       queryObjProducerWithCorrectId.variables.id = benoit.id;
       const {
-        query, variables, context, expected 
+        query, variables, context, expected
       } = queryObjProducerWithCorrectId;
 
       expected.data.producer.id = benoit.id;
@@ -187,11 +199,10 @@ describe('Testing query producer Graphql', () => {
       expect(result.data).to.be.not.null;
       expect(result.data.producer.products).to.be.an('array');
       expect(result.data.producer.products.length).to.be.equal(queryObjProducerWithCorrectId.expected.data.producer.products.length);
-      expect(result.data.producer.products).
-
+      // expect(result.data.producer.products).
     });
 
-    it('sucess - getting a producer without schedule on his sale point', async() => {
+    it('sucess - getting a producer without schedule on his salespoint', async() => {
       const queryObj = {
         query: `
           query($id: ID!){
@@ -218,7 +229,7 @@ describe('Testing query producer Graphql', () => {
                   }
                 }
               }
-              salesPoint{
+              salespoint{
                 name
                 address{
                   number
@@ -271,8 +282,8 @@ describe('Testing query producer Graphql', () => {
           data: {
             producer: {
               firstname: 'Antoine',
-              lastname: 'Rochat',
-              email: 'antoine.rochat5@heig-vd.ch',
+              lastname: 'Rochaille',
+              email: 'antoine@paysan.ch',
               password: '1234abcd',
               image: "Ceci est l'image d'un tueur encodée en base64!",
               emailValidated: false,
@@ -282,7 +293,7 @@ describe('Testing query producer Graphql', () => {
               isValidated: false,
               products: [
                 {
-                  description: 'Une pomme meilleure que celle de Benoit!',
+                  description: 'Une pomme meilleure que celle de Benoît!',
                   productType: {
                     name: 'Pomme',
                     image: 'ceci est une image de pomme encodée en base64!',
@@ -293,7 +304,7 @@ describe('Testing query producer Graphql', () => {
                   }
                 }
               ],
-              salesPoint: {
+              salespoint: {
                 name: 'Chez lui, perdu au milieu de rien',
                 address: {
                   number: 12,
@@ -331,7 +342,7 @@ describe('Testing query producer Graphql', () => {
         `,
         variables:
           {
-            id: 'eeeeeeeeeeeeeeeeeeeeeeee' // incorrect id
+            id: 'eeeeeeeeeeeeeeeeeeeeeeee' // unknown id
           },
         context: {},
         expected: {
@@ -341,7 +352,7 @@ describe('Testing query producer Graphql', () => {
         }
       };
       const {
-        query, variables, context, expected 
+        query, variables, context, expected
       } = queryObj;
       const result = await graphql(schema, query, null, context, variables);
       return result.should.be.eql(expected);

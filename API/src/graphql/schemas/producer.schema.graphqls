@@ -22,6 +22,7 @@ type Producer implements Person {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions: [Producer!]!
 	emailValidated: Boolean!
+	isAdmin: Boolean!
 	subscribedUsers : [Person!]!
 	phoneNumber: String
 	description: String
@@ -40,6 +41,7 @@ input ProducerInputAdd {
 	image: String # fixme: faudra l'encoder en base64
 	# subscriptions:[ProducerInputAdd!]!
 	# emailValidated: Boolean!
+	# isAdmin: Boolean!
 	# subscribedUsers : [UserInputAdd!]!
 	phoneNumber: String
 	description: String
@@ -58,6 +60,7 @@ input ProducerInputUpdate {
 	image: String # fixme: faudra l'encoder en base64
 	subscriptions:[ProducerInputUpdate!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
+	# isAdmin: Boolean! # ne peut pas être modifié par le client
 	subscribedUsers : [UserInputUpdate!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
