@@ -1,4 +1,3 @@
-require('../../chai-config');
 const producersService = require('../../../src/graphql/services/producers.services');
 const productsService = require('../../../src/graphql/services/products.services');
 const productTypeService = require('../../../src/graphql/services/productType.services');
