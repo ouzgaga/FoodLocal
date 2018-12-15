@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const productTypeService = require('../../../src/graphql/services/productType.services');
 const producersService = require('../../../src/graphql/services/producers.services');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');

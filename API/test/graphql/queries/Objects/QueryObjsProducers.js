@@ -1,4 +1,4 @@
-/** SUCCESS GETTING ALL PRODUCERS **/
+/** SUCCESS GETTING ALL PRODUCERS */
 const queryObjAllProducers = {
   query: `
           query{
@@ -15,11 +15,11 @@ const queryObjAllProducers = {
       producers: [
         {
           firstname: 'Benoît',
-          lastname: 'Schopfer'
+          lastname: 'Schöpfli'
         },
         {
           firstname: 'Antoine',
-          lastname: 'Rochat'
+          lastname: 'Rochaille'
         },
 
       ]
@@ -27,7 +27,7 @@ const queryObjAllProducers = {
   }
 };
 
-/** SUCESS - GETTING PRODUCER WITH A CORRECT ID **/
+/** SUCESS - GETTING PRODUCER WITH A CORRECT ID */
 const queryObjProducerWithCorrectId = {
   query: `
           query($id: ID!){
@@ -105,14 +105,14 @@ const queryObjProducerWithCorrectId = {
     data: {
       producer: {
         firstname: 'Benoît',
-        lastname: 'Schopfer',
-        email: 'benoit.schopfer5@heig-vd.ch',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
         password: '1234abcd',
         image: 'Ceci est une image encodée en base64!',
         emailValidated: false,
         phoneNumber: '0761435196',
         description: 'Un chouet gaillard!',
-        website: 'benoitschopfer.ch',
+        website: 'benoit-paysan.ch',
         isValidated: false,
         products: [
           {

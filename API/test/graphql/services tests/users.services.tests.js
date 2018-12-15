@@ -1,6 +1,4 @@
 const usersService = require('../../../src/graphql/services/users.services');
-const productsService = require('../../../src/graphql/services/products.services');
-const productTypeService = require('../../../src/graphql/services/productType.services');
 const UsersModel = require('../../../src/graphql/models/users.modelgql');
 const PersonModel = require('../../../src/graphql/models/persons.modelgql');
 const UserModel = require('../../../src/graphql/models/users.modelgql');
