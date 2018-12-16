@@ -6,7 +6,7 @@ const utilsServices = require('../services/utils.services');
 
 const producerResolvers = {
   Query: {
-    producers: () => producersServices.getProducers(),
+    producers: (parent, args, context) => producersServices.getProducers(),
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
@@ -38,7 +38,7 @@ const producerResolvers = {
       parent.salespointId
     ) : null),
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
   }
 };
 

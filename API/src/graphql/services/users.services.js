@@ -82,6 +82,7 @@ async function updateUser({ id, firstname, lastname, email, password, image, sub
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+  // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
   if (userValidation != null) {

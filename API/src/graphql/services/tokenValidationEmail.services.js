@@ -38,8 +38,9 @@ function getTokenValidationEmailByValue(value) {
  */
 async function addTokenValidationEmail (user) {
   // check user exist
-  if (user === null) {
-    return null;
+  // TODO: euh... faut faire un check là du coup...?!^^
+  if (user == null) {
+    return false;
   }
 
   // Generate token
@@ -54,7 +55,7 @@ async function addTokenValidationEmail (user) {
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
   // mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
-  return tokenValidationEmail;
+  return tokenValidationEmail != null;
 }
 
 /**

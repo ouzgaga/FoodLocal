@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const PersonSchema = require('./persons.modelgql');
 
 /**
- * User Schema
+ * User Schema (hérite du contenu du schéma 'persons')
  */
 const options = {
   discriminatorKey: 'kind',

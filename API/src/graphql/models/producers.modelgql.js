@@ -1,14 +1,27 @@
 const mongoose = require('mongoose');
 const PersonSchema = require('./persons.modelgql');
 
-/**
- * Producer Schema (hérite du contenu du schéma 'users')
- */
 const options = {
   discriminatorKey: 'kind',
   toObject: { virtuals: true }
 };
 
+const RatingSchema = new mongoose.Schema(
+  {
+    rating: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    },
+    nbRatings: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    }
+  }
+);
+
+/**
+ * Producer Schema (hérite du contenu du schéma 'persons')
+ */
 const producerSchema = new mongoose.Schema(
   {
     subscribedUsersIds: [
@@ -43,7 +56,11 @@ const producerSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products'
       }
-    ]
+    ],
+    rating: {
+      type: RatingSchema,
+      required: false
+    }
   }, options
 );
 

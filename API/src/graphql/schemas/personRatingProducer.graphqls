@@ -1,0 +1,39 @@
+type Query {
+	# retourne tous les ratings concernant le producteur correspondant à l'id 'producerId'
+	ratingsAboutProducer(producerId: ID!): [PersonRatingProducer!]!
+
+	# retourne le rating concernant le producteur correspondant à l'id 'producerId' fait par la personne (user ou producer) correspondant à l'id 'personId'
+	ratingAboutProducerMadeByPerson(personId: ID!, producerId: ID!): PersonRatingProducer!
+
+	# retourne tous les ratings fait par la personne correspondant à l'id 'personId'
+	ratingsMadeByPerson(personId: ID!): [PersonRatingProducer!]!
+}
+
+type Mutation {
+	# Ajoute un nouveau rating fait par la personne 'personId' et concernant le producteur 'producerId'
+	addProducerRating(rating: PersonRatingProducerInputAdd!): PersonRatingProducer!
+
+	# Met à jour le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
+	updateProducerRating(rating: PersonRatingProducerInputUpdate!): PersonRatingProducer
+
+	# Supprime le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
+	deleteProducerRating(ratingId: ID!): PersonRatingProducer
+}
+
+type PersonRatingProducer {
+	id: ID!
+	personId: ID! # FIXME: voir avec frontend s'il préfèrent que je retourne tout l'utilisateur plutôt que juste son id
+	producerId: ID! # FIXME: voir avec frontend s'il préfèrent que je retourne tout le producteur plutôt que juste son id
+	rating: Int!
+}
+
+input PersonRatingProducerInputAdd {
+	personId: ID!
+	producerId: ID!
+	rating: Int!
+}
+
+input PersonRatingProducerInputUpdate {
+	id: ID!
+	rating: Int!
+}
