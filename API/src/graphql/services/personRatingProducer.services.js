@@ -8,11 +8,19 @@ const ProducersServices = require('./producers.services');
  *
  * @param {Integer} producerId, L'id du producteur dont on souhaite récupérer tous les ratings le concernant.
  */
-function getAllRatingsOfProducerWithId(producerId) {
+function getAllRatingsOfProducerWithId(producerId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received personRatingProducer.producerId is invalid!');
   } else {
-    return PersonRatingProducerModel.find({ producerId });
+    let skip;
+    if (page !== 0) {
+      skip = page * limit;
+    }
+
+    return PersonRatingProducerModel.find({ producerId })
+      .sort({ _id: 1 })
+      .skip(+skip)
+      .limit(+limit);
   }
 }
 
@@ -23,11 +31,20 @@ function getAllRatingsOfProducerWithId(producerId) {
  * @param producerId, l'id du producteur concerné par le rating qu'on souhaite récupérer.
  * @returns {*}
  */
-function getRatingOfProducerIdMadeByPersonId(producerId, personId) {
+async function getRatingOfProducerIdMadeByPersonId(producerId, personId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received personRatingProducer.producerId is invalid!');
   } else {
-    return PersonRatingProducerModel.find({ producerId, personId });
+    let skip;
+    if (page !== 0) {
+      skip = page * limit;
+    }
+
+    const res = await PersonRatingProducerModel.findOne({ producerId, personId })
+      .sort({ _id: 1 })
+      .skip(+skip)
+      .limit(+limit);
+    return res;
   }
 }
 
@@ -36,11 +53,19 @@ function getRatingOfProducerIdMadeByPersonId(producerId, personId) {
  *
  * @param {Integer} personId, L'id de la personne dont on souhaite récupérer tous les ratings qu'il a fait.
  */
-function getAllRatingsMadeByPersonWithId(personId) {
+function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(personId)) {
     return new Error('Received personRatingProducer.personId is invalid!');
   } else {
-    return PersonRatingProducerModel.find({ personId });
+    let skip;
+    if (page !== 0) {
+      skip = page * limit;
+    }
+
+    return PersonRatingProducerModel.find({ personId })
+      .sort({ _id: 1 })
+      .skip(+skip)
+      .limit(+limit);
   }
 }
 
@@ -71,7 +96,7 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
   // personId et producerId existent bien dans la DB
   const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.find({ personId, producerId });
   if (ratingForThisProducerAlreadyMade.length !== 0) { // cette personne a déjà voté pour ce producteur ! // fixme: ou mettre à jour le rating existant...??
-    // return new Error('This person has already rated this producer! You can\'t rate twice the same producer.');
+    return new Error('This person has already rated this producer! You can\'t rate twice the same producer.');
   }
 
   // todo: tester avec un rating < 1 et > 5 et tester avec un rating qui n'est pas entier!

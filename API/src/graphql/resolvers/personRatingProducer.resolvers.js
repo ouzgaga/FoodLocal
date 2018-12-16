@@ -5,7 +5,7 @@ const personRatingProducerResolvers = {
     ratingsAboutProducer: (parent, args, context) => personRatingProducerServices.getAllRatingsOfProducerWithId(args.producerId),
 
     ratingAboutProducerMadeByPerson: (parent, args, context) => personRatingProducerServices.getRatingOfProducerIdMadeByPersonId(args.personId,
-                                                                                                                                 args.producerId),
+      args.producerId),
 
     ratingsMadeByPerson: (parent, args, context) => personRatingProducerServices.getAllRatingsMadeByPersonWithId(args.personId)
   },
