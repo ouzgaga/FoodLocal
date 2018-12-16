@@ -3,18 +3,13 @@ const usersService = require('../services/users.services');
 
 const producerResolvers = {
   Query: {
-    tokens: () => tokenValidationEmailServices.getTokenValidationEmails(),
+    tokens: (parent, args, context) => tokenValidationEmailServices.getTokenValidationEmails()
   },
+
   Mutation: {
     validateToken: (parent, args, context) => usersService.validateEmailUserByToken(args.token),
-    askNewToken: (parent, args, context) => {
-      const token = tokenValidationEmailServices.addTokenValidationEmail(args.idPerson);
-      if (token === null) {
-        return false;
-      } else {
-        return true;
-      }
-    },
+
+    askNewToken: (parent, args, context) => tokenValidationEmailServices.addTokenValidationEmail(args.idPerson)
   }
 };
 module.exports = producerResolvers;

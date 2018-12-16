@@ -30,6 +30,12 @@ type Producer implements Person {
 	salespoint: SalesPoint
 	isValidated: Boolean! # validation côté serveur uniquement
 	products: [Product!]!
+	rating: ProducerRating
+}
+
+type ProducerRating {
+	nbRatings: Int!
+	rating: Float!
 }
 
 input ProducerInputAdd {

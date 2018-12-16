@@ -1,5 +1,6 @@
 const productTypeService = require('../../../src/graphql/services/productType.services');
 const producersService = require('../../../src/graphql/services/producers.services');
+const clearDB = require('../clearDB');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
 const UserModel = require('../../../src/graphql/models/users.modelgql');
 const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
@@ -39,13 +40,7 @@ let tabProductType = [];
 
 const clearAndPopulateDB = async() => {
   // on supprime tout le contenu de la DB
-  await ProducersModel.deleteMany();
-  await ProductModel.deleteMany();
-  await ProductTypeModel.deleteMany();
-  await ProductTypeCategoryModel.deleteMany();
-  await UserModel.deleteMany();
-  await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
+  await clearDB();
 
   // on ajoute le contenu de départ
   categoryFruits = (await ProductTypeCategoryModel.create(categoryFruits)).toObject();
@@ -102,8 +97,6 @@ describe('tests productType services', () => {
   });
 
   describe('tests getProductTypeById', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     it('should get one productType', async() => {
       // on récupère le productType correspondant à l'id donné
       const productType = (await productTypeService.getProductTypeById(productTypePomme.id)).toObject();
