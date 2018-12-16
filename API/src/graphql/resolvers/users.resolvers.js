@@ -2,7 +2,7 @@ const usersServices = require('../services/users.services');
 
 const producerResolvers = {
   Query: {
-    users: () => usersServices.getUsers(),
+    users: (parent, args, context) => usersServices.getUsers(),
 
     user: (parent, args, context) => usersServices.getUserById(args.userId)
   },

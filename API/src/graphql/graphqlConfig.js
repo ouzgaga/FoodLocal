@@ -6,6 +6,7 @@ const Producer = require('./resolvers/producers.resolvers');
 const User = require('./resolvers/users.resolvers');
 const Utils = require('./resolvers/utils.resolvers');
 const Person = require('./resolvers/person.resolvers');
+const PersonRatingProducer = require('./resolvers/personRatingProducer.resolvers');
 const Product = require('./resolvers/products.resolvers');
 const Salespoint = require('./resolvers/salespoint.resolvers');
 const TokenValidationEmail = require('./resolvers/tokenValidationEmail.resolvers');
@@ -13,6 +14,7 @@ const TokenValidationEmail = require('./resolvers/tokenValidationEmail.resolvers
 
 const resolvers = merge(
   Person,
+  PersonRatingProducer,
   Producer,
   User,
   Product,

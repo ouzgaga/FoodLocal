@@ -2,7 +2,7 @@ const salespointsServices = require('../services/salespoints.services');
 
 const salespointsResolvers = {
   Query: {
-    salespoints: () => salespointsServices.getSalesPoints(),
+    salespoints: (parent, args, context) => salespointsServices.getSalesPoints(),
 
     salespoint: (parent, args, context) => salespointsServices.getSalesPointById(args.salespointId)
   },
