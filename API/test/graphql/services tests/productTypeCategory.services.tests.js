@@ -1,4 +1,5 @@
 const productTypeCategoryService = require('../../../src/graphql/services/productTypeCategory.services');
+const clearDB = require('../clearDB');
 const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
 const PersonModel = require('../../../src/graphql/models/persons.modelgql');
 const UserModel = require('../../../src/graphql/models/users.modelgql');
@@ -28,14 +29,7 @@ let tabProductTypeCategory = [];
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await ProducersModel.deleteMany();
-  await ProductModel.deleteMany();
-  await ProductTypeModel.deleteMany();
-  await ProductTypeCategoryModel.deleteMany();
-  await PersonModel.deleteMany();
-  await UserModel.deleteMany();
-  await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
+  await clearDB();
 
 
   // on ajoute le contenu de départ
@@ -72,8 +66,6 @@ describe('tests productTypeCategory services', () => {
   });
 
   describe('tests getProductTypeCategoryById', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     it('should get one productTypeCategory', async() => {
       // on récupère le productTypeCategory corresondant à l'id donné
       let productTypeCategoryGotInDB = (await productTypeCategoryService.getProductTypeCategoryById(fruits.id)).toObject();

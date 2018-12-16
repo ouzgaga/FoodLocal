@@ -24,7 +24,11 @@ const personRatingProducer = new mongoose.Schema(
       type: mongoose.Schema.Types.Number,
       required: true,
       min: 1,
-      max: 5
+      max: 5,
+      validate : {
+        validator : Number.isInteger,
+        message   : '{VALUE} is not an integer value'
+      }
     }
   }, options
 );

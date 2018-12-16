@@ -8,7 +8,7 @@ const ProducersServices = require('./producers.services');
  *
  * @param {Integer} producerId, L'id du producteur dont on souhaite récupérer tous les ratings le concernant.
  */
-function getAllRatingsOfProducerWithId(producerId, { limit = 30, page = 0 } = {}) {
+function getAllRatingsAboutProducerWithId(producerId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received personRatingProducer.producerId is invalid!');
   } else {
@@ -31,9 +31,11 @@ function getAllRatingsOfProducerWithId(producerId, { limit = 30, page = 0 } = {}
  * @param producerId, l'id du producteur concerné par le rating qu'on souhaite récupérer.
  * @returns {*}
  */
-async function getRatingOfProducerIdMadeByPersonId(producerId, personId, { limit = 30, page = 0 } = {}) {
+async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received personRatingProducer.producerId is invalid!');
+  } else if (!mongoose.Types.ObjectId.isValid(personId)) {
+    return new Error('Received personRatingProducer.personId is invalid!');
   } else {
     let skip;
     if (page !== 0) {
@@ -76,31 +78,30 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
  * @param personRatingProducer, Les informations du rating à ajouter.
  */
 async function addPersonRatingProducer({ personId, producerId, rating }) {
-  // 1) checker si idproducer et idPerson existent
-  // 2) checker si l'utilisateur a déjà voté pour ce producteur -> si oui, renvoyer une erreur # fixme: ou mettre à jour le rating existant...??
-  // 3) mettre à jour le rating dans le producer
-  // 4) enregistrer le nouveau rating
-
   if (!mongoose.Types.ObjectId.isValid(personId)) {
     return new Error('Received personId is invalid!');
   } else if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received producerId is invalid!');
   }
 
-  if (!checkIfPersonIdExistInDB(personId)) {
-    return new Error('There is no user with this id in database!');
+  const personIsInDB = await checkIfPersonIdExistInDB(personId);
+  const producerIsInDB = await checkIfPersonIdExistInDB(producerId);
+
+  if (!personIsInDB) {
+    return new Error('There is no person with this id in database!');
   }
-  if (!checkIfPersonIdExistInDB(producerId)) {
+  if (!producerIsInDB) {
     return new Error('There is no producer with this id in database!');
   }
-  // personId et producerId existent bien dans la DB
+  // Si on arrive jusqu'ici alors personId et producerId existent bien dans la DB
   const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.find({ personId, producerId });
-  if (ratingForThisProducerAlreadyMade.length !== 0) { // cette personne a déjà voté pour ce producteur ! // fixme: ou mettre à jour le rating existant...??
+
+  if (ratingForThisProducerAlreadyMade.length !== 0) {
+    // cette personne a déjà voté pour ce producteur ! // fixme: ou mettre à jour le rating existant...??
     return new Error('This person has already rated this producer! You can\'t rate twice the same producer.');
   }
 
-  // todo: tester avec un rating < 1 et > 5 et tester avec un rating qui n'est pas entier!
-  const newRating = (await new PersonRatingProducerModel({ personId, producerId, rating }).save()).toObject();
+  const newRating = await new PersonRatingProducerModel({ personId, producerId, rating }).save();
 
   await updateProducerRating(producerId);
 
@@ -108,8 +109,10 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
 }
 
 async function updateProducerRating(producerId) {
+  // pas besoin de checker la validité de l'id -> il l'est forcément!
   const nbRatings = await PersonRatingProducerModel.count({ producerId });
 
+  // FIXME: PAUL: j'arrive pas à faire fonctionner le aggregate...?
   /*
   const rating = await PersonRatingProducerModel.aggregate([
     { $match: { producerId } },
@@ -118,11 +121,14 @@ async function updateProducerRating(producerId) {
   */
 
   let ratings = await PersonRatingProducerModel.find({ producerId });
-  ratings = await ratings.map(r => r.toObject());
-  let { rating } = ratings.reduce((r1, r2) => ({ rating: (r1.rating + r2.rating) }));
-  rating = rating / nbRatings;
-
-  await ProducersServices.updateProducerRating(producerId, { nbRatings, rating });
+  if (ratings.length !== 0) {
+    ratings = await ratings.map(r => r.toObject());
+    let { rating } = ratings.reduce((r1, r2) => ({ rating: (r1.rating + r2.rating) }));
+    rating = rating / nbRatings;
+    return ProducersServices.updateProducerRating(producerId, { nbRatings, rating });
+  } else {
+    return ProducersServices.updateProducerRating(producerId, { nbRating: null, rating: null });
+  }
 }
 
 /**
@@ -131,15 +137,14 @@ async function updateProducerRating(producerId) {
  *
  * @param personRatingProducer, Les informations du rating à mettre à jour.
  */
-function updatePersonRatingProducer({ id, rating }) {
+async function updatePersonRatingProducer({ id, rating }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received personRatingProducer.id is invalid!');
   }
-  if (rating >= 1 && rating <= 5) {
-    return PersonRatingProducerModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
-  } else {
-    return new Error('The rating has to be an integer >= 1 and <= 5');
-  }
+
+  const update = await PersonRatingProducerModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
+  await updateProducerRating(update.producerId);
+  return update;
 }
 
 async function checkIfPersonIdExistInDB(personId) {
@@ -148,7 +153,7 @@ async function checkIfPersonIdExistInDB(personId) {
   }
 
   const person = await PersonModel.findById(personId);
-  return person.id != null; // todo: checker si marche aussi si id est undefined!
+  return person != null; // todo: checker si marche aussi si id est undefined!
 }
 
 /**
@@ -156,17 +161,21 @@ async function checkIfPersonIdExistInDB(personId) {
  *
  * @param {Integer} id, L'id du rating à supprimer.
  */
-function deletePersonRatingProducer(id) {
+async function deletePersonRatingProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received personRatingProducer.id is invalid!');
   }
 
-  return PersonRatingProducerModel.findByIdAndRemove(id);
+  const deletedRating = await PersonRatingProducerModel.findByIdAndRemove(id);
+  if (deletedRating != null) {
+    await updateProducerRating(deletedRating.producerId);
+  }
+  return deletedRating;
 }
 
 module.exports = {
-  getAllRatingsOfProducerWithId,
-  getRatingOfProducerIdMadeByPersonId,
+  getAllRatingsAboutProducerWithId,
+  getRatingAboutProducerIdMadeByPersonId,
   getAllRatingsMadeByPersonWithId,
   addPersonRatingProducer,
   updatePersonRatingProducer,

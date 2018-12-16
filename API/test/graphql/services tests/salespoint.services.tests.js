@@ -1,12 +1,6 @@
 const salespointService = require('../../../src/graphql/services/salespoints.services');
-const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
+const clearDB = require('../clearDB');
 const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
 
 let salespointWithSchedule = {
   name: 'Chez moi',
@@ -69,15 +63,7 @@ let tabSalespoints = [];
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await ProducersModel.deleteMany();
-  await ProductModel.deleteMany();
-  await ProductTypeModel.deleteMany();
-  await ProductTypeCategoryModel.deleteMany();
-  await PersonModel.deleteMany();
-  await UserModel.deleteMany();
-  await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
-
+  await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 point de vente avec un horaire
@@ -164,8 +150,6 @@ describe('tests salespoints services', () => {
   });
 
   describe('tests getSalesPointById', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     it('should get one salespoint', async() => {
       const salespointGotInDB = (await salespointService.getSalesPointById(salespointWithSchedule.id)).toObject();
       salespointGotInDB.should.be.not.null;

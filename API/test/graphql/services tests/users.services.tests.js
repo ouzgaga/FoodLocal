@@ -1,12 +1,5 @@
 const usersService = require('../../../src/graphql/services/users.services');
-const UsersModel = require('../../../src/graphql/models/users.modelgql');
-const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const clearDB = require('../clearDB');
 
 let benoit = {
   firstname: 'Benoît',
@@ -32,14 +25,7 @@ let tabUsers = [benoit, antoine];
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await UsersModel.deleteMany();
-  await ProductModel.deleteMany();
-  await ProductTypeModel.deleteMany();
-  await ProductTypeCategoryModel.deleteMany();
-  await PersonModel.deleteMany();
-  await UserModel.deleteMany();
-  await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
+  await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
 
@@ -76,8 +62,6 @@ describe('tests users services', () => {
   });
 
   describe('tests getUserById', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     it('should get one user', async() => {
       // on récupère le utilisateur corresondant à l'id donné
       const user = (await usersService.getUserById(benoit.id)).toObject();

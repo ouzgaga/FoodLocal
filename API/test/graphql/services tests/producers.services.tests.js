@@ -1,12 +1,8 @@
 const producersService = require('../../../src/graphql/services/producers.services');
 const productsService = require('../../../src/graphql/services/products.services');
 const productTypeService = require('../../../src/graphql/services/productType.services');
-const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+const clearDB = require('../clearDB');
+const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
 
@@ -104,14 +100,7 @@ let tabProducers = [benoit, antoine];
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await ProducersModel.deleteMany();
-  await ProductModel.deleteMany();
-  await ProductTypeModel.deleteMany();
-  await ProductTypeCategoryModel.deleteMany();
-  await PersonModel.deleteMany();
-  await UserModel.deleteMany();
-  await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
+  await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 productTypeCategory
@@ -193,8 +182,6 @@ describe('tests producers services', () => {
   });
 
   describe('tests getProducerById', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     it('should get one producer', async() => {
       // on récupère le producteur corresondant à l'id donné
       const producer = (await producersService.getProducerById(benoit.id)).toObject();

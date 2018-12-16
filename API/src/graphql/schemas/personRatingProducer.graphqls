@@ -14,10 +14,10 @@ type Mutation {
 	addProducerRating(rating: PersonRatingProducerInputAdd!): PersonRatingProducer!
 
 	# Met à jour le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
-	updateProducerRating(rating: PersonRatingProducerInputUpdate!): PersonRatingProducer!
+	updateProducerRating(rating: PersonRatingProducerInputUpdate!): PersonRatingProducer
 
 	# Supprime le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
-	deleteProducerRating(ratingId: ID!): PersonRatingProducer!
+	deleteProducerRating(ratingId: ID!): PersonRatingProducer
 }
 
 type PersonRatingProducer {

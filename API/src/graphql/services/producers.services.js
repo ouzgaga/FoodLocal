@@ -195,7 +195,8 @@ function updateProducerRating(producerId, rating) {
     return new Error('Received producer.id is invalid!');
   }
 
-  return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true }); // retourne l'objet modifié
+  // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true });
 }
 
 async function validateAProducer(producerId, validationState) {

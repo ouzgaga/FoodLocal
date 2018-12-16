@@ -2,9 +2,9 @@ const personRatingProducerServices = require('../services/personRatingProducer.s
 
 const personRatingProducerResolvers = {
   Query: {
-    ratingsAboutProducer: (parent, args, context) => personRatingProducerServices.getAllRatingsOfProducerWithId(args.producerId),
+    ratingsAboutProducer: (parent, args, context) => personRatingProducerServices.getAllRatingsAboutProducerWithId(args.producerId),
 
-    ratingAboutProducerMadeByPerson: (parent, args, context) => personRatingProducerServices.getRatingOfProducerIdMadeByPersonId(args.personId,
+    ratingAboutProducerMadeByPerson: (parent, args, context) => personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(args.personId,
       args.producerId),
 
     ratingsMadeByPerson: (parent, args, context) => personRatingProducerServices.getAllRatingsMadeByPersonWithId(args.personId)
