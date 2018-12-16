@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
-const passport = require('passport');
 const { resolvers, schema: typeDefs } = require('./graphql/graphqlConfig');
 
 const config = require('./config/config');
@@ -17,9 +16,6 @@ const app = express();
 
 // Active CORS pour le client
 app.use(cors());
-
-// initialisation de passport
-app.use(passport.initialize());
 
 // Integrate apollo as a middleware
 const server = new ApolloServer(

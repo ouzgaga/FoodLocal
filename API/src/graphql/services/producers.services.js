@@ -189,6 +189,16 @@ async function updateProducer({ id, firstname, lastname, email, password, image,
   }
 }
 
+// TOD: à ajouter dans les tests des services!!!
+function updateProducerRating(producerId, rating) {
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received producer.id is invalid!');
+  }
+
+  // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true });
+}
+
 async function validateAProducer(producerId, validationState) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received producer.id is invalid!');
@@ -224,6 +234,7 @@ module.exports = {
   filterProducers,
   addProducer,
   updateProducer,
+  updateProducerRating,
   validateAProducer,
   deleteProducer
 };

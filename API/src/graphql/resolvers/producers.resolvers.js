@@ -38,7 +38,7 @@ const producerResolvers = {
       parent.salespointId
     ) : null),
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds)
+    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
   }
 };
 
