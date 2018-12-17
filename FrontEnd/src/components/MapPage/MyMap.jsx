@@ -146,16 +146,16 @@ class MyMap extends React.Component {
 
           {
             data.producers.map(tile => (
-              tile.salesPoint !== null && (
+              tile.salespoint !== null && (
                 this.props.iconDrag === tile.id ? (
-                  <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon2}>
-                    <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
+                  <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon2}>
+                    <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
                       <ItemProducerPopUp producer={tile} />
                     </Popup>
                   </Marker>
                 ) : (
-                    <Marker key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} icon={myIcon}>
-                      <Popup key={tile.id} position={[tile.salesPoint.address.latitude, tile.salesPoint.address.longitude]} closeButton={false}>
+                    <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon}>
+                      <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
                         <ItemProducerPopUp producer={tile} />
                       </Popup>
                     </Marker>
