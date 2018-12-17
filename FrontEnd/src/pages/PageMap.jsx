@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import MainMap from '../components/mapPage/MainMap';
+import MainMap from '../components/mapPageProducer/MainMap';
 
 
 const query = gql`
