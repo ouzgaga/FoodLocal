@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const UsersModel = require('../models/users.modelgql');
-const UtilsServices = require('../services/utils.services');
+const personsServices = require('../services/persons.services');
 const ProducersModel = require('../models/producers.modelgql');
 const tokenValidationEmail = require('./tokenValidationEmail.services');
 
@@ -41,7 +41,7 @@ function getUserById(id) {
 }
 
 function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return UsersModel.find({ _id: { $in: listOfIdToGet } });
+  return UsersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
 /**
@@ -51,14 +51,14 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser({ firstname, lastname, email, password, image }) {
-  if (await UtilsServices.isEmailUnused(email)) {
+  if (await personsServices.isEmailUnused(email)) {
     const userToAdd = {
       firstname,
       lastname,
       email,
       password,
       image,
-      subscriptions: [],
+      followingProducersIds: [],
       emailValidated: false,
       isAdmin: false
     };
@@ -78,7 +78,7 @@ async function addUser({ firstname, lastname, email, password, image }) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({ id, firstname, lastname, email, password, image, subscriptions }) {
+async function updateUser({ id, firstname, lastname, email, password, image, followingProducersIds }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
@@ -94,7 +94,7 @@ async function updateUser({ id, firstname, lastname, email, password, image, sub
       email,
       password,
       image,
-      subscriptions: await getAllUsersInReceivedIdList(subscriptions),
+      followingProducersIds: await getAllUsersInReceivedIdList(followingProducersIds),
       emailValidated,
       isAdmin
     };

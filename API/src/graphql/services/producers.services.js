@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ProducersModel = require('../models/producers.modelgql');
 const productsServices = require('../services/products.services');
 const salespointsServices = require('../services/salespoints.services');
-const utilsServices = require('../services/utils.services');
+const personsServices = require('../services/persons.services');
 const TokenValidationEmail = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
 
@@ -91,7 +91,7 @@ async function filterProducers(byProductTypeIds) {
  */
 async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website, salespoint: receivedSalespoint, products, productsIds: productsTab }) {
   // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await utilsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
+  if (await personsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
     let salespoint = receivedSalespoint;
     if (salespoint != null) { // le producteur contient un point de vente
       // on enregistre le point de vente dans la DB
@@ -113,10 +113,10 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       email,
       password,
       image,
-      subscriptions: [],
+      followingProducersIds: [],
       emailValidated: false,
       isAdmin: false,
-      subscribedUsersIds: [],
+      followersIds: [],
       phoneNumber,
       description,
       website,
@@ -150,7 +150,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
  *
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
-async function updateProducer({ id, firstname, lastname, email, password, image, subscriptions, subscribedUsers, phoneNumber, description, website, salespointId, salespoint, products }) {
+async function updateProducer({ id, firstname, lastname, email, password, image, followingProducersIds, followers, phoneNumber, description, website, salespointId, salespoint, products }) {
   // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -170,10 +170,10 @@ async function updateProducer({ id, firstname, lastname, email, password, image,
       email,
       password,
       image,
-      subscriptions: subscriptions != null ? subscriptions.map(s => s.id) : [],
+      followingProducersIds: followingProducersIds != null ? followingProducersIds.map(s => s.id) : [],
       emailValidated,
       isAdmin,
-      subscribedUsersIds: subscribedUsers != null ? subscribedUsers.map(u => u.id) : [],
+      followersIds: followers != null ? followers.map(u => u.id) : [],
       phoneNumber,
       description,
       website,

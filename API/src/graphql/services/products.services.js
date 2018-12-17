@@ -31,8 +31,7 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductModel.find({ _id: { $in: listOfIdToGet } })
-    .sort({ _id: 1 });
+  return ProductModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
 /**

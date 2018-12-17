@@ -149,12 +149,12 @@ describe('tests producers services', () => {
         producer.id.should.be.eql(tabProducers[index].id);
 
         // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-        producer.subscriptions.should.be.not.null;
-        producer.subscriptions.should.be.an('array');
+        producer.followingProducersIds.should.be.not.null;
+        producer.followingProducersIds.should.be.an('array');
 
-        // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
-        producer.subscribedUsersIds.should.be.not.null;
-        producer.subscribedUsersIds.should.be.an('array');
+        // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
+        producer.followersIds.should.be.not.null;
+        producer.followersIds.should.be.an('array');
 
         expect(producer.salespointId)
           .to
@@ -196,16 +196,16 @@ describe('tests producers services', () => {
       producer.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      producer.subscriptions.should.be.an('array');
-      producer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      producer.followingProducersIds.should.be.an('array');
+      producer.followingProducersIds.length.should.be.equal(benoit.followingProducersIds.length);
 
       producer.emailValidated.should.be.equal(benoit.emailValidated);
-      producer.subscribedUsersIds.should.be.an('array');
-      producer.subscribedUsersIds.length.should.be.equal(benoit.subscribedUsersIds.length);
-      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      producer.followersIds.should.be.an('array');
+      producer.followersIds.length.should.be.equal(benoit.followersIds.length);
+      // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
       /*
       // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
-      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
+      producer.followersIds.forEach((subscribedUser, index) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;
@@ -331,16 +331,16 @@ describe('tests producers services', () => {
       addedProducer.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      addedProducer.subscriptions.should.be.an('array');
-      addedProducer.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      addedProducer.followingProducersIds.should.be.an('array');
+      addedProducer.followingProducersIds.length.should.be.equal(benoit.followingProducersIds.length);
 
       addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
-      addedProducer.subscribedUsersIds.should.be.an('array');
-      addedProducer.subscribedUsersIds.length.should.be.equal(benoit.subscribedUsersIds.length);
-      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      addedProducer.followersIds.should.be.an('array');
+      addedProducer.followersIds.length.should.be.equal(benoit.followersIds.length);
+      // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
       /*
       // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
-      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
+      producer.followersIds.forEach((subscribedUser, index) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;
@@ -426,16 +426,16 @@ describe('tests producers services', () => {
       updatedProducer.image.should.be.equal(producer.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      updatedProducer.subscriptions.should.be.an('array');
-      updatedProducer.subscriptions.length.should.be.equal(producer.subscriptions.length);
+      updatedProducer.followingProducersIds.should.be.an('array');
+      updatedProducer.followingProducersIds.length.should.be.equal(producer.followingProducersIds.length);
 
       updatedProducer.emailValidated.should.be.equal(producer.emailValidated);
-      updatedProducer.subscribedUsersIds.should.be.an('array');
-      updatedProducer.subscribedUsersIds.length.should.be.equal(producer.subscribedUsersIds.length);
-      // TODO: tester l'intérieur de subscribedUsersIds lorsqu'on pourra les gérer...!
+      updatedProducer.followersIds.should.be.an('array');
+      updatedProducer.followersIds.length.should.be.equal(producer.followersIds.length);
+      // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
       /*
       // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
-      producer.subscribedUsersIds.forEach((subscribedUser, index) => {
+      producer.followersIds.forEach((subscribedUser, index) => {
         subscribedUser.id.should.be.not.null;
         subscribedUser.firstname.should.be.not.null;
         subscribedUser.lastname.should.be.not.null;

@@ -16,7 +16,7 @@ const producerResolvers = {
   },
 
   User: {
-    subscriptions: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscriptions)
+    followingProducers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.followingProducersIds)
   }
 };
 module.exports = producerResolvers;

@@ -1,3 +1,15 @@
+type Query {
+	checkIfEmailIsAvailable(email: String!): Boolean!
+}
+
+type Mutation {
+	# Ajoute la personne correspondant à l'id 'personId' à la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	subscribeToProducer(producerId: ID!, personId: ID!): Person
+
+	# Supprime la personne correspondant à l'id 'personId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	unsubscribeToProducer(producerId: ID!, personId: ID!): Person
+}
+
 interface Person {
 	id: ID!
 	firstname: String!
@@ -5,7 +17,7 @@ interface Person {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[Producer!]!
+	followingProducers:[Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }

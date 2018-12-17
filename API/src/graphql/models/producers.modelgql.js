@@ -24,10 +24,10 @@ const RatingSchema = new mongoose.Schema(
  */
 const producerSchema = new mongoose.Schema(
   {
-    subscribedUsersIds: [
+    followersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'persons'
       }
     ],
     phoneNumber: {
@@ -63,6 +63,18 @@ const producerSchema = new mongoose.Schema(
     }
   }, options
 );
+
+/*
+producerSchema.pre('save', (next, err) => {
+  if (err) {
+    throw err;
+  }
+
+  this.followersIds = this.followersIds.map((person) => person._id);
+  this.productsIds = this.productsIds.map((product) => product._id);
+  next();
+});
+*/
 
 /**
  * @typedef Producer
