@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import InscriptionProducer from '../components/newProducer/InscriptionProducer';
+import InscriptionProducer from '../components/producerRegistration/InscriptionProducer';
 
 class PageProducerRegistration extends Component {
   constructor(props) {
