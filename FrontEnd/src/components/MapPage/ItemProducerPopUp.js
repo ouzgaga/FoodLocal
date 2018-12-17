@@ -59,10 +59,10 @@ function ListItemProducer(props) {
   return (
     <Fragment>
 
-      {producer.salesPoint !== null && (
+      {producer.salespoint !== null && (
         <Card className={classes.card}>
           <CardActionArea target="_blank">
-            <CardHeader title={producer.salesPoint.name} subheader={producer.salesPoint.address.city} className={classes.titleItem} />
+            <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
             <div className={classes.root}>
               <GridList className={classes.gridList}>
                 {producer.products.map(item => (

@@ -1,14 +1,14 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import MainMap from '../components/MapPage/MainMap';
+import MainMap from '../components/mapPage/MainMap';
 
 
 const query = gql`
 {
   producers {
     id
-    salesPoint {
+    salespoint {
       name
       address {
         city

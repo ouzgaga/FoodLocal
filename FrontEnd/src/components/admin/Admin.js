@@ -9,7 +9,7 @@ const query = gql`
 {
   producersWaitingForValidation{
     id
-    salesPoint{
+    salespoint{
       name
     }
   }
