@@ -62,10 +62,10 @@ class TableIssues extends React.Component {
           <Table className={classes.table}>
             <TableBody>
               {datas.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row =>
-                row.salesPoint !== null && (
+                row.salespoint !== null && (
                   <TableRow key={row.cursor} style={{ padding: 0 }}>
                     <TableCell style={{ padding: 0 }}>
-                      <TableProducerItem id={row.id} name={row.salesPoint.name} />
+                      <TableProducerItem id={row.id} name={row.salespoint.name} />
 
                     </TableCell>
                   </TableRow>
