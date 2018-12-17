@@ -7,7 +7,7 @@ let benoit = {
   email: 'benoit@paysan.ch',
   password: '1234abcd',
   image: 'ceci est une image encodée en base64!',
-  subscriptions: [],
+  followingProducersIds: [],
   emailValidated: false
 };
 
@@ -17,7 +17,7 @@ let antoine = {
   email: 'antoine@paysan.ch',
   password: '1234abcd',
   image: 'ceci est l\'image d\'un tueur encodée en base64!',
-  subscriptions: [],
+  followingProducersIds: [],
   emailValidated: false
 };
 
@@ -54,8 +54,8 @@ describe('tests users services', () => {
         user.id.should.be.eql(tabUsers[index].id);
 
         // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-        user.subscriptions.should.be.not.null;
-        user.subscriptions.should.be.an('array');
+        user.followingProducersIds.should.be.not.null;
+        user.followingProducersIds.should.be.an('array');
       });
       await Promise.all(promises);
     });
@@ -76,8 +76,8 @@ describe('tests users services', () => {
       user.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      user.subscriptions.should.be.an('array');
-      user.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      user.followingProducersIds.should.be.an('array');
+      user.followingProducersIds.length.should.be.equal(benoit.followingProducersIds.length);
 
       user.emailValidated.should.be.equal(benoit.emailValidated);
     });
@@ -138,8 +138,8 @@ describe('tests users services', () => {
       addedUser.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      addedUser.subscriptions.should.be.an('array');
-      addedUser.subscriptions.length.should.be.equal(benoit.subscriptions.length);
+      addedUser.followingProducersIds.should.be.an('array');
+      addedUser.followingProducersIds.length.should.be.equal(benoit.followingProducersIds.length);
 
       addedUser.emailValidated.should.be.equal(benoit.emailValidated);
     });
@@ -192,8 +192,8 @@ describe('tests users services', () => {
       updatedUser.image.should.be.equal(user.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      updatedUser.subscriptions.should.be.an('array');
-      updatedUser.subscriptions.length.should.be.equal(user.subscriptions.length);
+      updatedUser.followingProducersIds.should.be.an('array');
+      updatedUser.followingProducersIds.length.should.be.equal(user.followingProducersIds.length);
 
       updatedUser.emailValidated.should.be.equal(user.emailValidated);
     });

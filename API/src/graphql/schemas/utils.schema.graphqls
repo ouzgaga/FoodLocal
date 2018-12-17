@@ -1,4 +1,0 @@
-type Query {
-	checkIfEmailIsAvailable(email: String!): Boolean!
-	# login(email: String!, password: String!): User
-}
