@@ -4,7 +4,6 @@ const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
 
 const Producer = require('./resolvers/producers.resolvers');
 const User = require('./resolvers/users.resolvers');
-const Utils = require('./resolvers/utils.resolvers');
 const Person = require('./resolvers/person.resolvers');
 const PersonRatingProducer = require('./resolvers/personRatingProducer.resolvers');
 const Product = require('./resolvers/products.resolvers');
@@ -19,7 +18,6 @@ const resolvers = merge(
   User,
   Product,
   Salespoint,
-  Utils,
   TokenValidationEmail
 );
 

@@ -1,15 +1,28 @@
 type Query {
+	# Retourne tous les producteurs.
 	producers: [Producer!]!
+
+	# Retourne le producteur correspondant à l'id reçu. Retourne null si aucun producteur ne possède cet id.
 	producer(producerId: ID!) : Producer
+
+	# Retourne tous les producteurs attendant d'être validés par un administrateur (isValidated = false).
 	producersWaitingForValidation: [Producer!]!
-	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
+
+	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
 	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
+	# Valide le producteur correspondant au producerId si le booléen validationState vaut true, l'invalide s'il vaut false.
 	validateAProducer(producerId: ID!, validationState: Boolean!): Producer!
+
+	# Ajoute un nouveau producteur avec les informations passées en paramètre.
 	addProducer(producer: ProducerInputAdd!): Producer!
+
+	# Met à jour les informations du producteur reçu en paramètre. Retourne null si ce producteur n'existe pas.
 	updateProducer(producer: ProducerInputUpdate!): Producer
+
+	# Supprime le producteur correspondant à l'id reçu en paramètre. Retourne null si l'id reçu ne correspond à aucun producteur.
 	deleteProducer(producerId: ID!): Producer
 }
 
@@ -20,10 +33,10 @@ type Producer implements Person {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	subscriptions: [Producer!]!
+	followingProducers: [Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
-	subscribedUsers : [Person!]!
+	followers: [Person!]!
 	phoneNumber: String
 	description: String
 	website: String
@@ -45,10 +58,10 @@ input ProducerInputAdd {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	# subscriptions:[ProducerInputAdd!]!
+	# followingProducersIds:[ID!]!
 	# emailValidated: Boolean!
 	# isAdmin: Boolean!
-	# subscribedUsers : [UserInputAdd!]!
+	# followers : [ID!]!
 	phoneNumber: String
 	description: String
 	website: String
@@ -64,10 +77,10 @@ input ProducerInputUpdate {
 	email: String!
 	password: String!
 	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[ProducerInputUpdate!] # pas obligatoire si vide
+	followingProducersIds:[ID!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
-	subscribedUsers : [UserInputUpdate!] # pas obligatoire si vide
+	followers : [ID!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String
