@@ -35,6 +35,7 @@ const personRatingProducer = new mongoose.Schema(
   }, options
 );
 
+/*
 // FIXME: Paul: pourquoi intelliJ me met le aysnc en jaune?
 personRatingProducer.pre('save', async function(next, err) {
   if (err) {
@@ -53,6 +54,7 @@ personRatingProducer.pre('save', async function(next, err) {
 
   next();
 });
+*/
 
 /**
  * @typedef personRatingProducer
