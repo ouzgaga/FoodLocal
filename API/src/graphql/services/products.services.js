@@ -54,7 +54,6 @@ function getProductById(id) {
  * @param {Integer} product, Les informations du produit à ajouter.
  */
 async function addProduct(product) {
-  // FIXME: il faud ajouter l'appel à la fonction productTypeServices.addProducerProducingThisProductType()!!
   if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
@@ -77,8 +76,7 @@ async function addProduct(product) {
 async function addAllProductsInArray(productsArray) {
   if (productsArray != null && productsArray.length !== 0) {
     const promisesAddProducts = productsArray.map(product => addProduct(product));
-    const resolvedPromises = await Promise.all(promisesAddProducts);
-    return resolvedPromises.map(addedProduct => addedProduct.id);
+    return Promise.all(promisesAddProducts);
   } else {
     return new Error('function addAllProductsInArray: received productsArray is null or empty!');
   }

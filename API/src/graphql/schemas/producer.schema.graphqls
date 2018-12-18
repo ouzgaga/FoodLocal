@@ -32,7 +32,7 @@ type Producer implements Person {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 	followingProducers: [Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
@@ -57,17 +57,18 @@ input ProducerInputAdd {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 	# followingProducersIds:[ID!]!
 	# emailValidated: Boolean!
 	# isAdmin: Boolean!
-	# followers : [ID!]!
+	# followersIds: [ID!]!
 	phoneNumber: String
 	description: String
 	website: String
 	salespoint: SalesPointInputAdd
 	# isValidated: Boolean!
 	products: [ProductInputAdd!] # pas obligatoire si vide
+	# FIXME: est-ce qu'on veut vraiment pouvoir mettre à jour les produits en même temps que le producteur? On a ptetre meilleur temps de ne pas donner accès à cette liste autrement que via addproduct / deleteProduct et updateProduct...
 }
 
 input ProducerInputUpdate {
@@ -76,15 +77,16 @@ input ProducerInputUpdate {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 	followingProducersIds:[ID!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
-	followers : [ID!] # pas obligatoire si vide
+	followersIds: [ID!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String
 	salespoint: SalesPointInputUpdate
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
 	products: [ProductInputUpdate!] # pas obligatoire si vide
+	# FIXME: est-ce qu'on veut vraiment pouvoir mettre à jour les produits en même temps que le producteur? On a ptetre meilleur temps de ne pas donner accès à cette liste autrement que via addproduct / deleteProduct et updateProduct...
 }

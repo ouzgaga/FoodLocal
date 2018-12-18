@@ -27,7 +27,8 @@ const producerSchema = new mongoose.Schema(
     followersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'persons'
+        ref: 'persons',
+        required: true
       }
     ],
     phoneNumber: {
@@ -54,7 +55,8 @@ const producerSchema = new mongoose.Schema(
     productsIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'products'
+        ref: 'products',
+        required: true
       }
     ],
     rating: {
@@ -64,17 +66,12 @@ const producerSchema = new mongoose.Schema(
   }, options
 );
 
-/*
-producerSchema.pre('save', (next, err) => {
-  if (err) {
-    throw err;
-  }
-
-  this.followersIds = this.followersIds.map((person) => person._id);
-  this.productsIds = this.productsIds.map((product) => product._id);
+producerSchema.pre('save', function(next, err) {
+  this.followersIds = this.followersIds.map(person => person._id);
+  this.salespointId = this.salespointId != null ? this.salespointId._id : null;
+  this.productsIds = this.productsIds.map(product => product._id);
   next();
 });
-*/
 
 /**
  * @typedef Producer

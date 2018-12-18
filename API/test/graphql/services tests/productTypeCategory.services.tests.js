@@ -1,13 +1,6 @@
 const productTypeCategoryService = require('../../../src/graphql/services/productTypeCategory.services');
 const clearDB = require('../clearDB');
-const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
 
 let fruits = {
   name: 'Fruits',

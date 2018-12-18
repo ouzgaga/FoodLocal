@@ -156,7 +156,8 @@ describe('Testing query producer Graphql', () => {
   describe('Getting all producers', () => {
     beforeEach(beforeEachFunc());
     // afterEach(afterEachFunc());
-    it('sucess - query: getting firstname and lastname of all producers', async() => {
+
+    it('success - query: getting firstname and lastname of all producers', async() => {
       const {
         query, variables, context, expected
       } = queryObjAllProducers;
@@ -312,7 +313,7 @@ describe('Testing query producer Graphql', () => {
       return result.should.be.eql(expected);
     });
 
-    it('failed - getting firstname and lastname of an unexisted user', async() => {
+    it('failed - getting firstname and lastname of an unknown user', async() => {
       const queryObj = {
         query: `
           query($id: ID!){
@@ -324,7 +325,7 @@ describe('Testing query producer Graphql', () => {
         `,
         variables:
           {
-            id: 'eeeeeeeeeeeeeeeeeeeeeeee' // unknown id
+            id: 'abcdefabcdefabcdefabcdef' // unknown id
           },
         context: {},
         expected: {
@@ -352,7 +353,7 @@ describe('Testing query producer Graphql', () => {
         `,
         variables:
           {
-            id: 'badid' // incorrect id
+            id: 'badid' // invalid id
           },
         context: {},
         expected: {

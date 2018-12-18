@@ -4,7 +4,6 @@ type Query {
 	#Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
 	product(productId: ID!) : Product
 
-
 	#Retourne tous les type de produits de la base de données
 	productTypes: [ProductType!]! #FIXME: ajouter pagination
 	#Retourne le type de produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
@@ -20,7 +19,7 @@ type Query {
 }
 
 type Mutation {
-	#Ajoute un nouveau produit à la base de données. Si le champ 'productType' ne contient pas de champ 'id', un nouveau productType est automatiquement ajouté à la base de données. Si le champ 'productType.category' ne contient pas de champ 'id', une nouvelle category est automatiquement ajoutée à la base de données.
+	#Ajoute à la base de données un nouveau produit proposé par le producteur correspondant à l'id reçu en paramère.
 	addProduct(product: ProductInputAdd!): Product!
 	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
 	updateProduct(product: ProductInputUpdate!): Product
@@ -31,6 +30,7 @@ type Mutation {
 	#Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
 	addProductType(productType: ProductTypeInputAdd!): ProductType!
 	#Ajoute le producteur reçu en paramètre à la liste des producteurs proposant des produits du productType également reçu en paramètre.
+	# FIXME: voir si utile de l'exposer aux clients...? Vaut ptetre mieux l'appeler automatiquement depuis le serveur...
 	addProducerProducingThisProductType(productTypeId: ID!, producerId: ID!): ProductType!
 	#Met à jour les informations du type de produit passé en paramètre.
 	updateProductType(productType: ProductTypeInputUpdate!): ProductType
@@ -67,7 +67,7 @@ input ProductInputUpdate {
 type ProductType {
 	id: ID!
 	name: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 	category: ProductTypeCategory!
 	producers: [Producer!]! # contient la liste de tous les producers proposant ce type de produits
 }
@@ -88,16 +88,16 @@ input ProductTypeInputUpdate {
 type ProductTypeCategory{
 	id: ID!
 	name: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 }
 
 input ProductTypeCategoryInputAdd {
 	name: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 }
 
 input ProductTypeCategoryInputUpdate {
 	id: ID!
 	name: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 }

@@ -22,13 +22,10 @@ type Mutation {
 
 type PersonRatingProducer {
 	id: ID!
-
 	# L'id de la personne ayant fait le rating
-	personId: ID! # FIXME: voir avec frontend s'il préfèrent que je retourne tout l'utilisateur plutôt que juste son id
-
+	person: Person!
 	# L'id du producteur qui a été évalué
-	producerId: ID! # FIXME: voir avec frontend s'il préfèrent que je retourne tout le producteur plutôt que juste son id
-
+	producer: Producer!
 	# Note attribuée au producteur
 	rating: Int!
 }

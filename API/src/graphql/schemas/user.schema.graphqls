@@ -15,7 +15,7 @@ type User implements Person {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
 	followingProducers:[Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
@@ -27,8 +27,8 @@ input UserInputAdd {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	# followingProducersIds:[Producer!]!
+	image: String
+	# followingProducersIds:[ID!]
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
@@ -40,7 +40,7 @@ input UserInputUpdate {
 	email: String!
 	password: String!
 	image: String # faudra l'encoder en base64
-	followingProducersIds:[ProducerInputUpdate!]  # pas obligatoire si vide
+	followingProducersIds:[ID!]  # pas obligatoire si vide
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }

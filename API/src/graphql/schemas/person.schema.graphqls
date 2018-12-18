@@ -16,7 +16,8 @@ interface Person {
 	lastname: String!
 	email: String!
 	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	image: String
+	# tableau contenant tous les producteur que la personne suit
 	followingProducers:[Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!

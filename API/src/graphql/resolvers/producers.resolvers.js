@@ -29,9 +29,7 @@ const producerResolvers = {
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
-    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalesPointById(
-      parent.salespointId
-    ) : null),
+    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalesPointById(parent.salespointId) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
   }

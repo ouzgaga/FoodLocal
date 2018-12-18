@@ -82,7 +82,7 @@ let benoit = {
   description: 'Un chouet gaillard!',
   website: 'benoitpaysan.ch',
   salespoint: salespointBenoit,
-  productsIds: []
+  products: []
 };
 
 let antoine = {
@@ -93,7 +93,7 @@ let antoine = {
   image: 'Ceci est l\'image d\'un tueur encodée en base64!',
   phoneNumber: '0761435196',
   description: 'Un vrai payouz!',
-  productsIds: []
+  products: []
 };
 
 let tabProducers = [benoit, antoine];
@@ -156,10 +156,7 @@ describe('tests producers services', () => {
         producer.followersIds.should.be.not.null;
         producer.followersIds.should.be.an('array');
 
-        expect(producer.salespointId)
-          .to
-          .be
-          .eql(tabProducers[index].salespointId);
+        expect(producer.salespointId).to.be.eql(tabProducers[index].salespointId);
 
         const promisesTestsProductsIds = producer.productsIds.map((async(productId) => {
           // on récupère les infos du produit correspondant
@@ -412,7 +409,9 @@ describe('tests producers services', () => {
       // on le modifie
       producer = {
         ...benoit,
-        id: producer.id
+        id: producer.id,
+        salespoint: benoit.salespointId,
+        products: benoit.productsIds
       };
       // on met à jour dans la DB
       const updatedProducer = (await producersService.updateProducer(producer)).toObject();
@@ -426,12 +425,10 @@ describe('tests producers services', () => {
       updatedProducer.image.should.be.equal(producer.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
-      updatedProducer.followingProducersIds.should.be.an('array');
-      updatedProducer.followingProducersIds.length.should.be.equal(producer.followingProducersIds.length);
+      expect(updatedProducer.followingProducersIds).to.be.null;
 
       updatedProducer.emailValidated.should.be.equal(producer.emailValidated);
-      updatedProducer.followersIds.should.be.an('array');
-      updatedProducer.followersIds.length.should.be.equal(producer.followersIds.length);
+      expect(updatedProducer.followersIds).to.be.null;
       // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
       /*
       // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
@@ -464,7 +461,7 @@ describe('tests producers services', () => {
 
         // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
         const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
-        filtredTab.length.should.be.equal(1);
+        filtredTab.length.should.be.equal(1); //FIXME: bug dans la 2ème itération...!
       }));
       await Promise.all(promisesTestsProductsIds);
     });

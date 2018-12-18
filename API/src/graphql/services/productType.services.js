@@ -46,10 +46,10 @@ function getProductTypeByCategory(productTypeCategoryId) {
 }
 
 // todo: à ajouter dans les test!
-async function getAllProducersIdsProposingProductsOfReceivedProductsTypeIds(productTypeIdsTab) {
+async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
 
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
+  const productTypes = await getProductTypes({ tags: { _id: { $all: productTypeIdsTab } } });
   // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
 
 
@@ -128,7 +128,7 @@ function deleteProductType(id) {
 module.exports = {
   getProductTypes,
   getProductTypeByCategory,
-  getAllProducersIdsProposingProductsOfReceivedProductsTypeIds,
+  getAllProducersIdsProposingProductsOfReceivedProductsTypeIds: getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
   addProductType,
   addProducerProducingThisProductType,
   getProductTypeById,

@@ -21,6 +21,15 @@ async function checkIfPersonIdExistInDB(personId, isProducer = false) {
   }
 }
 
+// FIXME: à ajouter aux tests du service !!!
+function getPersonById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return new Error('Received user.id is invalid!');
+  } else {
+    return PersonsModel.findById(id);
+  }
+}
+
 function getAllPersonsInReceivedIdList(listOfIdToGet) {
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
@@ -87,6 +96,7 @@ async function unsubscribePersonToProducer(producerId, personId) {
 module.exports = {
   isEmailUnused,
   checkIfPersonIdExistInDB,
+  getPersonById,
   getAllPersonsInReceivedIdList,
   subscribePersonToProducer,
   unsubscribePersonToProducer

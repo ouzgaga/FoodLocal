@@ -152,8 +152,7 @@ describe('tests product services', () => {
       // on ajoute tous les produits passés dans le tableau en paramètre
       const addedProducts = await productsService.addAllProductsInArray([productPomme, productPoire]);
 
-      const promises = addedProducts.map((async(productId, index) => {
-        const product = await productsService.getProductById(productId);
+      const promises = addedProducts.map((async(product, index) => {
         product.should.be.not.null;
         product.id.should.be.not.null;
         product.description.should.be.equal(tabProducts[index].description);

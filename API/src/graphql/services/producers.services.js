@@ -89,8 +89,8 @@ async function filterProducers(byProductTypeIds) {
  *
  * @param {Integer} producer, Les informations du producteur à ajouter.
  */
-async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website, salespoint: receivedSalespoint, products, productsIds: productsTab }) {
-  // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
+async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website, salespoint: receivedSalespoint, products}) {
+  // FIXME: comment faire une transaction avec Mongoose pour rollback en cas d'erreur ?
   if (await personsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
     let salespoint = receivedSalespoint;
     if (salespoint != null) { // le producteur contient un point de vente
@@ -98,14 +98,10 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       salespoint = await salespointsServices.addSalesPoint(salespoint);
     }
 
-    let productsIds = productsTab;
-    // fixme: checker si les deux if sont vraiment nécessaires!
+    let productsTab = products;
     if (products != null && products.length !== 0) {
       // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
-      productsIds = await productsServices.addAllProductsInArray(products);
-    } else if (productsIds != null && productsIds.length !== 0) {
-      // si le producteur contient au moins un produit -> on enregistre chaque produits dans la DB et on récupère les ids correspondants
-      productsIds = await productsServices.addAllProductsInArray(productsIds);
+      productsTab = await productsServices.addAllProductsInArray(products);
     }
     const producerToAdd = {
       firstname,
@@ -113,16 +109,16 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       email,
       password,
       image,
-      followingProducersIds: [],
+      // followingProducersIds: [],
       emailValidated: false,
       isAdmin: false,
-      followersIds: [],
+      // followersIds: [],
       phoneNumber,
       description,
       website,
-      salespointId: salespoint != null ? salespoint.id : null, // on récupère juste l'id du point de vente
+      salespointId: salespoint,
       isValidated: false,
-      productsIds: productsIds != null ? productsIds : []
+      productsIds: productsTab
     };
 
     // on enregistre le producteur dans la DB
@@ -150,7 +146,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
  *
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
-async function updateProducer({ id, firstname, lastname, email, password, image, followingProducersIds, followers, phoneNumber, description, website, salespointId, salespoint, products }) {
+async function updateProducer({ id, firstname, lastname, email, password, image, followingProducers, followers, phoneNumber, description, website, salespoint, products }) {
   // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -170,17 +166,16 @@ async function updateProducer({ id, firstname, lastname, email, password, image,
       email,
       password,
       image,
-      followingProducersIds: followingProducersIds != null ? followingProducersIds.map(s => s.id) : [],
+      followingProducersIds: followingProducers,
       emailValidated,
       isAdmin,
-      followersIds: followers != null ? followers.map(u => u.id) : [],
+      followersIds: followers,
       phoneNumber,
       description,
       website,
-      salespointId: salespointId != null ? salespointId : salespoint,
+      salespointId: salespoint,
       isValidated,
-      // fixme: vérifier qu'on reçoit bien products et non pas productsIds!
-      productsIds: products != null ? products.map(p => p.id) : []
+      productsIds: products
     };
 
     return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié

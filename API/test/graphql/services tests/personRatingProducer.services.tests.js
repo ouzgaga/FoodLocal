@@ -35,22 +35,21 @@ let james = {
 };
 
 let ratingAntoine1 = {
-  'rating': 1
+  rating: 1
 };
 let ratingAntoine2 = {
-  'rating': 2
+  rating: 2
 };
 let ratingJames3 = {
-  'rating': 3
+  rating: 3
 };
 let ratingJames4 = {
-  'rating': 4
+  rating: 4
 };
 let ratingBenoit5 = {
-  'rating': 5
+  rating: 5
 };
 
-let tabRatings = [];
 let tabRatingsAboutAntoine = [];
 let tabRatingsMadeByAntoine = [];
 
@@ -102,8 +101,6 @@ const clearAndPopulateDB = async() => {
   ratingJames4 = (await personRatingProducerService.addPersonRatingProducer(ratingJames4)).toObject();
 
   ratingBenoit5 = (await personRatingProducerService.addPersonRatingProducer(ratingBenoit5)).toObject();
-
-  tabRatings = [ratingAntoine1, ratingAntoine2, ratingJames3, ratingJames4, ratingBenoit5];
 
   tabRatingsAboutAntoine = [ratingAntoine1, ratingAntoine2];
   tabRatingsMadeByAntoine = [ratingJames4, ratingBenoit5];
@@ -301,11 +298,13 @@ describe('tests personRatingProducer services', () => {
       benoitProducer.rating.rating.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
-      // on ajoute le rating ratingBenoit5 avec un producerId inconnu -> retournera une erreur
-      const addedRating = await personRatingProducerService.addPersonRatingProducer(ratingBenoit5);
-      // on check que les données ajoutées soient bien celles souhaitées
-      addedRating.should.be.not.null;
-      addedRating.message.should.be.equal('There is no producer with this id in database!');
+      try {
+        // on ajoute le rating ratingBenoit5 avec un producerId inconnu -> retournera une erreur
+        const addedRating = await personRatingProducerService.addPersonRatingProducer(ratingBenoit5);
+      } catch (e) {
+        e.should.be.not.null;
+        e.message.should.be.equal(`The given producerId (${ratingBenoit5.producerId}) doesn’t exist in the database!`);
+      }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersService.getProducerById(benoit.id)).toObject();
@@ -322,11 +321,13 @@ describe('tests personRatingProducer services', () => {
       benoitProducer.rating.rating.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
-      // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
-      const addedRating = await personRatingProducerService.addPersonRatingProducer(ratingBenoit5);
-      // on check que les données ajoutées soient bien celles souhaitées
-      addedRating.should.be.not.null;
-      addedRating.message.should.be.equal('There is no person with this id in database!');
+      try {
+        // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
+        const addedRating = await personRatingProducerService.addPersonRatingProducer(ratingBenoit5);
+      } catch (e) {
+        e.should.be.not.null;
+        e.message.should.be.equal(`The given personId (${ratingBenoit5.personId}) doesn’t exist in the database!`);
+      }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersService.getProducerById(benoit.id)).toObject();
@@ -571,6 +572,21 @@ describe('tests personRatingProducer services', () => {
 
       deletedRating = await personRatingProducerService.deletePersonRatingProducer(ratingBenoit5.id);
       expect(deletedRating).to.be.null;
+    });
+
+    it('should fail deleting a personRatingProducer about a producer because no id received', async() => {
+      let rating = await personRatingProducerService.deletePersonRatingProducer('');
+      rating.message.should.be.equal('Received personRatingProducer.id is invalid!');
+    });
+
+    it('should fail deleting a personRatingProducer about a producer because invalid id received', async() => {
+      const rating = await personRatingProducerService.deletePersonRatingProducer(benoit.id + benoit.id);
+      rating.message.should.be.equal('Received personRatingProducer.id is invalid!');
+    });
+
+    it('should fail deleting a personRatingProducer about a producer because unknown id received', async() => {
+      const rating = await personRatingProducerService.deletePersonRatingProducer('abcdefabcdefabcdefabcdef');
+      expect(rating).to.be.null;
     });
   });
 });

@@ -1,4 +1,6 @@
 const personRatingProducerServices = require('../services/personRatingProducer.services');
+const personsServices = require('../services/persons.services');
+const producersServices = require('../services/producers.services');
 
 const personRatingProducerResolvers = {
   Query: {
@@ -19,9 +21,9 @@ const personRatingProducerResolvers = {
   },
 
   PersonRatingProducer: {
-    personId: (parent, args, context) => parent.personId.toString(),
+    person: (parent, args, context) => personsServices.getPersonById(parent.personId),
 
-    producerId: (parent, args, context) => parent.producerId.toString()
+    producer: (parent, args, context) => producersServices.getProducerById(parent.producerId)
   }
 };
 module.exports = personRatingProducerResolvers;

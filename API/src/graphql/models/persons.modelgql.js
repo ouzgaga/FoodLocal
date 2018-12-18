@@ -53,29 +53,6 @@ const personSchema = new mongoose.Schema(
   }, options
 );
 
-/*
-personSchema.pre('save', (next, err) => {
-  if (err) {
-    throw err;
-  }
-  // this.followingProducersIds = this.followingProducersIds.map((producer) => producer._id);
-  next();
-});
-
-personSchema.pre('findOneAndUpdate', async(next) => {
-  const promises = this.followingProducersIds.map(async(ref) => {
-    const exist = true; // await ProducerModel.findById(ref);
-    if (!exist) {
-      throw new Error(`The given ref id (${ref}) doesn’t exist in the database!`);
-    }
-  });
-
-  await Promise.all(promises);
-
-  next();
-});
-*/
-
 /**
  * @typedef Person
  */

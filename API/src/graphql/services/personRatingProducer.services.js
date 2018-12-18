@@ -78,21 +78,8 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
  * @param personRatingProducer, Les informations du rating à ajouter.
  */
 async function addPersonRatingProducer({ personId, producerId, rating }) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    return new Error('Received personId is invalid!');
-  } else if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producerId is invalid!');
-  }
+  // les tests de validité et d'existence de personId et producerId sont fait directement dans le schéma mongoose
 
-  const personIsInDB = await personsServices.checkIfPersonIdExistInDB(personId);
-  const producerIsInDB = await personsServices.checkIfPersonIdExistInDB(producerId, true);
-
-  if (!personIsInDB) {
-    return new Error('There is no person with this id in database!');
-  }
-  if (!producerIsInDB) {
-    return new Error('There is no producer with this id in database!');
-  }
   // Si on arrive jusqu'ici alors personId et producerId existent bien dans la DB
   const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.find({ personId, producerId });
 
