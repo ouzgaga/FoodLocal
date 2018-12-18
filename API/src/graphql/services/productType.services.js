@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
-const utilsServices = require('./utils.services');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés

@@ -1,8 +1,7 @@
+const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
-const usersServices = require('../services/users.services');
 const salespointsServices = require('../services/salespoints.services');
-const utilsServices = require('../services/utils.services');
 
 const producerResolvers = {
   Query: {
@@ -12,11 +11,7 @@ const producerResolvers = {
 
     producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
 
-    searchProducerByProducts: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(
-      utilsServices.castTabOfIdsInTabOfObjectIds(args.productsIds)
-    ),
-
-    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeIds)
+    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
   },
 
   Mutation: {
@@ -26,13 +21,13 @@ const producerResolvers = {
 
     updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
 
-    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId)
+    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId),
   },
 
   Producer: {
-    subscriptions: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.subscriptions),
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
-    subscribedUsers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.subscribedUsers),
+    followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
     salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalesPointById(
       parent.salespointId

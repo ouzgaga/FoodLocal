@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const personsServices = require('../services/persons.services');
+
 
 const options = {
   toObject: { virtuals: true }
@@ -32,6 +34,27 @@ const personRatingProducer = new mongoose.Schema(
     }
   }, options
 );
+
+/*
+// FIXME: Paul: pourquoi intelliJ me met le aysnc en jaune?
+personRatingProducer.pre('save', async function(next, err) {
+  if (err) {
+    throw err;
+  }
+
+  const personExist = await personsServices.checkIfPersonIdExistInDB(this.personId);
+  if (!personExist) {
+    throw new Error(`The given personId (${this.personId}) doesn’t exist in the database!`);
+  }
+
+  const producerExist = await personsServices.checkIfPersonIdExistInDB(this.personId, true);
+  if (!producerExist) {
+    throw new Error(`The given producerId (${this.producerId}) doesn’t exist in the database!`);
+  }
+
+  next();
+});
+*/
 
 /**
  * @typedef personRatingProducer

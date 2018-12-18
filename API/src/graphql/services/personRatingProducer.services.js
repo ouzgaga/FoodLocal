@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const PersonRatingProducerModel = require('../models/personRatingProducer.modelgql');
-const PersonModel = require('../models/persons.modelgql');
 const ProducersServices = require('./producers.services');
+const personsServices = require('./persons.services');
 
 /**
  * Retourne tous les ratings concernant le producteur correspondant à l'id reçu.
@@ -84,8 +84,8 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
     return new Error('Received producerId is invalid!');
   }
 
-  const personIsInDB = await checkIfPersonIdExistInDB(personId);
-  const producerIsInDB = await checkIfPersonIdExistInDB(producerId);
+  const personIsInDB = await personsServices.checkIfPersonIdExistInDB(personId);
+  const producerIsInDB = await personsServices.checkIfPersonIdExistInDB(producerId, true);
 
   if (!personIsInDB) {
     return new Error('There is no person with this id in database!');
@@ -145,15 +145,6 @@ async function updatePersonRatingProducer({ id, rating }) {
   const update = await PersonRatingProducerModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
   await updateProducerRating(update.producerId);
   return update;
-}
-
-async function checkIfPersonIdExistInDB(personId) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    return new Error('Received personRatingProducer.id is invalid!');
-  }
-
-  const person = await PersonModel.findById(personId);
-  return person != null; // todo: checker si marche aussi si id est undefined!
 }
 
 /**
