@@ -9,3 +9,5 @@ node_modules
 .nyc_output
 
 cert-key.json
+
+Deployment/DB/script/gc-key\.json
