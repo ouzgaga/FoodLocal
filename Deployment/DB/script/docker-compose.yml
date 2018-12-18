@@ -1,0 +1,9 @@
+# not working yet
+version: '3'
+services:
+  gce:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "gce"
+    env_file: .env
