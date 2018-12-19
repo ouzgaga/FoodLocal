@@ -78,7 +78,6 @@ const queryObjProducerWithCorrectId = {
   query: `
           query($id: ID!){
             producer(producerId: $id){
-              id
               firstname
               lastname
               email
@@ -90,7 +89,6 @@ const queryObjProducerWithCorrectId = {
               website
               isValidated
               products{
-                id
                 description
                 productType{
                   name
@@ -153,7 +151,6 @@ const queryObjProducerWithWrongId = {
   query: `
           query($id: ID!){
             producer(producerId: $id){
-              id
               firstname
               lastname
               email

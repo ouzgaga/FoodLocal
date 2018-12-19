@@ -169,10 +169,10 @@ describe('Testing graphql request producers', () => {
     });
     it('Fail getting producer with wrong id', async (done) => {
       const { query, context } = queryObjProducerWithWrongId;
-      const variables = { id: antoine.id };
+      const variables = { id: 'abcdefabcdefabcdefabcdef' };
       const result = await graphql(schema, query, null, context, variables);
       expect.assertions(1);
-      expect(result).toMatchSnapshot();
+      expect(result.data.producer).toBeNull();
       done();
     });
   });

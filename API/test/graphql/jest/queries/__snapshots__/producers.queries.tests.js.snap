@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing graphql request producers Testing producer(id) Fail getting producer with wrong id 1`] = `
+exports[`Testing graphql request producers Testing producer(id) Getting producer by id 1`] = `
 Object {
   "data": Object {
     "producer": Object {
@@ -8,7 +8,6 @@ Object {
       "email": "antoine@paysan.ch",
       "emailValidated": false,
       "firstname": "Antoine",
-      "id": "5c1a8c7ac876a23de76b0f70",
       "image": "Ceci est l'image d'un tueur encodée en base64!",
       "isValidated": false,
       "lastname": "Rochaille",
@@ -43,14 +42,6 @@ Object {
       "website": null,
     },
   },
-}
-`;
-
-exports[`Testing graphql request producers Testing producer(id) Getting producer by id 1`] = `
-Object {
-  "errors": Array [
-    [GraphQLError: Variable "$id" of required type "ID!" was not provided.],
-  ],
 }
 `;
 
