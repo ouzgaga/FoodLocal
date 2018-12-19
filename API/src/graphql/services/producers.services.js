@@ -112,7 +112,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
     const producerAdded = await new ProducersModel(producerToAdd).save();
 
     // on envoie un mail au producteur avec un token de validation de l'adresse email et on enregistre le token généré dans la DB
-    TokenValidationEmailServices.addTokenValidationEmail(producerAdded);
+    await TokenValidationEmailServices.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else { // l'email est déjà utilisé -> on ne peut pas ajouter ce producteur!
     return new Error('This email is already used.');
