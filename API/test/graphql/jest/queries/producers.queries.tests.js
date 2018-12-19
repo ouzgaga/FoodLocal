@@ -2,9 +2,16 @@ const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const producersService = require('../../../../src/graphql/services/producers.services');
 const { resolvers, schema: typeDefs } = require('../../../../src/graphql/graphqlConfig');
-const clearDB = require('../../clearDB');const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../../src/graphql/models/products.modelgql');
-const { queryObjAllProducers, queryObjProducerWithCorrectId, queryObjProducerWithWrongId } = require('./Objects/QueryObjsProducers');
+const clearDB = require('../../clearDB'); const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+  '../../../../src/graphql/models/products.modelgql'
+);
+const {
+  queryObjAllProducers,
+  queryObjProducerById,
+  queryObjGetProducersWaitingForValidation,
+  queryObjGetFilterProducers,
+  mutationValidateProducer
+} = require('./Objects/QueryObjsProducers');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
@@ -145,37 +152,122 @@ const beforeEachFunc = () => async() => {
 };
 
 describe('Testing graphql request producers', () => {
-  // -------------------------Producers()------------------------------------- //
-  describe('Testing producers()', () => {
-    beforeEach(beforeEachFunc());
-    it('Getting all producers', async (done) => {
-      const { query, variables, context } = queryObjAllProducers;
-      const result = await graphql(schema, query, null, context, variables);
-      expect.assertions(1);
-      expect(result).toMatchSnapshot();
-      done();
+  describe('QUERY producers', () => {
+    // -------------------------Producers()------------------------------------- //
+    describe('Testing producers()', () => {
+      beforeEach(beforeEachFunc());
+      it('Getting all producers', async(done) => {
+        const { query, variables, context } = queryObjAllProducers;
+        const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(1);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+    });
+    // ----------------------Producer(id)-------------------------------------- //
+    describe('Testing producer(ProducerId)', () => {
+      beforeEach(beforeEachFunc());
+      it('Getting producer by id without schedule', async(done) => {
+        const { query, context } = queryObjProducerById;
+        const variables = { id: antoine.id };
+        const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(1);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+      it('Getting producer by id with schedule', async(done) => {
+        const { query, context } = queryObjProducerById;
+        const variables = { id: benoit.id };
+        const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(1);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+      it('Fail getting producer with wrong id', async(done) => {
+        const { query, context } = queryObjProducerById;
+        const variables = { id: 'abcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(1);
+        expect(result.data.producer)
+          .toBeNull();
+        done();
+      });
+      it('Fail getting producer with invalid id', async(done) => {
+        const { query, context } = queryObjProducerById;
+        const variables = { id: 'badid' };
+        const result = await graphql(schema, query, null, context, variables);
+        expect(result.errors[0].message)
+          .toEqual('Received producer.id is invalid!');
+        expect(result.data.producer)
+          .toBeNull();
+        done();
+      });
+    });
+    // ----------------------ProducerWaitingForValidation()-------------------------------------- //
+    describe('Testing producerWaitingForValidation()', () => {
+      beforeEach(beforeEachFunc());
+      it('Getting producers waiting for validation (1/2)', async(done) => {
+        const { query, variables, context } = queryObjGetProducersWaitingForValidation;
+        const result = await graphql(schema, query, null, context, variables);
+        expect(result.data.producersWaitingForValidation.length)
+          .toEqual(2);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+      it('Getting producers waiting for validation (1/2)', async(done) => {
+        await producersService.validateAProducer(antoine.id, true);
+        const { query, variables, context } = queryObjGetProducersWaitingForValidation;
+        const result = await graphql(schema, query, null, context, variables);
+        expect(result.data.producersWaitingForValidation.length)
+          .toEqual(1);
+        expect(result.data.producersWaitingForValidation[0].firstname)
+          .toEqual('Benoît');
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+    });
+
+    // --------------------filterProducers(ProductType)------------------------------------------ //
+    describe('Testing filterProducers(ProductType)', () => {
+      beforeEach(beforeEachFunc());
+      it('Getting producers selling apple', async(done) => {
+        const { query, context } = queryObjGetFilterProducers;
+        const variables = { id: [pomme.id] };
+        const result = await graphql(schema, query, null, context, variables);
+        expect(result.data.filterProducers.length)
+          .toEqual(2);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
+      it('Getting producers selling perry', async(done) => {
+        const { query, context } = queryObjGetFilterProducers;
+        const variables = { id: [poire.id] };
+        const result = await graphql(schema, query, null, context, variables);
+        expect(result.data.filterProducers.length)
+          .toEqual(1);
+        expect(result)
+          .toMatchSnapshot();
+        done();
+      });
     });
   });
-  // ----------------------Producer(id)-------------------------------------- //
-  describe('Testing producer(id)', () => {
+  describe('MUTATION producers', () => {
     beforeEach(beforeEachFunc());
-    it('Getting producer by id', async (done) => {
-      const { query, context } = queryObjProducerWithCorrectId;
-      const variables = { id: antoine.id };
-      const result = await graphql(schema, query, null, context, variables);
-      expect.assertions(1);
-      expect(result).toMatchSnapshot();
-      done();
-    });
-    it('Fail getting producer with wrong id', async (done) => {
-      const { query, context } = queryObjProducerWithWrongId;
-      const variables = { id: 'abcdefabcdefabcdefabcdef' };
-      const result = await graphql(schema, query, null, context, variables);
-      expect.assertions(1);
-      expect(result.data.producer).toBeNull();
-      done();
+    describe('Testing validateAProducer (Producer id)', () => {
+      it('Changing validation producer', async(done) => {
+        const { mutation, context } = mutationValidateProducer;
+        const variables = { producerId: antoine.id , state: true };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect(result.data.validateAProducer.isValidated).toBeTruthy();
+        expect(result).toMatchSnapshot();
+        done();
+      });
     });
   });
-
-
 });
