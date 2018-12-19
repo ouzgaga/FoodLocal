@@ -36,7 +36,7 @@ function getProducers({ tags = undefined, limit = 50, page = 0, lat = undefined,
   }
 
     if (tags !== undefined && typeof (tags) !== 'object') { // très moche mais fonctionne....
-        // FIXME: les tags fonctionnent pour les tests (passés commes Object JSON), mais pas via PostMan (passé comme une string il semble...)!
+        // FIXME: les tags fonctionnent pour les tests (passés commes Objects JSON), mais pas via PostMan (passé comme une string il semble...)!
         tags = JSON.parse(tags); // transforme la string en object
 
     tags = parser.parse(tags); // permet de filtrer la string au format mongoose...
