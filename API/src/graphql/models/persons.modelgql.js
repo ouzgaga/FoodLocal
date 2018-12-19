@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-// fixme: PAUL: pourquoi ajouter cette référence fait tout planter??!
-// const ProducerModel = require('./producers.modelgql');
 
 /**
  * Person Schema
@@ -53,8 +51,22 @@ const personSchema = new mongoose.Schema(
   }, options
 );
 
+const personsModel = mongoose.model('persons', personSchema);
+
+personSchema.pre('save', async function(next, err) {
+  this.followingProducersIds = this.followingProducersIds.map(async(producer) => {
+    if (await personsModel.findById(producer._id)) {
+      return producer._id;
+    } else {
+      throw new Error(`The given person (with id: ${producer.id}) doesn’t exist in the database!`);
+    }
+  });
+
+  next();
+});
+
 /**
  * @typedef Person
  */
 
-module.exports = mongoose.model('persons', personSchema);
+module.exports = personsModel;

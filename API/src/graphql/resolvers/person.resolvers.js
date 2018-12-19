@@ -1,5 +1,6 @@
 require('../models/producers.modelgql');
 const personServices = require('../services/persons.services');
+const producersServices = require('../services/producers.services');
 
 const PersonType = {
   USER: 'users',
@@ -13,9 +14,9 @@ const personResolvers = {
   },
 
   Mutation: {
-    subscribeToProducer: (parent, args, context) => personServices.subscribePersonToProducer(args.producerId, args.personId),
+    addFollowerToProducer: (parent, args, context) => producersServices.addFollowerToProducer(args.producerId, args.personId),
 
-    unsubscribeToProducer: (parent, args, context) => personServices.unsubscribePersonToProducer(args.producerId, args.personId)
+    removeFollowerToProducer: (parent, args, context) => producersServices.removeFollowerToProducer(args.producerId, args.personId)
   },
 
   Person: {

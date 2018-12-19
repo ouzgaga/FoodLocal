@@ -77,7 +77,7 @@ describe('Integration tests for productTypeCategory', () => {
           }
         };
         const result = await graphql(schema, query, null, context, null);
-        return result.should.be.eql(expected);
+        expect(result).toBe(expected);
       });
     });
 

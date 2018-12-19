@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const PersonSchema = require('./persons.modelgql');
+const PersonsModel = require('./persons.modelgql');
+const ProductsModel = require('./products.modelgql');
+const SalespointsModel = require('./salespoints.modelgql');
 
 const options = {
   discriminatorKey: 'kind',
@@ -66,10 +68,20 @@ const producerSchema = new mongoose.Schema(
   }, options
 );
 
-producerSchema.pre('save', function(next, err) {
-  this.followersIds = this.followersIds.map(person => person._id);
-  this.salespointId = this.salespointId != null ? this.salespointId._id : null;
-  this.productsIds = this.productsIds.map(product => product._id);
+producerSchema.pre('save', async function(next, err) {
+  if (this.salespointId != null) {
+    if (!(await SalespointsModel.findById(this.salespointId._id))) {
+      throw new Error(`The given salespoint (with id: ${this.salespointId.id}) doesn’t exist in the database!`);
+    }
+  }
+
+  this.productsIds = this.productsIds.map(async(product) => {
+    if (await ProductsModel.findById(product._id)) {
+      return product._id;
+    } else {
+      throw new Error(`The given product (with id: ${product.id}) doesn’t exist in the database!`);
+    }
+  });
   next();
 });
 
@@ -77,4 +89,4 @@ producerSchema.pre('save', function(next, err) {
  * @typedef Producer
  */
 
-module.exports = PersonSchema.discriminator('producers', producerSchema);
+module.exports = PersonsModel.discriminator('producers', producerSchema);

@@ -47,11 +47,9 @@ function getProductTypeByCategory(productTypeCategoryId) {
 
 // todo: à ajouter dans les test!
 async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
-
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
   const productTypes = await getProductTypes({ tags: { _id: { $all: productTypeIdsTab } } });
   // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
-
 
   const producersIds = [];
 
@@ -70,23 +68,17 @@ function addProductType(productType) {
   const newProductType = {
     name: productType.name,
     image: productType.image,
-    categoryId: productType.categoryId,
-    producersIds: []
+    categoryId: productType.categoryId
   };
   return new ProductTypeModel(newProductType).save();
 }
 
-async function addProducerProducingThisProductType(idProductType, idProducer) {
-  // fixme: checker si idProducer est présent dans la DB! (puis adapter les tests qui ne passeront plus... ^^)
+async function addProducerProducingThisProductType(productTypeId, producerId) {
+  return ProductTypeModel.findByIdAndUpdate(productTypeId, { $addToSet: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
+}
 
-  const productType = await getProductTypeById(idProductType);
-  if (productType.producersIds != null) {
-    // fixme: checker si producer est déjà dans le tableau avant de l'ajouter!
-    productType.producersIds.push(idProducer);
-  } else {
-    productType.producersIds = [idProducer];
-  }
-  return updateProductType(productType);
+async function removeProducerProducingThisProductType(productTypeId, producerId) {
+  return ProductTypeModel.findByIdAndUpdate(productTypeId, { $pull: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -105,8 +97,8 @@ function updateProductType(productType) {
     id: productType.id,
     name: productType.name,
     image: productType.image,
-    categoryId: productType.categoryId,
-    producersIds: productType.producersIds != null ? productType.producersIds : []
+    categoryId: productType.categoryId
+    // fixme: checker que le tableau de producersIds n'est pas supprimé lorsqu'on met à jour!
   };
 
   return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
@@ -128,9 +120,10 @@ function deleteProductType(id) {
 module.exports = {
   getProductTypes,
   getProductTypeByCategory,
-  getAllProducersIdsProposingProductsOfReceivedProductsTypeIds: getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
+  getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
   addProductType,
   addProducerProducingThisProductType,
+  removeProducerProducingThisProductType,
   getProductTypeById,
   updateProductType,
   deleteProductType

@@ -1,7 +1,7 @@
 const { makeExecutableSchema } = require('graphql-tools');
 const { graphql } = require('graphql');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const producersService = require('../../../src/graphql/services/producers.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
@@ -140,9 +140,9 @@ const beforeEachFunc = () => async() => {
       }
     ]
   };
-  benoit = (await producersService.addProducer(benoit)).toObject();
+  benoit = (await producersServices.addProducer(benoit)).toObject();
 
-  antoine = (await producersService.addProducer(antoine)).toObject();
+  antoine = (await producersServices.addProducer(antoine)).toObject();
 };
 
 const afterEachFunc = () => async () => {

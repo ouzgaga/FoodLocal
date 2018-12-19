@@ -1,13 +1,14 @@
 type Query {
+	# Retourne true si l'email reçu en paramètre peut être utilisé pour inscrire un nouveau membre. Retourne false si l'email re4u en paramètre est déjà utilisé.
 	checkIfEmailIsAvailable(email: String!): Boolean!
 }
 
 type Mutation {
 	# Ajoute la personne correspondant à l'id 'personId' à la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
-	subscribeToProducer(producerId: ID!, personId: ID!): Person
+	addFollowerToProducer(producerId: ID!, personId: ID!): Person
 
 	# Supprime la personne correspondant à l'id 'personId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
-	unsubscribeToProducer(producerId: ID!, personId: ID!): Person
+	removeFollowerToProducer(producerId: ID!, personId: ID!): Person
 }
 
 interface Person {
@@ -19,6 +20,7 @@ interface Person {
 	image: String
 	# tableau contenant tous les producteur que la personne suit
 	followingProducers:[Producer!]!
+	# booléen valant true si l'email a été validé par le membre, false sinon
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }

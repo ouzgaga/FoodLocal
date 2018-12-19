@@ -11,11 +11,11 @@ const producerResolvers = {
 
     producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
 
-    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
+    filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
   },
 
   Mutation: {
-    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
+    validateAProducer: (parent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
 
     addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
 

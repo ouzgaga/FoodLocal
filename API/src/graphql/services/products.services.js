@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Products: ProductModel } = require('../models/products.modelgql');
 const productTypeServices = require('./productType.services');
+const producersServices = require('./producers.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -52,30 +53,27 @@ function getProductById(id) {
  * Attention, doublons autorisés!
  *
  * @param {Integer} product, Les informations du produit à ajouter.
+ * @param producerId, L'id du producteur produisant le produit à ajouter.
  */
-async function addProduct(product) {
+async function addProduct(product, producerId) {
   if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    // on récupère les infos du productType du produit que l'on souhaite ajouter
-    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
+    const addedProduct = await new ProductModel(product).save();
 
-    if (productType != null) { // si ce productType existe
-      const newProduct = {
-        description: product.description,
-        productTypeId: productType.id
-      };
+    // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
+    await productTypeServices.addProducerProducingThisProductType(product.productTypeId, producerId);
 
-      return new ProductModel(newProduct).save();
-    } else {
-      return new Error("This productType.id doesn't exist!");
-    }
+    // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
+    await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+    return addedProduct;
   }
 }
 
-async function addAllProductsInArray(productsArray) {
+async function addAllProductsInArray(productsArray, producerId) {
   if (productsArray != null && productsArray.length !== 0) {
-    const promisesAddProducts = productsArray.map(product => addProduct(product));
+    const promisesAddProducts = productsArray.map(product => addProduct(product, producerId));
     return Promise.all(promisesAddProducts);
   } else {
     return new Error('function addAllProductsInArray: received productsArray is null or empty!');

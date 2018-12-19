@@ -1,7 +1,10 @@
-const producersService = require('../../../src/graphql/services/producers.services');
-const productsService = require('../../../src/graphql/services/products.services');
-const productTypeService = require('../../../src/graphql/services/productType.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
+const usersServices = require('../../../src/graphql/services/users.services');
+const salespointsServices = require('../../../src/graphql/services/salespoints.services');
+const productsServices = require('../../../src/graphql/services/products.services');
+const productTypeServices = require('../../../src/graphql/services/productType.services');
 const clearDB = require('../clearDB');
+const populateDB = require('../../PopulateDatabase');
 const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
   '../../../src/graphql/models/products.modelgql'
 );
@@ -29,7 +32,7 @@ const productPoire = {
   description: 'Une poire de folie!'
 };
 
-const salespointBenoit = {
+let salespointBenoit = {
   name: 'Chez moi',
   address: {
     number: 6,
@@ -80,9 +83,7 @@ let benoit = {
   image: 'Ceci est une image encodée en base64!',
   phoneNumber: '0761435196',
   description: 'Un chouet gaillard!',
-  website: 'benoitpaysan.ch',
-  salespoint: salespointBenoit,
-  products: []
+  website: 'benoitpaysan.ch'
 };
 
 let antoine = {
@@ -92,10 +93,11 @@ let antoine = {
   password: '1234abcd',
   image: 'Ceci est l\'image d\'un tueur encodée en base64!',
   phoneNumber: '0761435196',
-  description: 'Un vrai payouz!',
-  products: []
+  description: 'Un vrai payouz!'
 };
 
+let tabProductsBenoit = [];
+let tabProductsAntoine = [];
 let tabProducers = [benoit, antoine];
 
 const clearAndPopulateDB = async() => {
@@ -117,16 +119,16 @@ const clearAndPopulateDB = async() => {
   productPoire.productTypeId = productTypePoire.id;
 
   // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
-  benoit.products = [];
-  benoit.products.push(productPomme);
-  benoit.products.push(productPoire);
-  benoit.salespoint = salespointBenoit;
-  benoit = (await producersService.addProducer(benoit)).toObject();
+  salespointBenoit = (await salespointsServices.addSalesPoint(salespointBenoit)).toObject();
+  benoit.salespoint = salespointBenoit.id;
+  benoit = (await producersServices.addProducer(benoit)).toObject();
+  tabProductsBenoit = await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
+  tabProductsBenoit = tabProductsBenoit.map(product => product.toObject());
 
   // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
-  antoine.products = [];
-  antoine.products.push(productPomme);
-  antoine = (await producersService.addProducer(antoine)).toObject();
+  antoine = (await producersServices.addProducer(antoine)).toObject();
+  tabProductsAntoine = await productsServices.addAllProductsInArray([productPomme], antoine.id);
+  tabProductsAntoine = tabProductsAntoine.map(product => product.toObject());
 
   tabProducers = [benoit, antoine];
 };
@@ -137,7 +139,7 @@ describe('tests producers services', () => {
   describe('tests getProducers', () => {
     it('should get all producers', async() => {
       // on récupère un tableau contenant tous les producteurs
-      let allProducers = await producersService.getProducers();
+      let allProducers = await producersServices.getProducers();
 
       // on transforme chaque producteur du tableau en un objet
       allProducers = allProducers.map(producer => producer.toObject());
@@ -160,10 +162,10 @@ describe('tests producers services', () => {
 
         const promisesTestsProductsIds = producer.productsIds.map((async(productId) => {
           // on récupère les infos du produit correspondant
-          const product = (await productsService.getProductById(productId)).toObject();
+          const product = (await productsServices.getProductById(productId)).toObject();
 
           // on récupère les infos du productType correspondant au produit
-          const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+          const productType = (await productTypeServices.getProductTypeById(product.productTypeId)).toObject();
           productType.should.be.not.null;
           productType.producersIds.should.be.not.null;
           const addedProducerId = producer.id.toString();
@@ -181,7 +183,7 @@ describe('tests producers services', () => {
   describe('tests getProducerById', () => {
     it('should get one producer', async() => {
       // on récupère le producteur corresondant à l'id donné
-      const producer = (await producersService.getProducerById(benoit.id)).toObject();
+      const producer = (await producersServices.getProducerById(benoit.id)).toObject();
 
       // on test son contenu
       producer.should.be.not.null;
@@ -218,13 +220,13 @@ describe('tests producers services', () => {
 
       // on test le tableau productsIds et son contenu
       const promisesTestsProductsIds = producer.productsIds.map((async(productId, index) => {
-        productId.should.be.eql(benoit.productsIds[index]);
+        productId.toString().should.be.eql(tabProductsBenoit[index].id);
 
         // on récupère les infos du produit correspondant
-        const product = (await productsService.getProductById(productId)).toObject();
+        const product = (await productsServices.getProductById(productId)).toObject();
 
         // on récupère les infos du productType correspondant au produit
-        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        const productType = (await productTypeServices.getProductTypeById(product.productTypeId)).toObject();
         productType.should.be.not.null;
         productType.producersIds.should.be.not.null;
         const addedProducerId = producer.id.toString();
@@ -237,17 +239,17 @@ describe('tests producers services', () => {
     });
 
     it('should fail getting one producer because no id received', async() => {
-      const producerGotInDB = await producersService.getProducerById('');
+      const producerGotInDB = await producersServices.getProducerById('');
       producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail getting one producer because invalid id received', async() => {
-      const producerGotInDB = await producersService.getProducerById(benoit.id + benoit.id);
+      const producerGotInDB = await producersServices.getProducerById(benoit.id + benoit.id);
       producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail getting one producer because unknown id received', async() => {
-      const producerGotInDB = await producersService.getProducerById('abcdefabcdefabcdefabcdef');
+      const producerGotInDB = await producersServices.getProducerById('abcdefabcdefabcdefabcdef');
       expect(producerGotInDB).to.be.null;
     });
   });
@@ -255,16 +257,16 @@ describe('tests producers services', () => {
   describe('tests getAllProducerWaitingForValidation', () => {
     it('should get all producers waiting for validation', async() => {
       // on récupère tous les producteurs non validés (isValidated = false)
-      let allProducersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      let allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
       allProducersWaitingForValidation.should.be.an('array');
       allProducersWaitingForValidation.length.should.be.equal(2);
       allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
 
       // on valide un des producteurs non validé
-      await producersService.validateAProducer(allProducersWaitingForValidation[0].id, true);
+      await producersServices.validateAProducer(allProducersWaitingForValidation[0].id, true);
 
       // on récupère tous les producteurs non validés --> il y en a bien un de moins
-      allProducersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
       allProducersWaitingForValidation.should.be.an('array');
       allProducersWaitingForValidation.length.should.be.equal(1);
       allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
@@ -274,18 +276,18 @@ describe('tests producers services', () => {
   describe('tests getAllProducersInReceivedIdList', () => {
     it('should get all producers with id in received list', async() => {
       // on récupère 2 producteurs
-      let producers = await producersService.getAllProducersInReceivedIdList([benoit.id, antoine.id]);
+      let producers = await producersServices.getAllProducersInReceivedIdList([benoit.id, antoine.id]);
       producers.should.be.an('array');
       producers.length.should.be.equal(2);
 
       // on récupère 1 seul producteur
-      producers = await producersService.getAllProducersInReceivedIdList([benoit.id]);
+      producers = await producersServices.getAllProducersInReceivedIdList([benoit.id]);
       producers.should.be.not.null;
       producers.should.be.an('array');
       producers.length.should.be.equal(1);
 
       // on récupère aucun producteur
-      producers = await producersService.getAllProducersInReceivedIdList([]);
+      producers = await producersServices.getAllProducersInReceivedIdList([]);
       producers.should.be.not.null;
       producers.should.be.an('array');
       producers.length.should.be.equal(0);
@@ -295,14 +297,14 @@ describe('tests producers services', () => {
   describe('tests filterProducers by productTypeIds', () => {
     it('should return only producers that produce some products of the given productTypeIds', async() => {
       // on récupère tous les producteurs produisant des produits de la catégorie 'productTypePomme'
-      let producersOfPommes = await producersService.filterProducers([productTypePomme.id]);
+      const producersOfPommes = await producersServices.filterProducers([productTypePomme.id]);
       producersOfPommes.should.be.an('array');
       producersOfPommes.length.should.be.equal(2);
 
       // on récupère tous les producteurs produisant des produits de la catégorie 'productTypePoire'
-      producersOfPommes = await producersService.filterProducers([productTypePoire.id]);
-      producersOfPommes.should.be.an('array');
-      producersOfPommes.length.should.be.equal(1);
+      const producersOfPoires = await producersServices.filterProducers([productTypePoire.id]);
+      producersOfPoires.should.be.an('array');
+      producersOfPoires.length.should.be.equal(1);
     });
   });
 
@@ -317,7 +319,7 @@ describe('tests producers services', () => {
       benoit.salespoint = salespointBenoit;
 
       // on ajoute un nouveau producteur
-      const addedProducer = await producersService.addProducer(benoit);
+      const addedProducer = await producersServices.addProducer(benoit);
       // on test son contenu
       addedProducer.should.be.not.null;
       addedProducer.id.should.be.not.null; // ne peut pas être égal à benoit.id !
@@ -356,10 +358,10 @@ describe('tests producers services', () => {
         productId.should.be.not.null;
 
         // on récupère les infos du produit correspondant
-        const product = (await productsService.getProductById(productId)).toObject();
+        const product = (await productsServices.getProductById(productId)).toObject();
 
         // on récupère les infos du productType correspondant au produit
-        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        const productType = (await productTypeServices.getProductTypeById(product.productTypeId)).toObject();
         productType.should.be.not.null;
         productType.producersIds.should.be.not.null;
         const addedProducerId = addedProducer.id.toString();
@@ -386,7 +388,7 @@ describe('tests producers services', () => {
       };
 
       // on ajoute un nouveau producteur
-      const addedProducer = (await producersService.addProducer(producerToAdd)).toObject();
+      const addedProducer = (await producersServices.addProducer(producerToAdd)).toObject();
       addedProducer.should.be.not.null;
       addedProducer.id.should.be.not.null;
       addedProducer.firstname.should.be.equal(producerToAdd.firstname);
@@ -394,7 +396,7 @@ describe('tests producers services', () => {
       addedProducer.email.should.be.equal(producerToAdd.email);
 
       // on tente d'ajouter à nouveau le même producteur -> erreur car l'email est déjà utilisé
-      const res = await producersService.addProducer(producerToAdd);
+      const res = await producersServices.addProducer(producerToAdd);
       res.should.be.not.null;
       res.message.should.be.equal('This email is already used.');
     });
@@ -405,16 +407,15 @@ describe('tests producers services', () => {
 
     it('should update a producer', async() => {
       // on récupère un producteur
-      let producer = (await producersService.getProducerById(antoine.id)).toObject();
+      let producer = (await producersServices.getProducerById(antoine.id)).toObject();
       // on le modifie
       producer = {
         ...benoit,
         id: producer.id,
-        salespoint: benoit.salespointId,
-        products: benoit.productsIds
+        salespoint: benoit.salespointId
       };
       // on met à jour dans la DB
-      const updatedProducer = (await producersService.updateProducer(producer)).toObject();
+      const updatedProducer = (await producersServices.updateProducer(producer)).toObject();
       // on test son nouveau contenu
       updatedProducer.should.be.not.null;
       updatedProducer.id.should.be.equal(producer.id);
@@ -448,13 +449,13 @@ describe('tests producers services', () => {
 
       // on test le tableau productsIds et son contenu
       const promisesTestsProductsIds = updatedProducer.productsIds.map((async(productId, index) => {
-        productId.should.be.eql(producer.productsIds[index]);
+        productId.toString().should.be.eql(tabProductsAntoine[index].id);
 
         // on récupère les infos du produit correspondant
-        const product = (await productsService.getProductById(productId)).toObject();
+        const product = (await productsServices.getProductById(productId)).toObject();
 
         // on récupère les infos du productType correspondant au produit
-        const productType = (await productTypeService.getProductTypeById(product.productTypeId)).toObject();
+        const productType = (await productTypeServices.getProductTypeById(product.productTypeId)).toObject();
         productType.should.be.not.null;
         productType.producersIds.should.be.not.null;
         const addedProducerId = updatedProducer.id.toString();
@@ -468,28 +469,28 @@ describe('tests producers services', () => {
 
     it('should fail updating a producer because no id received', async() => {
       benoit.id = '';
-      const updatedProducer = await producersService.updateProducer(benoit);
+      const updatedProducer = await producersServices.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail updating a producer because invalid id received', async() => {
       benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProducer = await producersService.updateProducer(benoit);
+      const updatedProducer = await producersServices.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail updating a producer because invalid id received', async() => {
       benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProducer = await producersService.updateProducer(benoit);
+      const updatedProducer = await producersServices.updateProducer(benoit);
 
       updatedProducer.message.should.be.equal('Received producer.id is invalid!');
     });
 
     it('should fail updating a producer because unknown id received', async() => {
       benoit.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProducer = await producersService.updateProducer(benoit);
+      const updatedProducer = await producersServices.updateProducer(benoit);
       updatedProducer.message.should.be.equal('The received id is not in the database!');
     });
   });
@@ -498,24 +499,24 @@ describe('tests producers services', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should validate a producer', async() => {
-      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      const producersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
 
       // on valide un producteur
-      const validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      const validatedProducer = await producersServices.validateAProducer(producersWaitingForValidation[0].id, true);
       validatedProducer.should.be.not.null;
       validatedProducer.isValidated.should.be.true;
     });
 
     it('should unvalidate a validated producer', async() => {
-      const producersWaitingForValidation = await producersService.getAllProducerWaitingForValidation();
+      const producersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
 
       // on valide un producteur
-      let validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      let validatedProducer = await producersServices.validateAProducer(producersWaitingForValidation[0].id, true);
       validatedProducer.should.be.not.null;
       validatedProducer.isValidated.should.be.true;
 
       // on invalide ce même producteur
-      validatedProducer = await producersService.validateAProducer(producersWaitingForValidation[0].id, true);
+      validatedProducer = await producersServices.validateAProducer(producersWaitingForValidation[0].id, true);
       validatedProducer.should.be.not.null;
       validatedProducer.isValidated.should.be.false;
     });
@@ -524,21 +525,225 @@ describe('tests producers services', () => {
   describe('tests deleteProducer', () => {
     it('should delete a producer', async() => {
       // on supprime un producteur
-      let deleteProducer = (await producersService.deleteProducer(benoit.id)).toObject();
+      let deleteProducer = (await producersServices.deleteProducer(benoit.id)).toObject();
       deleteProducer.should.be.not.null;
       deleteProducer.id.should.be.eql(benoit.id);
 
       // on tente de récupérer le même producteur -> retourne null car le producteur est introuvable dans la DB
-      deleteProducer = await producersService.getProducerById(deleteProducer.id);
+      deleteProducer = await producersServices.getProducerById(deleteProducer.id);
 
       expect(deleteProducer).to.be.null;
     });
 
     it('should fail deleting a producer because given id not found in DB', async() => {
       // on supprime un producer inexistant -> retourne null car le producer est introuvable dans la DB
-      const deleteProducer = await producersService.deleteProducer('abcdefabcdefabcdefabcdef');
+      const deleteProducer = await producersServices.deleteProducer('abcdefabcdefabcdefabcdef');
 
       expect(deleteProducer).to.be.null;
+    });
+  });
+
+  describe('tests addFollowerToProducer', () => {
+    let users;
+    let producers;
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+
+      await populateDB();
+
+      users = await usersServices.getUsers();
+      users = users.map(u => u.toObject());
+      producers = await producersServices.getProducers();
+      producers = producers.map(p => p.toObject());
+    });
+
+    it('should add only once a person to the followers of a producer', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds[0].should.be.eql(producers[0]._id);
+
+      // on récupère le producteur qui a un nouveau follower
+      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(1);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+
+      // on ajoute à nouveau le follower users[0] au producer producers[0] -> il ne doit pas être ajouté une 2ème fois.
+      person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on récupère le producteur qui ne devrait pas avoir de 2ème nouveau follower
+      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(1);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+    });
+
+    it('should add multiple persons to the followers of a producer', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on récupère le producteur qui a un nouveau follower
+      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(1);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+
+      // on ajoute le follower users[1] au producer producers[0]
+      person = (await producersServices.addFollowerToProducer(producers[0].id, users[1].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on récupère le producteur qui devrait avoir un 2ème follower
+      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(2);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds.should.contain.deep(users[1]._id);
+
+      // on ajoute le follower producer[1] au producer producers[0]
+      person = (await producersServices.addFollowerToProducer(producers[0].id, producers[1].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on ajoute le follower producer[2] au producer producers[0]
+      person = (await producersServices.addFollowerToProducer(producers[0].id, producers[2].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on récupère le producteur qui devrait avoir un total de 4 followers
+      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(4);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds.should.contain.deep(users[1]._id);
+      producer0.followersIds.should.contain.deep(producers[1]._id);
+      producer0.followersIds.should.contain.deep(producers[2]._id);
+    });
+
+    it('should add multiple producers to the following list of a person', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(1);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+
+      // on récupère le producer0 qui a un nouveau follower
+      const producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(1);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+
+      // on ajoute le follower users[0] au producer producers[1]
+      person = (await producersServices.addFollowerToProducer(producers[1].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(2);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      person.followingProducersIds.should.contain.deep(producers[1]._id);
+
+      // on récupère le producer1 qui a un nouveau follower
+      const producer1 = (await producersServices.getProducerById(producers[1].id)).toObject();
+      producer1.followersIds.length.should.be.equal(1);
+      producer1.followersIds.should.contain.deep(users[0]._id);
+
+      // on ajoute le follower users[0] au producer producers[2]
+      person = (await producersServices.addFollowerToProducer(producers[2].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(3);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      person.followingProducersIds.should.contain.deep(producers[1]._id);
+      person.followingProducersIds.should.contain.deep(producers[2]._id);
+
+      // on récupère le producer2 qui a un nouveau follower
+      const producer2 = (await producersServices.getProducerById(producers[2].id)).toObject();
+      producer2.followersIds.length.should.be.equal(1);
+      producer2.followersIds.should.contain.deep(users[0]._id);
+
+      // on ajoute le follower users[0] au producer producers[3]
+      person = (await producersServices.addFollowerToProducer(producers[3].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(4);
+      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      person.followingProducersIds.should.contain.deep(producers[1]._id);
+      person.followingProducersIds.should.contain.deep(producers[2]._id);
+      person.followingProducersIds.should.contain.deep(producers[3]._id);
+
+      // on récupère le producer3 qui a un nouveau follower
+      const producer3 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer3.followersIds.length.should.be.equal(1);
+      producer3.followersIds.should.contain.deep(users[0]._id);
+    });
+
+    it('should fail adding a person to the followers of a producer because personId and producerId are the sames', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      const person = await producersServices.addFollowerToProducer(producers[0].id, producers[0].id);
+      person.message.should.not.be.null;
+      person.message.should.be.equal('You can\'t follow yourself!');
+    });
+
+    it('should fail adding a person to the followers of a producer because producerId do not refer a producer', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      const person = await producersServices.addFollowerToProducer(users[0].id, users[1].id);
+      person.message.should.not.be.null;
+      person.message.should.be.equal('There is no producer with this id in database!');
+    });
+  });
+
+
+  describe('tests removeFollowerToProducer', () => {
+    let users;
+    let producers;
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+
+      await populateDB();
+
+      users = await usersServices.getUsers();
+      users = users.map(u => u.toObject());
+      producers = await producersServices.getProducers();
+      producers = producers.map(p => p.toObject());
+    });
+
+    it('should delete a person from the followers of a producer', async() => {
+      // on ajoute les followers users[0] et users[1] au producer producers[0]
+      await producersServices.addFollowerToProducer(producers[0].id, users[0].id);
+      await producersServices.addFollowerToProducer(producers[0].id, users[1].id);
+
+      // on récupère le producer0 qui a deux nouveaux followers
+      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(2);
+      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds.should.contain.deep(users[1]._id);
+
+      // on supprime le follower users[0] des followers de producers[0]
+      let person = (await producersServices.removeFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(0);
+      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
+
+      // on récupère le producer0 qui n'a plus qu'un follower (users[1])
+      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(1);
+      producer0.followersIds.should.not.contain.deep(users[0]._id);
+      producer0.followersIds.should.contain.deep(users[1]._id);
+
+      // on supprime le follower users[1] des followers de producers[0]
+      person = (await producersServices.removeFollowerToProducer(producers[0].id, users[1].id)).toObject();
+      person.followingProducersIds.length.should.be.equal(0);
+      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
+
+      // on récupère le producer0 qui n'a plus qu'un follower (users[1])
+      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0.followersIds.length.should.be.equal(0);
+      producer0.followersIds.should.not.contain.deep(users[0]._id);
+      producer0.followersIds.should.not.contain.deep(users[1]._id);
+    });
+
+    it('should fail unsubscribe a person from the followers of a producer because personId and producerId are the sames', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      const person = await producersServices.removeFollowerToProducer(producers[0].id, producers[0].id);
+      person.message.should.not.be.null;
+      person.message.should.be.equal('You can\'t follow yourself!');
+    });
+
+    it('should fail unsubscribe a person to the followers of a producer because producerId do not refer a producer', async() => {
+      // on ajoute le follower users[0] au producer producers[0]
+      const person = await producersServices.removeFollowerToProducer(users[0].id, users[1].id);
+      person.message.should.not.be.null;
+      person.message.should.be.equal('There is no producer with this id in database!');
     });
   });
 });

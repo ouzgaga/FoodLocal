@@ -33,21 +33,28 @@ type Producer implements Person {
 	email: String!
 	password: String!
 	image: String
+	# Tableau contenant tous les producteur que la personne suit.
 	followingProducers: [Producer!]!
+	# Booléen valant true si l'email a été validé par le membre, false sinon.
 	emailValidated: Boolean!
 	isAdmin: Boolean!
+	# Tableau contenant tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
 	followers: [Person!]!
 	phoneNumber: String
 	description: String
 	website: String
 	salespoint: SalesPoint
 	isValidated: Boolean! # validation côté serveur uniquement
+	# Tableau contenant tous les produits proposés par le producteur.
 	products: [Product!]!
+	# Note moyenne attribuée au producteur par les autres membres du site.
 	rating: ProducerRating
 }
 
 type ProducerRating {
+	# Nombre total de notes qu'à reçu le producteur
 	nbRatings: Int!
+	# Moyenne des notes qu'à reçu le producteur
 	rating: Float!
 }
 
@@ -65,10 +72,9 @@ input ProducerInputAdd {
 	phoneNumber: String
 	description: String
 	website: String
-	salespoint: SalesPointInputAdd
+	salespoint: ID
 	# isValidated: Boolean!
-	products: [ProductInputAdd!] # pas obligatoire si vide
-	# FIXME: est-ce qu'on veut vraiment pouvoir mettre à jour les produits en même temps que le producteur? On a ptetre meilleur temps de ne pas donner accès à cette liste autrement que via addproduct / deleteProduct et updateProduct...
+	# products: [ProductInputAdd!]
 }
 
 input ProducerInputUpdate {
@@ -78,15 +84,18 @@ input ProducerInputUpdate {
 	email: String!
 	password: String!
 	image: String
+
+	# Tableau contenant l'id de tous les producteur que la personne suit.
 	followingProducersIds:[ID!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
+
+	# Tableau contenant l'id de tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
 	followersIds: [ID!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String
-	salespoint: SalesPointInputUpdate
+	salespoint: ID
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
-	products: [ProductInputUpdate!] # pas obligatoire si vide
-	# FIXME: est-ce qu'on veut vraiment pouvoir mettre à jour les produits en même temps que le producteur? On a ptetre meilleur temps de ne pas donner accès à cette liste autrement que via addproduct / deleteProduct et updateProduct...
+	# products: [ProductInputUpdate!]
 }

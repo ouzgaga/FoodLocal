@@ -19,11 +19,13 @@ type Query {
 }
 
 type Mutation {
+	#Ajoute à la base de données tous les produits du tableau reçu comme des produits proposés par le producteur correspondant à l'id reçu en paramère.
+	addMultipleProducts(producerId: ID!, products: [ProductInputAdd!]!): [Product!]!
 	#Ajoute à la base de données un nouveau produit proposé par le producteur correspondant à l'id reçu en paramère.
-	addProduct(product: ProductInputAdd!): Product!
+	addProduct(producerId: ID!, product: ProductInputAdd!): Product!
 	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
 	updateProduct(product: ProductInputUpdate!): Product
-	#Supprime le produit correspondant à l'id passée en paramètre. Ne supprime pas le 'productType'.
+	#Supprime le produit correspondant à l'id passée en paramètre. Supprime aussi le produit du tableau des produits proposés par le producteur. Ne supprime pas le 'productType'.
 	deleteProduct(productId: ID!): Product
 
 
@@ -48,43 +50,62 @@ type Mutation {
 
 type Product {
 	id: ID!
+	# Description du produit.
 	description: String
+
+	# Type du produit (Pomme, Orange, Pain, Boeuf, Farine, Blé, ...).
 	productType: ProductType!
 	# FIXME: est-ce qu'on enregistre aussi l'ID du producteur pour avoir le lien dans les 2 sens?
 }
 
 input ProductInputAdd {
+	# Description du produit.
 	description: String
+
+	# Id du type de produit (Pomme, Orange, Pain, Boeuf, Farine, Blé, ...).
 	productTypeId: ID!
 }
 
 input ProductInputUpdate {
 	id: ID!
+	# Description du produit.
 	description: String
+
+	# Id du type de produit (Pomme, Orange, Pain, Boeuf, Farine, Blé, ...).
 	productTypeId: ID!
 }
 
+# Type de produit (Pomme, Orange, Pain, Boeuf, Farine, Blé, ...).
 type ProductType {
 	id: ID!
 	name: String!
 	image: String
+
+	# Catégorie du produit (Boisson, Céréales, Fruits, Légumes, Viandes, Autres)
 	category: ProductTypeCategory!
-	producers: [Producer!]! # contient la liste de tous les producers proposant ce type de produits
+
+	# Tableau contenant tous les producteurs produisant au moins un produit de ce type.
+	producers: [Producer!]!
 }
 
 input ProductTypeInputAdd {
 	name: String!
 	image: String
-	categoryId: ID! #fixme: on ne peut pas ajouter une catégorie en même temps qu'un type de produit, ok?
+
+	# Id de la catégorie du produit (Boisson, Céréales, Fruits, Légumes, Viandes, Autres)
+	categoryId: ID!
 }
 
 input ProductTypeInputUpdate {
 	id: ID!
 	name: String!
 	image: String
-	categoryId: ID! #fixme: on ne peut pas mettre à jour une catégorie en même temps qu'un type de produit, ok?
+
+	# Id de la catégorie du produit (Boisson, Céréales, Fruits, Légumes, Viandes, Autres)
+	categoryId: ID!
 }
 
+# Catégorie du produit (Boisson, Céréales, Fruits, Légumes, Viandes, Autres)
 type ProductTypeCategory{
 	id: ID!
 	name: String!

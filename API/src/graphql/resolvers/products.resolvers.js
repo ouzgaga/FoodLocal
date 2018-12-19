@@ -3,7 +3,6 @@ const producerServices = require('../services/producers.services');
 const productTypeServices = require('../services/productType.services');
 const productTypeCategoryServices = require('../services/productTypeCategory.services');
 
-
 const productResolvers = {
   Query: {
     products: (parent, args, context) => productsServices.getProducts(),
@@ -23,7 +22,9 @@ const productResolvers = {
   },
 
   Mutation: {
-    addProduct: (parent, args, context) => productsServices.addProduct(args.product),
+    addMultipleProducts: (parent, args, context) => productsServices.addAllProductsInArray(args.products, args.producerId),
+
+    addProduct: (parent, args, context) => productsServices.addProduct(args.product, args.producerId),
 
     updateProduct: (parent, args, contet) => productsServices.updateProduct(args.product),
 
