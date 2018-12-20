@@ -1,4 +1,3 @@
-/** SUCCESS GETTING ALL PRODUCERS */
 const queryObjAllProducers = {
   query: `
     query{
@@ -83,13 +82,13 @@ const queryObjAllProducers = {
             }
           }
         }
+      }
     }
   `,
   variables: {},
   context: {},
 };
 
-/** GETTING PRODUCER */
 const queryObjProducerById = {
   query: `
           query($id: ID!){

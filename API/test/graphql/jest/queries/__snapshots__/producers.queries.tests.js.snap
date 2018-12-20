@@ -937,8 +937,113 @@ Object {
 
 exports[`Testing graphql request producers QUERY producers Testing producers() should get all producers 1`] = `
 Object {
-  "errors": Array [
-    [GraphQLError: Syntax Error: Expected Name, found <EOF>],
-  ],
+  "data": Object {
+    "producers": Array [
+      Object {
+        "description": "Un chouet gaillard!",
+        "email": "benoit@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Benoît",
+        "followers": Array [],
+        "followingProducers": Array [],
+        "image": "Ceci est une image encodée en base64!",
+        "isValidated": false,
+        "lastname": "Schöpfli",
+        "phoneNumber": "0761435196",
+        "products": Array [
+          Object {
+            "description": "Une pomme monnnnstre bonne!",
+            "productType": Object {
+              "category": Object {
+                "image": "ceci est une image de fruits encodée en base64!",
+                "name": "Fruits",
+              },
+              "image": "ceci est une image de pomme encodée en base64!",
+              "name": "Pomme",
+            },
+          },
+          Object {
+            "description": "Une poire de folie!",
+            "productType": Object {
+              "category": Object {
+                "image": "ceci est une image de fruits encodée en base64!",
+                "name": "Fruits",
+              },
+              "image": "ceci est une image de poire encodée en base64!",
+              "name": "Poire",
+            },
+          },
+        ],
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 1.123456789,
+            "longitude": 1.1234567,
+            "number": 6,
+            "postalCode": "1400",
+            "street": "Chemin de par ici",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
+        "website": "benoitpaysan.ch",
+      },
+      Object {
+        "description": "Un vrai payouz!",
+        "email": "antoine@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Antoine",
+        "followers": Array [],
+        "followingProducers": Array [],
+        "image": "Ceci est l'image d'un tueur encodée en base64!",
+        "isValidated": false,
+        "lastname": "Rochaille",
+        "phoneNumber": "0761435196",
+        "products": Array [
+          Object {
+            "description": "Une pomme monnnnstre bonne!",
+            "productType": Object {
+              "category": Object {
+                "image": "ceci est une image de fruits encodée en base64!",
+                "name": "Fruits",
+              },
+              "image": "ceci est une image de pomme encodée en base64!",
+              "name": "Pomme",
+            },
+          },
+        ],
+        "salespoint": null,
+        "website": null,
+      },
+    ],
+  },
 }
 `;

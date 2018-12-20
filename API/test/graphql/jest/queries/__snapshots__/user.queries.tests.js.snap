@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing graphql resquest user QUERY user Testing user() Should get the two user insert in the db 1`] = `
+Object {
+  "data": Object {
+    "users": Array [
+      Object {
+        "email": "benoit@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Benoît",
+        "followingProducers": Array [],
+        "image": "ceci est une image encodée en base64!",
+        "lastname": "Schöpfli",
+      },
+      Object {
+        "email": "antoine@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Antoine",
+        "followingProducers": Array [],
+        "image": "ceci est l'image d'un tueur encodée en base64!",
+        "lastname": "Rochaille",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Testing graphql resquest user QUERY user Testing user(userId) Should get an erro by using a bad id 1`] = `
+Object {
+  "data": Object {
+    "user": null,
+  },
+}
+`;
+
+exports[`Testing graphql resquest user QUERY user Testing user(userId) Should get benoit by his id 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followingProducers": Array [],
+      "image": "ceci est l'image d'un tueur encodée en base64!",
+      "lastname": "Rochaille",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql resquest user QUERY user Testing users() 1`] = `
+Object {
+  "data": Object {
+    "users": Array [
+      Object {
+        "email": "benoit@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Benoît",
+        "followingProducers": Array [],
+        "image": "ceci est une image encodée en base64!",
+        "lastname": "Schöpfli",
+      },
+      Object {
+        "email": "antoine@paysan.ch",
+        "emailValidated": false,
+        "firstname": "Antoine",
+        "followingProducers": Array [],
+        "image": "ceci est l'image d'un tueur encodée en base64!",
+        "lastname": "Rochaille",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Testing graphql resquest user Testing user(userId) Should get benoit by his id 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followingProducers": Array [],
+      "image": "ceci est l'image d'un tueur encodée en base64!",
+      "lastname": "Rochaille",
+    },
+  },
+}
+`;

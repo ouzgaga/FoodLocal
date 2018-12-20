@@ -147,14 +147,14 @@ const clearAndPopulateDB = async() => {
 
 describe('Testing graphql request producers', () => {
   describe('QUERY producers', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     // -------------------------Producers()------------------------------------- //
     describe('Testing producers()', () => {
+      beforeEach(() => clearAndPopulateDB());
       it('should get all producers', async(done) => {
         const { query, variables, context } = queryObjAllProducers;
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(1);
+        expect.assertions(2);
+        expect(result.data.producers.length).toEqual(2);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -162,20 +162,24 @@ describe('Testing graphql request producers', () => {
 
     // ----------------------Producer(id)-------------------------------------- //
     describe('Testing producer(ProducerId)', () => {
+      beforeEach(() => clearAndPopulateDB());
+      // TODO: Be more precise
       it('should get a producer by id (without schedule)', async(done) => {
         const { query, context } = queryObjProducerById;
         const variables = { id: antoine.id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(1);
+        expect.assertions(2);
+        expect(result.data.producer).not.toBeNull();
         expect(result).toMatchSnapshot();
         done();
       });
-
+      // TODO: Be more precise
       it('should get a producer by id (with schedule)', async(done) => {
         const { query, context } = queryObjProducerById;
         const variables = { id: benoit.id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(1);
+        expect.assertions(2);
+        expect(result.data.producer).not.toBeNull();
         expect(result).toMatchSnapshot();
         done();
       });
@@ -204,6 +208,7 @@ describe('Testing graphql request producers', () => {
 
     // ----------------------ProducerWaitingForValidation()-------------------------------------- //
     describe('Testing producerWaitingForValidation()', () => {
+      beforeEach(() => clearAndPopulateDB());
       it('should get all producers waiting for validation', async(done) => {
         const { query, variables, context } = queryObjGetProducersWaitingForValidation;
         let result = await graphql(schema, query, null, context, variables);
@@ -224,6 +229,7 @@ describe('Testing graphql request producers', () => {
 
     // --------------------filterProducers(ProductType)------------------------------------------ //
     describe('Testing filterProducers(ProductType)', () => {
+      beforeEach(() => clearAndPopulateDB());
       it('Getting producers selling apple', async(done) => {
         const { query, context } = queryObjGetFilterProducers;
         const variables = { id: [productTypePomme.id] };
@@ -245,8 +251,9 @@ describe('Testing graphql request producers', () => {
       });
     });
   });
-
+  // ---------------- Mutation producers -------------------------------- //
   describe('MUTATION producers', () => {
+    // --------------validateAProducer ---------------------------------- //
     describe('Testing validateAProducer (Producer id)', () => {
       beforeEach(() => clearAndPopulateDB());
       it('Changing validation producer to true', async(done) => {
@@ -269,6 +276,7 @@ describe('Testing graphql request producers', () => {
         done();
       });
     });
+    // --------------------------- Add Producer ------------------------ //
     describe('Testing addProducer', () => {
       beforeEach(() => clearDB());
       it('Adding producer correctly', async (done) => {
@@ -392,6 +400,7 @@ describe('Testing graphql request producers', () => {
       });
     });
     // TODO: Change updateProducer in the api ! Doesn't work !
+    // --------------------- Update Producer ----------------------------- //
     describe('updateProducer', () => {
       beforeEach(() => clearAndPopulateDB());
       it('updateProducer firstname correctly', async (done) => {
@@ -590,6 +599,7 @@ describe('Testing graphql request producers', () => {
         done();
       });
     });
+    // -------------------------- deleteProducer ----------------------------- //
     describe('deleteProducer', () => {
       beforeEach(() => clearAndPopulateDB());
       it('Delete correctly producer', async (done) => {
