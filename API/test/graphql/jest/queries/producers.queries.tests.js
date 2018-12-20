@@ -12,7 +12,10 @@ const {
   queryObjProducerById,
   queryObjGetProducersWaitingForValidation,
   queryObjGetFilterProducers,
-  mutationValidateProducer
+  mutationValidateProducer,
+  mutationAddProducer,
+  mutationUpdateProducer,
+  mutationDeleteProducer
 } = require('./Objects/QueryObjsProducers');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -33,11 +36,11 @@ let productTypePoire = {
   image: 'ceci est une image de poire encodée en base64!'
 };
 
-let productPomme = {
+const productPomme = {
   description: 'Une pomme monnnnstre bonne!'
 };
 
-let productPoire = {
+const productPoire = {
   description: 'Une poire de folie!'
 };
 
@@ -84,7 +87,7 @@ let salespointBenoit = {
     }
 };
 
-let benoit = {
+const benoitInit = {
   firstname: 'Benoît',
   lastname: 'Schöpfli',
   email: 'benoit@paysan.ch',
@@ -95,7 +98,7 @@ let benoit = {
   website: 'benoitpaysan.ch'
 };
 
-let antoine = {
+const antoineInit = {
   firstname: 'Antoine',
   lastname: 'Rochaille',
   email: 'antoine@paysan.ch',
@@ -107,6 +110,9 @@ let antoine = {
 
 let tabProductsBenoit = [];
 let tabProductsAntoine = [];
+
+let antoine = antoineInit;
+let benoit = benoitInit;
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
@@ -241,9 +247,8 @@ describe('Testing graphql request producers', () => {
   });
 
   describe('MUTATION producers', () => {
-    beforeEach(() => clearAndPopulateDB());
-
     describe('Testing validateAProducer (Producer id)', () => {
+      beforeEach(() => clearAndPopulateDB());
       it('Changing validation producer to true', async(done) => {
         const { mutation, context } = mutationValidateProducer;
         const variables = { producerId: antoine.id, state: true };
@@ -264,5 +269,358 @@ describe('Testing graphql request producers', () => {
         done();
       });
     });
+    describe('Testing addProducer', () => {
+      beforeEach(() => clearDB());
+      it('Adding producer correctly', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const variables = { producer: antoineInit };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(1);
+        expect(producers[0].firstname).toEqual(antoineInit.firstname);
+        expect(producers[0].isValidated).toBeFalsy();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding empty producer', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const variables = { producer: {} };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with null firstname', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, firstname: null };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with null lastname', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, lastname: null };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with null email', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, email: null };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with null password', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, password: null };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with empty firstname', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, firstname: '' };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with empty lastname', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, lastname: '' };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with empty email', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, email: '' };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // expect.assertions(4);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+      it('Adding producer with empty password', async (done) => {
+        const { mutation, context } = mutationAddProducer;
+        const producerToAdd = { ...antoineInit, password: '' };
+        const variables = { producer: producerToAdd };
+        const resultAddProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        expect.assertions(3);
+        expect(producers.length).toEqual(0);
+        expect(resultAddProducer.errors).not.toBeNull();
+        expect(resultAddProducer).toMatchSnapshot();
+        done();
+      });
+    });
+    // TODO: Change updateProducer in the api ! Doesn't work !
+    describe('updateProducer', () => {
+      beforeEach(() => clearAndPopulateDB());
+      it('updateProducer firstname correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: 'bob',
+          lastname: antoine.lastname,
+          email: antoine.email,
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        // Producer return by graphql
+        expect(resultUpdatedProducer.data.updateProducer.firstname).toEqual('bob'); // Check if graphql return correct firstname
+        // TODO: can be complete
+        // Change in the db
+        expect(producer.firstname).toEqual('bob'); // Check if the firstname change in the database
+        expect(producer.lastname).toEqual(antoine.lastname);
+        expect(producer.email).toEqual(antoine.email);
+        expect(producer.image).toEqual(antoine.image);
+        expect(producer.phoneNumber).toEqual(antoine.phoneNumber);
+        expect(producer.description).toEqual(antoine.description);
+        expect(producer.website).toBeNull(); // Is undefind in antoine object but null in db
+        expect(producer.password).toEqual(antoine.password); // Is a problème in api to debug
+        expect(producer.salespoint.length).toEqual(antoine.salespoint.length);
+        expect(producer.followersIds.length).toEqual(antoine.followersIds.length);
+        expect(producer.rating).toEqual(antoine.rating);
+        // Compare with snapshot
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer firstname correctly without giving all object', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: 'bob',
+          lastname: antoine.firstname,
+          email: antoine.email,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.firstname).toEqual('bob'); // Check if graphql return correct firstname
+        expect(producer.firstname).toEqual('bob'); // Check if the firstname change in the database
+        expect(producer.image).not.toBeNull();
+        expect(producer.followersIds).not.toBeNull();
+        expect(producer.phoneNumber).not.toBeNull();
+        expect(producer.website).not.toBeNull();
+        expect(producer.salespoint).not.toBeNull();
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer lastname correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: 'test',
+          email: antoine.email,
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.lastname).toEqual('test'); // Check if graphql return correct firstname
+        expect(producer.lastname).toEqual('test'); // Check if the lastname change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer email correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: 'test@test.ch',
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.email).toEqual('test@test.ch'); // Check if graphql return correct firstname
+        expect(producer.email).toEqual('test@test.ch'); // Check if the email change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer email with a string not a email', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: 'test',
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.errors).not.toBeNull(); // Check if graphql return correct firstname
+        expect(producer.email).not.toEqual(producerToUpdate.email); // Check if the email change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer image correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: antoine.email,
+          image: 'test',
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.image).toEqual('test'); // Check if graphql return correct firstname
+        expect(producer.image).toEqual('test'); // Check if the image change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer phoneNumber correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: antoine.email,
+          image: antoine.image,
+          phoneNumber: '7357',
+          description: antoine.description,
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.phoneNumber).toEqual('7357'); // Check if graphql return correct firstname
+        expect(producer.phoneNumber).toEqual('7357'); // Check if the phonenumber change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer description correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: antoine.email,
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: 'testDesc',
+          website: antoine.website,
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.description).toEqual('testDesc'); // Check if graphql return correct firstname
+        expect(producer.description).toEqual('testDesc'); // Check if the description change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+      it('updateProducer website correctly', async (done) => {
+        const producerToUpdate = {
+          id: antoine.id,
+          firstname: antoine.firstname,
+          lastname: antoine.lastname,
+          email: antoine.email,
+          image: antoine.image,
+          phoneNumber: antoine.phoneNumber,
+          description: antoine.description,
+          website: 'www.test.ch',
+        };
+        const { mutation, context } = mutationUpdateProducer;
+        const variables = { producer: producerToUpdate };
+        const resultUpdatedProducer = await graphql(schema, mutation, null, context, variables);
+        const producer = await producersServices.getProducerById(antoine.id);
+        expect(resultUpdatedProducer.data.updateProducer.website).toEqual('www.test.ch'); // Check if graphql return correct firstname
+        expect(producer.website).toEqual('www.test.ch'); // Check if the description change in the database
+        expect(resultUpdatedProducer).toMatchSnapshot();
+        done();
+      });
+    });
+    describe('deleteProducer', () => {
+      beforeEach(() => clearAndPopulateDB());
+      it('Delete correctly producer', async (done) => {
+        const { mutation, context } = mutationDeleteProducer;
+        const variables = { id: antoine.id };
+        const resultDeletedProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // Data return by graphql
+        expect(resultDeletedProducer.data.deleteProducer.email).toEqual(antoine.email);
+        // Changement into the db
+        expect(producers.length).toEqual(1);
+        expect(producers.map(producer => producer.id)).not.toContainEqual(antoine.id);
+        expect(resultDeletedProducer).toMatchSnapshot();
+        done();
+      });
+      it('Delete unknow user (wrong id)', async (done) => {
+        const { mutation, context } = mutationDeleteProducer;
+        const variables = { id: 'abcdefabcdefabcdefbacdef' };
+        const resultDeletedProducer = await graphql(schema, mutation, null, context, variables);
+        const producers = await producersServices.getProducers();
+        // Data return by graphql
+        console.log(resultDeletedProducer);
+        expect(resultDeletedProducer.data.deleteProducer).toBeNull();
+        // Changement into the db
+        expect(producers.length).toEqual(2);
+        expect(resultDeletedProducer).toMatchSnapshot();
+        done();
+      });
+      // TODO: Delete admin
+    });
   });
 });
+
+// TODO: test updateProducer with incorrect phone number
