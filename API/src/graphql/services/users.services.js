@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
 const personsServices = require('../services/persons.services');
-const ProducersModel = require('../models/producers.modelgql');
 const tokenValidationEmail = require('./tokenValidationEmail.services');
 
 /**
@@ -56,9 +56,9 @@ async function addUser({ firstname, lastname, email, password, image }) {
       firstname,
       lastname,
       email,
-      password,
+      // fixme: Paul: 10 saltRound, c'est suffisant ?
+      password: await bcrypt.hash(password, 10),
       image,
-      followingProducersIds: [],
       emailValidated: false,
       isAdmin: false
     };
@@ -78,7 +78,7 @@ async function addUser({ firstname, lastname, email, password, image }) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({ id, firstname, lastname, email, password, image, followingProducersIds }) {
+async function updateUser({ id, firstname, lastname, email, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
@@ -92,9 +92,9 @@ async function updateUser({ id, firstname, lastname, email, password, image, fol
       firstname,
       lastname,
       email,
-      password,
+      // password,
       image,
-      followingProducersIds: await getAllUsersInReceivedIdList(followingProducersIds),
+      // followingProducersIds: await getAllUsersInReceivedIdList(followingProducersIds),
       emailValidated,
       isAdmin
     };
@@ -117,24 +117,11 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
-// todo: à déplacer dans un fichier Person.services, faire la recherche sur toutes les personnes et faire les tests des tokens!
-async function validateEmailUserByToken(value) {
-  const token = await tokenValidationEmail.validateToken(value);
-  if (token !== null) {
-    const user = await getUserById(token.idPerson);
-    user.emailValidated = true;
-    return updateUser(user) !== null;
-  } else {
-    return new Error('Token not valid');
-  }
-}
-
 module.exports = {
   getUsers,
   addUser,
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList,
-  validateEmailUserByToken
+  getAllUsersInReceivedIdList
 };

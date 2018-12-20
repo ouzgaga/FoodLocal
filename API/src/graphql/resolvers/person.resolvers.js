@@ -16,7 +16,9 @@ const personResolvers = {
   Mutation: {
     addFollowerToProducer: (parent, args, context) => producersServices.addFollowerToProducer(args.producerId, args.personId),
 
-    removeFollowerToProducer: (parent, args, context) => producersServices.removeFollowerToProducer(args.producerId, args.personId)
+    removeFollowerToProducer: (parent, args, context) => producersServices.removeFollowerToProducer(args.producerId, args.personId),
+
+    changePassword: (parent, args, context) => personServices.changePassword(args.newPassword, args.oldPassword, args.personId)
   },
 
   Person: {

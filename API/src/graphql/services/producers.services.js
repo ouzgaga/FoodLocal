@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const ProducersModel = require('../models/producers.modelgql');
-
 const personsServices = require('../services/persons.services');
 const TokenValidationEmailServices = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
@@ -94,7 +94,8 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       firstname,
       lastname,
       email,
-      password, // fixme: il faudra chiffrer le mdp avant de l'enregistrer!
+      // fixme: Paul: 10 saltRound, c'est suffisant ?
+      password: await bcrypt.hash(password, 10),
       image,
       // followingProducersIds: [],
       emailValidated: false,
@@ -137,36 +138,35 @@ function removeProductFromProducer(productId, producerId) {
  *
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
-async function updateProducer({ id, firstname, lastname, email, password, image, followingProducers, followers, phoneNumber, description, website, salespoint }) {
+async function updateProducer({ id, firstname, lastname, email, image, phoneNumber, description, website}) {
   // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }
 
-  const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin productsIds');
+  const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
   if (producerValidation != null) {
     // si producerValidation n'est pas nul -> l'utilisateur existe dans la DB
-    const { emailValidated, isValidated, isAdmin, productsIds } = producerValidation;
+    const { emailValidated, isValidated, isAdmin } = producerValidation;
 
     const producerToUpdate = {
       id,
       firstname,
       lastname,
       email,
-      password, // fixme: il faudra checker que le mdp est correct puis le chiffrer avant de l'enregistrer!
       image,
-      followingProducersIds: followingProducers,
+      // followingProducersIds: followingProducers,
       emailValidated,
       isAdmin,
-      followersIds: followers,
+      // followersIds: followers,
       phoneNumber,
       description,
       website,
-      salespointId: salespoint,
+      // salespointId: salespoint,
       isValidated,
-      productsIds
+      // productsIds
     };
 
     return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié

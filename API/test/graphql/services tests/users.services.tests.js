@@ -134,7 +134,7 @@ describe('tests users services', () => {
       addedUser.firstname.should.be.equal(benoit.firstname);
       addedUser.lastname.should.be.equal(benoit.lastname);
       addedUser.email.should.be.equal(benoit.email);
-      addedUser.password.should.be.equal(benoit.password);
+      addedUser.password.should.be.not.null;
       addedUser.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
@@ -175,10 +175,15 @@ describe('tests users services', () => {
     it('should update a user', async() => {
       // on récupère un utilisateur
       let user = await usersServices.getUserById(antoine.id);
+
+      const { password } = user;
+
       // on le modifie
       user = {
         ...benoit,
-        id: user.id
+        id: user.id,
+        // on tente de modifier le password -> ne devrait pas se modifier lors de l'update
+        password: '12341234'
       };
       // on met à jour dans la DB
       const updatedUser = await usersServices.updateUser(user);
@@ -188,7 +193,8 @@ describe('tests users services', () => {
       updatedUser.firstname.should.be.equal(user.firstname);
       updatedUser.lastname.should.be.equal(user.lastname);
       updatedUser.email.should.be.equal(user.email);
-      updatedUser.password.should.be.equal(user.password);
+      // on check que le password n'ait pas été modifié durant l'update!
+      updatedUser.password.should.be.equal(password);
       updatedUser.image.should.be.equal(user.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!

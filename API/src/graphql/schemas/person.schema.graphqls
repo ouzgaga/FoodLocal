@@ -9,6 +9,9 @@ type Mutation {
 
 	# Supprime la personne correspondant à l'id 'personId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
 	removeFollowerToProducer(producerId: ID!, personId: ID!): Person
+
+	# Permet de modifier le password du producteur correspondant à l'id reçu si l'ancien password entré correspond à celui enregistré dans la base de données. Retourne true si le password a été changé avec succès, false sinon.
+	changePassword(newPassword: String!, oldPassword: String!, personId: ID!): Boolean!
 }
 
 interface Person {
@@ -16,7 +19,7 @@ interface Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# tableau contenant tous les producteur que la personne suit
 	followingProducers:[Producer!]!

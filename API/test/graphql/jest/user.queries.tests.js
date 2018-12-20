@@ -1,15 +1,15 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const usersServices = require('../../../../src/graphql/services/users.services');
-const { resolvers, schema: typeDefs } = require('../../../../src/graphql/graphqlConfig');
-const clearDB = require('../../clearDB');
+const usersServices = require('../../../src/graphql/services/users.services');
+const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const clearDB = require('../clearDB');
 const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../../src/graphql/models/products.modelgql'
+  '../../../src/graphql/models/products.modelgql'
 );
 const {
   queryObjAllUsers,
   queryObjUserById
-} = require('./Objects/QueryObjsUsers');
+} = require('./queries/QueryObjsUsers');
 
 // Making schema graphql
 const schema = makeExecutableSchema({ typeDefs, resolvers });

@@ -326,7 +326,7 @@ describe('tests producers services', () => {
       addedProducer.firstname.should.be.equal(benoit.firstname);
       addedProducer.lastname.should.be.equal(benoit.lastname);
       addedProducer.email.should.be.equal(benoit.email);
-      addedProducer.password.should.be.equal(benoit.password);
+      addedProducer.password.should.be.not.null;
       addedProducer.image.should.be.equal(benoit.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
@@ -409,10 +409,15 @@ describe('tests producers services', () => {
       // on récupère un producteur
       let producer = (await producersServices.getProducerById(antoine.id)).toObject();
       // on le modifie
+      const { password } = producer;
+
       producer = {
         ...benoit,
         id: producer.id,
-        salespoint: benoit.salespointId
+        // on tente de modifier le salespointId -> ne devrait pas se modifier lors de l'update
+        salespoint: benoit.salespointId,
+        // on tente de modifier le password -> ne devrait pas se modifier lors de l'update
+        password: '12341234'
       };
       // on met à jour dans la DB
       const updatedProducer = (await producersServices.updateProducer(producer)).toObject();
@@ -422,7 +427,8 @@ describe('tests producers services', () => {
       updatedProducer.firstname.should.be.equal(producer.firstname);
       updatedProducer.lastname.should.be.equal(producer.lastname);
       updatedProducer.email.should.be.equal(producer.email);
-      updatedProducer.password.should.be.equal(producer.password);
+      // on check que le password n'ait pas été modifié durant l'update!
+      updatedProducer.password.should.be.equal(password);
       updatedProducer.image.should.be.equal(producer.image);
 
       // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
@@ -444,7 +450,7 @@ describe('tests producers services', () => {
       updatedProducer.phoneNumber.should.be.equal(producer.phoneNumber);
       updatedProducer.description.should.be.equal(producer.description);
       updatedProducer.website.should.be.equal(producer.website);
-      updatedProducer.salespointId.should.be.eql(producer.salespointId);
+      expect(updatedProducer.salespointId).to.be.null; // car antoine.salespoint est null et que le salespointId n'est pas modifié lors d'un update
       updatedProducer.isValidated.should.be.equal(producer.isValidated);
 
       // on test le tableau productsIds et son contenu
@@ -462,7 +468,7 @@ describe('tests producers services', () => {
 
         // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
         const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
-        filtredTab.length.should.be.equal(1); //FIXME: bug dans la 2ème itération...!
+        filtredTab.length.should.be.equal(1); // FIXME: bug dans la 2ème itération...!
       }));
       await Promise.all(promisesTestsProductsIds);
     });

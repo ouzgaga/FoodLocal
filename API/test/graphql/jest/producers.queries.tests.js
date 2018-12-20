@@ -1,11 +1,12 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const productsServices = require('../../../../src/graphql/services/products.services');
-const salespointsServices = require('../../../../src/graphql/services/salespoints.services');
-const producersServices = require('../../../../src/graphql/services/producers.services');
-const { resolvers, schema: typeDefs } = require('../../../../src/graphql/graphqlConfig');
-const clearDB = require('../../clearDB'); const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../../src/graphql/models/products.modelgql'
+const productsServices = require('../../../src/graphql/services/products.services');
+const salespointsServices = require('../../../src/graphql/services/salespoints.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
+const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const clearDB = require('../clearDB');
+const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
+  '../../../src/graphql/models/products.modelgql'
 );
 const {
   queryObjAllProducers,
@@ -130,13 +131,11 @@ const clearAndPopulateDB = async() => {
   salespointBenoit = (await salespointsServices.addSalesPoint(salespointBenoit)).toObject();
   benoit.salespoint = salespointBenoit.id;
   benoit = (await producersServices.addProducer(benoit)).toObject();
-  tabProductsBenoit = await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
-  tabProductsBenoit = tabProductsBenoit.map(product => product.toObject());
+  await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
 
   // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
   antoine = (await producersServices.addProducer(antoine)).toObject();
-  tabProductsAntoine = await productsServices.addAllProductsInArray([productPomme], antoine.id);
-  tabProductsAntoine = tabProductsAntoine.map(product => product.toObject());
+  await productsServices.addAllProductsInArray([productPomme], antoine.id);
 };
 
 describe('Testing graphql request producers', () => {

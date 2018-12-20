@@ -1,8 +1,8 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../../src/graphql/graphqlConfig');
-const clearDB = require('../../clearDB');
-const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../../src/graphql/models/products.modelgql');
+const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const clearDB = require('../clearDB');
+const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
 const {
   getAllProductTypeCategories,
   getProductTypeCategoryById,

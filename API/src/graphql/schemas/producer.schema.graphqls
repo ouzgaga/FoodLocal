@@ -31,7 +31,7 @@ type Producer implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# Tableau contenant tous les producteur que la personne suit.
 	followingProducers: [Producer!]!
@@ -63,11 +63,15 @@ input ProducerInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	password: String! # password obligatoire à l'ajout
 	image: String
+
+	# Tableau contenant l'id de tous les producteur que la personne suit.
 	# followingProducersIds:[ID!]!
 	# emailValidated: Boolean!
 	# isAdmin: Boolean!
+
+	# Tableau contenant l'id de tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
 	# followersIds: [ID!]!
 	phoneNumber: String
 	description: String
@@ -82,7 +86,7 @@ input ProducerInputUpdate {
 	firstname: String!
 	lastname: String!
 	email: String!
-	# password: String! // TODO: le password doit être modifié via son propre endpoint -> à rajouter
+	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String
 
 	# Tableau contenant l'id de tous les producteur que la personne suit.

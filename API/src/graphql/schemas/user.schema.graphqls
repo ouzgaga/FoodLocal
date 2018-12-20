@@ -14,7 +14,7 @@ type User implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	followingProducers:[Producer!]!
 	emailValidated: Boolean!
@@ -26,7 +26,7 @@ input UserInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	password: String! # password obligatoire à l'ajout
 	image: String
 	# followingProducersIds:[ID!]
 	# emailValidated: Boolean!
@@ -38,9 +38,9 @@ input UserInputUpdate {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String # faudra l'encoder en base64
-	followingProducersIds:[ID!]  # pas obligatoire si vide
+	# followingProducersIds:[ID!]  # pas obligatoire si vide
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
