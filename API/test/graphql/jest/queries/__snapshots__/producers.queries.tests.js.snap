@@ -1,564 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing graphql request producers MUTATION producers Testing validateAProducer (Producer id) Changing validation producer 1`] = `
+exports[`Testing graphql request producers MUTATION producers Testing validateAProducer (Producer id) Changing validation producer to false 1`] = `
 Object {
   "data": Object {
     "validateAProducer": Object {
-      "description": "Un vrai payouz!",
-      "email": "antoine@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Antoine",
-      "image": "Ceci est l'image d'un tueur encodée en base64!",
-      "isValidated": true,
-      "lastname": "Rochaille",
-      "password": "1234abcd",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme meilleure que celle de Benoît!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-          },
-        },
-      ],
-      "salespoint": Object {
-        "address": Object {
-          "city": "Quelque part par là-bas",
-          "country": "Suisse",
-          "latitude": 1.123418029,
-          "longitude": 1.1234796,
-          "number": 12,
-          "postalCode": "1234",
-          "street": "Chemin de par ici",
-        },
-        "name": "Chez lui, perdu au milieu de rien",
-        "schedule": null,
-      },
-      "website": null,
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing filterProducers(ProductType) Getting producers selling apple 1`] = `
-Object {
-  "data": Object {
-    "filterProducers": Array [
-      Object {
-        "description": "Un chouet gaillard!",
-        "email": "benoit@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Benoît",
-        "image": "Ceci est une image encodée en base64!",
-        "isValidated": false,
-        "lastname": "Schöpfli",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme moins bonne que celle d'antoine!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-          Object {
-            "description": "Une poire bof bof!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de poire encodée en base64!",
-              "name": "Poire",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Yverdon",
-            "country": "Suisse",
-            "latitude": 1.123456789,
-            "longitude": 1.1234567,
-            "number": 6,
-            "postalCode": "1400",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez moi",
-          "schedule": Object {
-            "friday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-            "monday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-              Object {
-                "closingHour": "18:00",
-                "openingHour": "13:00",
-              },
-            ],
-            "saturday": Array [],
-            "sunday": Array [],
-            "thursday": Array [],
-            "tuesday": Array [],
-            "wednesday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-          },
-        },
-        "website": "benoit-paysan.ch",
-      },
-      Object {
-        "description": "Un vrai payouz!",
-        "email": "antoine@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Antoine",
-        "image": "Ceci est l'image d'un tueur encodée en base64!",
-        "isValidated": false,
-        "lastname": "Rochaille",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme meilleure que celle de Benoît!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Quelque part par là-bas",
-            "country": "Suisse",
-            "latitude": 1.123418029,
-            "longitude": 1.1234796,
-            "number": 12,
-            "postalCode": "1234",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez lui, perdu au milieu de rien",
-          "schedule": null,
-        },
-        "website": null,
-      },
-    ],
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing filterProducers(ProductType) Getting producers selling perry 1`] = `
-Object {
-  "data": Object {
-    "filterProducers": Array [
-      Object {
-        "description": "Un chouet gaillard!",
-        "email": "benoit@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Benoît",
-        "image": "Ceci est une image encodée en base64!",
-        "isValidated": false,
-        "lastname": "Schöpfli",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme moins bonne que celle d'antoine!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-          Object {
-            "description": "Une poire bof bof!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de poire encodée en base64!",
-              "name": "Poire",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Yverdon",
-            "country": "Suisse",
-            "latitude": 1.123456789,
-            "longitude": 1.1234567,
-            "number": 6,
-            "postalCode": "1400",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez moi",
-          "schedule": Object {
-            "friday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-            "monday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-              Object {
-                "closingHour": "18:00",
-                "openingHour": "13:00",
-              },
-            ],
-            "saturday": Array [],
-            "sunday": Array [],
-            "thursday": Array [],
-            "tuesday": Array [],
-            "wednesday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-          },
-        },
-        "website": "benoit-paysan.ch",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) Getting producer by id with schedule 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
-      "description": "Un chouet gaillard!",
-      "email": "benoit@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Benoît",
-      "image": "Ceci est une image encodée en base64!",
-      "isValidated": false,
-      "lastname": "Schöpfli",
-      "password": "1234abcd",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme moins bonne que celle d'antoine!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-          },
-        },
-        Object {
-          "description": "Une poire bof bof!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de poire encodée en base64!",
-            "name": "Poire",
-          },
-        },
-      ],
-      "salespoint": Object {
-        "address": Object {
-          "city": "Yverdon",
-          "country": "Suisse",
-          "latitude": 1.123456789,
-          "longitude": 1.1234567,
-          "number": 6,
-          "postalCode": "1400",
-          "street": "Chemin de par ici",
-        },
-        "name": "Chez moi",
-        "schedule": Object {
-          "friday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-          "monday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-            Object {
-              "closingHour": "18:00",
-              "openingHour": "13:00",
-            },
-          ],
-          "saturday": Array [],
-          "sunday": Array [],
-          "thursday": Array [],
-          "tuesday": Array [],
-          "wednesday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-        },
-      },
-      "website": "benoit-paysan.ch",
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) Getting producer by id without schedule 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
-      "description": "Un vrai payouz!",
-      "email": "antoine@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Antoine",
-      "image": "Ceci est l'image d'un tueur encodée en base64!",
-      "isValidated": false,
-      "lastname": "Rochaille",
-      "password": "1234abcd",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme meilleure que celle de Benoît!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-          },
-        },
-      ],
-      "salespoint": Object {
-        "address": Object {
-          "city": "Quelque part par là-bas",
-          "country": "Suisse",
-          "latitude": 1.123418029,
-          "longitude": 1.1234796,
-          "number": 12,
-          "postalCode": "1234",
-          "street": "Chemin de par ici",
-        },
-        "name": "Chez lui, perdu au milieu de rien",
-        "schedule": null,
-      },
-      "website": null,
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should fail getting a producer because unknown id received 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
-      "description": "Un chouet gaillard!",
-      "email": "benoit@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Benoît",
-      "image": "Ceci est une image encodée en base64!",
-      "isValidated": false,
-      "lastname": "Schöpfli",
-      "password": "1234abcd",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme monnnnstre bonne!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-          },
-        },
-        Object {
-          "description": "Une poire de folie!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de poire encodée en base64!",
-            "name": "Poire",
-          },
-        },
-      ],
-      "salespoint": Object {
-        "address": Object {
-          "city": "Yverdon",
-          "country": "Suisse",
-          "latitude": 1.123456789,
-          "longitude": 1.1234567,
-          "number": 6,
-          "postalCode": "1400",
-          "street": "Chemin de par ici",
-        },
-        "name": "Chez moi",
-        "schedule": Object {
-          "friday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-          "monday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-            Object {
-              "closingHour": "18:00",
-              "openingHour": "13:00",
-            },
-          ],
-          "saturday": Array [],
-          "sunday": Array [],
-          "thursday": Array [],
-          "tuesday": Array [],
-          "wednesday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-        },
-      },
-      "website": "benoitpaysan.ch",
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (with schedule) 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
-      "description": "Un chouet gaillard!",
-      "email": "benoit@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Benoît",
-      "image": "Ceci est une image encodée en base64!",
-      "isValidated": false,
-      "lastname": "Schöpfli",
-      "password": "1234abcd",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme monnnnstre bonne!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-          },
-        },
-        Object {
-          "description": "Une poire de folie!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de poire encodée en base64!",
-            "name": "Poire",
-          },
-        },
-      ],
-      "salespoint": Object {
-        "address": Object {
-          "city": "Yverdon",
-          "country": "Suisse",
-          "latitude": 1.123456789,
-          "longitude": 1.1234567,
-          "number": 6,
-          "postalCode": "1400",
-          "street": "Chemin de par ici",
-        },
-        "name": "Chez moi",
-        "schedule": Object {
-          "friday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-          "monday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-            Object {
-              "closingHour": "18:00",
-              "openingHour": "13:00",
-            },
-          ],
-          "saturday": Array [],
-          "sunday": Array [],
-          "thursday": Array [],
-          "tuesday": Array [],
-          "wednesday": Array [
-            Object {
-              "closingHour": "12:00",
-              "openingHour": "08:00",
-            },
-          ],
-        },
-      },
-      "website": "benoitpaysan.ch",
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (with schedule) 2`] = `
-Object {
-  "data": Object {
-    "producer": null,
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (without schedule) 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
       "description": "Un vrai payouz!",
       "email": "antoine@paysan.ch",
       "emailValidated": false,
@@ -588,218 +33,43 @@ Object {
 }
 `;
 
-exports[`Testing graphql request producers QUERY producers Testing producerWaitingForValidation() Getting producers waiting for validation (1/2) 1`] = `
+exports[`Testing graphql request producers MUTATION producers Testing validateAProducer (Producer id) Changing validation producer to true 1`] = `
 Object {
   "data": Object {
-    "producersWaitingForValidation": Array [
-      Object {
-        "description": "Un chouet gaillard!",
-        "email": "benoit@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Benoît",
-        "image": "Ceci est une image encodée en base64!",
-        "isValidated": false,
-        "lastname": "Schöpfli",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme moins bonne que celle d'antoine!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
+    "validateAProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": true,
+      "lastname": "Rochaille",
+      "password": "1234abcd",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
             },
-          },
-          Object {
-            "description": "Une poire bof bof!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de poire encodée en base64!",
-              "name": "Poire",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Yverdon",
-            "country": "Suisse",
-            "latitude": 1.123456789,
-            "longitude": 1.1234567,
-            "number": 6,
-            "postalCode": "1400",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez moi",
-          "schedule": Object {
-            "friday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-            "monday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-              Object {
-                "closingHour": "18:00",
-                "openingHour": "13:00",
-              },
-            ],
-            "saturday": Array [],
-            "sunday": Array [],
-            "thursday": Array [],
-            "tuesday": Array [],
-            "wednesday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
           },
         },
-        "website": "benoit-paysan.ch",
-      },
-      Object {
-        "description": "Un vrai payouz!",
-        "email": "antoine@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Antoine",
-        "image": "Ceci est l'image d'un tueur encodée en base64!",
-        "isValidated": false,
-        "lastname": "Rochaille",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme meilleure que celle de Benoît!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Quelque part par là-bas",
-            "country": "Suisse",
-            "latitude": 1.123418029,
-            "longitude": 1.1234796,
-            "number": 12,
-            "postalCode": "1234",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez lui, perdu au milieu de rien",
-          "schedule": null,
-        },
-        "website": null,
-      },
-    ],
+      ],
+      "salespoint": null,
+      "website": null,
+    },
   },
 }
 `;
 
-exports[`Testing graphql request producers QUERY producers Testing producerWaitingForValidation() Getting producers waiting for validation (1/2) 2`] = `
+exports[`Testing graphql request producers QUERY producers Testing filterProducers(ProductType) Getting producers selling apple 1`] = `
 Object {
   "data": Object {
-    "producersWaitingForValidation": Array [
-      Object {
-        "description": "Un chouet gaillard!",
-        "email": "benoit@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Benoît",
-        "image": "Ceci est une image encodée en base64!",
-        "isValidated": false,
-        "lastname": "Schöpfli",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme moins bonne que celle d'antoine!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-          Object {
-            "description": "Une poire bof bof!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de poire encodée en base64!",
-              "name": "Poire",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Yverdon",
-            "country": "Suisse",
-            "latitude": 1.123456789,
-            "longitude": 1.1234567,
-            "number": 6,
-            "postalCode": "1400",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez moi",
-          "schedule": Object {
-            "friday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-            "monday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-              Object {
-                "closingHour": "18:00",
-                "openingHour": "13:00",
-              },
-            ],
-            "saturday": Array [],
-            "sunday": Array [],
-            "thursday": Array [],
-            "tuesday": Array [],
-            "wednesday": Array [
-              Object {
-                "closingHour": "12:00",
-                "openingHour": "08:00",
-              },
-            ],
-          },
-        },
-        "website": "benoit-paysan.ch",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producerWaitingForValidation() should get all producers waiting for validation 1`] = `
-Object {
-  "data": Object {
-    "producersWaitingForValidation": Array [
+    "filterProducers": Array [
       Object {
         "description": "Un chouet gaillard!",
         "email": "benoit@paysan.ch",
@@ -907,10 +177,10 @@ Object {
 }
 `;
 
-exports[`Testing graphql request producers QUERY producers Testing producerWaitingForValidation() should get all producers waiting for validation 2`] = `
+exports[`Testing graphql request producers QUERY producers Testing filterProducers(ProductType) Getting producers selling perry 1`] = `
 Object {
   "data": Object {
-    "producersWaitingForValidation": Array [
+    "filterProducers": Array [
       Object {
         "description": "Un chouet gaillard!",
         "email": "benoit@paysan.ch",
@@ -992,10 +262,145 @@ Object {
 }
 `;
 
-exports[`Testing graphql request producers QUERY producers Testing producers() Getting all producers 1`] = `
+exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should fail getting a producer beaucse invalid id received 1`] = `
 Object {
   "data": Object {
-    "producers": Array [
+    "producer": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producer.id is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should fail getting a producer because unknown id received 1`] = `
+Object {
+  "data": Object {
+    "producer": null,
+  },
+}
+`;
+
+exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (with schedule) 1`] = `
+Object {
+  "data": Object {
+    "producer": Object {
+      "description": "Un chouet gaillard!",
+      "email": "benoit@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Benoît",
+      "image": "Ceci est une image encodée en base64!",
+      "isValidated": false,
+      "lastname": "Schöpfli",
+      "password": "1234abcd",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+        Object {
+          "description": "Une poire de folie!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de poire encodée en base64!",
+            "name": "Poire",
+          },
+        },
+      ],
+      "salespoint": Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 1.123456789,
+          "longitude": 1.1234567,
+          "number": 6,
+          "postalCode": "1400",
+          "street": "Chemin de par ici",
+        },
+        "name": "Chez moi",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+      "website": "benoitpaysan.ch",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (without schedule) 1`] = `
+Object {
+  "data": Object {
+    "producer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "password": "1234abcd",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers QUERY producers Testing producerWaitingForValidation() should get all producers waiting for validation 1`] = `
+Object {
+  "data": Object {
+    "producersWaitingForValidation": Array [
       Object {
         "description": "Un chouet gaillard!",
         "email": "benoit@paysan.ch",
@@ -1008,7 +413,7 @@ Object {
         "phoneNumber": "0761435196",
         "products": Array [
           Object {
-            "description": "Une pomme moins bonne que celle d'antoine!",
+            "description": "Une pomme monnnnstre bonne!",
             "productType": Object {
               "category": Object {
                 "image": "ceci est une image de fruits encodée en base64!",
@@ -1019,7 +424,7 @@ Object {
             },
           },
           Object {
-            "description": "Une poire bof bof!",
+            "description": "Une poire de folie!",
             "productType": Object {
               "category": Object {
                 "image": "ceci est une image de fruits encodée en base64!",
@@ -1070,45 +475,7 @@ Object {
             ],
           },
         },
-        "website": "benoit-paysan.ch",
-      },
-      Object {
-        "description": "Un vrai payouz!",
-        "email": "antoine@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Antoine",
-        "image": "Ceci est l'image d'un tueur encodée en base64!",
-        "isValidated": false,
-        "lastname": "Rochaille",
-        "password": "1234abcd",
-        "phoneNumber": "0761435196",
-        "products": Array [
-          Object {
-            "description": "Une pomme meilleure que celle de Benoît!",
-            "productType": Object {
-              "category": Object {
-                "image": "ceci est une image de fruits encodée en base64!",
-                "name": "Fruits",
-              },
-              "image": "ceci est une image de pomme encodée en base64!",
-              "name": "Pomme",
-            },
-          },
-        ],
-        "salespoint": Object {
-          "address": Object {
-            "city": "Quelque part par là-bas",
-            "country": "Suisse",
-            "latitude": 1.123418029,
-            "longitude": 1.1234796,
-            "number": 12,
-            "postalCode": "1234",
-            "street": "Chemin de par ici",
-          },
-          "name": "Chez lui, perdu au milieu de rien",
-          "schedule": null,
-        },
-        "website": null,
+        "website": "benoitpaysan.ch",
       },
     ],
   },
