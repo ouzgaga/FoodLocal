@@ -1,5 +1,106 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding empty producer 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producer" got invalid value {}; Field value.firstname of required type String! was not provided.],
+    [GraphQLError: Variable "$producer" got invalid value {}; Field value.lastname of required type String! was not provided.],
+    [GraphQLError: Variable "$producer" got invalid value {}; Field value.email of required type String! was not provided.],
+    [GraphQLError: Variable "$producer" got invalid value {}; Field value.password of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer correctly 1`] = `
+Object {
+  "data": Object {
+    "addProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with empty email 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: producers validation failed: email: Path \`email\` is required.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with empty firstname 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: producers validation failed: firstname: Path \`firstname\` is required.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with empty lastname 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: producers validation failed: lastname: Path \`lastname\` is required.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with empty password 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: producers validation failed: password: Path \`password\` is required.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with null email 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producer" got invalid value { firstname: "Antoine", lastname: "Rochaille", email: null, password: "1234abcd", image: "Ceci est l'image d'un tueur encodée en base64!", phoneNumber: "0761435196", description: "Un vrai payouz!" }; Expected non-nullable type String! not to be null at value.email.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with null firstname 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producer" got invalid value { firstname: null, lastname: "Rochaille", email: "antoine@paysan.ch", password: "1234abcd", image: "Ceci est l'image d'un tueur encodée en base64!", phoneNumber: "0761435196", description: "Un vrai payouz!" }; Expected non-nullable type String! not to be null at value.firstname.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with null lastname 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producer" got invalid value { firstname: "Antoine", lastname: null, email: "antoine@paysan.ch", password: "1234abcd", image: "Ceci est l'image d'un tueur encodée en base64!", phoneNumber: "0761435196", description: "Un vrai payouz!" }; Expected non-nullable type String! not to be null at value.lastname.],
+  ],
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers Testing addProducer Adding producer with null password 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producer" got invalid value { firstname: "Antoine", lastname: "Rochaille", email: "antoine@paysan.ch", password: null, image: "Ceci est l'image d'un tueur encodée en base64!", phoneNumber: "0761435196", description: "Un vrai payouz!" }; Expected non-nullable type String! not to be null at value.password.],
+  ],
+}
+`;
+
 exports[`Testing graphql request producers MUTATION producers Testing validateAProducer (Producer id) Changing validation producer to false 1`] = `
 Object {
   "data": Object {
@@ -8,10 +109,11 @@ Object {
       "email": "antoine@paysan.ch",
       "emailValidated": false,
       "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
       "image": "Ceci est l'image d'un tueur encodée en base64!",
       "isValidated": false,
       "lastname": "Rochaille",
-      "password": "1234abcd",
       "phoneNumber": "0761435196",
       "products": Array [
         Object {
@@ -41,10 +143,11 @@ Object {
       "email": "antoine@paysan.ch",
       "emailValidated": false,
       "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
       "image": "Ceci est l'image d'un tueur encodée en base64!",
       "isValidated": true,
       "lastname": "Rochaille",
-      "password": "1234abcd",
       "phoneNumber": "0761435196",
       "products": Array [
         Object {
@@ -61,6 +164,354 @@ Object {
       ],
       "salespoint": null,
       "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers deleteProducer Delete correctly producer 1`] = `
+Object {
+  "data": Object {
+    "deleteProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers deleteProducer Delete unknow user (wrong id) 1`] = `
+Object {
+  "data": Object {
+    "deleteProducer": null,
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer description correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "testDesc",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer email correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "test@test.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer email correctly 2`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "test",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer firstname correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "bob",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer firstname correctly without giving all object 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": null,
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "bob",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": null,
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": null,
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer image correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "test",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer lastname correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "test",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer phoneNumber correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "7357",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request producers MUTATION producers updateProducer updateProducer website correctly 1`] = `
+Object {
+  "data": Object {
+    "updateProducer": Object {
+      "description": "Un vrai payouz!",
+      "email": "antoine@paysan.ch",
+      "emailValidated": false,
+      "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
+      "image": "Ceci est l'image d'un tueur encodée en base64!",
+      "isValidated": false,
+      "lastname": "Rochaille",
+      "phoneNumber": "0761435196",
+      "products": Array [
+        Object {
+          "description": "Une pomme monnnnstre bonne!",
+          "productType": Object {
+            "category": Object {
+              "image": "ceci est une image de fruits encodée en base64!",
+              "name": "Fruits",
+            },
+            "image": "ceci est une image de pomme encodée en base64!",
+            "name": "Pomme",
+          },
+        },
+      ],
+      "salespoint": null,
+      "website": "www.test.ch",
     },
   },
 }
@@ -289,10 +740,11 @@ Object {
       "email": "benoit@paysan.ch",
       "emailValidated": false,
       "firstname": "Benoît",
+      "followers": Array [],
+      "followingProducers": Array [],
       "image": "Ceci est une image encodée en base64!",
       "isValidated": false,
       "lastname": "Schöpfli",
-      "password": "1234abcd",
       "phoneNumber": "0761435196",
       "products": Array [
         Object {
@@ -372,10 +824,11 @@ Object {
       "email": "antoine@paysan.ch",
       "emailValidated": false,
       "firstname": "Antoine",
+      "followers": Array [],
+      "followingProducers": Array [],
       "image": "Ceci est l'image d'un tueur encodée en base64!",
       "isValidated": false,
       "lastname": "Rochaille",
-      "password": "1234abcd",
       "phoneNumber": "0761435196",
       "products": Array [
         Object {
@@ -491,10 +944,11 @@ Object {
         "email": "benoit@paysan.ch",
         "emailValidated": false,
         "firstname": "Benoît",
+        "followers": Array [],
+        "followingProducers": Array [],
         "image": "Ceci est une image encodée en base64!",
         "isValidated": false,
         "lastname": "Schöpfli",
-        "password": "1234abcd",
         "phoneNumber": "0761435196",
         "products": Array [
           Object {
@@ -567,10 +1021,11 @@ Object {
         "email": "antoine@paysan.ch",
         "emailValidated": false,
         "firstname": "Antoine",
+        "followers": Array [],
+        "followingProducers": Array [],
         "image": "Ceci est l'image d'un tueur encodée en base64!",
         "isValidated": false,
         "lastname": "Rochaille",
-        "password": "1234abcd",
         "phoneNumber": "0761435196",
         "products": Array [
           Object {
