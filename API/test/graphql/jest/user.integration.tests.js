@@ -53,26 +53,29 @@ describe('Testing graphql resquest user', () => {
   describe('QUERY user', () => {
     describe('Testing user()', () => {
       beforeEach(() => clearAndPopulateDB());
+
       it('Should get the two user insert in the db', async (done) => {
         const { query, variables, context } = queryObjAllUsers;
-        const result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query,null, context, variables);
         expect.assertions(2);
         expect(result.data.users.length).toEqual(tabUsers.length);
         expect(result).toMatchSnapshot();
         done();
       });
     });
+
     describe('Testing user(userId)', () => {
       beforeEach(() => clearAndPopulateDB());
       it('Should get benoit by his id', async (done) => {
         const { query, context } = queryObjUserById;
-        const variables = {id: antoine.id };
+        const variables = { id: antoine.id };
         const result = await graphql(schema, query, null, context, variables);
         expect.assertions(2);
         expect(result.data.user.email).toEqual(antoine.email);
         expect(result).toMatchSnapshot();
         done();
       });
+
       it('Should get an erro by using a bad id', async (done) => {
         const { query, context } = queryObjUserById;
         const variables = { id: 'abcdefabcdefabcdefbacdef' };
@@ -84,5 +87,4 @@ describe('Testing graphql resquest user', () => {
       });
     });
   });
-
 });

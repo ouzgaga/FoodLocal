@@ -1,46 +1,43 @@
 const queryObjAllUsers = {
   query: `
-    query{
-      users{
+  query {
+    users {
+      firstname
+      lastname
+      email
+      image
+      followingProducers {
         firstname
         lastname
         email
         image
         emailValidated
-        followingProducers{
-          firstname
-          lastname
-          email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
+        phoneNumber
+        rating {
+          nbRatings
+          rating
         }
       }
+      emailValidated
+      isAdmin
     }
-  `,
+  }`,
   variables: {},
   context: {},
 };
 
 const queryObjUserById = {
   query: `
-    query($id: ID!){
-      user(userId: $id){
+    query ($id: ID!){
+      user(userId: $id) {
         firstname
         lastname
         email
         image
-        emailValidated
-        followingProducers{
+        followingProducers {
           firstname
           lastname
           email
-          password
           image
           emailValidated
           phoneNumber
@@ -49,9 +46,10 @@ const queryObjUserById = {
             rating
           }
         }
+        emailValidated
+        isAdmin
       }
-    }
-  `,
+    }`,
   variables: {},
   context: {},
 };

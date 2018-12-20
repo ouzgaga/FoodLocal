@@ -6,40 +6,21 @@ const queryObjAllProducers = {
         lastname
         email
         image
-        emailValidated
-        phoneNumber
-        description
-        website
-        isValidated
         followingProducers{
           firstname
           lastname
           email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
         }
+        emailValidated
+        isAdmin
         followers{
           firstname
           lastname
           email
         }
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
+        phoneNumber
+        description
+        website
         salespoint{
           name
           address{
@@ -47,12 +28,13 @@ const queryObjAllProducers = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -82,99 +64,122 @@ const queryObjAllProducers = {
             }
           }
         }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
       }
-    }
-  `,
+    }`,
   variables: {},
   context: {},
 };
 
 const queryObjProducerById = {
   query: `
-          query($id: ID!){
-            producer(producerId: $id){
+    query($id: ID!){
+      producer(producerId: $id){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
               firstname
               lastname
               email
-              image
-              emailValidated
-              phoneNumber
-              description
-              website
-              isValidated
-              followingProducers{
-                firstname
-                lastname
-                email
-                password
-                image
-                emailValidated
-                phoneNumber
-                rating {
-                  nbRatings
-                  rating
-                }
-              }
-              followers{
-                firstname
-                lastname
-                email
-              }
-              products{
-                description
-                productType{
-                  name
-                  image
-                  category{
-                    name
-                    image
-                  }
-                }
-              }
-              salespoint{
-                name
-                address{
-                  number
-                  street
-                  city
-                  postalCode
-                  country
-                  longitude
-                  latitude
-                }
-                schedule {
-                  monday {
-                    openingHour
-                    closingHour
-                  }
-                  tuesday{
-                    openingHour
-                    closingHour
-                  }
-                  wednesday{
-                    openingHour
-                    closingHour
-                  }
-                  thursday{
-                    openingHour
-                    closingHour
-                  }
-                  friday{
-                    openingHour
-                    closingHour
-                  }
-                  saturday{
-                    openingHour
-                    closingHour
-                  }
-                  sunday{
-                    openingHour
-                    closingHour
-                  }
-                }
-              }
             }
-          }`,
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`,
   variables: {},
   context: {},
 };
@@ -186,24 +191,22 @@ const queryObjGetProducersWaitingForValidation = {
         firstname
         lastname
         email
-        password
         image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
         emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
         phoneNumber
         description
         website
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
         salespoint{
           name
           address{
@@ -211,12 +214,13 @@ const queryObjGetProducersWaitingForValidation = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -245,6 +249,27 @@ const queryObjGetProducersWaitingForValidation = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,
@@ -259,24 +284,22 @@ const queryObjGetFilterProducers = {
         firstname
         lastname
         email
-        password
         image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
         emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
         phoneNumber
         description
         website
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
         salespoint{
           name
           address{
@@ -284,12 +307,13 @@ const queryObjGetFilterProducers = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -318,6 +342,27 @@ const queryObjGetFilterProducers = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,
@@ -333,40 +378,21 @@ const mutationValidateProducer = {
         lastname
         email
         image
-        emailValidated
-        phoneNumber
-        description
-        website
-        isValidated
         followingProducers{
           firstname
           lastname
           email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
         }
+        emailValidated
+        isAdmin
         followers{
           firstname
           lastname
           email
         }
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
+        phoneNumber
+        description
+        website
         salespoint{
           name
           address{
@@ -374,12 +400,13 @@ const mutationValidateProducer = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -408,6 +435,27 @@ const mutationValidateProducer = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,
@@ -423,40 +471,21 @@ const mutationAddProducer = {
         lastname
         email
         image
-        emailValidated
-        phoneNumber
-        description
-        website
-        isValidated
         followingProducers{
           firstname
           lastname
           email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
         }
+        emailValidated
+        isAdmin
         followers{
           firstname
           lastname
           email
         }
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
+        phoneNumber
+        description
+        website
         salespoint{
           name
           address{
@@ -464,12 +493,13 @@ const mutationAddProducer = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -498,6 +528,27 @@ const mutationAddProducer = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,
@@ -513,40 +564,21 @@ const mutationUpdateProducer = {
         lastname
         email
         image
-        emailValidated
-        phoneNumber
-        description
-        website
-        isValidated
         followingProducers{
           firstname
           lastname
           email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
         }
+        emailValidated
+        isAdmin
         followers{
           firstname
           lastname
           email
         }
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
+        phoneNumber
+        description
+        website
         salespoint{
           name
           address{
@@ -554,12 +586,13 @@ const mutationUpdateProducer = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -588,6 +621,27 @@ const mutationUpdateProducer = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,
@@ -603,40 +657,21 @@ const mutationDeleteProducer = {
         lastname
         email
         image
-        emailValidated
-        phoneNumber
-        description
-        website
-        isValidated
         followingProducers{
           firstname
           lastname
           email
-          password
-          image
-          emailValidated
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
         }
+        emailValidated
+        isAdmin
         followers{
           firstname
           lastname
           email
         }
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-          }
-        }
+        phoneNumber
+        description
+        website
         salespoint{
           name
           address{
@@ -644,12 +679,13 @@ const mutationDeleteProducer = {
             street
             city
             postalCode
+            state
             country
             longitude
             latitude
           }
-          schedule {
-            monday {
+          schedule{
+            monday{
               openingHour
               closingHour
             }
@@ -678,6 +714,27 @@ const mutationDeleteProducer = {
               closingHour
             }
           }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
         }
       }
     }`,

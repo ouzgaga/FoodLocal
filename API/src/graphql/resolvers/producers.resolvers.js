@@ -25,8 +25,6 @@ const producerResolvers = {
   },
 
   Producer: {
-    password: (parent, args, context) => null,
-
     followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),

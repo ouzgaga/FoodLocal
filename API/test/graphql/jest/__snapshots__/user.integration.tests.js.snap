@@ -10,6 +10,7 @@ Object {
         "firstname": "Benoît",
         "followingProducers": Array [],
         "image": "ceci est une image encodée en base64!",
+        "isAdmin": false,
         "lastname": "Schöpfli",
       },
       Object {
@@ -18,6 +19,7 @@ Object {
         "firstname": "Antoine",
         "followingProducers": Array [],
         "image": "ceci est l'image d'un tueur encodée en base64!",
+        "isAdmin": false,
         "lastname": "Rochaille",
       },
     ],
@@ -42,46 +44,7 @@ Object {
       "firstname": "Antoine",
       "followingProducers": Array [],
       "image": "ceci est l'image d'un tueur encodée en base64!",
-      "lastname": "Rochaille",
-    },
-  },
-}
-`;
-
-exports[`Testing graphql resquest user QUERY user Testing users() 1`] = `
-Object {
-  "data": Object {
-    "users": Array [
-      Object {
-        "email": "benoit@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Benoît",
-        "followingProducers": Array [],
-        "image": "ceci est une image encodée en base64!",
-        "lastname": "Schöpfli",
-      },
-      Object {
-        "email": "antoine@paysan.ch",
-        "emailValidated": false,
-        "firstname": "Antoine",
-        "followingProducers": Array [],
-        "image": "ceci est l'image d'un tueur encodée en base64!",
-        "lastname": "Rochaille",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Testing graphql resquest user Testing user(userId) Should get benoit by his id 1`] = `
-Object {
-  "data": Object {
-    "user": Object {
-      "email": "antoine@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Antoine",
-      "followingProducers": Array [],
-      "image": "ceci est l'image d'un tueur encodée en base64!",
+      "isAdmin": false,
       "lastname": "Rochaille",
     },
   },

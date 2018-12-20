@@ -106,9 +106,6 @@ let antoine = {
   description: 'Un vrai payouz!'
 };
 
-let tabProductsBenoit = [];
-let tabProductsAntoine = [];
-
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
   await clearDB();
@@ -139,6 +136,7 @@ const clearAndPopulateDB = async() => {
 };
 
 describe('Testing graphql request producers', () => {
+
   describe('QUERY producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
@@ -155,7 +153,7 @@ describe('Testing graphql request producers', () => {
 
     // ----------------------Producer(id)-------------------------------------- //
     describe('Testing producer(ProducerId)', () => {
-      it('should get a producer by id (without schedule)', async(done) => {
+      it('should get a producer by id (without salespoint)', async(done) => {
         const { query, context } = queryObjProducerById;
         const variables = { id: antoine.id };
         const result = await graphql(schema, query, null, context, variables);
@@ -164,7 +162,7 @@ describe('Testing graphql request producers', () => {
         done();
       });
 
-      it('should get a producer by id (with schedule)', async(done) => {
+      it('should get a producer by id (with salespoint)', async(done) => {
         const { query, context } = queryObjProducerById;
         const variables = { id: benoit.id };
         const result = await graphql(schema, query, null, context, variables);
@@ -183,11 +181,24 @@ describe('Testing graphql request producers', () => {
         done();
       });
 
-      it('should fail getting a producer beaucse invalid id received', async(done) => {
+      it('should fail getting a producer because invalid id received (too short)', async(done) => {
         const { query, context } = queryObjProducerById;
-        const variables = { id: 'badid' };
+        const variables = { id: 'abcdef' };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(3);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
+        expect(result.data.producer).toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail getting a producer because invalid id received (too long)', async(done) => {
+        const { query, context } = queryObjProducerById;
+        const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
         expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
         expect(result.data.producer).toBeNull();
         expect(result).toMatchSnapshot();
@@ -201,12 +212,13 @@ describe('Testing graphql request producers', () => {
         const { query, variables, context } = queryObjGetProducersWaitingForValidation;
         let result = await graphql(schema, query, null, context, variables);
         expect.assertions(4);
+        // on check qu'il y a bien 2 producteurs en attente de validation
         expect(result.data.producersWaitingForValidation.length).toEqual(2);
 
         // on valide un producteur
         await producersServices.validateAProducer(antoine.id, true);
 
-        // il ne doit rester plus qu'un producteur en attente de validation
+        // on check qu'il ne reste plus qu'un producteur en attente de validation
         result = await graphql(schema, query, null, context, variables);
         expect(result.data.producersWaitingForValidation.length).toEqual(1);
         expect(result.data.producersWaitingForValidation[0].firstname).toEqual('Benoît');
@@ -217,21 +229,23 @@ describe('Testing graphql request producers', () => {
 
     // --------------------filterProducers(ProductType)------------------------------------------ //
     describe('Testing filterProducers(ProductType)', () => {
-      it('Getting producers selling apple', async(done) => {
+      it('should get all producers producing one or more products of productType "apple"', async(done) => {
         const { query, context } = queryObjGetFilterProducers;
         const variables = { id: [productTypePomme.id] };
         const result = await graphql(schema, query, null, context, variables);
         expect.assertions(2);
+        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Pomme"
         expect(result.data.filterProducers.length).toEqual(2);
         expect(result).toMatchSnapshot();
         done();
       });
 
-      it('Getting producers selling perry', async(done) => {
+      it('should get all producers producing one or more products of productTypeCategory "perry"', async(done) => {
         const { query, context } = queryObjGetFilterProducers;
         const variables = { id: [productTypePoire.id] };
-        expect.assertions(2);
         const result = await graphql(schema, query, null, context, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Pomme"
         expect(result.data.filterProducers.length).toEqual(1);
         expect(result).toMatchSnapshot();
         done();
@@ -242,8 +256,8 @@ describe('Testing graphql request producers', () => {
   describe('MUTATION producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    describe('Testing validateAProducer (Producer id)', () => {
-      it('Changing validation producer to true', async(done) => {
+    describe('Testing validateAProducer(Producer id)', () => {
+      it('should change the validation state of a producer to true', async(done) => {
         const { mutation, context } = mutationValidateProducer;
         const variables = { producerId: antoine.id, state: true };
         const result = await graphql(schema, mutation, null, context, variables);
@@ -252,7 +266,8 @@ describe('Testing graphql request producers', () => {
         expect(result).toMatchSnapshot();
         done();
       });
-      it('Changing validation producer to false', async (done) => {
+
+      it('should change the validation state of a producer to false', async (done) => {
         await producersServices.validateAProducer(antoine.id, true);
         const { mutation, context } = mutationValidateProducer;
         const variables = { producerId: antoine.id, state: false };
