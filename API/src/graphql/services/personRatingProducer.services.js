@@ -96,26 +96,25 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
 }
 
 async function updateProducerRating(producerId) {
-  // pas besoin de checker la validité de l'id -> il l'est forcément!
-  const nbRatings = await PersonRatingProducerModel.count({ producerId });
-
-  // FIXME: PAUL: j'arrive pas à faire fonctionner le aggregate...?
-  /*
-  const rating = await PersonRatingProducerModel.aggregate([
-    { $match: { producerId } },
-    { $group: { _id: 'producerId', average: { $avg: 'rating' } } }
+  // TODO: tester si ça fonctionne de lui passer un objectId !
+  let rating = await PersonRatingProducerModel.aggregate([
+    { $match: { producerId: mongoose.Types.ObjectId(producerId) } },
+    { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
+    { $project: { _id: false } }
   ]);
-  */
 
-  let ratings = await PersonRatingProducerModel.find({ producerId });
-  if (ratings.length !== 0) {
-    ratings = await ratings.map(r => r.toObject());
-    let { rating } = ratings.reduce((r1, r2) => ({ rating: (r1.rating + r2.rating) }));
-    rating = rating / nbRatings;
-    return ProducersServices.updateProducerRating(producerId, { nbRatings, rating });
+  if (rating.length === 0) {
+    rating = rating[0];
+    rating = {
+      rating: null,
+      nbRatings: null
+    };
   } else {
-    return ProducersServices.updateProducerRating(producerId, { nbRating: null, rating: null });
+    rating = rating[0];
   }
+
+  return ProducersServices.updateProducerRating(producerId, rating);
+
 }
 
 /**

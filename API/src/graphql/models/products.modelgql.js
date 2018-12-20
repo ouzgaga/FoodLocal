@@ -72,24 +72,16 @@ const productTypeCategoryModel = mongoose.model('productTypeCategory', ProductTy
  * Vérifie l'existence du productTypeId entrés.
  * Lève une erreur s'il n'existe pas dans la collection des productType.
  */
-// FIXME: Paul: pourquoi intelliJ me met le aysnc en jaune?
-ProductSchema.pre('save', async function(next, err) {
+ProductSchema.pre('save', async function(next) {
   const productTypeId = await productTypeModel.findById(this.productTypeId);
 
   if (!productTypeId) {
     throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
   }
-
-  // FIXME: PAUL: c'est quoi ce err qui vaut toujours qqch...?!
-  /*
-  if (err) {
-    throw err;
-  }
-  */
   next();
 });
 
-ProductTypeSchema.pre('save', async function(next, err) {
+ProductTypeSchema.pre('save', async function(next) {
   const categoryId = await productTypeCategoryModel.findById(this.categoryId.id);
 
   if (categoryId) {
@@ -109,13 +101,6 @@ ProductTypeSchema.pre('save', async function(next, err) {
       }
     });
   }
-
-  // FIXME: PAUL: c'est quoi ce err qui vaut toujours qqch...?!
-  /*
-  if (err) {
-    throw err;
-  }
-  */
   next();
 });
 

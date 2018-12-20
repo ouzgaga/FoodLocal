@@ -39,8 +39,7 @@ const personRatingProducer = new mongoose.Schema(
  * Vérifie l'existence des personId et producerId entrés.
  * Lève une erreur si l'un des deux n'existe pas dans la base de données.
  */
-// FIXME: Paul: pourquoi intelliJ me met le aysnc en jaune?
-personRatingProducer.pre('save', async function(next, err) {
+personRatingProducer.pre('save', async function(next) {
   const personExist = await personsServices.checkIfPersonIdExistInDB(this.personId);
   if (!personExist) {
     throw new Error(`The given personId (${this.personId}) doesn’t exist in the database!`);
@@ -50,12 +49,6 @@ personRatingProducer.pre('save', async function(next, err) {
   if (!producerExist) {
     throw new Error(`The given producerId (${this.producerId}) doesn’t exist in the database!`);
   }
-  // FIXME: PAUL: c'est que ce err qui vaut toujours qqch...?!
-  /*
-  if (err) {
-    throw err;
-  }
-  */
   next();
 });
 

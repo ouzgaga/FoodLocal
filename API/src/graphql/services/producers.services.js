@@ -94,7 +94,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       firstname,
       lastname,
       email,
-      password,
+      password, // fixme: il faudra chiffrer le mdp avant de l'enregistrer!
       image,
       // followingProducersIds: [],
       emailValidated: false,
@@ -155,7 +155,7 @@ async function updateProducer({ id, firstname, lastname, email, password, image,
       firstname,
       lastname,
       email,
-      password,
+      password, // fixme: il faudra checker que le mdp est correct puis le chiffrer avant de l'enregistrer!
       image,
       followingProducersIds: followingProducers,
       emailValidated,

@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType) should add a new productType 1`] = `
+Object {
+  "data": Object {
+    "addProductType": Object {
+      "image": "ceci est une image de pomme encodée en base64! :D",
+      "name": "pomme",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should delete a productType 1`] = `
+Object {
+  "data": Object {
+    "deleteProductType": Object {
+      "image": "ceci est une image de pomme encodée en base64!",
+      "name": "Pomme",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should fail deleting a productType by id because invalid id received (too long) 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should fail deleting a productType by id because invalid id received (too short) 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should fail deleting a productType by id because unknown id received 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType) should update a productType 1`] = `
+Object {
+  "data": Object {
+    "updateProductType": Object {
+      "image": "ceci est une image de courgette encodée en base64! :D",
+      "name": "courgette",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productType QUERY productType Testing productTypes() should get all productTypes 1`] = `
+Object {
+  "data": Object {
+    "productTypes": Array [
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de pomme encodée en base64!",
+        "name": "Pomme",
+        "producers": Array [],
+      },
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de poire encodée en base64!",
+        "name": "Poire",
+        "producers": Array [],
+      },
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de raisin encodée en base64!",
+        "name": "Raisin",
+        "producers": Array [],
+      },
+      Object {
+        "category": Object {
+          "image": "ceci est une image de légume encodée en base64!",
+          "name": "Légumes",
+        },
+        "image": "ceci est une image de courgette encodée en base64!",
+        "name": "Courgette",
+        "producers": Array [],
+      },
+    ],
+  },
+}
+`;
+
+exports[`Testing graphql request productType QUERY productType Testing productTypes(productTypeId) should fail getting a productType by id because unknown id received 1`] = `
+Object {
+  "data": Object {
+    "productType": null,
+  },
+}
+`;
+
+exports[`Testing graphql request productType QUERY productType Testing productTypes(productTypeId) should get a productType by id 1`] = `
+Object {
+  "data": Object {
+    "productType": Object {
+      "category": Object {
+        "image": "ceci est une image de fruits encodée en base64!",
+        "name": "Fruits",
+      },
+      "image": "ceci est une image de pomme encodée en base64!",
+      "name": "Pomme",
+      "producers": Array [],
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productType QUERY productType Testing productTypesOfCategory(productTypeCategoryId) should get all productType of the productTypeCategory corresponding to the received id 1`] = `
+Object {
+  "data": Object {
+    "productTypesOfCategory": Array [
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de pomme encodée en base64!",
+        "name": "Pomme",
+        "producers": Array [],
+      },
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de poire encodée en base64!",
+        "name": "Poire",
+        "producers": Array [],
+      },
+      Object {
+        "category": Object {
+          "image": "ceci est une image de fruits encodée en base64!",
+          "name": "Fruits",
+        },
+        "image": "ceci est une image de raisin encodée en base64!",
+        "name": "Raisin",
+        "producers": Array [],
+      },
+    ],
+  },
+}
+`;
+
+exports[`Testing graphql request productType QUERY productType Testing productTypesOfCategory(productTypeCategoryId) should get all productType of the productTypeCategory corresponding to the received id 2`] = `
+Object {
+  "data": Object {
+    "productTypesOfCategory": Array [
+      Object {
+        "category": Object {
+          "image": "ceci est une image de légume encodée en base64!",
+          "name": "Légumes",
+        },
+        "image": "ceci est une image de courgette encodée en base64!",
+        "name": "Courgette",
+        "producers": Array [],
+      },
+    ],
+  },
+}
+`;

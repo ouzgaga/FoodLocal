@@ -31,7 +31,8 @@ const productResolvers = {
     deleteProduct: async(parent, args, context) => productsServices.deleteProduct(args.productId),
 
     addProductType: (parent, args, context) => productTypeServices.addProductType(args.productType),
-    addProducerProducingThisProductType: (parent, args, context) => productTypeServices.addProducerProducingThisProductType(args.productTypeId, args.producerId),
+    // addProducerProducingThisProductType: (parent, args, context) => productTypeServices.addProducerProducingThisProductType(args.productTypeId,
+    // args.producerId),
     updateProductType: (parent, args, context) => productTypeServices.updateProductType(args.productType),
     deleteProductType: (parent, args, context) => productTypeServices.deleteProductType(args.productTypeId),
 

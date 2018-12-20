@@ -82,16 +82,16 @@ input ProducerInputUpdate {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
+	# password: String! // TODO: le password doit être modifié via son propre endpoint -> à rajouter
 	image: String
 
 	# Tableau contenant l'id de tous les producteur que la personne suit.
-	followingProducersIds:[ID!] # pas obligatoire si vide
+	# followingProducersIds:[ID!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 
 	# Tableau contenant l'id de tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
-	followersIds: [ID!] # pas obligatoire si vide
+	# followersIds: [ID!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String

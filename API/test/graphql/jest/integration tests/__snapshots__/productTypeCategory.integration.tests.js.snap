@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing addProductTypeCategory(productTypeCategory) should add a new productTypeCategory 1`] = `
+Object {
+  "data": Object {
+    "addProductTypeCategory": Object {
+      "image": "ceci est une image de blé encodée en base64! :D",
+      "name": "blé",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing addProductTypeCategory(productTypeCategory) should fail adding a new productTypeCategory because given field "rienAVoir" is not defined in schema 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { name: "blé", image: "ceci est une image de blé encodée en base64! :D", rienAVoir: "ceci est un champ qui n'a rien à faire ici!" }; Field "rienAVoir" is not defined by type ProductTypeCategoryInputAdd.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing addProductTypeCategory(productTypeCategory) should fail adding a new productTypeCategory because missing name 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { image: "ceci est une image de blé encodée en base64! :D" }; Field value.name of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing deleteProductTypeCategory(productTypeCategoryId) should delete a productTypeCategory 1`] = `
+Object {
+  "data": Object {
+    "deleteProductTypeCategory": Object {
+      "image": "ceci est une image de fruits encodée en base64!",
+      "name": "Fruits",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing deleteProductTypeCategory(productTypeCategoryId) should fail deleting a productTypeCategory by id because invalid id received (too long) 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing deleteProductTypeCategory(productTypeCategoryId) should fail deleting a productTypeCategory by id because invalid id received (too short) 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing deleteProductTypeCategory(productTypeCategoryId) should fail deleting a productTypeCategory by id because unknown id received 1`] = `
+Object {
+  "errors": Array [
+    [TypeError: Must provide Source. Received: undefined],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing updateProductTypeCategory(productTypeCategory) should fail updating a productTypeCategory because given field "rienAVoir" is not defined in schema 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { id: "5c1b63e84342cf80303a87d9", name: "blé", image: "ceci est une image de blé encodée en base64! :D", rienAVoir: "ceci est un champ qui n'a rien à faire ici!" }; Field "rienAVoir" is not defined by type ProductTypeCategoryInputUpdate.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing updateProductTypeCategory(productTypeCategory) should fail updating a productTypeCategory because missing id 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { image: "ceci est une image de blé encodée en base64! :D" }; Field value.id of required type ID! was not provided.],
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { image: "ceci est une image de blé encodée en base64! :D" }; Field value.name of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing updateProductTypeCategory(productTypeCategory) should fail updating a productTypeCategory because missing name 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { image: "ceci est une image de blé encodée en base64! :D" }; Field value.id of required type ID! was not provided.],
+    [GraphQLError: Variable "$productTypeCategory" got invalid value { image: "ceci est une image de blé encodée en base64! :D" }; Field value.name of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory MUTATION productTypeCategory Testing updateProductTypeCategory(productTypeCategory) should update a productTypeCategory 1`] = `
+Object {
+  "data": Object {
+    "updateProductTypeCategory": Object {
+      "image": "ceci est une image de blé encodée en base64! :D",
+      "name": "blé",
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request productTypeCategory QUERY productTypeCategory Testing productTypeCategories() should get all productTypeCategory 1`] = `
+Object {
+  "data": Object {
+    "productTypeCategories": Array [
+      Object {
+        "image": "ceci est une image de fruits encodée en base64!",
+        "name": "Fruits",
+      },
+      Object {
+        "image": "ceci est une image de légumes encodée en base64!",
+        "name": "Légumes",
+      },
+      Object {
+        "image": "ceci est une image de viande encodée en base64!",
+        "name": "Viande",
+      },
+      Object {
+        "image": "ceci est une image de pain encodée en base64!",
+        "name": "Pain",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Testing graphql request productTypeCategory QUERY productTypeCategory Testing productTypeCategory(productTypeCategoryId) should fail getting a productTypeCategory by id because invalid id received (too long) 1`] = `
+Object {
+  "data": Object {
+    "productTypeCategory": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received productTypeCategory.id is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory QUERY productTypeCategory Testing productTypeCategory(productTypeCategoryId) should fail getting a productTypeCategory by id because invalid id received (too short) 1`] = `
+Object {
+  "data": Object {
+    "productTypeCategory": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received productTypeCategory.id is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request productTypeCategory QUERY productTypeCategory Testing productTypeCategory(productTypeCategoryId) should fail getting a productTypeCategory by id because unknown id received 1`] = `
+Object {
+  "data": Object {
+    "productTypeCategory": null,
+  },
+}
+`;
+
+exports[`Testing graphql request productTypeCategory QUERY productTypeCategory Testing productTypeCategory(productTypeCategoryId) should get a productTypeCategory by id 1`] = `
+Object {
+  "data": Object {
+    "productTypeCategory": Object {
+      "image": "ceci est une image de fruits encodée en base64!",
+      "name": "Fruits",
+    },
+  },
+}
+`;

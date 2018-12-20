@@ -13,7 +13,7 @@ const {
   queryObjGetProducersWaitingForValidation,
   queryObjGetFilterProducers,
   mutationValidateProducer
-} = require('./Objects/QueryObjsProducers');
+} = require('./queries/QueryObjsProducers');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
