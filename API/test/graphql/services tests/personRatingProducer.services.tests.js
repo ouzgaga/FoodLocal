@@ -1,7 +1,6 @@
 const producersServices = require('../../../src/graphql/services/producers.services');
 const personRatingProducerServices = require('../../../src/graphql/services/personRatingProducer.services');
 const clearDB = require('../clearDB');
-const PersonRatingProducerModel = require('../../../src/graphql/models/personRatingProducer.modelgql');
 
 let benoit = {
   firstname: 'Benoît',
@@ -130,11 +129,17 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail getting the rating about received producerId made by received personId because no producerId received', async() => {
-      let ratings = await personRatingProducerServices.getAllRatingsAboutProducerWithId(null);
-      ratings.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      try {
+        await personRatingProducerServices.getAllRatingsAboutProducerWithId(null);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
 
-      ratings = await personRatingProducerServices.getAllRatingsAboutProducerWithId(undefined);
-      ratings.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      try {
+        await personRatingProducerServices.getAllRatingsAboutProducerWithId(undefined);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
     });
 
     it('should fail getting the rating about received producerId made by received personId because invalid producerId received', async() => {
@@ -350,7 +355,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -378,7 +383,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -407,7 +412,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -454,7 +459,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -482,7 +487,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -510,7 +515,7 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arive pas à faire marcher le expect().to.throw()...
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -575,7 +580,7 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail deleting a personRatingProducer about a producer because no id received', async() => {
-      let rating = await personRatingProducerServices.deletePersonRatingProducer('');
+      const rating = (await personRatingProducerServices.deletePersonRatingProducer(''));
       rating.message.should.be.equal('Received personRatingProducer.id is invalid!');
     });
 

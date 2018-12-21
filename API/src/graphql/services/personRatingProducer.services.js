@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const PersonRatingProducerModel = require('../models/personRatingProducer.modelgql');
 const ProducersServices = require('./producers.services');
-const personsServices = require('./persons.services');
 
 /**
  * Retourne tous les ratings concernant le producteur correspondant à l'id reçu.
@@ -78,21 +77,24 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
  * @param personRatingProducer, Les informations du rating à ajouter.
  */
 async function addPersonRatingProducer({ personId, producerId, rating }) {
-  // les tests de validité et d'existence de personId et producerId sont fait directement dans le schéma mongoose
+  if (!mongoose.Types.ObjectId.isValid(personId)) {
+    return new Error('Received personRatingProducer.personId is invalid!');
+  }
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received personRatingProducer.producerId is invalid!');
+  }
+  // les tests d'existence de personId et producerId sont fait directement dans le schéma mongoose
 
-  // Si on arrive jusqu'ici alors personId et producerId existent bien dans la DB
-  const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.find({ personId, producerId });
+  // on check si cet personne a déjà voté pour ce producteur
+  const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.findOne({ personId, producerId });
 
-  if (ratingForThisProducerAlreadyMade.length !== 0) {
-    // cette personne a déjà voté pour ce producteur ! // fixme: ou mettre à jour le rating existant...??
+  if (ratingForThisProducerAlreadyMade != null) {
+    // cette personne a déjà voté pour ce producteur !
     return new Error('This person has already rated this producer! You can\'t rate twice the same producer.');
   }
 
-  const newRating = await new PersonRatingProducerModel({ personId, producerId, rating }).save();
-
-  await updateProducerRating(producerId);
-
-  return newRating;
+  // on enregistre le nouveau rating dans la base de données
+  return new PersonRatingProducerModel({ personId, producerId, rating }).save();
 }
 
 async function updateProducerRating(producerId) {

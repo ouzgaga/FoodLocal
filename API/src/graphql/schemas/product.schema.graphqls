@@ -32,10 +32,6 @@ type Mutation {
 	#Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
 	addProductType(productType: ProductTypeInputAdd!): ProductType!
 
-	#Ajoute le producteur reçu en paramètre à la liste des producteurs proposant des produits du productType également reçu en paramètre.
-	# FIXME: voir si utile de l'exposer aux clients...? Vaut ptetre mieux l'appeler automatiquement depuis le serveur...
-	# addProducerProducingThisProductType(productTypeId: ID!, producerId: ID!): ProductType!
-
 	#Met à jour les informations du type de produit passé en paramètre.
 	updateProductType(productType: ProductTypeInputUpdate!): ProductType
 	#Supprime le type de produit reçu en paramètre.

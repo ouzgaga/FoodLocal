@@ -104,7 +104,7 @@ module.exports = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-   rootDir: '.',
+  rootDir: '.',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -124,7 +124,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environm  ent that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -144,7 +144,7 @@ module.exports = {
   // ],
 
   // The regexp pattern Jest uses to detect test files
-  testRegex: "./test/graphql/jest.*tests.js$",
+  testRegex: './test/graphql/jest.*tests.js$',
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: null,

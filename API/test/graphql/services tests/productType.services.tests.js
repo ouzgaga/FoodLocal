@@ -279,7 +279,6 @@ describe('tests productType services', () => {
   describe('tests addProducerProducingThisProductType', () => {
     it('should add the received producerId as producing one or more products of the received productTypeId', async() => {
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
-
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(1);
@@ -288,19 +287,14 @@ describe('tests productType services', () => {
         .contain('abcdefabcdefabcdefabcdef');
 
       // on tente de rajouter un producteur produisant déjà un ou plusieurs produits de type productTypeCourgette (donc déjà présent dans le tableau)
-      /*
-      // fixme: à décommenter lorsque j'aurai ajouté le check de présence d'un producerId dans addProducerProducingThisProductType()
       productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
-      productTypeCourgette.producersIds.length.should.be.equal(2);
-      productTypeCourgette.producersIds.map(p => p.toString())
-        .should
-        .contain('abcdefabcdefabcdefabcdef');
-      */
+      productTypeCourgette.producersIds.length.should.be.equal(1);
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain('abcdefabcdefabcdefabcdef');
 
       // on ajoute un autre producteur produisant un ou plusieurs produits de type productTypeCourgette
       productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdfe')).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(2);
-      // productTypeCourgette.producersIds.map(p => p.toString()).should.contain('abcdefabcdefabcdefabcdfe');
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain('abcdefabcdefabcdefabcdfe');
     });
   });
 

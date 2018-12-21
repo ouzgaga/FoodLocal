@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const TokenGenerator = require('uuid-token-generator');
 const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
-const mail = require('../../utils/sendEmailFoodlocal');
+const mail = require('../utils/sendEmailFoodlocal');
 
 /**
  * get all tokens

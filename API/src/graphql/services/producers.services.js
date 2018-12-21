@@ -120,15 +120,13 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
   }
 }
 
-// FIXME: à ajouter aux tests!!! Tester d'ajouter plusieurs fois le même produit
+// FIXME: à ajouter aux tests!!! Tester d'ajouter plusieurs fois le même produit, vérifier la validité des 2 ids!
 function addProductToProducer(productId, producerId) {
-  // TODO: vérifier la validité des 2 ids!
   return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
 }
 
-// FIXME: à ajouter aux tests!!!
+// FIXME: à ajouter aux tests!!!  Vérifier la validité des 2 ids!
 function removeProductFromProducer(productId, producerId) {
-  // TODO: vérifier la validité des 2 ids!
   return ProducersModel.findByIdAndUpdate(producerId, { $pull: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
 }
 
@@ -139,8 +137,6 @@ function removeProductFromProducer(productId, producerId) {
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
 async function updateProducer({ id, firstname, lastname, email, image, phoneNumber, description, website}) {
-  // fixme: checker le contexte pour vérifier que le user ait bien les droits pour faire cet udpate!
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }
@@ -242,7 +238,6 @@ async function addFollowerToProducer(producerId, followerId) {
 
 // FIXME: à ajouter aux tests!!!
 async function removeFollowerToProducer(producerId, followerId) {
-  // FIXME: PAUL: Y-a moyen de vérifier la validité d'un id directement lors de l'insertion/update dans mongoose?
   if (!mongoose.Types.ObjectId.isValid(followerId)) {
     return new Error('Received followerId is invalid!');
   }
@@ -250,7 +245,6 @@ async function removeFollowerToProducer(producerId, followerId) {
     return new Error('You can\'t follow yourself!');
   }
 
-  // FIXME: PAUL: Y-a moyen de vérifier l'existence d'un id référencé directement lors de l'insertion/update dans mongoose?
   const personIsInDB = await personsServices.checkIfPersonIdExistInDB(followerId);
   const producerIsInDB = await personsServices.checkIfPersonIdExistInDB(producerId, true);
 
