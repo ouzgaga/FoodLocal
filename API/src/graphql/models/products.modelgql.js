@@ -64,10 +64,6 @@ const ProductSchema = new mongoose.Schema(
   }, options
 );
 
-const productModel = mongoose.model('products', ProductSchema);
-const productTypeModel = mongoose.model('productType', ProductTypeSchema);
-const productTypeCategoryModel = mongoose.model('productTypeCategory', ProductTypeCategorySchema);
-
 /**
  * Vérifie l'existence du productTypeId entrés.
  * Lève une erreur s'il n'existe pas dans la collection des productType.
@@ -81,12 +77,14 @@ ProductSchema.pre('save', async function(next) {
   next();
 });
 
+/**
+ * Vérifie l'existence de la categoryId entrée ainsi que l'existence de chaque producer du tableau producersIds.
+ * Lève une erreur si l'un d'entre eux n'existe pas dans la base de données.
+ */
 ProductTypeSchema.pre('save', async function(next) {
-  const categoryId = await productTypeCategoryModel.findById(this.categoryId.id);
+  const categoryId = await productTypeCategoryModel.findById(this.categoryId);
 
-  if (categoryId) {
-    this.categoryId = this.categoryId.id;
-  } else {
+  if (!categoryId) {
     throw new Error(`The given categoryId (${this.categoryId}) doesn’t exist in the database!`);
   }
 
@@ -100,14 +98,27 @@ ProductTypeSchema.pre('save', async function(next) {
         throw new Error(`The given producerId (${producerId}) doesn’t exist in the database!`);
       }
     });
+    await Promise.all(this.producersIds);
   }
   next();
 });
 
+
+const productModel = mongoose.model('products', ProductSchema);
+const productTypeModel = mongoose.model('productType', ProductTypeSchema);
+const productTypeCategoryModel = mongoose.model('productTypeCategory', ProductTypeCategorySchema);
+
 /**
  * @typedef Product
  */
-
 module.exports.Products = productModel;
+
+/**
+ * @typedef ProductType
+ */
 module.exports.ProductType = productTypeModel;
+
+/**
+ * @typedef ProductTypeCategory
+ */
 module.exports.ProductTypeCategory = productTypeCategoryModel;

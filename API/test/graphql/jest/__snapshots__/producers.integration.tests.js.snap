@@ -386,17 +386,6 @@ Object {
 exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (with salespoint) 1`] = `
 Object {
   "data": Object {
-    "producer": null,
-  },
-  "errors": Array [
-    [GraphQLError: Cannot return null for non-nullable field Product.productType.],
-  ],
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (with schedule) 1`] = `
-Object {
-  "data": Object {
     "producer": Object {
       "description": "Un chouet gaillard!",
       "email": "benoit@paysan.ch",
@@ -501,54 +490,6 @@ Object {
 `;
 
 exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (without salespoint) 1`] = `
-Object {
-  "data": Object {
-    "producer": Object {
-      "description": "Un vrai payouz!",
-      "email": "antoine@paysan.ch",
-      "emailValidated": false,
-      "firstname": "Antoine",
-      "followers": Array [],
-      "followingProducers": Array [],
-      "image": "Ceci est l'image d'un tueur encodée en base64!",
-      "isAdmin": false,
-      "isValidated": false,
-      "lastname": "Rochaille",
-      "phoneNumber": "0761435196",
-      "products": Array [
-        Object {
-          "description": "Une pomme monnnnstre bonne!",
-          "productType": Object {
-            "category": Object {
-              "image": "ceci est une image de fruits encodée en base64!",
-              "name": "Fruits",
-            },
-            "image": "ceci est une image de pomme encodée en base64!",
-            "name": "Pomme",
-            "producers": Array [
-              Object {
-                "email": "benoit@paysan.ch",
-                "firstname": "Benoît",
-                "lastname": "Schöpfli",
-              },
-              Object {
-                "email": "antoine@paysan.ch",
-                "firstname": "Antoine",
-                "lastname": "Rochaille",
-              },
-            ],
-          },
-        },
-      ],
-      "rating": null,
-      "salespoint": null,
-      "website": null,
-    },
-  },
-}
-`;
-
-exports[`Testing graphql request producers QUERY producers Testing producer(ProducerId) should get a producer by id (without schedule) 1`] = `
 Object {
   "data": Object {
     "producer": Object {

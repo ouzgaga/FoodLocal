@@ -160,7 +160,7 @@ describe('tests product services', () => {
         const addedProduct = await productsServices.addProduct(productPomme, antoine.id);
       } catch (e) {
         // on test son contenu
-        e.message.should.be.equal(`The given productTypeId ${productPomme.productTypeId} doesn’t exist in the database!`);
+        e.message.should.be.equal(`The given productTypeId (${productPomme.productTypeId}) doesn’t exist in the database!`);
       }
     });
 

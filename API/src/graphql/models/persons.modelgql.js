@@ -51,11 +51,13 @@ const personSchema = new mongoose.Schema(
   }, options
 );
 
-const personsModel = mongoose.model('persons', personSchema);
-
 personSchema.pre('save', async function(next, err) {
   this.followingProducersIds = this.followingProducersIds.map(async(producer) => {
-    if (await personsModel.findById(producer._id)) {
+    const person = await PersonsModel.findById(producer._id);
+    if (person != null) {
+      if (person.kind !== 'producers') {
+        throw new Error(`The given person (with id: ${producer.id}) is not a producer! You can only follow the producers.`);
+      }
       return producer._id;
     } else {
       throw new Error(`The given person (with id: ${producer.id}) doesn’t exist in the database!`);
@@ -65,8 +67,10 @@ personSchema.pre('save', async function(next, err) {
   next();
 });
 
+
+const PersonsModel = mongoose.model('persons', personSchema);
+
 /**
  * @typedef Person
  */
-
-module.exports = personsModel;
+module.exports = PersonsModel;
