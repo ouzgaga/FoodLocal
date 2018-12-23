@@ -5,9 +5,9 @@ type Query {
 }
 
 type Mutation {
-	addSalespoint(salespoint: SalesPointInputAdd!): SalesPoint!
+	addSalespointToProducer(producerId: ID!, salespoint: SalesPointInputAdd!): SalesPoint!
 	updateSalespoint(salespoint: SalesPointInputUpdate!): SalesPoint
-	deleteSalesPoint(salespointId: ID!): SalesPoint
+	deleteSalesPointToProducer(producerId: ID!): SalesPoint
 }
 
 type SalesPoint {

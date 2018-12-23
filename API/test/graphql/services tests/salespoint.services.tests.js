@@ -1,6 +1,27 @@
-const salespointServices = require('../../../src/graphql/services/salespoints.services');
+const salespointsServices = require('../../../src/graphql/services/salespoints.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
+
+let benoit = {
+  firstname: 'Benoît',
+  lastname: 'Schöpfli',
+  email: 'benoit@paysan.ch',
+  password: '1234abcd',
+  image: 'Ceci est une image encodée en base64!',
+  phoneNumber: '0761435196',
+  description: 'Un chouet gaillard!',
+  website: 'benoitpaysan.ch'
+};
+
+let antoine = {
+  firstname: 'Antoine',
+  lastname: 'Rochaille',
+  email: 'antoine@paysan.ch',
+  password: '1234abcd',
+  image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+  phoneNumber: '0761435196',
+  description: 'Un vrai payouz!'
+};
 
 let salespointWithSchedule = {
   name: 'Chez moi',
@@ -66,10 +87,15 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
-  // on ajoute 1 point de vente avec un horaire
-  salespointWithSchedule = (await SalespointsModel.create(salespointWithSchedule)).toObject();
+  // on ajoute 1 producteur contenant le salespoint 'salespointWithSchedule'
+  benoit = (await producersServices.addProducer(benoit)).toObject();
+  salespointWithSchedule = (await salespointsServices.addSalesPoint(salespointWithSchedule, benoit.id)).toObject();
+  benoit = (await producersServices.getProducerById(benoit.id)).toObject();
 
-  salespointWithoutSchedule = (await SalespointsModel.create(salespointWithoutSchedule)).toObject();
+  // on ajoute 1 producteur contenant le salespoint 'salespointWithoutSchedule''
+  antoine = (await producersServices.addProducer(antoine)).toObject();
+  salespointWithoutSchedule = (await salespointsServices.addSalesPoint(salespointWithoutSchedule, benoit.id)).toObject();
+  antoine = (await producersServices.getProducerById(antoine.id)).toObject();
 
   tabSalespoints = [salespointWithSchedule, salespointWithoutSchedule];
 };
@@ -80,7 +106,7 @@ describe('tests salespoints services', () => {
   describe('tests getSalesPoints', () => {
     it('should get all salespoints', async() => {
       // on récupère un tableau contenant tous les salespoints
-      let allSalespoints = await salespointServices.getSalesPoints();
+      let allSalespoints = await salespointsServices.getSalesPoints();
 
       // on transforme chaque salespoint du tableau en un objet
       allSalespoints = allSalespoints.map(producer => producer.toObject());
@@ -151,7 +177,7 @@ describe('tests salespoints services', () => {
 
   describe('tests getSalesPointById', () => {
     it('should get one salespoint', async() => {
-      const salespointGotInDB = (await salespointServices.getSalesPointById(salespointWithSchedule.id)).toObject();
+      const salespointGotInDB = (await salespointsServices.getSalesPointById(salespointWithSchedule.id)).toObject();
       salespointGotInDB.should.be.not.null;
       salespointGotInDB.id.should.be.equal(salespointWithSchedule.id);
       salespointGotInDB.name.should.be.equal(salespointWithSchedule.name);
@@ -212,17 +238,17 @@ describe('tests salespoints services', () => {
     });
 
     it('should fail getting one salespoint because no id received', async() => {
-      const salespoint = await salespointServices.getSalesPointById('');
+      const salespoint = await salespointsServices.getSalesPointById('');
       salespoint.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail getting one salespoint because invalid id received', async() => {
-      const salespoint = await salespointServices.getSalesPointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
+      const salespoint = await salespointsServices.getSalesPointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
       salespoint.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail getting one salespoint because unknown id received', async() => {
-      const salespoint = await salespointServices.getSalesPointById('abcdefabcdefabcdefabcdef');
+      const salespoint = await salespointsServices.getSalesPointById('abcdefabcdefabcdefabcdef');
       expect(salespoint).to.be.null;
     });
   });
@@ -230,7 +256,7 @@ describe('tests salespoints services', () => {
   describe('tests addSalesPoint', () => {
     it('should add a new salespoint with a schedule', async() => {
       salespointWithSchedule._id = undefined;
-      const addedSalespoint = (await salespointServices.addSalesPoint(salespointWithSchedule)).toObject();
+      const addedSalespoint = (await salespointsServices.addSalesPoint(salespointWithSchedule)).toObject();
       addedSalespoint.should.be.not.null;
       addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
       addedSalespoint.name.should.be.equal(salespointWithSchedule.name);
@@ -292,7 +318,7 @@ describe('tests salespoints services', () => {
 
     it('should add a new salespoint without schedule', async() => {
       salespointWithoutSchedule._id = undefined;
-      const addedSalespoint = (await salespointServices.addSalesPoint(salespointWithoutSchedule)).toObject();
+      const addedSalespoint = (await salespointsServices.addSalesPoint(salespointWithoutSchedule)).toObject();
       addedSalespoint.should.be.not.null;
       addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithoutSchedule.id
       addedSalespoint.name.should.be.equal(salespointWithoutSchedule.name);
@@ -320,14 +346,14 @@ describe('tests salespoints services', () => {
 
     it('should update a salespoint', async() => {
       // on récupère un salespoint
-      let salespoint = (await salespointServices.getSalesPointById(salespointWithoutSchedule.id)).toObject();
+      let salespoint = (await salespointsServices.getSalesPointById(salespointWithoutSchedule.id)).toObject();
       // on le modifie
       salespoint = {
         ...salespointWithSchedule,
         id: salespoint.id,
         _id: salespoint._id
       };
-      const updatedSalespoint = await salespointServices.updateSalesPoint(salespoint);
+      const updatedSalespoint = await salespointsServices.updateSalesPoint(salespoint);
       updatedSalespoint.should.be.not.null;
       updatedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
       updatedSalespoint.name.should.be.equal(salespointWithSchedule.name);
@@ -389,28 +415,28 @@ describe('tests salespoints services', () => {
 
     it('should fail updating a salespoint because no id received', async() => {
       salespointWithSchedule.id = '';
-      const updatedProduct = await salespointServices.updateSalesPoint(salespointWithSchedule);
+      const updatedProduct = await salespointsServices.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail updating a salespoint because invalid id received', async() => {
       salespointWithSchedule.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProduct = await salespointServices.updateSalesPoint(salespointWithSchedule);
+      const updatedProduct = await salespointsServices.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail updating a salespoint because invalid id received', async() => {
       salespointWithSchedule.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProduct = await salespointServices.updateSalesPoint(salespointWithSchedule);
+      const updatedProduct = await salespointsServices.updateSalesPoint(salespointWithSchedule);
 
       updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail updating a salespoint because unknown id received', async() => {
       salespointWithSchedule.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProducer = await salespointServices.updateSalesPoint(salespointWithSchedule);
+      const updatedProducer = await salespointsServices.updateSalesPoint(salespointWithSchedule);
       expect(updatedProducer).to.be.null;
     });
   });
@@ -420,18 +446,18 @@ describe('tests salespoints services', () => {
 
     it('should delete a salespoint', async() => {
       // on supprime un salespoint
-      let deleteSalespoint = (await salespointServices.deleteSalesPoint(salespointWithSchedule.id)).toObject();
+      let deleteSalespoint = (await salespointsServices.deleteSalesPoint(salespointWithSchedule.id)).toObject();
       deleteSalespoint.should.be.not.null;
       deleteSalespoint.id.should.be.eql(salespointWithSchedule.id);
 
       // on tente de récupérer le même salespoint -> retourne null car le salespoint est introuvable dans la DB
-      deleteSalespoint = await salespointServices.getSalesPointById(deleteSalespoint);
+      deleteSalespoint = await salespointsServices.getSalesPointById(deleteSalespoint);
       expect(deleteSalespoint).to.be.null;
     });
 
     it('should fail deleting a salespoint because given id not found in DB', async() => {
       // on supprime un salepoint inexistant
-      const deleteSalesPoint = await salespointServices.deleteSalesPoint('abcdefabcdefabcdefabcdef');
+      const deleteSalesPoint = await salespointsServices.deleteSalesPoint('abcdefabcdefabcdefabcdef');
       expect(deleteSalesPoint).to.be.null;
     });
   });

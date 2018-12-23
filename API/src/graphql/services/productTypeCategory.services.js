@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { ProductTypeCategory: ProductTypeCategoryModel } = require('../models/products.modelgql');
+const ProductTypeCategoryModel = require('../models/productTypeCategories.modelgql');
 
 /**
  * Retourne "limit" catégories de produits de la base de données, filtrés

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const PersonRatingProducerModel = require('../models/personRatingProducer.modelgql');
-const ProducersServices = require('./producers.services');
+const producersServices = require('./producers.services');
 
 /**
  * Retourne tous les ratings concernant le producteur correspondant à l'id reçu.
@@ -115,7 +115,7 @@ async function updateProducerRating(producerId) {
     rating = rating[0];
   }
 
-  return ProducersServices.updateProducerRating(producerId, rating);
+  return producersServices.updateProducerRating(producerId, rating);
 
 }
 

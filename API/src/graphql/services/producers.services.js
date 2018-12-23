@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
-const TokenValidationEmailServices = require('./tokenValidationEmail.services');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 const productTypeServices = require('./productType.services');
+const salespointsServices = require('./salespoints.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -88,7 +89,7 @@ async function filterProducers(byProductTypeIds) {
  *
  * @param {Integer} producer, Les informations du producteur à ajouter.
  */
-async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website, salespoint }) {
+async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website }) {
   if (await personsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
     const producerToAdd = {
       firstname,
@@ -104,7 +105,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       phoneNumber,
       description,
       website,
-      salespointId: salespoint, // salespoint contient l'id du point de vente
+      // salespointId: salespoint, // salespoint contient l'id du point de vente
       isValidated: false,
       // productsIds: []
     };
@@ -113,7 +114,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
     const producerAdded = await new ProducersModel(producerToAdd).save();
 
     // on envoie un mail au producteur avec un token de validation de l'adresse email et on enregistre le token généré dans la DB
-    await TokenValidationEmailServices.addTokenValidationEmail(producerAdded);
+    await tokenValidationEmailServices.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else { // l'email est déjà utilisé -> on ne peut pas ajouter ce producteur!
     return new Error('This email is already used.');
@@ -160,7 +161,6 @@ async function updateProducer({ id, firstname, lastname, email, image, phoneNumb
       phoneNumber,
       description,
       website,
-      // salespointId: salespoint,
       isValidated,
       // productsIds
     };
@@ -169,6 +169,45 @@ async function updateProducer({ id, firstname, lastname, email, image, phoneNumb
   } else {
     return new Error('The received id is not in the database!');
   }
+}
+
+/**
+ * Ajoute le salespointId reçu au producteur possédant l'id reçu.
+ *
+ * @param producerId, L'id du producteur auquel on souhaite ajouter le salespoint reçu.
+ * @param salespoint, Les informations du salespoint que l'on souhaite ajouter au producteur.
+ */
+async function addSalespointToProducer(producerId, salespoint) {
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received producerId is invalid!');
+  }
+
+  // on ajoute le salespoint dans la collection des salespoint
+  const addedSalespoint = await salespointsServices.addSalesPoint(salespoint);
+
+  // on met à jour le salespointId du producteur avec l'id du nouveau salespoint
+  return ProducersModel.findByIdAndUpdate(producerId, { salespointId: addedSalespoint.id }, { new: true }); // retourne l'objet modifié
+}
+
+/**
+ * Supprime le salespointId reçu au producteur possédant l'id reçu.
+ *
+ * @param {Integer} producerId, L'id du producteur dont on souhaite supprimer le salespoint.
+ */
+async function removeSalespointToProducer(producerId) {
+  if (!mongoose.Types.ObjectId.isValid(producerId)) {
+    return new Error('Received producerId is invalid!');
+  }
+
+  // on supprime le salespointId contenu dans les informations du producteur
+  const producer = ProducersModel.findByIdAndUpdate(producerId, { salespointId: null }, { new: false }); // retourne l'objet avant sa modification
+
+  // on supprime le salespoint correspondant au salespointId du producteur
+  await salespointsServices.deleteSalesPoint(producer.salespointId);
+
+  // on applique la modification afin de retourner le producteur tel qu'il est réellement dans la DB
+  producer.salespointId = null;
+  return producer;
 }
 
 // TOD: à ajouter dans les tests des services!!!
@@ -273,6 +312,8 @@ module.exports = {
   filterProducers,
   addProducer,
   addProductToProducer,
+  addSalespointToProducer,
+  removeSalespointToProducer,
   removeProductFromProducer,
   updateProducer,
   updateProducerRating,

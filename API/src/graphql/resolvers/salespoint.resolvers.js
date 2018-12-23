@@ -1,4 +1,5 @@
 const salespointsServices = require('../services/salespoints.services');
+const producersServices = require('../services/producers.services');
 
 const salespointsResolvers = {
   Query: {
@@ -8,11 +9,11 @@ const salespointsResolvers = {
   },
 
   Mutation: {
-    addSalespoint: (parent, args, context) => salespointsServices.addSalesPoint(args.salespoint),
+    addSalespointToProducer: (parent, args, context) => producersServices.addSalespointToProducer(args.producerId, args.salespoint),
 
     updateSalespoint: (parent, args, context) => salespointsServices.updateSalesPoint(args.salespoint),
 
-    deleteSalesPoint: (parent, args, context) => salespointsServices.deleteSalesPoint(args.salespointId)
+    deleteSalesPointToProducer: (parent, args, context) => producersServices.removeSalespointToProducer(args.producerId)
   }
 };
 module.exports = salespointsResolvers;

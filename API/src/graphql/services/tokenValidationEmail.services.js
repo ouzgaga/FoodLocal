@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const TokenGenerator = require('uuid-token-generator');
+const tokenGenerator = require('uuid-token-generator');
 const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
 const mail = require('../utils/sendEmailFoodlocal');
 
@@ -44,7 +44,7 @@ async function addTokenValidationEmail (user) {
   }
 
   // Generate token
-  const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
+  const tokenGen = new tokenGenerator(256, tokenGenerator.BASE62);
   const token = {
     value: tokenGen.generate(),
     idPerson: user.id

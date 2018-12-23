@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { ProductType: ProductTypeModel } = require('../models/products.modelgql');
+const ProductTypesModel = require('../models/productTypes.modelgql');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -18,7 +18,7 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return ProductTypeModel.find(tags)
+  return ProductTypesModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
@@ -33,7 +33,7 @@ function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    return ProductTypeModel.findById(id);
+    return ProductTypesModel.findById(id);
   }
 }
 
@@ -70,15 +70,15 @@ function addProductType(productType) {
     image: productType.image,
     categoryId: productType.categoryId
   };
-  return new ProductTypeModel(newProductType).save();
+  return new ProductTypesModel(newProductType).save();
 }
 
 async function addProducerProducingThisProductType(productTypeId, producerId) {
-  return ProductTypeModel.findByIdAndUpdate(productTypeId, { $addToSet: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $addToSet: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
 }
 
 async function removeProducerProducingThisProductType(productTypeId, producerId) {
-  return ProductTypeModel.findByIdAndUpdate(productTypeId, { $pull: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $pull: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -101,7 +101,7 @@ function updateProductType(productType) {
     // fixme: checker que le tableau de producersIds n'est pas supprimé lorsqu'on met à jour!
   };
 
-  return ProductTypeModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -114,7 +114,7 @@ function deleteProductType(id) {
     return new Error('Received productType.id is invalid!');
   }
 
-  return ProductTypeModel.findByIdAndRemove(id);
+  return ProductTypesModel.findByIdAndRemove(id);
 }
 
 module.exports = {

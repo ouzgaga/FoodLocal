@@ -1,6 +1,6 @@
 const productTypeCategoryServices = require('../../../src/graphql/services/productTypeCategory.services');
 const clearDB = require('../clearDB');
-const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let fruits = {
   name: 'Fruits',
@@ -26,10 +26,10 @@ const clearAndPopulateDB = async() => {
 
 
   // on ajoute le contenu de départ
-  fruits = (await ProductTypeCategoryModel.create(fruits)).toObject();
-  legumes = (await ProductTypeCategoryModel.create(legumes)).toObject();
-  viande = (await ProductTypeCategoryModel.create(viande)).toObject();
-  pain = (await ProductTypeCategoryModel.create(pain)).toObject();
+  fruits = (await ProductTypeCategoriesModel.create(fruits)).toObject();
+  legumes = (await ProductTypeCategoriesModel.create(legumes)).toObject();
+  viande = (await ProductTypeCategoriesModel.create(viande)).toObject();
+  pain = (await ProductTypeCategoriesModel.create(pain)).toObject();
 
   tabProductTypeCategory = [fruits, legumes, viande, pain];
 };

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { Products: ProductModel } = require('../models/products.modelgql');
-const productTypeServices = require('./productType.services');
+const ProductsModel = require('../models/products.modelgql');
+const productTypesServices = require('./productType.services');
 const producersServices = require('./producers.services');
 
 /**
@@ -20,7 +20,7 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return ProductModel.find({ tags })
+  return ProductsModel.find({ tags })
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
@@ -32,7 +32,7 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+  return ProductsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
 /**
@@ -44,7 +44,7 @@ function getProductById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   } else {
-    return ProductModel.findById(id);
+    return ProductsModel.findById(id);
   }
 }
 
@@ -59,10 +59,10 @@ async function addProduct(product, producerId) {
   if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
     return new Error('Received productType.id is invalid!');
   } else {
-    const addedProduct = await new ProductModel(product).save();
+    const addedProduct = await new ProductsModel(product).save();
 
     // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
-    await productTypeServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+    await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
 
     // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
     await producersServices.addProductToProducer(addedProduct.id, producerId);
@@ -98,7 +98,7 @@ async function updateProduct(product) {
     productTypeId: product.productTypeId
   };
 
-  return ProductModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
+  return ProductsModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -111,7 +111,7 @@ function deleteProduct(id) {
     return new Error('Received product.id is invalid!');
   }
 
-  return ProductModel.findByIdAndRemove(id);
+  return ProductsModel.findByIdAndRemove(id);
 }
 
 module.exports = {

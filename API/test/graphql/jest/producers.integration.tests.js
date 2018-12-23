@@ -5,9 +5,9 @@ const salespointsServices = require('../../../src/graphql/services/salespoints.s
 const producersServices = require('../../../src/graphql/services/producers.services');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const clearDB = require('../clearDB');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
+
 const {
   queryObjAllProducers,
   queryObjProducerById,
@@ -112,27 +112,28 @@ const clearAndPopulateDB = async() => {
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 productTypeCategory
-  productTypeCategory = (await ProductTypeCategoryModel.create(productTypeCategory)).toObject();
+  productTypeCategory = (await ProductTypeCategoriesModel.create(productTypeCategory)).toObject();
 
   // on ajoute 2 productType
   productTypePomme.categoryId = productTypeCategory.id;
-  productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
+  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
   productTypePoire.categoryId = productTypeCategory.id;
-  productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
+  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
 
   // on set le productTypeId avec les id de productType qu'on vient d'ajouter
   productPomme.productTypeId = productTypePomme.id;
   productPoire.productTypeId = productTypePoire.id;
 
   // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
-  salespointBenoit = (await salespointsServices.addSalesPoint(salespointBenoit)).toObject();
-  benoit.salespoint = salespointBenoit.id;
   benoit = (await producersServices.addProducer(benoit)).toObject();
+  await producersServices.addSalespointToProducer(benoit.id, salespointBenoit);
   await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
+  benoit = (await producersServices.getProducerById(benoit.id)).toObject();
 
   // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
   antoine = (await producersServices.addProducer(antoine)).toObject();
   await productsServices.addAllProductsInArray([productPomme], antoine.id);
+  antoine = (await producersServices.getProducerById(antoine.id)).toObject();
 };
 
 describe('Testing graphql request producers', () => {

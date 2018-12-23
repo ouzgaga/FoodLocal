@@ -2,13 +2,8 @@ const productTypeServices = require('../../../src/graphql/services/productType.s
 const producersServices = require('../../../src/graphql/services/producers.services');
 const productsServices = require('../../../src/graphql/services/products.services');
 const clearDB = require('../clearDB');
-const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let categoryFruits = {
   name: 'Fruits',
@@ -44,21 +39,21 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // on ajoute le contenu de départ
-  categoryFruits = (await ProductTypeCategoryModel.create(categoryFruits)).toObject();
-  categoryVegetable = (await ProductTypeCategoryModel.create(categoryVegetable)).toObject();
+  categoryFruits = (await ProductTypeCategoriesModel.create(categoryFruits)).toObject();
+  categoryVegetable = (await ProductTypeCategoriesModel.create(categoryVegetable)).toObject();
 
   productTypePomme.categoryId = categoryFruits.id;
-  productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
+  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
 
   productTypePoire.categoryId = categoryFruits.id;
-  productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
+  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
 
   productTypeRaisin.categoryId = categoryFruits.id;
-  productTypeRaisin = (await ProductTypeModel.create(productTypeRaisin)).toObject();
+  productTypeRaisin = (await ProductTypesModel.create(productTypeRaisin)).toObject();
 
   productTypeCourgette.id = undefined;
   productTypeCourgette.categoryId = categoryVegetable.id;
-  productTypeCourgette = (await ProductTypeModel.create(productTypeCourgette)).toObject();
+  productTypeCourgette = (await ProductTypesModel.create(productTypeCourgette)).toObject();
 
   tabProductType = [productTypePomme, productTypePoire, productTypeRaisin, productTypeCourgette];
 };

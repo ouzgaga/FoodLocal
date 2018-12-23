@@ -1,9 +1,9 @@
 const productsServices = require('../../../src/graphql/services/products.services');
 const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductsModel = require('../../../src/graphql/models/products.modelgql');
+const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let productTypeCategory = {
   name: 'Fruits',
@@ -35,19 +35,19 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // on ajoute 1 productTypeCategory
-  productTypeCategory = (await ProductTypeCategoryModel.create(productTypeCategory)).toObject();
+  productTypeCategory = (await ProductTypeCategoriesModel.create(productTypeCategory)).toObject();
 
   // on ajoute 2 productType
   productTypePomme.categoryId = productTypeCategory.id;
-  productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
+  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
   productTypePoire.categoryId = productTypeCategory.id;
-  productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
+  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
 
   // on ajoute 2 produits
   productPomme.productTypeId = productTypePomme.id;
-  productPomme = (await ProductModel.create(productPomme)).toObject();
+  productPomme = (await ProductsModel.create(productPomme)).toObject();
   productPoire.productTypeId = productTypePoire.id;
-  productPoire = (await ProductModel.create(productPoire)).toObject();
+  productPoire = (await ProductsModel.create(productPoire)).toObject();
 
   tabProducts = [productPomme, productPoire];
 };
@@ -170,7 +170,7 @@ describe('tests product services', () => {
   describe('tests addAllProductsInArray', () => {
     it('should add a new product for all product in received array', async() => {
       // on supprime tout le contenu de la DB de products
-      await ProductModel.deleteMany();
+      await ProductsModel.deleteMany();
 
       // on ajoute tous les produits passés dans le tableau en paramètre
       const addedProducts = await productsServices.addAllProductsInArray([productPomme, productPoire]);

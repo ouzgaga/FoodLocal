@@ -5,9 +5,8 @@ const productsServices = require('../../../src/graphql/services/products.service
 const productTypeServices = require('../../../src/graphql/services/productType.services');
 const clearDB = require('../clearDB');
 const populateDB = require('../../PopulateDatabase');
-const { ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductTypeModel = require('../../../src/graphql/models/productTypes.modelgql');
+const ProductTypeCategoryModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let productTypeCategory = {
   name: 'Fruits',
@@ -119,16 +118,17 @@ const clearAndPopulateDB = async() => {
   productPoire.productTypeId = productTypePoire.id;
 
   // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
-  salespointBenoit = (await salespointsServices.addSalesPoint(salespointBenoit)).toObject();
-  benoit.salespoint = salespointBenoit.id;
   benoit = (await producersServices.addProducer(benoit)).toObject();
+  await producersServices.addSalespointToProducer(benoit.id, salespointBenoit);
   tabProductsBenoit = await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
   tabProductsBenoit = tabProductsBenoit.map(product => product.toObject());
+  benoit = (await producersServices.getProducerById(benoit.id)).toObject();
 
   // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
   antoine = (await producersServices.addProducer(antoine)).toObject();
   tabProductsAntoine = await productsServices.addAllProductsInArray([productPomme], antoine.id);
   tabProductsAntoine = tabProductsAntoine.map(product => product.toObject());
+  antoine = (await producersServices.getProducerById(antoine.id)).toObject();
 
   tabProducers = [benoit, antoine];
 };
@@ -158,8 +158,6 @@ describe('tests producers services', () => {
         producer.followersIds.should.be.not.null;
         producer.followersIds.should.be.an('array');
 
-        expect(producer.salespointId).to.be.eql(tabProducers[index].salespointId);
-
         const promisesTestsProductsIds = producer.productsIds.map((async(productId) => {
           // on récupère les infos du produit correspondant
           const product = (await productsServices.getProductById(productId)).toObject();
@@ -171,7 +169,7 @@ describe('tests producers services', () => {
           const addedProducerId = producer.id.toString();
 
           // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
-          const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+          const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
           filtredTab.length.should.be.equal(1);
         }));
         await Promise.all(promisesTestsProductsIds);
@@ -215,7 +213,7 @@ describe('tests producers services', () => {
       producer.phoneNumber.should.be.equal(benoit.phoneNumber);
       producer.description.should.be.equal(benoit.description);
       producer.website.should.be.equal(benoit.website);
-      producer.salespointId.should.be.eql(benoit.salespointId);
+      expect(producer.salespointId).to.be.eql(benoit.salespointId);
       producer.isValidated.should.be.equal(benoit.isValidated);
 
       // on test le tableau productsIds et son contenu
@@ -232,7 +230,7 @@ describe('tests producers services', () => {
         const addedProducerId = producer.id.toString();
 
         // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
-        const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+        const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
         filtredTab.length.should.be.equal(1);
       }));
       await Promise.all(promisesTestsProductsIds);
@@ -350,9 +348,8 @@ describe('tests producers services', () => {
       addedProducer.phoneNumber.should.be.equal(benoit.phoneNumber);
       addedProducer.description.should.be.equal(benoit.description);
       addedProducer.website.should.be.equal(benoit.website);
-      addedProducer.salespointId.should.be.not.null; // ne peut pas être égal à benoit.salespointId !
+      expect(addedProducer.salespointId).to.be.null; // car n'est pas ajouté lors de la création d'un producteur
       addedProducer.isValidated.should.be.equal(benoit.isValidated);
-
       // on test le tableau productsIds et son contenu
       const promisesTestsProductsIds = addedProducer.productsIds.map((async(productId) => {
         productId.should.be.not.null;
@@ -367,7 +364,7 @@ describe('tests producers services', () => {
         const addedProducerId = addedProducer.id.toString();
 
         // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
-        const filtredTab = await productType.producersIds.filter((elem) => elem.toString() === addedProducerId);
+        const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
         filtredTab.length.should.be.equal(1);
       }));
       await Promise.all(promisesTestsProductsIds);

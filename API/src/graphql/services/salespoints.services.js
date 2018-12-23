@@ -41,7 +41,7 @@ function getSalesPointById(id) {
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
  *
- * @param {Integer} salespoint, Les informations du point de vente à ajouter.
+ * @param salespoint, Les informations du point de vente à ajouter.
  */
 function addSalesPoint(salespoint) {
   return new SalespointsModel(salespoint).save();
@@ -67,7 +67,7 @@ function updateSalesPoint(salespoint) {
  *
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
-function deleteSalesPoint(id) {
+async function deleteSalesPoint(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received salespoint.id is invalid!');
   }

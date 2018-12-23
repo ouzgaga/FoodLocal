@@ -2,7 +2,7 @@ const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const clearDB = require('../clearDB');
-const { ProductTypeCategory: ProductTypeCategoryModel } = require('../../../src/graphql/models/products.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 const {
   getAllProductTypeCategories,
   getProductTypeCategoryById,
@@ -35,10 +35,10 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
-  fruits = (await ProductTypeCategoryModel.create(fruits)).toObject();
-  legumes = (await ProductTypeCategoryModel.create(legumes)).toObject();
-  viande = (await ProductTypeCategoryModel.create(viande)).toObject();
-  pain = (await ProductTypeCategoryModel.create(pain)).toObject();
+  fruits = (await ProductTypeCategoriesModel.create(fruits)).toObject();
+  legumes = (await ProductTypeCategoriesModel.create(legumes)).toObject();
+  viande = (await ProductTypeCategoriesModel.create(viande)).toObject();
+  pain = (await ProductTypeCategoriesModel.create(pain)).toObject();
 };
 
 describe('Testing graphql request productTypeCategory', () => {
