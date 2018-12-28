@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const PersonRatingProducerModel = require('../models/personRatingProducer.modelgql');
+const PersonRatingProducersModel = require('../models/personRatingProducers.modelgql');
 const producersServices = require('./producers.services');
 
 /**
@@ -16,7 +16,7 @@ function getAllRatingsAboutProducerWithId(producerId, { limit = 30, page = 0 } =
       skip = page * limit;
     }
 
-    return PersonRatingProducerModel.find({ producerId })
+    return PersonRatingProducersModel.find({ producerId })
       .sort({ _id: 1 })
       .skip(+skip)
       .limit(+limit);
@@ -41,7 +41,7 @@ async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { li
       skip = page * limit;
     }
 
-    const res = await PersonRatingProducerModel.findOne({ producerId, personId })
+    const res = await PersonRatingProducersModel.findOne({ producerId, personId })
       .sort({ _id: 1 })
       .skip(+skip)
       .limit(+limit);
@@ -63,7 +63,7 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
       skip = page * limit;
     }
 
-    return PersonRatingProducerModel.find({ personId })
+    return PersonRatingProducersModel.find({ personId })
       .sort({ _id: 1 })
       .skip(+skip)
       .limit(+limit);
@@ -86,7 +86,7 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
   // les tests d'existence de personId et producerId sont fait directement dans le schéma mongoose
 
   // on check si cet personne a déjà voté pour ce producteur
-  const ratingForThisProducerAlreadyMade = await PersonRatingProducerModel.findOne({ personId, producerId });
+  const ratingForThisProducerAlreadyMade = await PersonRatingProducersModel.findOne({ personId, producerId });
 
   if (ratingForThisProducerAlreadyMade != null) {
     // cette personne a déjà voté pour ce producteur !
@@ -94,12 +94,12 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
   }
 
   // on enregistre le nouveau rating dans la base de données
-  return new PersonRatingProducerModel({ personId, producerId, rating }).save();
+  return new PersonRatingProducersModel({ personId, producerId, rating }).save();
 }
 
 async function updateProducerRating(producerId) {
   // TODO: tester si ça fonctionne de lui passer un objectId !
-  let rating = await PersonRatingProducerModel.aggregate([
+  let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(producerId) } },
     { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
     { $project: { _id: false } }
@@ -130,7 +130,7 @@ async function updatePersonRatingProducer({ id, rating }) {
     return new Error('Received personRatingProducer.id is invalid!');
   }
 
-  const update = await PersonRatingProducerModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
+  const update = await PersonRatingProducersModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
   await updateProducerRating(update.producerId);
   return update;
 }
@@ -145,7 +145,7 @@ async function deletePersonRatingProducer(id) {
     return new Error('Received personRatingProducer.id is invalid!');
   }
 
-  const deletedRating = await PersonRatingProducerModel.findByIdAndRemove(id);
+  const deletedRating = await PersonRatingProducersModel.findByIdAndRemove(id);
   if (deletedRating != null) {
     await updateProducerRating(deletedRating.producerId);
   }

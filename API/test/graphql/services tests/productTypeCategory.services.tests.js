@@ -1,4 +1,4 @@
-const productTypeCategoryServices = require('../../../src/graphql/services/productTypeCategory.services');
+const productTypeCategoryServices = require('../../../src/graphql/services/productTypeCategories.services');
 const clearDB = require('../clearDB');
 const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 

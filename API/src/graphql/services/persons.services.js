@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const PersonsModel = require('../models/persons.modelgql');
-const tokenValidationEmail = require('./tokenValidationEmail.services');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 async function isEmailUnused(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
@@ -21,10 +21,9 @@ async function checkIfPersonIdExistInDB(personId, isProducer = false) {
   }
 }
 
-// FIXME: à ajouter aux tests du service !!!
 function getPersonById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
+    return new Error('Received person.id is invalid!');
   } else {
     return PersonsModel.findById(id);
   }
@@ -34,21 +33,26 @@ function getAllPersonsInReceivedIdList(listOfIdToGet) {
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
-// FIXME: à ajouter aux tests!!!
 function addProducerToPersonsFollowingList(personId, producerId) {
-  return PersonsModel.findByIdAndUpdate(personId, { $addToSet: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  if (personId !== producerId) {
+    return PersonsModel.findByIdAndUpdate(personId, { $addToSet: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('You can\'t follow yourself!');
+  }
 }
 
-// FIXME: à ajouter aux tests!!!
 function removeProducerToPersonsFollowingList(personId, producerId) {
-  return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  if (personId !== producerId) {
+    return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('You can\'t follow yourself!');
+  }
 }
 
-// TODO: à ajouter aux tests!
 async function changePassword(newPassword, oldPassword, personId) {
   const person = await getPersonById(personId);
 
-  if (person != null) { // la personne correspondante à 'personId' a été trouvé dans la DB
+  if (person != null && person.id != null) { // la personne correspondante à 'personId' a été trouvé dans la DB
     // on compare le oldPassword avec le mdp enregistré dans la DB
     const match = await bcrypt.compare(oldPassword, person.password);
     if (match) { // oldPassword est identique au mdp enregistré dans la DB
@@ -64,7 +68,7 @@ async function changePassword(newPassword, oldPassword, personId) {
 
 // TODO: à ajouter aux tests!
 async function validateEmailUserByToken(value) {
-  const token = await tokenValidationEmail.validateToken(value);
+  const token = await tokenValidationEmailServices.validateToken(value);
   if (token !== null) {
     const updatedPerson = await PersonsModel.findByIdAndUpdate(token.idPerson, { emailValidated: true }, { new: true }); // retourne l'objet modifié
     return updatedPerson !== null;

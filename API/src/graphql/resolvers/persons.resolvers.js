@@ -1,5 +1,5 @@
 require('../models/producers.modelgql');
-const personServices = require('../services/persons.services');
+const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 
 const PersonType = {
@@ -8,9 +8,9 @@ const PersonType = {
 };
 
 
-const personResolvers = {
+const personsResolvers = {
   Query: {
-    checkIfEmailIsAvailable: (parent, args, context) => personServices.isEmailUnused(args.email)
+    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailUnused(args.email)
   },
 
   Mutation: {
@@ -18,7 +18,7 @@ const personResolvers = {
 
     removeFollowerToProducer: (parent, args, context) => producersServices.removeFollowerToProducer(args.producerId, args.personId),
 
-    changePassword: (parent, args, context) => personServices.changePassword(args.newPassword, args.oldPassword, args.personId)
+    changePassword: (parent, args, context) => personsServices.changePassword(args.newPassword, args.oldPassword, args.personId)
   },
 
   Person: {
@@ -35,4 +35,4 @@ const personResolvers = {
   }
 };
 
-module.exports = personResolvers;
+module.exports = personsResolvers;

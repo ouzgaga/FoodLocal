@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
 const personsServices = require('../services/persons.services');
-const tokenValidationEmail = require('./tokenValidationEmail.services');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -64,7 +64,7 @@ async function addUser({ firstname, lastname, email, password, image }) {
     };
 
     const userAdded = await new UsersModel(userToAdd).save();
-    tokenValidationEmail.addTokenValidationEmail(userAdded);
+    tokenValidationEmailServices.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
     return new Error('This email is already used.');

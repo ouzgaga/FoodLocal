@@ -1,99 +1,21 @@
 const producersServices = require('../../../src/graphql/services/producers.services');
+const salespointServices = require('../../../src/graphql/services/salespoints.services');
 const usersServices = require('../../../src/graphql/services/users.services');
-const salespointsServices = require('../../../src/graphql/services/salespoints.services');
 const productsServices = require('../../../src/graphql/services/products.services');
-const productTypeServices = require('../../../src/graphql/services/productType.services');
+const productTypeServices = require('../../../src/graphql/services/productTypes.services');
 const clearDB = require('../clearDB');
 const populateDB = require('../../PopulateDatabase');
 const ProductTypeModel = require('../../../src/graphql/models/productTypes.modelgql');
 const ProductTypeCategoryModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
-let productTypeCategory = {
-  name: 'Fruits',
-  image: 'ceci est une image de fruits encodée en base64!'
-};
-
-let productTypePomme = {
-  name: 'Pomme',
-  image: 'ceci est une image de pomme encodée en base64!'
-};
-
-let productTypePoire = {
-  name: 'Poire',
-  image: 'ceci est une image de poire encodée en base64!'
-};
-
-const productPomme = {
-  description: 'Une pomme monnnnstre bonne!'
-};
-
-const productPoire = {
-  description: 'Une poire de folie!'
-};
-
-let salespointBenoit = {
-  name: 'Chez moi',
-  address: {
-    number: 6,
-    street: 'Chemin de par ici',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  },
-  schedule:
-    {
-      monday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        },
-        {
-          openingHour: '13:00',
-          closingHour: '18:00'
-        }
-      ],
-      tuesday: [],
-      wednesday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      thursday: [],
-      friday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      saturday: [],
-      sunday: []
-    }
-};
-
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est une image encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un chouet gaillard!',
-  website: 'benoitpaysan.ch'
-};
-
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un vrai payouz!'
-};
+let productTypeCategory;
+let productTypePomme;
+let productTypePoire;
+let productPomme;
+let productPoire;
+let salespointBenoit;
+let benoit;
+let antoine;
 
 let tabProductsBenoit = [];
 let tabProductsAntoine = [];
@@ -102,6 +24,97 @@ let tabProducers = [benoit, antoine];
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
   await clearDB();
+
+  // ---------------------------------------- on set le contenu des différents objets utilisés dans les tests ----------------------------------------
+  productTypeCategory = {
+    name: 'Fruits',
+    image: 'ceci est une image de fruits encodée en base64!'
+  };
+
+  productTypePomme = {
+    name: 'Pomme',
+    image: 'ceci est une image de pomme encodée en base64!'
+  };
+
+  productTypePoire = {
+    name: 'Poire',
+    image: 'ceci est une image de poire encodée en base64!'
+  };
+
+  const productPomme = {
+    description: 'Une pomme monnnnstre bonne!'
+  };
+
+  const productPoire = {
+    description: 'Une poire de folie!'
+  };
+
+  salespointBenoit = {
+    name: 'Chez moi',
+    address: {
+      number: 6,
+      street: 'Chemin de par ici',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 1.1234567,
+      latitude: 1.123456789
+    },
+    schedule:
+      {
+        monday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          },
+          {
+            openingHour: '13:00',
+            closingHour: '18:00'
+          }
+        ],
+        tuesday: [],
+        wednesday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        thursday: [],
+        friday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        saturday: [],
+        sunday: []
+      }
+  };
+
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est une image encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un chouet gaillard!',
+    website: 'benoitpaysan.ch'
+  };
+
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un vrai payouz!'
+  };
+
+
+
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 productTypeCategory
@@ -252,25 +265,6 @@ describe('tests producers services', () => {
     });
   });
 
-  describe('tests getAllProducerWaitingForValidation', () => {
-    it('should get all producers waiting for validation', async() => {
-      // on récupère tous les producteurs non validés (isValidated = false)
-      let allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
-      allProducersWaitingForValidation.should.be.an('array');
-      allProducersWaitingForValidation.length.should.be.equal(2);
-      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
-
-      // on valide un des producteurs non validé
-      await producersServices.validateAProducer(allProducersWaitingForValidation[0].id, true);
-
-      // on récupère tous les producteurs non validés --> il y en a bien un de moins
-      allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
-      allProducersWaitingForValidation.should.be.an('array');
-      allProducersWaitingForValidation.length.should.be.equal(1);
-      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
-    });
-  });
-
   describe('tests getAllProducersInReceivedIdList', () => {
     it('should get all producers with id in received list', async() => {
       // on récupère 2 producteurs
@@ -289,6 +283,25 @@ describe('tests producers services', () => {
       producers.should.be.not.null;
       producers.should.be.an('array');
       producers.length.should.be.equal(0);
+    });
+  });
+
+  describe('tests getAllProducerWaitingForValidation', () => {
+    it('should get all producers waiting for validation', async() => {
+      // on récupère tous les producteurs non validés (isValidated = false)
+      let allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
+      allProducersWaitingForValidation.should.be.an('array');
+      allProducersWaitingForValidation.length.should.be.equal(2);
+      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
+
+      // on valide un des producteurs non validé
+      await producersServices.validateAProducer(allProducersWaitingForValidation[0].id, true);
+
+      // on récupère tous les producteurs non validés --> il y en a bien un de moins
+      allProducersWaitingForValidation = await producersServices.getAllProducerWaitingForValidation();
+      allProducersWaitingForValidation.should.be.an('array');
+      allProducersWaitingForValidation.length.should.be.equal(1);
+      allProducersWaitingForValidation.forEach(p => p.isValidated.should.be.false);
     });
   });
 
@@ -396,6 +409,363 @@ describe('tests producers services', () => {
       const res = await producersServices.addProducer(producerToAdd);
       res.should.be.not.null;
       res.message.should.be.equal('This email is already used.');
+    });
+  });
+
+  describe('tests addProductToProducer', () => {
+    beforeEach(() => clearAndPopulateDB());
+
+    it('should add only once a new product to a producer', async() => {
+      // on ajoute le produit aux produits proposés par le producteur
+      benoit = (await producersServices.addProductToProducer(tabProductsAntoine[0].id, benoit.id)).toObject();
+      expect(benoit.productsIds.length).to.be.equal(3);
+      expect(benoit.productsIds.map(p => p.toString())).to.contain(tabProductsAntoine[0].id);
+
+      // on tente d'ajouter le même produit
+      benoit = (await producersServices.addProductToProducer(tabProductsAntoine[0].id, benoit.id)).toObject();
+      // il ne devrait pas avoir été ajouté à nouveau -> la taille du tableau reste de 3
+      expect(benoit.productsIds.length).to.be.equal(3);
+      expect(benoit.productsIds.map(p => p.toString())).to.contain(tabProductsAntoine[0].id);
+    });
+
+    it('should not add a new product to a producer because invalid producerId received (too short)', async() => {
+      try {
+        benoit = await producersServices.addProductToProducer(tabProductsAntoine[0].id, 'abcdef');
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
+      }
+    });
+
+    it('should not add a new product to a producer because invalid producerId received (too long)', async() => {
+      try {
+        benoit = await producersServices.addProductToProducer(tabProductsAntoine[0].id, 'abcdefabcdefabcdefabcdefabcdef');
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
+      }
+    });
+
+    it('should not add a new product to a producer because unknown producerId received', async() => {
+      benoit = await producersServices.addProductToProducer(tabProductsAntoine[0].id, 'abcdefabcdefabcdefabcdef');
+      expect(benoit).to.be.null;
+    });
+
+    it('should not add a new product to a producer because invalid productId received (too short)', async() => {
+      try {
+        benoit = (await producersServices.addProductToProducer('abcedf', benoit.id)).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedf" at path "productsIds"');
+      }
+    });
+
+    it('should not add a new product to a producer because invalid productId received (too long)', async() => {
+      try {
+        benoit = (await producersServices.addProductToProducer('abcedfabcedfabcedfabcedfabcedf', benoit.id)).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedfabcedfabcedfabcedfabcedf" at path "productsIds"');
+      }
+    });
+
+    it('should not add a new product to a producer because unknown productId received', async() => {
+      benoit = (await producersServices.addProductToProducer('abcedfabcedfabcedfabcedf', benoit.id)).toObject();
+      // fixme: il faut régler le problème de require circulaire pour que le test passe...!
+      expect(benoit.message).to.be.equal('The given product (with id: abcedfabcedfabcedfabcedf) doesn’t exist in the database!');
+    });
+  });
+
+  describe('tests removeProductFromProducer', () => {
+    it('should remove a product from a producer', async() => {
+      // on ajoute le produit aux produits proposés par le producteur
+      benoit = (await producersServices.addProductToProducer(tabProductsAntoine[0].id, benoit.id)).toObject();
+      expect(benoit.productsIds.length).to.be.equal(3);
+      expect(benoit.productsIds.map(p => p.toString())).to.contain(tabProductsAntoine[0].id);
+
+      // on supprime le produit
+      benoit = (await producersServices.removeProductFromProducer(tabProductsAntoine[0].id, benoit.id)).toObject();
+      expect(benoit.productsIds.length).to.be.equal(2);
+      expect(benoit.productsIds.map(p => p.toString())).not.to.contain(tabProductsAntoine[0].id);
+    });
+  });
+
+  describe('tests addSalespointToProducer', () => {
+    it('should add a salespoint to a producer', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = (await producersServices.addSalespointToProducer(antoine.id, salespointBenoit)).toObject();
+      // antoine a maintenant un point de vente
+      expect(antoine.salespointId).to.be.not.null;
+
+      const salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
+      expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
+      expect(salespoint.name).to.be.equal(salespointBenoit.name);
+    });
+
+    it('should not add a salespoint to a producer because invalid producerId received (too short)', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = await producersServices.addSalespointToProducer('abcdef', salespointBenoit);
+      expect(antoine.message).to.be.equal('Received producerId is invalid!');
+    });
+
+    it('should not add a salespoint to a producer because invalid producerId received (too long)', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdefabcdef', salespointBenoit);
+      expect(antoine.message).to.be.equal('Received producerId is invalid!');
+    });
+
+    it('should not add a salespoint to a producer because received producerId is unknown', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdef', salespointBenoit);
+      expect(antoine).to.be.null;
+    });
+  });
+
+  describe('tests removeSalespointToProducer', () => {
+    it('should remove a salespoint to a producer', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = (await producersServices.addSalespointToProducer(antoine.id, salespointBenoit)).toObject();
+      // antoine a maintenant un point de vente
+      expect(antoine.salespointId).to.be.not.null;
+
+      // on supprime le point de vente du producteur
+      antoine = (await producersServices.removeSalespointToProducer(antoine.id)).toObject();
+
+      let salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
+      expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
+      expect(salespoint.name).to.be.equal(salespointBenoit.name);
+
+      // antoine n'a plus de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
+      expect(salespoint).to.be.null;
     });
   });
 
@@ -685,7 +1055,6 @@ describe('tests producers services', () => {
       person.message.should.be.equal('There is no producer with this id in database!');
     });
   });
-
 
   describe('tests removeFollowerToProducer', () => {
     let users;

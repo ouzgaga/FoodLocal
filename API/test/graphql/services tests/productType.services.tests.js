@@ -1,42 +1,51 @@
-const productTypeServices = require('../../../src/graphql/services/productType.services');
+const productTypeServices = require('../../../src/graphql/services/productTypes.services');
 const producersServices = require('../../../src/graphql/services/producers.services');
+const usersServices = require('../../../src/graphql/services/users.services');
 const productsServices = require('../../../src/graphql/services/products.services');
 const clearDB = require('../clearDB');
 const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
 const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
-let categoryFruits = {
-  name: 'Fruits',
-  image: 'ceci est une image de fruits encodée en base64!'
-};
-
-let categoryVegetable = {
-  name: 'Légumes',
-  image: 'ceci est une image de légume encodée en base64!'
-};
-
-let productTypePomme = {
-  name: 'Pomme',
-  image: 'ceci est une image de pomme encodée en base64!'
-};
-let productTypePoire = {
-  name: 'Poire',
-  image: 'ceci est une image de poire encodée en base64!'
-};
-let productTypeRaisin = {
-  name: 'Raisin',
-  image: 'ceci est une image de raisin encodée en base64!'
-};
-let productTypeCourgette = {
-  name: 'Courgette',
-  image: 'ceci est une image de courgette encodée en base64!'
-};
+let categoryFruits;
+let categoryVegetable;
+let productTypePomme;
+let productTypePoire;
+let productTypeRaisin;
+let productTypeCourgette;
 
 let tabProductType = [];
 
 const clearAndPopulateDB = async() => {
   // on supprime tout le contenu de la DB
   await clearDB();
+
+  //
+  categoryFruits = {
+    name: 'Fruits',
+    image: 'ceci est une image de fruits encodée en base64!'
+  };
+
+  categoryVegetable = {
+    name: 'Légumes',
+    image: 'ceci est une image de légume encodée en base64!'
+  };
+
+  productTypePomme = {
+    name: 'Pomme',
+    image: 'ceci est une image de pomme encodée en base64!'
+  };
+  productTypePoire = {
+    name: 'Poire',
+    image: 'ceci est une image de poire encodée en base64!'
+  };
+  productTypeRaisin = {
+    name: 'Raisin',
+    image: 'ceci est une image de raisin encodée en base64!'
+  };
+  productTypeCourgette = {
+    name: 'Courgette',
+    image: 'ceci est une image de courgette encodée en base64!'
+  };
 
   // on ajoute le contenu de départ
   categoryFruits = (await ProductTypeCategoriesModel.create(categoryFruits)).toObject();
@@ -132,7 +141,20 @@ describe('tests productType services', () => {
 
   describe('tests getProductTypeByCategory', () => {
     it('should get all products of the category corresponding to the received id', async() => {
-      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
+      const benoit = (await producersServices.addProducer(
+        {
+          firstname: 'Benoît',
+          lastname: 'Schöpfli',
+          email: 'benoit@paysan.ch',
+          password: '1234abcd',
+          image: 'Ceci est une image encodée en base64!',
+          phoneNumber: '0761435196',
+          description: 'Un chouet gaillard!',
+          website: 'benoitpaysan.ch'
+        }
+      )).toObject();
+
+      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
       tabProductType = [productTypeCourgette];
 
       // on récupère tous les productType de la catégorie correspondante à l'id passé en paramètre
@@ -272,24 +294,136 @@ describe('tests productType services', () => {
   });
 
   describe('tests addProducerProducingThisProductType', () => {
+    beforeEach(() => clearAndPopulateDB());
+
     it('should add the received producerId as producing one or more products of the received productTypeId', async() => {
+      const benoit = (await producersServices.addProducer(
+        {
+          firstname: 'Benoît',
+          lastname: 'Schöpfli',
+          email: 'benoit@paysan.ch',
+          password: '1234abcd',
+          image: 'Ceci est une image encodée en base64!',
+          phoneNumber: '0761435196',
+          description: 'Un chouet gaillard!',
+          website: 'benoitpaysan.ch'
+        }
+      )).toObject();
+
+      const benoit2 = (await producersServices.addProducer(
+        {
+          firstname: 'Benoît',
+          lastname: 'Schöpfli',
+          email: 'benoit2@paysan.ch',
+          password: '1234abcd',
+          image: 'Ceci est une image encodée en base64!',
+          phoneNumber: '0761435196',
+          description: 'Un chouet gaillard!',
+          website: 'benoitpaysan.ch'
+        }
+      )).toObject();
+
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
-      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
+      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(1);
       productTypeCourgette.producersIds.map(p => p.toString())
         .should
-        .contain('abcdefabcdefabcdefabcdef');
+        .contain(benoit.id);
 
       // on tente de rajouter un producteur produisant déjà un ou plusieurs produits de type productTypeCourgette (donc déjà présent dans le tableau)
-      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
+      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(1);
-      productTypeCourgette.producersIds.map(p => p.toString()).should.contain('abcdefabcdefabcdefabcdef');
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain(benoit.id);
 
       // on ajoute un autre producteur produisant un ou plusieurs produits de type productTypeCourgette
-      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdfe')).toObject();
+      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit2.id)).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(2);
-      productTypeCourgette.producersIds.map(p => p.toString()).should.contain('abcdefabcdefabcdefabcdfe');
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain(benoit.id);
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain(benoit2.id);
+    });
+
+    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is not a'
+       + ' producer but a userId', async() => {
+      const benoit = (await usersServices.addUser(
+        {
+          firstname: 'Benoît',
+          lastname: 'Schöpfli',
+          email: 'benoit@paysan.ch',
+          password: '1234abcd',
+          image: 'Ceci est une image encodée en base64!',
+          phoneNumber: '0761435196',
+          description: 'Un chouet gaillard!',
+          website: 'benoitpaysan.ch'
+        }
+      )).toObject();
+
+      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+      try {
+        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal(`The given producerId (with id: ${benoit.id}) doesn’t exist in the database or is not a producer!`);
+      }
+    });
+
+    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is invalid (too'
+       + ' short)', async() => {
+      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+      try {
+        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdef')).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "producersIds"');
+      }
+    });
+
+    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is invalid (too'
+       + ' long)', async() => {
+      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+      try {
+        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdefabcdef')).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "producersIds"');
+      }
+    });
+
+    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is unknown', async() => {
+      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+      try {
+        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('The given producerId (with id: abcdefabcdefabcdefabcdef) doesn’t exist in the database or is not a producer!');
+      }
+    });
+  });
+
+  describe('tests removeProducerProducingThisProductType', () => {
+    it('should remove the received producerId as producing one or more products of the received productTypeId', async() => {
+      const benoit = (await producersServices.addProducer(
+        {
+          firstname: 'Benoît',
+          lastname: 'Schöpfli',
+          email: 'benoit@paysan.ch',
+          password: '1234abcd',
+          image: 'Ceci est une image encodée en base64!',
+          phoneNumber: '0761435196',
+          description: 'Un chouet gaillard!',
+          website: 'benoitpaysan.ch'
+        }
+      )).toObject();
+
+      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+      productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
+      productTypeCourgette.producersIds.length.should.be.equal(1);
+      productTypeCourgette.producersIds.map(p => p.toString()).should.contain(benoit.id);
+
+      productTypeCourgette = (await productTypeServices.removeProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
+      productTypeCourgette.producersIds.length.should.be.equal(0);
+      productTypeCourgette.producersIds.map(p => p.toString()).should.not.contain(benoit.id);
     });
   });
 

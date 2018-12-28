@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ProductTypeModel = require('./productTypes.modelgql');
+const ProductTypesModel = require('./productTypes.modelgql');
 
 const options = {
   toObject: { virtuals: true }
@@ -27,12 +27,16 @@ const ProductSchema = new mongoose.Schema(
  * Lève une erreur s'il n'existe pas dans la collection des productType.
  */
 ProductSchema.pre('save', async function(next) {
-  const productTypeId = await ProductTypeModel.findById(this.productTypeId);
+  try {
+    const productTypeId = await ProductTypesModel.findById(this.productTypeId);
 
-  if (!productTypeId) {
-    throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
+    if (!productTypeId) {
+      throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
+    }
+    next();
+  } catch (err) {
+    return next(err);
   }
-  next();
 });
 
 /**

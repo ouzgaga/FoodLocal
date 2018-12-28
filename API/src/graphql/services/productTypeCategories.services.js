@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ProductTypeCategoryModel = require('../models/productTypeCategories.modelgql');
+const ProductTypeCategoriesModel = require('../models/productTypeCategories.modelgql');
 
 /**
  * Retourne "limit" catégories de produits de la base de données, filtrés
@@ -18,7 +18,7 @@ function getProductTypeCategories({ tags = undefined, limit = 50, page = 0 } = {
     skip = page * limit;
   }
 
-  return ProductTypeCategoryModel.find({ tags })
+  return ProductTypeCategoriesModel.find({ tags })
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
@@ -33,7 +33,7 @@ function getProductTypeCategoryById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received productTypeCategory.id is invalid!');
   } else {
-    return ProductTypeCategoryModel.findById(id);
+    return ProductTypeCategoriesModel.findById(id);
   }
 }
 
@@ -44,7 +44,7 @@ function getProductTypeCategoryById(id) {
  * @param productTypeCategory, Les informations de la catégorie de produits à ajouter.
  */
 function addProductTypeCategory(productTypeCategory) {
-  return new ProductTypeCategoryModel(productTypeCategory).save();
+  return new ProductTypeCategoriesModel(productTypeCategory).save();
 }
 
 /**
@@ -59,7 +59,7 @@ function updateProductTypeCategory(productTypeCategory) {
     return new Error('Received productTypeCategory.id is invalid!');
   }
 
-  return ProductTypeCategoryModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true }); // retourne l'objet modifié
+  return ProductTypeCategoriesModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -72,7 +72,7 @@ function deleteProductTypeCategory(id) {
     return new Error('Received productTypeCategory.id is invalid!');
   }
 
-  return ProductTypeCategoryModel.findByIdAndRemove(id);
+  return ProductTypeCategoriesModel.findByIdAndRemove(id);
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const ProductsModel = require('../models/products.modelgql');
-const productTypesServices = require('./productType.services');
+const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
 
 /**

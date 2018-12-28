@@ -53,10 +53,18 @@ async function checkGivenPersonAndProducerExists(query, next) {
 }
 
 personRatingProducer.pre('save', function(next) {
-  return checkGivenPersonAndProducerExists(this, next);
+  try {
+    return checkGivenPersonAndProducerExists(this, next);
+  } catch (err) {
+    return next(err);
+  }
 });
 personRatingProducer.pre('findOneAndUpdate', function(next) {
-  return checkGivenPersonAndProducerExists(this, next);
+  try {
+    return checkGivenPersonAndProducerExists(this, next);
+  } catch (err) {
+    return next(err);
+  }
 });
 
 
@@ -70,9 +78,8 @@ async function updateProducerRating(doc) {
     return null;
   }
 
-
   // TODO: tester si ça fonctionne de lui passer un objectId !
-  let rating = await personRatingProducerModel.aggregate([
+  let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(doc.producerId) } },
     { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
     { $project: { _id: false } }
@@ -95,9 +102,9 @@ personRatingProducer.post('save', doc => updateProducerRating(doc));
 personRatingProducer.post('findOneAndUpdate', doc => updateProducerRating(doc));
 personRatingProducer.post('findOneAndRemove', doc => updateProducerRating(doc));
 
-const personRatingProducerModel = mongoose.model('personRatingProducer', personRatingProducer);
+const PersonRatingProducersModel = mongoose.model('personRatingProducer', personRatingProducer);
 
 /**
  * @typedef personRatingProducer
  */
-module.exports = personRatingProducerModel;
+module.exports = PersonRatingProducersModel;

@@ -1,5 +1,5 @@
 const producersServices = require('../../../src/graphql/services/producers.services');
-const personRatingProducerServices = require('../../../src/graphql/services/personRatingProducer.services');
+const personRatingProducerServices = require('../../../src/graphql/services/personRatingProducers.services');
 const clearDB = require('../clearDB');
 
 let benoit = {
@@ -305,7 +305,8 @@ describe('tests personRatingProducer services', () => {
 
       try {
         // on ajoute le rating ratingBenoit5 avec un producerId inconnu -> retournera une erreur
-        const addedRating = await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
+        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
         e.message.should.be.equal(`The given producerId (${ratingBenoit5.producerId}) doesn’t exist in the database!`);
@@ -328,7 +329,8 @@ describe('tests personRatingProducer services', () => {
 
       try {
         // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
-        const addedRating = await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
+        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
         e.message.should.be.equal(`The given personId (${ratingBenoit5.personId}) doesn’t exist in the database!`);
@@ -356,7 +358,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
@@ -384,7 +386,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
@@ -413,7 +415,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: 3.5 is not an integer value');
@@ -460,7 +462,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
@@ -488,7 +490,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
@@ -516,7 +518,7 @@ describe('tests personRatingProducer services', () => {
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        const addedRating = await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        await personRatingProducerServices.updatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: 3.5 is not an integer value');

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const ProducersModel = require('./producers.modelgql');
-const ProductTypeCategoryModel = require('./productTypeCategories.modelgql');
+const ProductTypeCategoriesModel = require('./productTypeCategories.modelgql');
 const personsServices = require('../services/persons.services');
 
 const options = {
@@ -10,7 +9,7 @@ const options = {
 /**
  * ProductType Schema
  */
-const ProductTypeSchema = new mongoose.Schema(
+const productTypeSchema = new mongoose.Schema(
   {
     name: {
       type: mongoose.Schema.Types.String,
@@ -37,11 +36,11 @@ const ProductTypeSchema = new mongoose.Schema(
  * Vérifie l'existence de la categoryId entrée ainsi que l'existence de chaque producer du tableau producersIds.
  * Lève une erreur si l'un d'entre eux n'existe pas dans la base de données.
  */
-ProductTypeSchema.pre('save', async function(next) {
-  const categoryId = await ProductTypeCategoryModel.findById(this.categoryId);
+productTypeSchema.pre('save', async function(next) {
+  const categoryId = await ProductTypeCategoriesModel.findById(this.categoryId);
 
   if (!categoryId) {
-    throw new Error(`The given categoryId (${this.categoryId}) doesn’t exist in the database!`);
+    next(new Error(`The given categoryId (${this.categoryId}) doesn’t exist in the database!`));
   }
 
   if (this.producersIds != null && this.producersIds.length > 0) {
@@ -51,7 +50,7 @@ ProductTypeSchema.pre('save', async function(next) {
       if (producer) {
         return producer.id;
       } else {
-        throw new Error(`The given producerId (${producerId}) doesn’t exist in the database!`);
+        next(new Error(`The given producerId (${producerId}) doesn’t exist in the database or is not a producer!`));
       }
     });
     await Promise.all(this.producersIds);
@@ -59,7 +58,27 @@ ProductTypeSchema.pre('save', async function(next) {
   next();
 });
 
+
+productTypeSchema.pre('findOneAndUpdate', async function(next) {
+  try {
+    if (this._update != null && this._update.$addToSet != null) {
+      const addToSetOperation = this._update.$addToSet;
+      if (addToSetOperation.producersIds != null) {
+        const producerExistInDB = await personsServices.checkIfPersonIdExistInDB(this._update.$addToSet.producersIds, true);
+        if (producerExistInDB) {
+          return this._update.$addToSet.producersIds;
+        } else {
+          throw new Error(`The given producerId (with id: ${this._update.$addToSet.producersIds}) doesn’t exist in the database or is not a producer!`);
+        }
+      }
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /**
  * @typedef ProductType
  */
-module.exports = mongoose.model('productType', ProductTypeSchema);
+module.exports = mongoose.model('productType', productTypeSchema);

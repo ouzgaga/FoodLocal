@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const tokenGenerator = require('uuid-token-generator');
-const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
+const TokenValidationEmailModel = require('../models/tokenValidationEmail.modelgql');
 const mail = require('../utils/sendEmailFoodlocal');
 
 /**
@@ -16,7 +16,7 @@ function getTokenValidationEmails({ tags = undefined, limit = 50, page = 0 } = {
     skip = page * limit;
   }
 
-  return TokenValidationEmailsModel.find(tags)
+  return TokenValidationEmailModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
@@ -28,7 +28,7 @@ function getTokenValidationEmails({ tags = undefined, limit = 50, page = 0 } = {
  * @returns {*} - return the token found
  */
 function getTokenValidationEmailByValue(value) {
-  return TokenValidationEmailsModel.findOne({ value });
+  return TokenValidationEmailModel.findOne({ value });
 }
 
 /**
@@ -50,7 +50,7 @@ async function addTokenValidationEmail (user) {
     idPerson: user.id
   };
   // insert in the database
-  const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();
+  const tokenValidationEmail = await new TokenValidationEmailModel(token).save();
   const name = `${user.firstname} ${user.lastname}`;
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
@@ -68,7 +68,7 @@ function deleteTokenValidationEmail(id) {
     return new Error('Received TokenValidationEmail.id is invalid!');
   }
 
-  return TokenValidationEmailsModel.findByIdAndRemove(id);
+  return TokenValidationEmailModel.findByIdAndRemove(id);
 }
 
 function tokenToOld(dateCreation) {

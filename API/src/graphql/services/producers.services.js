@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
-const productTypeServices = require('./productType.services');
+const productTypesServices = require('./productTypes.services');
 const salespointsServices = require('./salespoints.services');
 
 /**
@@ -72,7 +72,7 @@ async function filterProducers(byProductTypeIds) {
   let filtredProducersObjectIds;
   if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
     // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    filtredProducersObjectIds = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+    filtredProducersObjectIds = await productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
   }
 
   if (filtredProducersObjectIds != null && filtredProducersObjectIds.length !== 0) {
@@ -121,12 +121,10 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
   }
 }
 
-// FIXME: à ajouter aux tests!!! Tester d'ajouter plusieurs fois le même produit, vérifier la validité des 2 ids!
 function addProductToProducer(productId, producerId) {
   return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
 }
 
-// FIXME: à ajouter aux tests!!!  Vérifier la validité des 2 ids!
 function removeProductFromProducer(productId, producerId) {
   return ProducersModel.findByIdAndUpdate(producerId, { $pull: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
 }
@@ -247,7 +245,6 @@ function deleteProducer(id) {
   return ProducersModel.findByIdAndRemove(id);
 }
 
-// FIXME: à ajouter aux tests!!!
 async function addFollowerToProducer(producerId, followerId) {
   if (!mongoose.Types.ObjectId.isValid(followerId)) {
     return new Error('Received followerId is invalid!');
@@ -275,7 +272,6 @@ async function addFollowerToProducer(producerId, followerId) {
   return personsServices.addProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
 
-// FIXME: à ajouter aux tests!!!
 async function removeFollowerToProducer(producerId, followerId) {
   if (!mongoose.Types.ObjectId.isValid(followerId)) {
     return new Error('Received followerId is invalid!');

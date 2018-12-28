@@ -2,89 +2,96 @@ const salespointsServices = require('../../../src/graphql/services/salespoints.s
 const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
 
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est une image encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un chouet gaillard!',
-  website: 'benoitpaysan.ch'
-};
-
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un vrai payouz!'
-};
-
-let salespointWithSchedule = {
-  name: 'Chez moi',
-  address: {
-    number: 6,
-    street: 'Chemin de par ici',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  },
-  schedule:
-    {
-      monday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        },
-        {
-          openingHour: '13:00',
-          closingHour: '18:00'
-        }
-      ],
-      tuesday: [],
-      wednesday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      thursday: [],
-      friday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      saturday: [],
-      sunday: []
-    }
-};
-
-let salespointWithoutSchedule = {
-  name: 'Chez toi',
-  address: {
-    number: 12,
-    street: 'Chemin de par là-bas',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  }
-};
+let benoit;
+let antoine;
+let salespointWithSchedule;
+let salespointWithoutSchedule;
 
 let tabSalespoints = [];
 
 const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
   await clearDB();
+
+  //
+
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est une image encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un chouet gaillard!',
+    website: 'benoitpaysan.ch'
+  };
+
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un vrai payouz!'
+  };
+
+  salespointWithSchedule = {
+    name: 'Chez moi',
+    address: {
+      number: 6,
+      street: 'Chemin de par ici',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 1.1234567,
+      latitude: 1.123456789
+    },
+    schedule:
+      {
+        monday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          },
+          {
+            openingHour: '13:00',
+            closingHour: '18:00'
+          }
+        ],
+        tuesday: [],
+        wednesday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        thursday: [],
+        friday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        saturday: [],
+        sunday: []
+      }
+  };
+
+  salespointWithoutSchedule = {
+    name: 'Chez toi',
+    address: {
+      number: 12,
+      street: 'Chemin de par là-bas',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 1.1234567,
+      latitude: 1.123456789
+    }
+  };
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 producteur contenant le salespoint 'salespointWithSchedule'
