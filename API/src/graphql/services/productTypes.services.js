@@ -52,8 +52,11 @@ async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(prod
 
   const producersIds = [];
 
+  // fixme: il faut récupérer l'id des producteurs présent dans chaque productType pour faire un ET. Là, je fais un OU et je récupère plusieurs fois le même
+  //  producteur...!
   // on récupère tous les ids des producteurs proposant des produits de ces productTypes
   productTypes.forEach(p => p.producersIds.forEach(id => producersIds.push(id)));
+  producersIds.filter((p1, p2) => p1 !== p2);
   return producersIds;
 }
 

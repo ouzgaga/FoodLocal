@@ -4,7 +4,7 @@ const usersServices = require('../../../src/graphql/services/users.services');
 const productsServices = require('../../../src/graphql/services/products.services');
 const productTypeServices = require('../../../src/graphql/services/productTypes.services');
 const clearDB = require('../clearDB');
-const populateDB = require('../../PopulateDatabase');
+const populateDB = require('../../populateDatabase');
 const ProductTypeModel = require('../../../src/graphql/models/productTypes.modelgql');
 const ProductTypeCategoryModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
@@ -453,7 +453,7 @@ describe('tests producers services', () => {
       try {
         benoit = (await producersServices.addProductToProducer('abcedf', benoit.id)).toObject();
       } catch (err) {
-        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedf" at path "productsIds"');
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedf" at path "_id" for model "products"');
       }
     });
 
@@ -461,14 +461,16 @@ describe('tests producers services', () => {
       try {
         benoit = (await producersServices.addProductToProducer('abcedfabcedfabcedfabcedfabcedf', benoit.id)).toObject();
       } catch (err) {
-        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedfabcedfabcedfabcedfabcedf" at path "productsIds"');
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcedfabcedfabcedfabcedfabcedf" at path "_id" for model "products"');
       }
     });
 
     it('should not add a new product to a producer because unknown productId received', async() => {
-      benoit = (await producersServices.addProductToProducer('abcedfabcedfabcedfabcedf', benoit.id)).toObject();
-      // fixme: il faut régler le problème de require circulaire pour que le test passe...!
-      expect(benoit.message).to.be.equal('The given product (with id: abcedfabcedfabcedfabcedf) doesn’t exist in the database!');
+      try {
+        benoit = (await producersServices.addProductToProducer('abcedfabcedfabcedfabcedf', benoit.id)).toObject();
+      } catch (err) {
+        expect(err.message).to.be.equal('The given product (with id: abcedfabcedfabcedfabcedf) doesn’t exist in the database!');
+      }
     });
   });
 

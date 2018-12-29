@@ -5,7 +5,7 @@ const productsServices = require('../../../src/graphql/services/products.service
 const productTypeServices = require('../../../src/graphql/services/productTypes.services');
 const usersServices = require('../../../src/graphql/services/users.services');
 const clearDB = require('../clearDB');
-const populateDB = require('../../PopulateDatabase');
+const populateDB = require('../../populateDatabase');
 
 let producers = [];
 let users = [];

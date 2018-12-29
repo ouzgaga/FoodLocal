@@ -222,14 +222,7 @@ async function validateAProducer(producerId, validationState) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     return new Error('Received producer.id is invalid!');
   }
-
-  const producerToUpdate = await getProducerById(producerId);
-  if (producerToUpdate != null) {
-    producerToUpdate.isValidated = validationState;
-    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
-  } else {
-    return null;
-  }
+  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -241,6 +234,8 @@ function deleteProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received producer.id is invalid!');
   }
+
+  // FIXME: il faut supprimer toutes les informations du producteur -> les produits, le point de vente, son id dans les productType qu'il produisait, ......
 
   return ProducersModel.findByIdAndRemove(id);
 }

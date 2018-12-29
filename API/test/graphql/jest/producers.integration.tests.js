@@ -1,151 +1,124 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const productsServices = require('../../../src/graphql/services/products.services');
-const salespointsServices = require('../../../src/graphql/services/salespoints.services');
-const producersServices = require('../../../src/graphql/services/producers.services');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
-const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
-const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
-
-const {
-  queryObjAllProducers,
-  queryObjProducerById,
-  queryObjGetProducersWaitingForValidation,
-  queryObjGetFilterProducers,
-  mutationValidateProducer
-} = require('./queries/QueryObjsProducers');
+const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-
-let productTypeCategory = {
-  name: 'Fruits',
-  image: 'ceci est une image de fruits encodée en base64!'
-};
-
-let productTypePomme = {
-  name: 'Pomme',
-  image: 'ceci est une image de pomme encodée en base64!'
-};
-
-let productTypePoire = {
-  name: 'Poire',
-  image: 'ceci est une image de poire encodée en base64!'
-};
-
-let productPomme = {
-  description: 'Une pomme monnnnstre bonne!'
-};
-
-let productPoire = {
-  description: 'Une poire de folie!'
-};
-
-let salespointBenoit = {
-  name: 'Chez moi',
-  address: {
-    number: 6,
-    street: 'Chemin de par ici',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  },
-  schedule:
-    {
-      monday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        },
-        {
-          openingHour: '13:00',
-          closingHour: '18:00'
-        }
-      ],
-      tuesday: [],
-      wednesday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      thursday: [],
-      friday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      saturday: [],
-      sunday: []
-    }
-};
-
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est une image encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un chouet gaillard!',
-  website: 'benoitpaysan.ch'
-};
-
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un vrai payouz!'
-};
+let tabProducers;
+let tabProductTypes;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
+  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
   await clearDB();
 
-  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
-  // on ajoute 1 productTypeCategory
-  productTypeCategory = (await ProductTypeCategoriesModel.create(productTypeCategory)).toObject();
+  // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
+  await populateDB();
 
-  // on ajoute 2 productType
-  productTypePomme.categoryId = productTypeCategory.id;
-  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
-  productTypePoire.categoryId = productTypeCategory.id;
-  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
-
-  // on set le productTypeId avec les id de productType qu'on vient d'ajouter
-  productPomme.productTypeId = productTypePomme.id;
-  productPoire.productTypeId = productTypePoire.id;
-
-  // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
-  benoit = (await producersServices.addProducer(benoit)).toObject();
-  await producersServices.addSalespointToProducer(benoit.id, salespointBenoit);
-  await productsServices.addAllProductsInArray([productPomme, productPoire], benoit.id);
-  benoit = (await producersServices.getProducerById(benoit.id)).toObject();
-
-  // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
-  antoine = (await producersServices.addProducer(antoine)).toObject();
-  await productsServices.addAllProductsInArray([productPomme], antoine.id);
-  antoine = (await producersServices.getProducerById(antoine.id)).toObject();
+  tabProducers = getTabProducers();
+  tabProductTypes = getTabProductTypes();
 };
 
 describe('Testing graphql request producers', () => {
-
   describe('QUERY producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
     // -------------------------Producers()------------------------------------- //
     describe('Testing producers()', () => {
+      const { query } = {
+        query: `
+    query{
+      producers{
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+      };
       it('should get all producers', async(done) => {
-        const { query, variables, context } = queryObjAllProducers;
-        const result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query, null, {}, {});
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
@@ -153,29 +126,117 @@ describe('Testing graphql request producers', () => {
     });
 
     // ----------------------Producer(id)-------------------------------------- //
-    describe('Testing producer(ProducerId)', () => {
+    describe('Testing producer(producerId: ID!)', () => {
+      const { query } = {
+        query: `
+    query($id: ID!){
+      producer(producerId: $id){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+      };
+
       it('should get a producer by id (without salespoint)', async(done) => {
-        const { query, context } = queryObjProducerById;
-        const variables = { id: antoine.id };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { id: tabProducers[3].id };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
       });
 
       it('should get a producer by id (with salespoint)', async(done) => {
-        const { query, context } = queryObjProducerById;
-        const variables = { id: benoit.id };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { id: tabProducers[0].id };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
       });
 
       it('should fail getting a producer because unknown id received', async(done) => {
-        const { query, context } = queryObjProducerById;
         const variables = { id: 'abcdefabcdefabcdefbacdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         expect(result.data.producer).toBeNull();
         expect(result).toMatchSnapshot();
@@ -183,9 +244,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail getting a producer because invalid id received (too short)', async(done) => {
-        const { query, context } = queryObjProducerById;
         const variables = { id: 'abcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
         expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
@@ -195,9 +255,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail getting a producer because invalid id received (too long)', async(done) => {
-        const { query, context } = queryObjProducerById;
         const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
         expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
@@ -209,44 +268,242 @@ describe('Testing graphql request producers', () => {
 
     // ----------------------ProducerWaitingForValidation()-------------------------------------- //
     describe('Testing producerWaitingForValidation()', () => {
-      it('should get all producers waiting for validation', async(done) => {
-        const { query, variables, context } = queryObjGetProducersWaitingForValidation;
-        let result = await graphql(schema, query, null, context, variables);
-        expect.assertions(4);
+      const { query } = {
+        query: `
+    query{
+      producersWaitingForValidation{
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`,
+        variables: {},
+        context: {}
+      };
+      it('should get all producers (2) waiting for validation', async(done) => {
+        const result = await graphql(schema, query, null, null, null);
+        expect.assertions(2);
         // on check qu'il y a bien 2 producteurs en attente de validation
         expect(result.data.producersWaitingForValidation.length).toEqual(2);
+        expect(result).toMatchSnapshot();
+        done();
+      });
 
-        // on valide un producteur
-        await producersServices.validateAProducer(antoine.id, true);
-
+      it('should get all producers (1) waiting for validation', async(done) => {
+        await producersServices.validateAProducer(tabProducers[2].id, true);
         // on check qu'il ne reste plus qu'un producteur en attente de validation
-        result = await graphql(schema, query, null, context, variables);
+        const result = await graphql(schema, query, null, null, null);
+        expect.assertions(3);
         expect(result.data.producersWaitingForValidation.length).toEqual(1);
-        expect(result.data.producersWaitingForValidation[0].firstname).toEqual('Benoît');
+        expect(result.data.producersWaitingForValidation[0].firstname).toEqual('Jérémie');
         expect(result).toMatchSnapshot();
         done();
       });
     });
 
     // --------------------filterProducers(ProductType)------------------------------------------ //
-    describe('Testing filterProducers(ProductType)', () => {
-      it('should get all producers producing one or more products of productType "apple"', async(done) => {
-        const { query, context } = queryObjGetFilterProducers;
-        const variables = { id: [productTypePomme.id] };
-        const result = await graphql(schema, query, null, context, variables);
+    describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
+      const { query } = {
+        query: `
+    query($id: [ID!]){
+      filterProducers(byProductTypeIds: $id){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+      };
+
+      it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers"', async(done) => {
+        const variables = { id: [tabProductTypes[1].id] };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
-        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Pomme"
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.filterProducers.length).toEqual(3);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
+         + ' productTypeCategory "Jus de fruits"', async(done) => {
+        const variables = { id: [tabProductTypes[1].id, tabProductTypes[10].id] };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers" et un ou plusieurs produits
+        // de type "Jus de fruits"
         expect(result.data.filterProducers.length).toEqual(2);
         expect(result).toMatchSnapshot();
         done();
       });
 
-      it('should get all producers producing one or more products of productTypeCategory "perry"', async(done) => {
-        const { query, context } = queryObjGetFilterProducers;
-        const variables = { id: [productTypePoire.id] };
-        const result = await graphql(schema, query, null, context, variables);
+
+      it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
+         + ' productTypeCategory "Jus de fruits" AND one or more products of productTypeCategory "Pâtes"', async(done) => {
+        const variables = { id: [tabProductTypes[1].id, tabProductTypes[10].id, tabProductTypes[17].id] };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
-        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Pomme"
+        // on check qu'il y a bien qu'un producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers", un ou plusieurs produits
+        // de type "Jus de fruits" et un ou plusieurs produits de type "pâtes"
         expect(result.data.filterProducers.length).toEqual(1);
         expect(result).toMatchSnapshot();
         done();
@@ -257,27 +514,994 @@ describe('Testing graphql request producers', () => {
   describe('MUTATION producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    describe('Testing validateAProducer(Producer id)', () => {
+    describe('Testing validateAProducer(producerId: ID!, validationState: Boolean!)', () => {
+      const { mutation } = {
+        mutation: `
+    mutation($producerId: ID!, $state: Boolean!){
+      validateAProducer(producerId: $producerId, validationState: $state){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+      };
+
       it('should change the validation state of a producer to true', async(done) => {
-        const { mutation, context } = mutationValidateProducer;
-        const variables = { producerId: antoine.id, state: true };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const variables = { producerId: tabProducers[2].id, state: true };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.data.validateAProducer.isValidated).toBeTruthy();
         expect(result).toMatchSnapshot();
         done();
       });
 
-      it('should change the validation state of a producer to false', async (done) => {
-        await producersServices.validateAProducer(antoine.id, true);
-        const { mutation, context } = mutationValidateProducer;
-        const variables = { producerId: antoine.id, state: false };
-        const result = await graphql(schema, mutation, null, context, variables);
+      it('should change the validation state of a producer to false', async(done) => {
+        const variables = { producerId: tabProducers[0].id, state: false };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.data.validateAProducer.isValidated).toBeFalsy();
         expect(result).toMatchSnapshot();
         done();
       });
+    });
+
+    describe('Testing addProducer(producer: ProducerInputAdd!)', () => {
+      beforeEach(() => clearAndPopulateDB());
+
+      const { mutation } = {
+        mutation: `mutation($producer: ProducerInputAdd!) {
+  addProducer(producer: $producer) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      firstname
+      lastname
+      email
+    }
+    emailValidated
+    isAdmin
+    followers {
+      firstname
+      lastname
+      email
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
+        }
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      description
+      productType {
+        name
+        image
+        category {
+          name
+          image
+        }
+        producers {
+          firstname
+          lastname
+          email
+        }
+      }
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}
+`
+      };
+
+      it('should add a new producer', async(done) => {
+        const variables = {
+          producer: {
+            firstname: 'benoit',
+            lastname: 'Schöpfli',
+            email: 'benoit@schöpfli.ch',
+            password: '1234abcd',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.data.addProducer).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new producer because of missing mendatory information', async(done) => {
+        const variables = {
+          producer: {
+            lastname: 'Schöpfli',
+            email: 'benoit@schöpfli.ch',
+            password: '1234abcd',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new producer because of missing mendatory information', async(done) => {
+        const variables = {
+          producer: {
+            firstname: 'benoit',
+            email: 'benoit@schöpfli.ch',
+            password: '1234abcd',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new producer because of missing mendatory information', async(done) => {
+        const variables = {
+          producer: {
+            firstname: 'benoit',
+            lastname: 'Schöpfli',
+            password: '1234abcd',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new producer because of missing mendatory information', async(done) => {
+        const variables = {
+          producer: {
+            firstname: 'benoit',
+            lastname: 'Schöpfli',
+            email: 'benoit@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new producer because email already used', async(done) => {
+        const variables = {
+          producer: {
+            firstname: 'benoit',
+            lastname: 'Schöpfli',
+            email: 'benoit@schöpfli.ch',
+            password: '1234abcd',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        // on ajoute le producteur une 1ère fois
+        let result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(4);
+        expect(result.data.addProducer).not.toBeNull();
+
+        // on tente d'ajouter le producteur une 2ème fois -> plante car email déjà utilisé
+        result = await graphql(schema, mutation, null, null, variables);
+        expect(result.data).toBeNull();
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+    });
+
+    describe('Testing updateProducer(producer: ProducerInputUpdate!)', () => {
+      beforeEach(() => clearAndPopulateDB());
+
+      const { mutation } = {
+        mutation: `mutation($producer: ProducerInputUpdate!) {
+  updateProducer(producer: $producer) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      firstname
+      lastname
+      email
+    }
+    emailValidated
+    isAdmin
+    followers {
+      firstname
+      lastname
+      email
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
+        }
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      description
+      productType {
+        name
+        image
+        category {
+          name
+          image
+        }
+        producers {
+          firstname
+          lastname
+          email
+        }
+      }
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}
+`
+      };
+
+      it('should update a producer', async(done) => {
+        const producerToAdd = {
+          producer: {
+            id: tabProducers[0].id,
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        let result = await graphql(schema, mutation, null, null, producerToAdd);
+        expect.assertions(6);
+        expect(result.data.updateProducer).not.toBeNull();
+        expect(result).toMatchSnapshot();
+
+        const variables = { producerId: tabProducers[0].id };
+        const { queryGetProducerById } = {
+          queryGetProducerById: `
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+        };
+        result = await graphql(schema, queryGetProducerById, null, null, variables);
+        expect(result.data.producer).not.toBeNull();
+        expect(result.data.producer.firstname).toEqual(producerToAdd.producer.firstname);
+        expect(result.data.producer.lastname).toEqual(producerToAdd.producer.lastname);
+        expect(result.data.producer.email).toEqual(producerToAdd.producer.email);
+
+        done();
+      });
+
+      it('should fail updating a producer because of missing mendatory information (firstname)', async(done) => {
+        const variables = {
+          producer: {
+            id: tabProducers[0].id,
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.firstname of required type String! was not provided.'));
+        done();
+      });
+
+      it('should fail updating a producer because of missing mendatory information (lastname)', async(done) => {
+        const variables = {
+          producer: {
+            id: tabProducers[0].id,
+            firstname: 'ben',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.lastname of required type String! was not provided.'));
+        done();
+      });
+
+      it('should fail updating a producer because of missing mendatory information (email)', async(done) => {
+        const variables = {
+          producer: {
+            id: tabProducers[0].id,
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        const result = await graphql(schema, mutation, null, null, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.email of required type String! was not provided.'));
+        done();
+      });
+
+      it('should fail updating a producer because invalid id received (too short)', async(done) => {
+        const producerToAdd = {
+          producer: {
+            id: 'abcdef',
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        let result = await graphql(schema, mutation, null, null, producerToAdd);
+        expect.assertions(4);
+        expect(result.data.updateProducer).toBeNull();
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
+        expect(result).toMatchSnapshot();
+
+        done();
+      });
+
+      it('should fail updating a producer because invalid id received (too long)', async(done) => {
+        const producerToAdd = {
+          producer: {
+            id: 'abcdefabcdefabcdefabcdefabcdef',
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        let result = await graphql(schema, mutation, null, null, producerToAdd);
+        expect(result.data.updateProducer).toBeNull();
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
+        expect(result).toMatchSnapshot();
+
+        done();
+      });
+
+      it('should fail updating a producer because unknown id received', async(done) => {
+        const producerToAdd = {
+          producer: {
+            id: 'abcdefabcdefabcdefabcdef',
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch',
+            image: 'ceci est une image encodée en base 64',
+            phoneNumber: '0781234561212',
+            description: 'un chouette gaillard!',
+            website: 'benoitschöpfli.ch'
+          }
+        };
+        let result = await graphql(schema, mutation, null, null, producerToAdd);
+        expect(result.data.updateProducer).toBeNull();
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual('The received id is not in the database!');
+        expect(result).toMatchSnapshot();
+
+        done();
+      });
+
+      it('should delete information of a producer that became null', async(done) => {
+        const producerToAdd = {
+          producer: {
+            id: tabProducers[0].id,
+            firstname: 'ben',
+            lastname: 'Schöpfli',
+            email: 'ben@schöpfli.ch'
+          }
+        };
+        let result = await graphql(schema, mutation, null, null, producerToAdd);
+        expect.assertions(10);
+        expect(result.data.updateProducer).not.toBeNull();
+        expect(result).toMatchSnapshot();
+
+        const variables = { producerId: tabProducers[0].id };
+        const { queryGetProducerById } = {
+          queryGetProducerById: `
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+        };
+        result = await graphql(schema, queryGetProducerById, null, null, variables);
+        expect(result.data.producer).not.toBeNull();
+        expect(result.data.producer.firstname).toEqual(producerToAdd.producer.firstname);
+        expect(result.data.producer.lastname).toEqual(producerToAdd.producer.lastname);
+        expect(result.data.producer.email).toEqual(producerToAdd.producer.email);
+        expect(result.data.producer.image).toBeNull();
+        expect(result.data.producer.phoneNumber).toBeNull();
+        expect(result.data.producer.description).toBeNull();
+        expect(result.data.producer.website).toBeNull();
+
+        done();
+      });
+    });
+
+    describe('Testing deleteProducer(producerId: ID!)', () => {
+      beforeEach(() => clearAndPopulateDB());
+
+      const { mutation } = {
+        mutation: ` mutation($producerId: ID!) {
+  deleteProducer(producerId: $producerId) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      firstname
+      lastname
+      email
+    }
+    emailValidated
+    isAdmin
+    followers {
+      firstname
+      lastname
+      email
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
+        }
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      description
+      productType {
+        name
+        image
+        category {
+          name
+          image
+        }
+        producers {
+          firstname
+          lastname
+          email
+        }
+      }
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+      }
+`
+      };
+
+      it('should delete an existing producer', async(done) => {
+        const variable = {
+          producerId: tabProducers[0].id
+        };
+        // on supprime un producteur
+        let result = await graphql(schema, mutation, null, null, variable);
+        expect.assertions(3);
+        expect(result.data.updateProducer).not.toBeNull();
+        expect(result).toMatchSnapshot();
+
+        // on tente de le récupérer dans la base de données -> doit retourner null vu que le producteur n'existe plus
+        const variables = { producerId: tabProducers[0].id };
+        const { queryGetProducerById } = {
+          queryGetProducerById: `
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+        };
+        result = await graphql(schema, queryGetProducerById, null, null, variables);
+        expect(result.data.producer).toBeNull();
+
+        // fixme: tester que toutes trace du producteur ait été effacées (point de vente, produits, id dans tableau des productType, ......)
+
+        done();
+      });
+
+
     });
   });
 });

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const ProductTypesModel = require('./productTypes.modelgql');
 
 const options = {
   toObject: { virtuals: true }
@@ -33,7 +32,7 @@ ProductSchema.pre('save', async function(next) {
     if (!productTypeId) {
       throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
     }
-    next();
+    return next();
   } catch (err) {
     return next(err);
   }
@@ -43,3 +42,4 @@ ProductSchema.pre('save', async function(next) {
  * @typedef Product
  */
 module.exports = mongoose.model('products', ProductSchema);
+const ProductTypesModel = require('./productTypes.modelgql');

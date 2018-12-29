@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const { ProductsModel } = require('../requires/models');
 
 /**
  * Person Schema
@@ -77,14 +76,12 @@ personSchema.pre('findOneAndUpdate', async function(next) {
     if (this._update != null && this._update.$addToSet != null) {
       const addToSetOperation = this._update.$addToSet;
       if (addToSetOperation.productsIds != null) {
-        /*
         // fixme: problème de require circulaire....!!! `_´
         if (await ProductsModel.findById(addToSetOperation.productsIds)) {
           return addToSetOperation.productsIds;
         } else {
           throw new Error(`The given product (with id: ${addToSetOperation.productsIds}) doesn’t exist in the database!`);
         }
-        */
       } else if (addToSetOperation.followingProducersIds != null) {
         const person = await PersonsModel.findById(this._update.$addToSet.followingProducersIds);
         if (person != null) {
@@ -110,3 +107,6 @@ const PersonsModel = mongoose.model('persons', personSchema);
  * @typedef Person
  */
 module.exports = PersonsModel;
+
+// Très moche, mais permet de résoudre le problème de dépendances circulaires...
+const ProductsModel = require('../models/products.modelgql');

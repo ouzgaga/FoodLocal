@@ -1,7 +1,7 @@
-const personsServices = require('../services/persons.services');
-const producersServices = require('../services/producers.services');
 const productsServices = require('../services/products.services');
+const producersServices = require('../services/producers.services');
 const salespointsServices = require('../services/salespoints.services');
+const personsServices = require('../services/persons.services');
 
 const producerResolvers = {
   Query: {
