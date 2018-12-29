@@ -4,11 +4,11 @@ type Query {
 }
 
 type Mutation {
-	# Ajoute la personne correspondant à l'id 'personId' à la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
-	addFollowerToProducer(producerId: ID!, personId: ID!): Person
+	# Ajoute la personne correspondant à l'id 'followerId' à la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	addFollowerToProducer(producerId: ID!, followerId: ID!): Person
 
-	# Supprime la personne correspondant à l'id 'personId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
-	removeFollowerToProducer(producerId: ID!, personId: ID!): Person
+	# Supprime la personne correspondant à l'id 'followerId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	removeFollowerToProducer(producerId: ID!, followerId: ID!): Person
 
 	# Permet de modifier le password du producteur correspondant à l'id reçu si l'ancien password entré correspond à celui enregistré dans la base de données. Retourne true si le password a été changé avec succès, false sinon.
 	changePassword(newPassword: String!, oldPassword: String!, personId: ID!): Boolean!

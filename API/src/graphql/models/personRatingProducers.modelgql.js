@@ -49,21 +49,21 @@ async function checkGivenPersonAndProducerExists(query, next) {
   if (!producerExist) {
     throw new Error(`The given producerId (${query.producerId}) doesn’t exist in the database!`);
   }
-  return next();
+  next();
 }
 
 personRatingProducer.pre('save', function(next) {
   try {
     return checkGivenPersonAndProducerExists(this, next);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 personRatingProducer.pre('findOneAndUpdate', function(next) {
   try {
     return checkGivenPersonAndProducerExists(this, next);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 

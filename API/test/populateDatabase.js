@@ -56,7 +56,14 @@ const populateDB = async() => {
   );
 
   // on regroupe toutes les catgéories de produits dans un tableau pour les tests d'intégration
-  tabProductTypeCategories = [categoriesCereales, categoriesBoissons, categoriesAutres, categoriesFruits, categoriesLegumes, categoriesViandes];
+  tabProductTypeCategories = [
+    categoriesCereales,
+    categoriesBoissons,
+    categoriesAutres,
+    categoriesFruits,
+    categoriesLegumes,
+    categoriesViandes
+  ];
   // ---------------------------------------------------------------- ajout des productType ----------------------------------------------------------------
 
   // ---------------------------------------------------------------- productType: autres ------------------------------------------------------------------
@@ -197,6 +204,22 @@ const populateDB = async() => {
       categoryId: categoriesCereales.id
     }
   );
+
+  const productTypePomme = await productTypesServices.addProductType(
+    {
+      name: 'Fruits',
+      image: 'data:image/png;base64,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',
+      categoryId: categoriesFruits.id
+    }
+  );
+
+  const productTypePoire = await productTypesServices.addProductType(
+    {
+      name: 'Légumes',
+      image: 'data:image/png;base64,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',
+      categoryId: categoriesFruits.id
+    }
+  );
   // FIXME: ajouter les catégories manquantes...!
 
   // on regroupe tous les types de produits dans un tableau pour les tests d'intégration
@@ -218,7 +241,9 @@ const populateDB = async() => {
     productTypeFarine,
     productTypePolenta,
     productTypeQuinoa,
-    productTypePates
+    productTypePates,
+    productTypePomme,
+    productTypePoire
   ];
 
   // ------------------------------------------------------------------ ajout de products --------------------------------------------------------------------

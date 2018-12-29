@@ -37,25 +37,14 @@ const productTypeSchema = new mongoose.Schema(
  * Lève une erreur si l'un d'entre eux n'existe pas dans la base de données.
  */
 productTypeSchema.pre('save', async function(next) {
-  const categoryId = await ProductTypeCategoriesModel.findById(this.categoryId);
-
-  if (!categoryId) {
-    next(new Error(`The given categoryId (${this.categoryId}) doesn’t exist in the database!`));
+  try {
+    if (!(await ProductTypeCategoriesModel.findById(this.categoryId))) {
+      throw new Error(`The given categoryId (${this.categoryId}) doesn’t exist in the database!`);
+    }
+    next();
+  } catch (err) {
+    next(err);
   }
-
-  if (this.producersIds != null && this.producersIds.length > 0) {
-    this.producersIds = this.producersIds.map(async(producerId) => {
-      const producer = await personsServices.checkIfPersonIdExistInDB(producerId, true);
-
-      if (producer) {
-        return producer.id;
-      } else {
-        next(new Error(`The given producerId (${producerId}) doesn’t exist in the database or is not a producer!`));
-      }
-    });
-    await Promise.all(this.producersIds);
-  }
-  next();
 });
 
 
@@ -63,18 +52,13 @@ productTypeSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {
       const addToSetOperation = this._update.$addToSet;
-      if (addToSetOperation.producersIds != null) {
-        const producerExistInDB = await personsServices.checkIfPersonIdExistInDB(this._update.$addToSet.producersIds, true);
-        if (producerExistInDB) {
-          return this._update.$addToSet.producersIds;
-        } else {
-          throw new Error(`The given producerId (with id: ${this._update.$addToSet.producersIds}) doesn’t exist in the database or is not a producer!`);
-        }
+      if (addToSetOperation.producersIds != null && !(await personsServices.checkIfPersonIdExistInDB(addToSetOperation.producersIds, true))) {
+        throw new Error(`The given producerId (with id: ${this._update.$addToSet.producersIds}) doesn’t exist in the database or is not a producer!`);
       }
     }
     next();
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 

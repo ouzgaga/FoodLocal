@@ -25,7 +25,7 @@ describe('Testing graphql request producers', () => {
   describe('QUERY producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    // -------------------------Producers()------------------------------------- //
+    // -------------------------producers()------------------------------------- //
     describe('Testing producers()', () => {
       const { query } = {
         query: `
@@ -125,7 +125,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
-    // ----------------------Producer(id)-------------------------------------- //
+    // ----------------------producer(producerId: ID!)-------------------------------------- //
     describe('Testing producer(producerId: ID!)', () => {
       const { query } = {
         query: `
@@ -266,7 +266,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
-    // ----------------------ProducerWaitingForValidation()-------------------------------------- //
+    // ----------------------producerWaitingForValidation()-------------------------------------- //
     describe('Testing producerWaitingForValidation()', () => {
       const { query } = {
         query: `
@@ -381,7 +381,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
-    // --------------------filterProducers(ProductType)------------------------------------------ //
+    // --------------------filterProducers(byProductTypeIds: [ID!]!)------------------------------------------ //
     describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
       const { query } = {
         query: `
@@ -514,6 +514,7 @@ describe('Testing graphql request producers', () => {
   describe('MUTATION producers', () => {
     beforeEach(() => clearAndPopulateDB());
 
+    // --------------------validateAProducer(producerId: ID!, validationState: Boolean!)------------------------------------------ //
     describe('Testing validateAProducer(producerId: ID!, validationState: Boolean!)', () => {
       const { mutation } = {
         mutation: `
@@ -625,6 +626,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
+    // --------------------addProducer(producer: ProducerInputAdd!)------------------------------------------ //
     describe('Testing addProducer(producer: ProducerInputAdd!)', () => {
       beforeEach(() => clearAndPopulateDB());
 
@@ -842,6 +844,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
+    // --------------------updateProducer(producer: ProducerInputUpdate!)------------------------------------------ //
     describe('Testing updateProducer(producer: ProducerInputUpdate!)', () => {
       beforeEach(() => clearAndPopulateDB());
 
@@ -1297,6 +1300,7 @@ describe('Testing graphql request producers', () => {
       });
     });
 
+    // --------------------deleteProducer(producerId: ID!)------------------------------------------ //
     describe('Testing deleteProducer(producerId: ID!)', () => {
       beforeEach(() => clearAndPopulateDB());
 

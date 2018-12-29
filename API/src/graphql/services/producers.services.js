@@ -90,7 +90,7 @@ async function filterProducers(byProductTypeIds) {
  * @param {Integer} producer, Les informations du producteur à ajouter.
  */
 async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website }) {
-  if (await personsServices.isEmailUnused(email)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
+  if (await personsServices.isEmailUnused(email) && personsServices.checkIfPasswordIsValid(password)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
     const producerToAdd = {
       firstname,
       lastname,

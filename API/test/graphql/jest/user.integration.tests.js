@@ -3,9 +3,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const usersServices = require('../../../src/graphql/services/users.services');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const clearDB = require('../clearDB');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+
 const {
   queryObjAllUsers,
   queryObjUserById
@@ -14,25 +12,9 @@ const {
 // Making schema graphql
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'ceci est une image encodée en base64!',
-  followingProducersIds: [],
-  emailValidated: false
-};
+let benoit;
 
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'ceci est l\'image d\'un tueur encodée en base64!',
-  followingProducersIds: [],
-  emailValidated: false
-};
+let antoine;
 
 let tabUsers = [benoit, antoine];
 
@@ -41,6 +23,26 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'ceci est une image encodée en base64!',
+    followingProducersIds: [],
+    emailValidated: false
+  };
+
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'ceci est l\'image d\'un tueur encodée en base64!',
+    followingProducersIds: [],
+    emailValidated: false
+  };
 
   // on ajoute 2 utilisateurs
   benoit = (await usersServices.addUser(benoit)).toObject();

@@ -51,7 +51,7 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser({ firstname, lastname, email, password, image }) {
-  if (await personsServices.isEmailUnused(email)) {
+  if (await personsServices.isEmailUnused(email) && personsServices.checkIfPasswordIsValid(password)) {
     const userToAdd = {
       firstname,
       lastname,

@@ -56,13 +56,34 @@ async function changePassword(newPassword, oldPassword, personId) {
     // on compare le oldPassword avec le mdp enregistré dans la DB
     const match = await bcrypt.compare(oldPassword, person.password);
     if (match) { // oldPassword est identique au mdp enregistré dans la DB
-      person.password = await bcrypt.hash(newPassword, 10); // fixme: Paul: 10 saltRound, c'est suffisant ?
-      return true;
+      try {
+        checkIfPasswordIsValid(newPassword);
+
+        // si on arrive ici, alors le nouveau mot de passe est un mot de passe valide.
+        person.password = await bcrypt.hash(newPassword, 10); // fixme: Paul: 10 saltRound, c'est suffisant ?
+        return true;
+      } catch (err) {
+        return err;
+      }
     } else { // oldPassword n'est pas identique au mdp enregistré dans la DB!
       return new Error('The received oldPassword is not correct!');
     }
   } else { // le personId reçu ne correspond à aucune entrée de la base de données!
     return new Error('Received personId can\'t be found in the database!');
+  }
+}
+
+function checkIfPasswordIsValid(password) {
+  if (password.length < 6) {
+    throw new Error('New password must be at least 6 characters long.');
+  } else if (password.length > 30) {
+    throw new Error('New password must be less than 30 characters long.');
+  } else if (password.search(/\d/) === -1) {
+    throw new Error('New password must contain at least 1 number.');
+  } else if (password.search(/[a-zA-Z]/) === -1) {
+    throw new Error('New password must contain at least 1 letter.');
+  } else {
+    return true;
   }
 }
 
@@ -85,5 +106,6 @@ module.exports = {
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
   changePassword,
+  checkIfPasswordIsValid,
   validateEmailUserByToken
 };

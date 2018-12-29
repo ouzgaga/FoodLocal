@@ -32,9 +32,9 @@ ProductSchema.pre('save', async function(next) {
     if (!productTypeId) {
       throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
     }
-    return next();
+    next();
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const SalespointsModel = require('./salespoints.modelgql');
 
 /**
  * Person Schema
@@ -51,53 +52,40 @@ const personSchema = new mongoose.Schema(
   }, options
 );
 
-personSchema.pre('save', async function(next) {
-  try {
-    this.followingProducersIds = this.followingProducersIds.map(async(producer) => {
-      const person = await PersonsModel.findById(producer._id);
-      if (person != null) {
-        if (person.kind !== 'producers') {
-          throw new Error(`The given person (with id: ${producer.id}) is not a producer! You can only follow the producers.`);
-        }
-        return producer._id;
-      } else {
-        throw new Error(`The given person (with id: ${producer.id}) doesn’t exist in the database!`);
-      }
-    });
+// il n'y a aucun check à faire lors de l'ajout d'un producer ou d'un user (ils sont tous fait au niveau de GraphQL)
 
-    next();
-  } catch (err) {
-    return next(err);
-  }
-});
 
 personSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {
+      // on check les opérations addToSet
       const addToSetOperation = this._update.$addToSet;
-      if (addToSetOperation.productsIds != null) {
-        // fixme: problème de require circulaire....!!! `_´
-        if (await ProductsModel.findById(addToSetOperation.productsIds)) {
-          return addToSetOperation.productsIds;
-        } else {
-          throw new Error(`The given product (with id: ${addToSetOperation.productsIds}) doesn’t exist in the database!`);
+
+      // on check la validité des insertions dans le tableau productsIds
+      if (addToSetOperation.productsIds != null && !(await ProductsModel.findById(addToSetOperation.productsIds))) {
+        throw new Error(`The given product (with id: ${addToSetOperation.productsIds}) doesn’t exist in the database!`);
+      }
+
+      // on check la validité des insertions dans le tableau followingProducersIds
+      if (addToSetOperation.followingProducersIds != null) {
+        const person = await PersonsModel.findById(addToSetOperation.followingProducersIds);
+        if (person == null) {
+          throw new Error(`The given person (with id: ${addToSetOperation.followingProducersIds}) doesn’t exist in the database!`);
+        } else if (person.kind !== 'producers') {
+          throw new Error(
+            `The given person (with id: ${addToSetOperation.followingProducersIds}) is not a producer! You can only follow the producers.`
+          );
         }
-      } else if (addToSetOperation.followingProducersIds != null) {
-        const person = await PersonsModel.findById(this._update.$addToSet.followingProducersIds);
-        if (person != null) {
-          if (person.kind !== 'producers') {
-            throw new Error(
-              `The given person (with id: ${this._update.$addToSet.followingProducersIds}) is not a producer! You can only follow the producers.`);
-          }
-          return this._update.$addToSet.followingProducersIds;
-        } else {
-          throw new Error(`The given person (with id: ${this._update.$addToSet.followingProducersIds}) doesn’t exist in the database!`);
-        }
+      }
+
+      // on check la validité des insertions dans le tableau followersIds
+      if (addToSetOperation.followersIds != null && !(await PersonsModel.findById(addToSetOperation.followersIds))) {
+        throw new Error(`The given person (with id: ${addToSetOperation.followersIds}) doesn’t exist in the database!`);
       }
     }
     next();
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 

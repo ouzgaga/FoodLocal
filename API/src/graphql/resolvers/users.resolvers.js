@@ -1,4 +1,5 @@
 const usersServices = require('../services/users.services');
+const producersServices = require('../services/producers.services');
 
 const producerResolvers = {
   Query: {
@@ -16,7 +17,7 @@ const producerResolvers = {
   },
 
   User: {
-    followingProducers: (parent, args, context) => usersServices.getAllUsersInReceivedIdList(parent.followingProducersIds)
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
   }
 };
 module.exports = producerResolvers;

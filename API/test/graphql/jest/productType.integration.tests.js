@@ -2,98 +2,86 @@ const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const clearDB = require('../clearDB');
-const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
-const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
-const {
-  getAllProductTypes,
-  getProductTypeById,
-  getAllProductTypeOfProductTypeCategoryId,
-  addProductType,
-  updateProductType,
-  deleteProductType
-} = require('./queries/QueryObjsProductType');
+const { populateDB, getTabProductTypes, getTabProductTypeCategories } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-
-let categoryFruits = {
-  name: 'Fruits',
-  image: 'ceci est une image de fruits encodée en base64!'
-};
-
-let categoryVegetable = {
-  name: 'Légumes',
-  image: 'ceci est une image de légume encodée en base64!'
-};
-
-let productTypePomme = {
-  name: 'Pomme',
-  image: 'ceci est une image de pomme encodée en base64!'
-};
-let productTypePoire = {
-  name: 'Poire',
-  image: 'ceci est une image de poire encodée en base64!'
-};
-let productTypeRaisin = {
-  name: 'Raisin',
-  image: 'ceci est une image de raisin encodée en base64!'
-};
-let productTypeCourgette = {
-  name: 'Courgette',
-  image: 'ceci est une image de courgette encodée en base64!'
-};
+let tabProductTypes;
+let tabProductTypeCategories;
 
 const clearAndPopulateDB = async() => {
-  // on supprime tout le contenu de la DB
+  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
   await clearDB();
 
-  // on ajoute le contenu de départ
-  categoryFruits = (await ProductTypeCategoriesModel.create(categoryFruits)).toObject();
-  categoryVegetable = (await ProductTypeCategoriesModel.create(categoryVegetable)).toObject();
+  // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
+  await populateDB();
 
-  productTypePomme.categoryId = categoryFruits.id;
-  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
-
-  productTypePoire.categoryId = categoryFruits.id;
-  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
-
-  productTypeRaisin.categoryId = categoryFruits.id;
-  productTypeRaisin = (await ProductTypesModel.create(productTypeRaisin)).toObject();
-
-  productTypeCourgette.id = undefined;
-  productTypeCourgette.categoryId = categoryVegetable.id;
-  productTypeCourgette = (await ProductTypesModel.create(productTypeCourgette)).toObject();
+  tabProductTypes = getTabProductTypes();
+  tabProductTypeCategories = getTabProductTypeCategories();
 };
-
 
 describe('Testing graphql request productType', () => {
   beforeEach(() => clearAndPopulateDB());
 
   describe('QUERY productType', () => {
+    // ----------------------productTypes()-------------------------------------- //
     describe('Testing productTypes()', () => {
       it('should get all productTypes', async(done) => {
-        const { query, variables, context } = getAllProductTypes;
-        const result = await graphql(schema, query, null, context, variables);
+        const { query } = {
+          query: `query{
+  productTypes{
+    name
+    image
+    category{
+      name
+      image
+    }
+    producers{
+      firstname
+      lastname
+      email
+    }
+  }
+}`
+        };
+        const result = await graphql(schema, query, null, null, null);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
       });
     });
 
-    describe('Testing productTypes(productTypeId)', () => {
+    // ----------------------productType(productTypeId: ID!)-------------------------------------- //
+    describe('Testing productType(productTypeId: ID!)', () => {
+      const { query } = {
+        query: `query ($productTypeId: ID!){
+  productType(productTypeId: $productTypeId){
+    name
+    image
+    category{
+      name
+      image
+    }
+    producers{
+      firstname
+      lastname
+      email
+    }
+  }
+}`
+      };
+
       it('should get a productType by id', async(done) => {
-        const { query, context } = getProductTypeById;
-        const variables = { id: productTypePomme.id };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: tabProductTypes[18].id };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
       });
 
       it('should fail getting a productType by id because invalid id received (too short)', async(done) => {
-        const { query, context } = getProductTypeById;
-        const variables = { id: 'abcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdef' };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -102,9 +90,8 @@ describe('Testing graphql request productType', () => {
       });
 
       it('should fail getting a productType by id because invalid id received (too long)', async(done) => {
-        const { query, context } = getProductTypeById;
-        const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdefabcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -113,9 +100,8 @@ describe('Testing graphql request productType', () => {
       });
 
       it('should fail getting a productType by id because unknown id received', async(done) => {
-        const { query, context } = getProductTypeById;
-        const variables = { id: 'abcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         expect(result.errors).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -123,16 +109,36 @@ describe('Testing graphql request productType', () => {
       });
     });
 
-    describe('Testing productTypesOfCategory(productTypeCategoryId)', () => {
-      it('should get all productType of the productTypeCategory corresponding to the received id', async(done) => {
-        const { query, context } = getAllProductTypeOfProductTypeCategoryId;
-        let variables = { id: categoryFruits.id };
-        let result = await graphql(schema, query, null, context, variables);
+    // ----------------------productTypesOfCategory(productTypeCategoryId: ID!)-------------------------------------- //
+    describe('Testing productTypesOfCategory(productTypeCategoryId: ID!)', () => {
+      const { query } = {
+        query: `query ($productTypeCategoryId: ID!){
+  productTypesOfCategory(productTypeCategoryId: $productTypeCategoryId) {'
+    name
+    image
+    category {
+      name
+      image
+    }
+    producers{
+      firstname
+      lastname
+      email
+    }
+  }
+}`
+      };
+
+      it('should get all productType of the productTypeCategory "fruits"', async(done) => {
+        // on récupère tous les produits de la catégorie "fruits"
+        let variables = { productTypeCategoryId: tabProductTypeCategories[3].id };
+        let result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         expect(result).toMatchSnapshot();
 
-        variables = { id: categoryVegetable.id };
-        result = await graphql(schema, query, null, context, variables);
+        // on récupère tous les produits de la catégorie "légumes"
+        variables = { id: tabProductTypes[4].id };
+        result = await graphql(schema, query, null, null, variables);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -142,18 +148,28 @@ describe('Testing graphql request productType', () => {
   describe('MUTATION productType', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    describe('Testing addProductType(productType)', () => {
+    // ----------------------addProductType(productType: ProductTypeInputAdd!)-------------------------------------- //
+    describe('Testing addProductType(productType: ProductTypeInputAdd!)', () => {
       beforeEach(() => clearAndPopulateDB());
+
+      const { mutation } = {
+        mutation: `mutation($productType: ProductTypeInputAdd!) {
+     addProductType(productType: $productType) {
+       name
+       image
+     }
+   }`
+      };
+
       it('should add a new productType', async(done) => {
         const pomme = {
           name: 'pomme',
           image: 'ceci est une image de pomme encodée en base64! :D',
-          categoryId: categoryFruits.id
+          categoryId: tabProductTypeCategories[3].id
         };
 
-        const { mutation, context } = addProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.data.addProductType).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -163,12 +179,11 @@ describe('Testing graphql request productType', () => {
       it('should fail adding a new productType because missing name', async(done) => {
         const pomme = {
           image: 'ceci est une image de pomme encodée en base64! :D',
-          categoryId: categoryFruits.id
+          categoryId: tabProductTypeCategories[3].id
         };
 
-        const { mutation, context } = addProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -182,9 +197,8 @@ describe('Testing graphql request productType', () => {
           image: 'ceci est une image de pomme encodée en base64! :D'
         };
 
-        const { mutation, context } = addProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -196,35 +210,43 @@ describe('Testing graphql request productType', () => {
         const pomme = {
           name: 'pomme',
           image: 'ceci est une image de pomme encodée en base64! :D',
-          categoryId: categoryFruits.id,
+          categoryId: tabProductTypeCategories[3].id,
           rienAVoir: 'ceci est un champ qui n\'a rien à faire ici!'
         };
 
-        const { mutation, context } = addProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
         expect(result.errors[0].message).toEqual(expect.stringContaining('Field "rienAVoir" is not defined by type ProductTypeInputAdd.'));
         done();
       });
-    });
+    })
 
-    describe('Testing updateProductType(productType)', () => {
+    // ----------------------updateProductType(productType: ProductTypeInputUpdate!)-------------------------------------- //
+    describe('Testing updateProductType(productType: ProductTypeInputUpdate!)', () => {
       beforeEach(() => clearAndPopulateDB());
+
+      const { mutation } = {
+        mutation: `mutation($productType: ProductTypeInputUpdate!) {
+     updateProductType(productType: $productType) {
+       name
+       image
+     }
+   }`
+      };
 
       it('should update a productType', async(done) => {
         const pomme = {
-          id: productTypePomme.id,
+          id: tabProductTypes[18].id,
           name: 'courgette',
           image: 'ceci est une image de courgette encodée en base64! :D',
-          categoryId: categoryVegetable.id
+          categoryId: tabProductTypeCategories[4].id
         };
 
-        const { mutation, context } = updateProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.data.updateProductType).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -233,14 +255,13 @@ describe('Testing graphql request productType', () => {
 
       it('should fail updating a productType because missing name', async(done) => {
         const poire = {
-          id: productTypePomme.id,
+          id: tabProductTypes[18].id,
           image: 'ceci est une image de courgette encodée en base64! :D',
-          categoryId: categoryVegetable.id
+          categoryId: tabProductTypeCategories[4].id
         };
 
-        const { mutation, context } = updateProductType;
         const variables = { productType: poire };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -250,14 +271,13 @@ describe('Testing graphql request productType', () => {
 
       it('should fail updating a productType because missing categoryId', async(done) => {
         const pomme = {
-          id: productTypePomme.id,
+          id: tabProductTypes[18].id,
           name: 'courgette',
           image: 'ceci est une image de courgette encodée en base64! :D'
         };
 
-        const { mutation, context } = updateProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -269,12 +289,11 @@ describe('Testing graphql request productType', () => {
         const pomme = {
           name: 'courgette',
           image: 'ceci est une image de courgette encodée en base64! :D',
-          categoryId: categoryVegetable.id
+          categoryId: tabProductTypeCategories[4].id
         };
 
-        const { mutation, context } = updateProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -284,16 +303,15 @@ describe('Testing graphql request productType', () => {
 
       it('should fail updating a productType because given field "rienAVoir" is not defined in schema', async(done) => {
         const pomme = {
-          id: productTypePomme.id,
+          id: tabProductTypes[18].id,
           name: 'courgette',
           image: 'ceci est une image de courgette encodée en base64! :D',
-          categoryId: categoryVegetable.id,
+          categoryId: tabProductTypeCategories[4].id,
           rienAVoir: 'ceci est un champ qui n\'a rien à faire ici!'
         };
 
-        const { mutation, context } = updateProductType;
         const variables = { productType: pomme };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -305,10 +323,18 @@ describe('Testing graphql request productType', () => {
     describe('Testing deleteProductType(productTypeId)', () => {
       beforeEach(() => clearAndPopulateDB());
 
+      const { mutation } = {
+        mutation: `mutation($productTypeId: ID!) {
+     deleteProductType(productTypeId: $productTypeId) {
+       name
+       image
+     }
+   }`
+      };
+
       it('should delete a productType', async(done) => {
-        const { mutation, context } = deleteProductType;
-        const variables = { id: productTypePomme.id };
-        const result = await graphql(schema, mutation, null, context, variables);
+        const variables = { productTypeId: tabProductTypes[18].id };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.data.deleteProductType).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -316,9 +342,8 @@ describe('Testing graphql request productType', () => {
       });
 
       it('should fail deleting a productType by id because invalid id received (too short)', async(done) => {
-        const { query, context } = deleteProductType;
-        const variables = { id: 'abcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdef' };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.errors).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -326,9 +351,8 @@ describe('Testing graphql request productType', () => {
       });
 
       it('should fail deleting a productType by id because invalid id received (too long)', async(done) => {
-        const { query, context } = deleteProductType;
-        const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdefabcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.errors).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -336,9 +360,8 @@ describe('Testing graphql request productType', () => {
       });
 
       it('should fail deleting a productType by id because unknown id received', async(done) => {
-        const { query, context } = deleteProductType;
-        const variables = { id: 'abcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, context, variables);
+        const variables = { productTypeId: 'abcdefabcdefabcdefabcdef' };
+        const result = await graphql(schema, mutation, null, null, variables);
         expect.assertions(2);
         expect(result.errors).not.toBeNull();
         expect(result).toMatchSnapshot();
