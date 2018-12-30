@@ -123,18 +123,19 @@ describe('tests product services', () => {
   });
 
   describe('tests addProduct', () => {
-    let antoine = {
-      firstname: 'Antoine',
-      lastname: 'Rochaille',
-      email: 'antoine@paysan.ch',
-      password: '1234abcd',
-      image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-      phoneNumber: '0761435196',
-      description: 'Un vrai payouz!'
-    };
+    let antoine;
 
     beforeEach(async() => {
       await clearAndPopulateDB();
+      antoine = {
+        firstname: 'Antoine',
+        lastname: 'Rochaille',
+        email: 'antoine@paysan.ch',
+        password: '1234abcd',
+        image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un vrai payouz!'
+      };
 
       // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
       antoine = (await producersServices.addProducer(antoine)).toObject();

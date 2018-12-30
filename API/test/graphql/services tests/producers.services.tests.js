@@ -4,7 +4,7 @@ const usersServices = require('../../../src/graphql/services/users.services');
 const productsServices = require('../../../src/graphql/services/products.services');
 const productTypeServices = require('../../../src/graphql/services/productTypes.services');
 const clearDB = require('../clearDB');
-const populateDB = require('../../populateDatabase');
+const { populateDB } = require('../../populateDatabase');
 const ProductTypeModel = require('../../../src/graphql/models/productTypes.modelgql');
 const ProductTypeCategoryModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
@@ -41,11 +41,11 @@ const clearAndPopulateDB = async() => {
     image: 'ceci est une image de poire encodée en base64!'
   };
 
-  const productPomme = {
+  productPomme = {
     description: 'Une pomme monnnnstre bonne!'
   };
 
-  const productPoire = {
+  productPoire = {
     description: 'Une poire de folie!'
   };
 
@@ -112,9 +112,6 @@ const clearAndPopulateDB = async() => {
     phoneNumber: '0761435196',
     description: 'Un vrai payouz!'
   };
-
-
-
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   // on ajoute 1 productTypeCategory
@@ -324,11 +321,7 @@ describe('tests producers services', () => {
 
     it('should add a new producer', async() => {
       benoit.email = 'benoit1@paysan.ch';
-      benoit.products = [];
-      benoit.products.push(productPomme);
-      benoit.products.push(productPoire);
-      benoit.salespoint = salespointBenoit;
-
+      benoit.password = '1234abcd';
       // on ajoute un nouveau producteur
       const addedProducer = await producersServices.addProducer(benoit);
       // on test son contenu
@@ -386,15 +379,10 @@ describe('tests producers services', () => {
     // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
 
     it('should fail adding a new producer with an already used email', async() => {
-      const productsIds = [];
-      productsIds.push(productPomme);
-      productsIds.push(productPoire);
-
       const producerToAdd = {
         ...benoit,
         email: 'benoit2@paysan.ch',
-        salespoint: salespointBenoit,
-        productsIds
+        password: '1234abcd'
       };
 
       // on ajoute un nouveau producteur
@@ -933,81 +921,80 @@ describe('tests producers services', () => {
     });
 
     it('should add only once a person to the followers of a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      // on ajoute le follower users[0] au producer producers[1]
+      let person = (await producersServices.addFollowerToProducer(producers[1].id, producers[2].id)).toObject();
       person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds[0].should.be.eql(producers[0]._id);
+      person.followingProducersIds[0].should.be.eql(producers[1]._id);
 
       // on récupère le producteur qui a un nouveau follower
-      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      let producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds[0].toString().should.be.equal(producers[2].id);
 
-      // on ajoute à nouveau le follower users[0] au producer producers[0] -> il ne doit pas être ajouté une 2ème fois.
-      person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      // on ajoute à nouveau le follower producers[2] au producer producers[1] -> il ne doit pas être ajouté une 2ème fois.
+      person = (await producersServices.addFollowerToProducer(producers[1].id, producers[2].id)).toObject();
       person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      person.followingProducersIds.should.contain.deep(producers[1]._id);
 
       // on récupère le producteur qui ne devrait pas avoir de 2ème nouveau follower
-      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds[0].toString().should.be.equal(producers[2].id);
     });
 
     it('should add multiple persons to the followers of a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      // on ajoute le follower users[0] au producer producers[1]
+      let follower = (await producersServices.addFollowerToProducer(producers[1].id, users[0].id)).toObject();
+      follower.followingProducersIds.length.should.be.equal(2);
+      follower.followingProducersIds.should.contain.deep(producers[1]._id);
 
       // on récupère le producteur qui a un nouveau follower
-      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      let producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(1);
       producer0.followersIds.should.contain.deep(users[0]._id);
 
-      // on ajoute le follower users[1] au producer producers[0]
-      person = (await producersServices.addFollowerToProducer(producers[0].id, users[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      // on ajoute le follower users[1] au producer producers[1]
+      follower = (await producersServices.addFollowerToProducer(producers[1].id, users[1].id)).toObject();
+      follower.followingProducersIds.length.should.be.equal(2);
+      follower.followingProducersIds.should.contain.deep(producers[1]._id);
 
       // on récupère le producteur qui devrait avoir un 2ème follower
-      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(2);
       producer0.followersIds.should.contain.deep(users[0]._id);
       producer0.followersIds.should.contain.deep(users[1]._id);
 
-      // on ajoute le follower producer[1] au producer producers[0]
-      person = (await producersServices.addFollowerToProducer(producers[0].id, producers[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      // on ajoute le follower producer[1] au producer producers[1] -> erreur on peut pas se suivre soit même
+      follower = await producersServices.addFollowerToProducer(producers[1].id, producers[1].id);
+      expect(follower.message).to.be.equal('You can\'t follow yourself!');
 
-      // on ajoute le follower producer[2] au producer producers[0]
-      person = (await producersServices.addFollowerToProducer(producers[0].id, producers[2].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      // on ajoute le follower producer[2] au producer producers[1]
+      follower = (await producersServices.addFollowerToProducer(producers[1].id, producers[2].id)).toObject();
+      follower.followingProducersIds.length.should.be.equal(1);
+      follower.followingProducersIds.should.contain.deep(producers[1]._id);
 
-      // on récupère le producteur qui devrait avoir un total de 4 followers
-      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(4);
+      // on récupère le producteur qui devrait avoir un total de 3 followers
+      producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
+      producer0.followersIds.length.should.be.equal(3);
       producer0.followersIds.should.contain.deep(users[0]._id);
       producer0.followersIds.should.contain.deep(users[1]._id);
-      producer0.followersIds.should.contain.deep(producers[1]._id);
+      producer0.followersIds.should.not.contain.deep(producers[1]._id);
       producer0.followersIds.should.contain.deep(producers[2]._id);
     });
 
     it('should add multiple producers to the following list of a person', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await producersServices.addFollowerToProducer(producers[0].id, users[0].id)).toObject();
+      // on ajoute le follower producers[3] au producer producers[0]
+      let person = (await producersServices.addFollowerToProducer(producers[0].id, producers[3].id)).toObject();
       person.followingProducersIds.length.should.be.equal(1);
       person.followingProducersIds.should.contain.deep(producers[0]._id);
 
-      // on récupère le producer0 qui a un nouveau follower
+      // on récupère le producer0 qui a un nouveau follower (un 4ème)
       const producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
+      producer0.followersIds.length.should.be.equal(4);
+      producer0.followersIds.should.contain.deep(producers[3]._id);
 
-      // on ajoute le follower users[0] au producer producers[1]
-      person = (await producersServices.addFollowerToProducer(producers[1].id, users[0].id)).toObject();
+      // on ajoute le follower producers[3] au producer producers[1]
+      person = (await producersServices.addFollowerToProducer(producers[1].id, producers[3].id)).toObject();
       person.followingProducersIds.length.should.be.equal(2);
       person.followingProducersIds.should.contain.deep(producers[0]._id);
       person.followingProducersIds.should.contain.deep(producers[1]._id);
@@ -1015,10 +1002,10 @@ describe('tests producers services', () => {
       // on récupère le producer1 qui a un nouveau follower
       const producer1 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer1.followersIds.length.should.be.equal(1);
-      producer1.followersIds.should.contain.deep(users[0]._id);
+      producer1.followersIds.should.contain.deep(producers[3]._id);
 
-      // on ajoute le follower users[0] au producer producers[2]
-      person = (await producersServices.addFollowerToProducer(producers[2].id, users[0].id)).toObject();
+      // on ajoute le follower producers[3] au producer producers[2]
+      person = (await producersServices.addFollowerToProducer(producers[2].id, producers[3].id)).toObject();
       person.followingProducersIds.length.should.be.equal(3);
       person.followingProducersIds.should.contain.deep(producers[0]._id);
       person.followingProducersIds.should.contain.deep(producers[1]._id);
@@ -1027,20 +1014,7 @@ describe('tests producers services', () => {
       // on récupère le producer2 qui a un nouveau follower
       const producer2 = (await producersServices.getProducerById(producers[2].id)).toObject();
       producer2.followersIds.length.should.be.equal(1);
-      producer2.followersIds.should.contain.deep(users[0]._id);
-
-      // on ajoute le follower users[0] au producer producers[3]
-      person = (await producersServices.addFollowerToProducer(producers[3].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(4);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-      person.followingProducersIds.should.contain.deep(producers[1]._id);
-      person.followingProducersIds.should.contain.deep(producers[2]._id);
-      person.followingProducersIds.should.contain.deep(producers[3]._id);
-
-      // on récupère le producer3 qui a un nouveau follower
-      const producer3 = (await producersServices.getProducerById(producers[0].id)).toObject();
-      producer3.followersIds.length.should.be.equal(1);
-      producer3.followersIds.should.contain.deep(users[0]._id);
+      producer2.followersIds.should.contain.deep(producers[3]._id);
     });
 
     it('should fail adding a person to the followers of a producer because personId and producerId are the sames', async() => {
@@ -1073,34 +1047,34 @@ describe('tests producers services', () => {
     });
 
     it('should delete a person from the followers of a producer', async() => {
-      // on ajoute les followers users[0] et users[1] au producer producers[0]
-      await producersServices.addFollowerToProducer(producers[0].id, users[0].id);
-      await producersServices.addFollowerToProducer(producers[0].id, users[1].id);
+      // on ajoute les followers users[0] et users[1] au producer producers[1]
+      await producersServices.addFollowerToProducer(producers[1].id, users[0].id);
+      await producersServices.addFollowerToProducer(producers[1].id, users[1].id);
 
       // on récupère le producer0 qui a deux nouveaux followers
-      let producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      let producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(2);
       producer0.followersIds.should.contain.deep(users[0]._id);
       producer0.followersIds.should.contain.deep(users[1]._id);
 
-      // on supprime le follower users[0] des followers de producers[0]
-      let person = (await producersServices.removeFollowerToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(0);
-      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
+      // on supprime le follower users[0] des followers de producers[1]
+      let follower = (await producersServices.removeFollowerToProducer(producers[1].id, users[0].id)).toObject();
+      follower.followingProducersIds.length.should.be.equal(1);
+      follower.followingProducersIds.should.not.contain.deep(producers[1]._id);
 
       // on récupère le producer0 qui n'a plus qu'un follower (users[1])
-      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(1);
       producer0.followersIds.should.not.contain.deep(users[0]._id);
       producer0.followersIds.should.contain.deep(users[1]._id);
 
-      // on supprime le follower users[1] des followers de producers[0]
-      person = (await producersServices.removeFollowerToProducer(producers[0].id, users[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(0);
-      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
+      // on supprime le follower users[1] des followers de producers[1]
+      follower = (await producersServices.removeFollowerToProducer(producers[1].id, users[1].id)).toObject();
+      follower.followingProducersIds.length.should.be.equal(1);
+      follower.followingProducersIds.should.not.contain.deep(producers[1]._id);
 
       // on récupère le producer0 qui n'a plus qu'un follower (users[1])
-      producer0 = (await producersServices.getProducerById(producers[0].id)).toObject();
+      producer0 = (await producersServices.getProducerById(producers[1].id)).toObject();
       producer0.followersIds.length.should.be.equal(0);
       producer0.followersIds.should.not.contain.deep(users[0]._id);
       producer0.followersIds.should.not.contain.deep(users[1]._id);

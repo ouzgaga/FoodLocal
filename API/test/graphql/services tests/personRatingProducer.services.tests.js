@@ -2,52 +2,14 @@ const producersServices = require('../../../src/graphql/services/producers.servi
 const personRatingProducerServices = require('../../../src/graphql/services/personRatingProducers.services');
 const clearDB = require('../clearDB');
 
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est une image encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un chouet gaillard!',
-  website: 'benoitpaysan.ch'
-};
-
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est l\'image d\'un tueur encodée en base64!',
-  phoneNumber: '0761435196',
-  description: 'Un vrai payouz!'
-};
-
-let james = {
-  firstname: 'James',
-  lastname: 'Submith',
-  email: 'james@paysan.ch',
-  password: '1234abcd',
-  image: 'Ceci est une image encodée en base64!',
-  phoneNumber: '1234567123',
-  description: 'Un vrai touriste!'
-};
-
-let ratingAntoine1 = {
-  rating: 1
-};
-let ratingAntoine2 = {
-  rating: 2
-};
-let ratingJames3 = {
-  rating: 3
-};
-let ratingJames4 = {
-  rating: 4
-};
-let ratingBenoit5 = {
-  rating: 5
-};
+let benoit;
+let antoine;
+let james;
+let ratingAntoine1;
+let ratingAntoine2;
+let ratingJames3;
+let ratingJames4;
+let ratingBenoit5;
 
 let tabRatingsAboutAntoine = [];
 let tabRatingsMadeByAntoine = [];
@@ -57,6 +19,38 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est une image encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un chouet gaillard!',
+    website: 'benoitpaysan.ch'
+  };
+
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un vrai payouz!'
+  };
+
+  james = {
+    firstname: 'James',
+    lastname: 'Submith',
+    email: 'james@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est une image encodée en base64!',
+    phoneNumber: '1234567123',
+    description: 'Un vrai touriste!'
+  };
+
   // on ajoute 3 producteurs
   benoit = (await producersServices.addProducer(benoit)).toObject();
   antoine = (await producersServices.addProducer(antoine)).toObject();

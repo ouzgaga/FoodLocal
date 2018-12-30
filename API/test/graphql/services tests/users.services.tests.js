@@ -1,25 +1,8 @@
 const usersServices = require('../../../src/graphql/services/users.services');
 const clearDB = require('../clearDB');
 
-let benoit = {
-  firstname: 'Benoît',
-  lastname: 'Schöpfli',
-  email: 'benoit@paysan.ch',
-  password: '1234abcd',
-  image: 'ceci est une image encodée en base64!',
-  followingProducersIds: [],
-  emailValidated: false
-};
-
-let antoine = {
-  firstname: 'Antoine',
-  lastname: 'Rochaille',
-  email: 'antoine@paysan.ch',
-  password: '1234abcd',
-  image: 'ceci est l\'image d\'un tueur encodée en base64!',
-  followingProducersIds: [],
-  emailValidated: false
-};
+let benoit;
+let antoine;
 
 let tabUsers = [benoit, antoine];
 
@@ -28,6 +11,26 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'ceci est une image encodée en base64!',
+    followingProducersIds: [],
+    emailValidated: false
+  };
+
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'ceci est l\'image d\'un tueur encodée en base64!',
+    followingProducersIds: [],
+    emailValidated: false
+  };
 
   // on ajoute 2 utilisateurs
   benoit = (await usersServices.addUser(benoit)).toObject();
@@ -125,6 +128,7 @@ describe('tests users services', () => {
     it('should add a new user', async() => {
       benoit._id = undefined;
       benoit.email = 'benoit1@paysan.ch';
+      benoit.password = '1234abcd';
 
       // on ajoute un nouveau utilisateur
       const addedUser = await usersServices.addUser(benoit);
@@ -150,8 +154,8 @@ describe('tests users services', () => {
       const userToAdd = {
         ...benoit,
         email: 'benoit2@paysan.ch',
-        _id: undefined,
-        id: undefined
+        password: '1234abcd',
+        _id: undefined
       };
 
       // on ajoute un nouveau utilisateur
