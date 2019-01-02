@@ -49,6 +49,7 @@ const addressSchema = new mongoose.Schema(
  */
 const dayScheduleSchema = new mongoose.Schema(
   {
+    // fixme: il faudrait checker que les heures sont valides...
     openingHour: {
       type: mongoose.Schema.Types.String,
       required: true

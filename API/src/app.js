@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { resolvers, schema: typeDefs } = require('./graphql/graphqlConfig');
 
 const config = require('./config/config');
@@ -17,13 +18,26 @@ const app = express();
 // Active CORS pour le client
 app.use(cors());
 
+const getToken = async(req) => {
+  const token = req.headers['x-token'];
+
+  if (token) {
+    try {
+      return await jwt.verify(token, config.jwtSecret);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+};
+
 // Integrate apollo as a middleware
 const server = new ApolloServer(
   {
     typeDefs,
     resolvers,
     introspection: true,
-    playground: true
+    playground: true,
+    context: ({ req }) => getToken(req)
   }
 );
 server.applyMiddleware({ app });

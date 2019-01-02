@@ -12,7 +12,7 @@ const SalespointsModel = require('../models/salespoints.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalesPoints({ tags = undefined, limit = 50, page = 0 } = {}) {
+function getSalespoints({ tags = undefined, limit = 50, page = 0 } = {}) {
   let skip;
   if (page !== 0) {
     skip = page * limit;
@@ -29,7 +29,7 @@ function getSalesPoints({ tags = undefined, limit = 50, page = 0 } = {}) {
  *
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
-function getSalesPointById(id) {
+function getSalespointById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received salespoint.id is invalid!');
   } else {
@@ -41,9 +41,9 @@ function getSalesPointById(id) {
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
  *
- * @param {Integer} salespoint, Les informations du point de vente à ajouter.
+ * @param salespoint, Les informations du point de vente à ajouter.
  */
-function addSalesPoint(salespoint) {
+function addSalespoint(salespoint) {
   return new SalespointsModel(salespoint).save();
 }
 
@@ -54,12 +54,36 @@ function addSalesPoint(salespoint) {
  *
  * @param {Integer} salespoint, Les informations du point de vente à mettre à jour.
  */
-function updateSalesPoint(salespoint) {
-  if (!mongoose.Types.ObjectId.isValid(salespoint.id)) {
-    return new Error('Received salespoint.id is invalid!');
+async function updateSalespoint(producerId, { name, address, schedule }) {
+  const producer = await producersServices.getProducerById(producerId);
+
+  if (producer == null) {
+    return new Error('Received producerId is not in the database!');
+  }
+  if (producer.message != null) {
+    // l'appel à getProducerById() a retournée l'erreur "Received producer.id is invalid!"
+    return new Error('Received producerId is invalid!');
+  }
+  if (producer.salespointId == null) {
+    return new Error('Impossible to update this salespoint because this producer doesn\'t have one.');
   }
 
-  return SalespointsModel.findByIdAndUpdate(salespoint.id, salespoint, { new: true }); // retourne l'objet modifié
+  const updatedSalespoint = {};
+
+  // on ne déclare le nom, l'adresse ou l'horaire que s'il est réellement donné, sinon, on ne les déclare même pas (pour
+  // ne pas remplacer ceux contenus dans la DB par null sans le vouloir
+  if (name !== undefined) {
+    updatedSalespoint.name = name;
+  }
+  if (address !== undefined) {
+    updatedSalespoint.address = address;
+  }
+  if (schedule !== undefined) {
+    updatedSalespoint.schedule = schedule;
+  }
+
+  await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true }); // retourne l'objet modifié
+  return producer;
 }
 
 /**
@@ -67,7 +91,7 @@ function updateSalesPoint(salespoint) {
  *
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
-function deleteSalesPoint(id) {
+async function deleteSalespoint(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received salespoint.id is invalid!');
   }
@@ -76,9 +100,11 @@ function deleteSalesPoint(id) {
 }
 
 module.exports = {
-  getSalesPoints,
-  addSalesPoint,
-  getSalesPointById,
-  updateSalesPoint,
-  deleteSalesPoint
+  getSalespoints,
+  addSalespoint,
+  getSalespointById,
+  updateSalespoint,
+  deleteSalespoint
 };
+
+const producersServices = require('./producers.services');

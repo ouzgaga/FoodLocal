@@ -1,7 +1,8 @@
-const personsServices = require('../services/persons.services');
-const producersServices = require('../services/producers.services');
+const { isAuthenticatedAsProducerAndIsYourself, isAuthenticatedAsAdmin } = require('./authorization.resolvers');
 const productsServices = require('../services/products.services');
+const producersServices = require('../services/producers.services');
 const salespointsServices = require('../services/salespoints.services');
+const personsServices = require('../services/persons.services');
 
 const producerResolvers = {
   Query: {
@@ -9,19 +10,31 @@ const producerResolvers = {
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
-    producersWaitingForValidation: (parent, args, context) => producersServices.getAllProducerWaitingForValidation(),
+    producersWaitingForValidation: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return producersServices.getAllProducerWaitingForValidation();
+    },
 
-    filterProducers: async(parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
+    filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
   },
 
   Mutation: {
-    validateAProducer: (poarent, args, context) => producersServices.validateAProducer(args.producerId, args.validationState),
+    validateAProducer: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return producersServices.validateAProducer(args.producerId, args.validationState);
+    },
 
-    addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
+    // addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
 
-    updateProducer: (parent, args, context) => producersServices.updateProducer(args.producer),
+    updateProducer: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      return producersServices.updateProducer(args.producer);
+    },
 
-    deleteProducer: (parent, args, context) => producersServices.deleteProducer(args.producerId),
+    deleteProducer: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
+      return producersServices.deleteProducer(args.producerId);
+    }
   },
 
   Producer: {
@@ -29,9 +42,7 @@ const producerResolvers = {
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
-    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalesPointById(
-      parent.salespointId
-    ) : null),
+    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalespointById(parent.salespointId) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
   }

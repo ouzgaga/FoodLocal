@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-	addUser(user: UserInputAdd!): User!
+	# addUser(user: UserInputAdd!): User!
 	updateUser(user: UserInputUpdate!): User
 	deleteUser(userId: ID!): User
 }
@@ -14,8 +14,8 @@ type User implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
+	# password: String! # le password n'est pas accessible côté client!
+	image: String
 	followingProducers:[Producer!]!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
@@ -26,9 +26,9 @@ input UserInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	# followingProducersIds:[Producer!]!
+	password: String! # password obligatoire à l'ajout
+	image: String
+	# followingProducersIds:[ID!]
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
@@ -37,10 +37,11 @@ input UserInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	email: String!
-	password: String!
+	# TODO: tester que l'email ne peut pas être modifié dans un update!
+	# email: String! # l'email ne peut pas être modifié!
+	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String # faudra l'encoder en base64
-	followingProducersIds:[ProducerInputUpdate!]  # pas obligatoire si vide
+	# followingProducersIds:[ID!]  # pas obligatoire si vide
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
