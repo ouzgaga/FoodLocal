@@ -1368,7 +1368,47 @@ Object {
         "nbRatings": 4,
         "rating": 3.5,
       },
-      "salespoint": null,
+      "salespoint": Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7792474,
+          "longitude": 6.6572137,
+          "number": 6,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin d'ici",
+        },
+        "name": "Chez moi",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
       "website": "foodlocal.ch",
     },
   },
@@ -1767,7 +1807,47 @@ Object {
           "nbRatings": 2,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7592474,
+            "longitude": 6.6772137,
+            "number": 12,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin de par là-bas",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
       Object {
@@ -1839,7 +1919,47 @@ Object {
           "nbRatings": 4,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7792474,
+            "longitude": 6.6572137,
+            "number": 6,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin d'ici",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
     ],
@@ -2164,7 +2284,47 @@ Object {
           "nbRatings": 4,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7792474,
+            "longitude": 6.6572137,
+            "number": 6,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin d'ici",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
     ],
@@ -2851,7 +3011,47 @@ Object {
           "nbRatings": 4,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7792474,
+            "longitude": 6.6572137,
+            "number": 6,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin d'ici",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
       Object {
@@ -2908,6 +3108,9 @@ Object {
 exports[`Testing graphql request producers QUERY producers Testing producers() should get all producers 1`] = `
 Object {
   "data": Object {
+<<<<<<< HEAD
+    "producers": Array [],
+=======
     "producers": Array [
       Object {
         "description": "description",
@@ -3279,7 +3482,47 @@ Object {
           "nbRatings": 2,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7592474,
+            "longitude": 6.6772137,
+            "number": 12,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin de par là-bas",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
       Object {
@@ -3351,7 +3594,47 @@ Object {
           "nbRatings": 4,
           "rating": 3.5,
         },
-        "salespoint": null,
+        "salespoint": Object {
+          "address": Object {
+            "city": "Yverdon",
+            "country": "Suisse",
+            "latitude": 46.7792474,
+            "longitude": 6.6572137,
+            "number": 6,
+            "postalCode": "1400",
+            "state": "Vaud",
+            "street": "Chemin d'ici",
+          },
+          "name": "Chez moi",
+          "schedule": Object {
+            "friday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+            "monday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+              Object {
+                "closingHour": "18:00",
+                "openingHour": "13:00",
+              },
+            ],
+            "saturday": Array [],
+            "sunday": Array [],
+            "thursday": Array [],
+            "tuesday": Array [],
+            "wednesday": Array [
+              Object {
+                "closingHour": "12:00",
+                "openingHour": "08:00",
+              },
+            ],
+          },
+        },
         "website": "foodlocal.ch",
       },
       Object {
@@ -3383,6 +3666,7 @@ Object {
         "website": null,
       },
     ],
+>>>>>>> GraphQL
   },
 }
 `;
