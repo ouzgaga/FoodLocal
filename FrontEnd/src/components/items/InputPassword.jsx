@@ -46,6 +46,7 @@ class InputPassword extends React.Component {
             name="password"
             type={showPassword ? 'text' : 'password'}
             id={id}
+            autoComplete="current-password"
             endAdornment={(
               <InputAdornment position="end">
                 <IconButton

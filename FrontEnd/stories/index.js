@@ -20,8 +20,9 @@ import BorderedPasswordField from '../src/components/items/fields/BorderedPasswo
 import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
 import ChangePassword from '../src/components/accouontCRUD/ChangePassword';
 import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
+import PersonalDescription from '../src/components/accouontCRUD/PersonalDescription';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
-
+import BorderedCountField from '../src/components/items/fields/BorderedCountField';
 
 
 function onChange(event) {
@@ -172,8 +173,15 @@ storiesOf('BoxWithHeader', module)
     >
       <ChangePassword />
     </BoxWithHeader>
+  ))
+  .add('PersonalDescription', () => (
+    <BoxWithHeader
+      header="Changer votre description"
+    >
+      <PersonalDescription />
+    </BoxWithHeader>
   ));
-
+  
  
 storiesOf('BorderedTextField', module)
   .add('no data', () => (
@@ -207,6 +215,13 @@ storiesOf('BorderedPasswordField', module)
     />
   ));
   
+  storiesOf('BorderedCountField', module)
+  .add('BorderedCountField', () => (
+    <BorderedCountField
+      value="test"
+
+    />
+  ))
 
 storiesOf('BoxLeftRight', module)
   .add('BoxLeftRight', () => (

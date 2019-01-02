@@ -26,6 +26,7 @@ import {
   PageError404,
   PageBecomeProducer,
   PageAdmin,
+  PagePersonalInformations,
 } from './pages/Pages';
 
 
@@ -75,26 +76,21 @@ class App extends React.Component {
 
     return (
       <div className={classes.root}>
-        <div>
-          <Router>
-            <MuiThemeProvider theme={Theme}>
-              <Header />
-              <div className={classes.page} center="xs">
-                <Switch>
-                  <Route path="/" exact component={PageAcceuil} classes={classes} />
-                  <Route default path="/about" exact component={PageAbout} classes={classes} />
-                  <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-                  <Route path="/becomeProducer" exct component={PageBecomeProducer} classes={classes} />
-                  <Route path="/admin" exct component={PageAdmin} classes={classes} />
-                  <Route path="/map" exact component={PageMap} classes={classes} />
-                  <Route path="/producer/:producerId" component={ProducerVue} />
-                  <Route path="/validationEmail/:token" component={PageEmailValidation} />
-                  <Route path="/pageproducer/" component={PageProducer} classes={classes} />
-                  <Route path="*" component={PageError404} classes={classes} />
-                </Switch>
-              </div>
-            </MuiThemeProvider>
-          </Router>
+        <Header />
+        <div className={classes.page} center="xs">
+          <Switch>
+            <Route path="/" exact component={PageAcceuil} classes={classes} />
+            <Route default path="/about" exact component={PageAbout} classes={classes} />
+            <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+            <Route path="/becomeProducer" exct component={PageBecomeProducer} classes={classes} />
+            <Route path="/admin" exct component={PageAdmin} classes={classes} />
+            <Route path="/map" exact component={PageMap} classes={classes} />
+            <Route path="/producer/:producerId" component={ProducerVue} />
+            <Route path="/validationEmail/:token" component={PageEmailValidation} />
+            <Route path="/pageproducer" component={PageProducer} classes={classes} />
+            <Route path="/PagePersonalInformations" component={PagePersonalInformations} classes={classes} />
+            <Route path="*" component={PageError404} classes={classes} />
+          </Switch>
         </div>
       </div>
     );

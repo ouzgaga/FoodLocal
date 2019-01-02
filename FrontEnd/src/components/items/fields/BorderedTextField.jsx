@@ -18,7 +18,7 @@ const styles = theme => ({
 
 class BorderedTextField extends Component {
   render() {
-    const { classes, onChange, defaultValue, id, fullWidth } = this.props;
+    const { classes, onChange, defaultValue, id, fullWidth, required } = this.props;
     
     return (
       <>
@@ -29,7 +29,7 @@ class BorderedTextField extends Component {
           variant="outlined"
           onChange={onChange}
           fullWidth={fullWidth}
-          InputProps
+          required={required}
         />
       </>
     );
@@ -42,12 +42,14 @@ BorderedTextField.propTypes = {
   id: PropTypes.string,
   defaultValue: PropTypes.string,
   fullWidth: PropTypes.bool,
+  required: PropTypes.bool,
 };
 
 BorderedTextField.defaultProps = {
   id: '',
   defaultValue: '',
   fullWidth: false,
+  required: false,
 };
 
 export default withStyles(styles)(BorderedTextField);

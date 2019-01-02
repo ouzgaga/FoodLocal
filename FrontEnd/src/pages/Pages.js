@@ -7,6 +7,7 @@ import PageProducer from './PageProducer';
 import PageAcceuil from './PageAcceuil';
 import PageEmailValidation from './PageEmailValidation';
 import PageAdmin from './PageAdmin';
+import PagePersonalInformations from './PagePersonalInformations';
 
 export {
   PageAbout,
@@ -18,4 +19,5 @@ export {
   PageEmailValidation,
   PageError404,
   PageAdmin,
+  PagePersonalInformations,
 };

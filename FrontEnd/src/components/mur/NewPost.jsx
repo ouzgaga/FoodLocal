@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 
@@ -15,12 +12,12 @@ import BorderedCountField from '../items/fields/BorderedCountField';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    display: 'flex',
     maxWidth: 1200,
     padding: theme.spacing.unit * 2,
     textAlign: 'justify',
   },
   bootstrapRoot: {
-    
     'label + &': {
       marginTop: theme.spacing.unit * 3,
     },
@@ -44,8 +41,8 @@ const styles = theme => ({
     fontSize: 18,
   },
   margin: {
-    //marginLeft: theme.spacing.unit,
-    //marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
   },
   button: {
     margin: theme.spacing.unit,
@@ -90,40 +87,28 @@ class NewPost extends React.Component {
     return (
       <Paper className={classes.root}>
         <FormControl
-          className={classes.margin}
+          //className={classes.margin}
           margin="normal"
           noValidate
           autoComplete="off"
           fullWidth
         >
-
-
-        
           <BorderedCountField
             header="Publier un nouveau post."
             id="new-post-input"
-            value={body}
-            
-      
-            
+            maxLenght={1024}
+            fullWidth
             onChange={this.handleChangeText}
-            
-
-
           />
-
           <div>
-            
             { showMap ? <ResearchMap /> : <div />}
-
             <Button variant="contained" className={classes.button} onClick={this.handleClickAddMap}>
-              { showMap ? `Retirer la carte` : `Ajouter une carte`}
+              { showMap ? 'Retirer la carte' : 'Ajouter une carte'}
             </Button>
             <Button variant="contained" className={classes.button} onClick={this.handleClickPost}>
               Post
             </Button>
           </div>
-
         </FormControl>
       </Paper>
     );

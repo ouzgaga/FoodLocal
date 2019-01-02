@@ -10,7 +10,7 @@ import compose from 'recompose/compose';
 
 import logo from '../img/LogoCarrote.png';
 import UserContext from './UserContext';
-import MenuDrawer from './MenuDrawer';
+import MenuDrawer from './menu/MenuDrawer';
 import LoginDialog from './LoginDialog';
 import SimpleDialog from './items/SimpleDialog';
 import InscriptionContainer from './newUser/InscriptionContainer';
@@ -87,6 +87,7 @@ class MenuAppBar extends React.Component {
         }
       </div>
     );
+    
     return (
       <div>
         <AppBar position="static" className={classes.root}>

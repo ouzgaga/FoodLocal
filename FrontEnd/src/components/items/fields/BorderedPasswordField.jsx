@@ -33,18 +33,21 @@ class BorderedPasswordField extends Component {
   }
 
   render() {
-    const { classes, onChange, defaultValue, id, fullWidth } = this.props;
+    const { classes, onChange, defaultValue, id, fullWidth, required } = this.props;
     const { showPassword } = this.state;
 
     return (
       <>
         <OutlinedInput
+          labelWidth={0}
+          required={required}
           id={`BorderedTextFiel-${id}`}
           className={classes.textField}
           defaultValue={defaultValue}
           onChange={onChange}
           type={showPassword ? 'text' : 'password'}
           fullWidth={fullWidth}
+          autoComplete="current-password"
           endAdornment={(
             <InputAdornment position="end">
               <IconButton
@@ -69,12 +72,14 @@ BorderedPasswordField.propTypes = {
   id: PropTypes.string,
   defaultValue: PropTypes.string,
   fullWidth: PropTypes.bool,
+  required: PropTypes.bool,
 };
 
 BorderedPasswordField.defaultProps = {
   id: '',
   defaultValue: '',
   fullWidth: false,
+  required: false,
 };
 
 export default withStyles(styles)(BorderedPasswordField);
