@@ -1,4 +1,3 @@
-const { combineResolvers } = require('graphql-resolvers');
 const { isAuthenticatedAsUserAndIsYourself, isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const personRatingProducersServices = require('../services/personRatingProducers.services');
 const personsServices = require('../services/persons.services');
@@ -8,32 +7,32 @@ const personRatingProducersResolvers = {
   Query: {
     ratingsAboutProducer: (parent, args, context) => personRatingProducersServices.getAllRatingsAboutProducerWithId(args.producerId),
 
-    ratingAboutProducerMadeByPerson: combineResolvers(
-      isAuthenticatedAsUserAndIsYourself,
-      (parent, args, context) => personRatingProducersServices.getRatingAboutProducerIdMadeByPersonId(args.personId, args.producerId)
-    ),
+    ratingAboutProducerMadeByPerson: async(parent, args, context) => {
+      await isAuthenticatedAsUserAndIsYourself(context.id, args.personId, context.kind);
+      return personRatingProducersServices.getRatingAboutProducerIdMadeByPersonId(args.personId, args.producerId);
+    },
 
-    ratingsMadeByPerson: combineResolvers(
-      isAuthenticatedAsUserAndIsYourself,
-      (parent, args, context) => personRatingProducersServices.getAllRatingsMadeByPersonWithId(args.personId)
-    )
+    ratingsMadeByPerson: async(parent, args, context) => {
+      await isAuthenticatedAsUserAndIsYourself(context.id, args.personId, context.kind);
+      return personRatingProducersServices.getAllRatingsMadeByPersonWithId(args.personId);
+    }
   },
 
   Mutation: {
-    addProducerRating: combineResolvers(
-      isAuthenticatedAndIsYourself,
-      (parent, args, context) => personRatingProducersServices.addPersonRatingProducer(args.rating)
-    ),
+    addProducerRating: async(parent, args, context) => {
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
+      return personRatingProducersServices.addPersonRatingProducer(args.rating);
+    },
 
-    updateProducerRating: combineResolvers(
-      isAuthenticatedAndIsYourself,
-      (parent, args, context) => personRatingProducersServices.updatePersonRatingProducer(args.rating)
-    ),
+    updateProducerRating: async(parent, args, context) => {
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
+      return personRatingProducersServices.updatePersonRatingProducer(args.rating);
+    },
 
-    deleteProducerRating: combineResolvers(
-      isAuthenticatedAndIsYourself,
-      (parent, args, context) => personRatingProducersServices.deletePersonRatingProducer(args.ratingId)
-    )
+    deleteProducerRating: async(parent, args, context) => {
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
+      return personRatingProducersServices.deletePersonRatingProducer(args.ratingId);
+    }
   },
 
   PersonRatingProducer: {
