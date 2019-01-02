@@ -1,6 +1,7 @@
 const clearDB = require('./graphql/clearDB');
 const personRatingProducersServices = require('../src/graphql/services/personRatingProducers.services');
 const usersServices = require('../src/graphql/services/users.services');
+const salespointsServices = require('../src/graphql/services/salespoints.services');
 const producersServices = require('../src/graphql/services/producers.services');
 const productsServices = require('../src/graphql/services/products.services');
 const productTypesServices = require('../src/graphql/services/productTypes.services');
@@ -302,7 +303,7 @@ const populateDB = async() => {
   // on ajoute des produits au producteur
   const productsProducer1 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, biere, jusOrange, jusPomme, polenta], producer1.id);
   // on ajoute un point de vente au producteur
-  const salespointProducer1 = await producersServices.addSalespointToProducer(producer1.id, {
+  await producersServices.addSalespointToProducer(producer1.id, {
     name: 'Chez moi',
     address: {
       number: 6,
@@ -362,7 +363,7 @@ const populateDB = async() => {
   // on ajoute des produits au producteur
   const productsProducer2 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, polenta], producer2.id);
   // on ajoute un point de vente au producteur
-  const salespointProducer2 = await producersServices.addSalespointToProducer({
+  await producersServices.addSalespointToProducer(producer2.id, {
     name: 'Chez moi',
     address: {
       number: 12,
@@ -421,7 +422,7 @@ const populateDB = async() => {
   const productsProducer3 = await productsServices.addAllProductsInArray([tomme, jusPomme], producer3.id);
 
   // on ajoute un point de vente au producteur
-  const salespointProducer3 = await producersServices.addSalespointToProducer({
+  await producersServices.addSalespointToProducer(producer3.id, {
     name: 'Chez moi',
     address: {
       number: 6,
@@ -474,7 +475,7 @@ const populateDB = async() => {
   );
 
   tabProducers = [producer1, producer2, producer3, producer4];
-  tabSalespoints = [salespointProducer1, salespointProducer2, salespointProducer3];
+  tabSalespoints = await salespointsServices.getSalespoints();
 
   // ------------------------------------------------------------------- ajout de 2 users ----------------------------------------------------------------------
   // on ajoute un utilisateur
@@ -483,7 +484,8 @@ const populateDB = async() => {
       firstname: 'Jérémie',
       lastname: 'Chaton',
       email: 'jerem@user.ch',
-      password: '1234abcd'
+      password: '1234abcd',
+      image: 'ceci est une image encodée en base64!'
     }
   );
 

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const PersonsModel = require('../models/persons.modelgql');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
-async function isEmailUnused(emailUser) {
+async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
   return existingPerson === null;
 }
@@ -26,6 +26,24 @@ function getPersonById(id) {
     return new Error('Received person.id is invalid!');
   } else {
     return PersonsModel.findById(id);
+  }
+}
+
+// TODO: à ajouter aux tests des services et d'intégration!
+async function getPersonByLogin(email, password) {
+  const person = await PersonsModel.findOne({ email });
+
+  if (person != null && person.id != null) { // une personne avec cet email a été trouvée dans la DB
+    // on compare le password reçu en paramètre avec le mdp enregistré dans la DB
+    const match = await bcrypt.compare(password, person.password);
+    if (match) {
+      // si le mdp est correct, on retourne la personne
+      return person;
+    } else {
+      return new Error('Received password is not correct!');
+    }
+  } else {
+    return new Error(`There is no user corresponding to the email "${email}"`);
   }
 }
 
@@ -61,7 +79,8 @@ async function changePassword(newPassword, oldPassword, personId) {
 
         // si on arrive ici, alors le nouveau mot de passe est un mot de passe valide.
         person.password = await bcrypt.hash(newPassword, 10); // fixme: Paul: 10 saltRound, c'est suffisant ?
-        return true;
+        const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
+        return updatedPerson != null;
       } catch (err) {
         return err;
       }
@@ -88,8 +107,8 @@ function checkIfPasswordIsValid(password) {
 }
 
 // TODO: à ajouter aux tests!
-async function validateEmailUserByToken(value) {
-  const token = await tokenValidationEmailServices.validateToken(value);
+async function validateEmailUserByToken(emailValidationToken) {
+  const token = await tokenValidationEmailServices.validateToken(emailValidationToken);
   if (token !== null) {
     const updatedPerson = await PersonsModel.findByIdAndUpdate(token.idPerson, { emailValidated: true }, { new: true }); // retourne l'objet modifié
     return updatedPerson !== null;
@@ -98,10 +117,13 @@ async function validateEmailUserByToken(value) {
   }
 }
 
+// TODO: Ajouter une fonction pour upgrade un utilsiateur en producteur !
+
 module.exports = {
-  isEmailUnused,
+  isEmailAvailable,
   checkIfPersonIdExistInDB,
   getPersonById,
+  getPersonByEmail: getPersonByLogin,
   getAllPersonsInReceivedIdList,
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,

@@ -525,7 +525,7 @@ describe('tests personRatingProducer services', () => {
     });
   });
 
-  describe('tests deleteSalesPoint', () => {
+  describe('tests deleteSalespoint', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should delete a personRatingProducer', async() => {

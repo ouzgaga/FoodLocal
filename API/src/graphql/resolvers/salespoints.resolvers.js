@@ -1,19 +1,29 @@
+const { isAuthenticatedAsProducerAndIsYourself } = require('./authorization.resolvers');
 const salespointsServices = require('../services/salespoints.services');
 const producersServices = require('../services/producers.services');
 
 const salespointsResolvers = {
   Query: {
-    salespoints: (parent, args, context) => salespointsServices.getSalesPoints(),
+    salespoints: (parent, args, context) => salespointsServices.getSalespoints(),
 
-    salespoint: (parent, args, context) => salespointsServices.getSalesPointById(args.salespointId)
+    salespoint: (parent, args, context) => salespointsServices.getSalespointById(args.salespointId)
   },
 
   Mutation: {
-    addSalespointToProducer: (parent, args, context) => producersServices.addSalespointToProducer(args.producerId, args.salespoint),
+    addSalespointToProducer: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
+      return producersServices.addSalespointToProducer(args.producerId, args.salespoint);
+    },
 
-    updateSalespoint: (parent, args, context) => salespointsServices.updateSalesPoint(args.salespoint),
+    updateSalespoint: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
+      return salespointsServices.updateSalespoint(args.producerId, args.salespoint);
+    },
 
-    deleteSalesPointToProducer: (parent, args, context) => producersServices.removeSalespointToProducer(args.producerId)
+    deleteSalespointToProducer: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
+      return producersServices.removeSalespointToProducer(args.producerId);
+    }
   }
 };
 module.exports = salespointsResolvers;

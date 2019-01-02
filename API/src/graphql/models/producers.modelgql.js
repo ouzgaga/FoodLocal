@@ -41,7 +41,8 @@ const producerSchema = new mongoose.Schema(
     },
     website: {
       type: mongoose.Schema.Types.String,
-      required: false
+      required: false,
+      lowercase: true
     },
     salespointId: {
       type: mongoose.Schema.Types.ObjectId,

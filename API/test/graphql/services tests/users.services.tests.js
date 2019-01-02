@@ -171,6 +171,71 @@ describe('tests users services', () => {
       res.should.be.not.null;
       res.message.should.be.equal('This email is already used.');
     });
+
+
+    it('should fail adding a new user because invalid email received (1)', async() => {
+      const userToAdd = {
+        ...benoit,
+        email: '@paysan.ch',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouvel utilisateur
+      try {
+        const res = (await usersServices.addUser(userToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`users validation failed: email: Path \`email\` is invalid (${userToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new user because invalid email received (2)', async() => {
+      const userToAdd = {
+        ...benoit,
+        email: 'benoit@.ch',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouvel utilisateur
+      try {
+        const res = (await usersServices.addUser(userToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`users validation failed: email: Path \`email\` is invalid (${userToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new producer because invalid email received (3)', async() => {
+      const userToAdd = {
+        ...benoit,
+        email: 'benoit@paysan',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await usersServices.addUser(userToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`users validation failed: email: Path \`email\` is invalid (${userToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new producer because invalid email received (4)', async() => {
+      const userToAdd = {
+        ...benoit,
+        email: 'benoit@paysan.ch.',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await usersServices.addUser(userToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`users validation failed: email: Path \`email\` is invalid (${userToAdd.email}).`);
+      }
+    });
   });
 
   describe('tests updateUser', () => {
@@ -196,7 +261,7 @@ describe('tests users services', () => {
       updatedUser.id.should.be.equal(user.id);
       updatedUser.firstname.should.be.equal(user.firstname);
       updatedUser.lastname.should.be.equal(user.lastname);
-      updatedUser.email.should.be.equal(user.email);
+      updatedUser.email.should.be.equal(antoine.email); // car l'email ne peut pas être modifié
       // on check que le password n'ait pas été modifié durant l'update!
       updatedUser.password.should.be.equal(password);
       updatedUser.image.should.be.equal(user.image);

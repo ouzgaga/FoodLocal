@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-	addUser(user: UserInputAdd!): User!
+	# addUser(user: UserInputAdd!): User!
 	updateUser(user: UserInputUpdate!): User
 	deleteUser(userId: ID!): User
 }
@@ -37,7 +37,8 @@ input UserInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	email: String!
+	# TODO: tester que l'email ne peut pas être modifié dans un update!
+	# email: String! # l'email ne peut pas être modifié!
 	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String # faudra l'encoder en base64
 	# followingProducersIds:[ID!]  # pas obligatoire si vide

@@ -398,6 +398,70 @@ describe('tests producers services', () => {
       res.should.be.not.null;
       res.message.should.be.equal('This email is already used.');
     });
+
+    it('should fail adding a new producer because invalid email received (1)', async() => {
+      const producerToAdd = {
+        ...benoit,
+        email: '@paysan.ch',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await producersServices.addProducer(producerToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`producers validation failed: email: Path \`email\` is invalid (${producerToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new producer because invalid email received (2)', async() => {
+      const producerToAdd = {
+        ...benoit,
+        email: 'benoit@.ch',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await producersServices.addProducer(producerToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`producers validation failed: email: Path \`email\` is invalid (${producerToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new producer because invalid email received (3)', async() => {
+      const producerToAdd = {
+        ...benoit,
+        email: 'benoit@paysan',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await producersServices.addProducer(producerToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`producers validation failed: email: Path \`email\` is invalid (${producerToAdd.email}).`);
+      }
+    });
+
+    it('should fail adding a new producer because invalid email received (4)', async() => {
+      const producerToAdd = {
+        ...benoit,
+        email: 'benoit@paysan.ch.',
+        password: '1234abcd'
+      };
+
+      // on ajoute un nouveau producteur
+      try {
+        const res = (await producersServices.addProducer(producerToAdd)).toObject();
+      } catch (err) {
+        err.should.be.not.null;
+        err.message.should.be.equal(`producers validation failed: email: Path \`email\` is invalid (${producerToAdd.email}).`);
+      }
+    });
   });
 
   describe('tests addProductToProducer', () => {
@@ -529,9 +593,71 @@ describe('tests producers services', () => {
       // antoine a maintenant un point de vente
       expect(antoine.salespointId).to.be.not.null;
 
-      const salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
+      const salespoint = (await salespointServices.getSalespointById(antoine.salespointId)).toObject();
       expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
       expect(salespoint.name).to.be.equal(salespointBenoit.name);
+    });
+
+    it('should fail adding a salespoint to a producer because he has already one', async() => {
+      salespointBenoit = {
+        name: 'Chez moi',
+        address: {
+          number: 6,
+          street: 'Chemin de par ici',
+          city: 'Yverdon',
+          postalCode: '1400',
+          state: 'Vaud',
+          country: 'Suisse',
+          longitude: 1.1234567,
+          latitude: 1.123456789
+        },
+        schedule:
+          {
+            monday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              },
+              {
+                openingHour: '13:00',
+                closingHour: '18:00'
+              }
+            ],
+            tuesday: [],
+            wednesday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            thursday: [],
+            friday: [
+              {
+                openingHour: '08:00',
+                closingHour: '12:00'
+              }
+            ],
+            saturday: [],
+            sunday: []
+          }
+      };
+
+      // antoine n'a pas encore de point de vente
+      expect(antoine.salespointId).to.be.null;
+
+      // on ajoute un point de vente au producteur
+      antoine = (await producersServices.addSalespointToProducer(antoine.id, salespointBenoit)).toObject();
+      // antoine a maintenant un point de vente
+      expect(antoine.salespointId).to.be.not.null;
+
+      const salespoint = (await salespointServices.getSalespointById(antoine.salespointId)).toObject();
+      expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
+      expect(salespoint.name).to.be.equal(salespointBenoit.name);
+
+      // on tente de lui ajouter un nouveau point de vente alors qu'il en a déjà un -> erreur
+      antoine = await producersServices.addSalespointToProducer(antoine.id, salespointBenoit);
+      expect(antoine.message).to.be
+        .equal('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
     });
 
     it('should not add a salespoint to a producer because invalid producerId received (too short)', async() => {
@@ -744,17 +870,14 @@ describe('tests producers services', () => {
       // antoine a maintenant un point de vente
       expect(antoine.salespointId).to.be.not.null;
 
+      const idSalespoint = antoine.salespointId;
+
       // on supprime le point de vente du producteur
       antoine = (await producersServices.removeSalespointToProducer(antoine.id)).toObject();
-
-      let salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
-      expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
-      expect(salespoint.name).to.be.equal(salespointBenoit.name);
-
       // antoine n'a plus de point de vente
       expect(antoine.salespointId).to.be.null;
 
-      salespoint = (await salespointServices.getSalesPointById(antoine.salespointId)).toObject();
+      const salespoint = await salespointServices.getSalespointById(idSalespoint);
       expect(salespoint).to.be.null;
     });
   });
@@ -783,7 +906,7 @@ describe('tests producers services', () => {
       updatedProducer.id.should.be.equal(producer.id);
       updatedProducer.firstname.should.be.equal(producer.firstname);
       updatedProducer.lastname.should.be.equal(producer.lastname);
-      updatedProducer.email.should.be.equal(producer.email);
+      updatedProducer.email.should.be.equal(antoine.email); // car l'email ne peut pas être modifié
       // on check que le password n'ait pas été modifié durant l'update!
       updatedProducer.password.should.be.equal(password);
       updatedProducer.image.should.be.equal(producer.image);

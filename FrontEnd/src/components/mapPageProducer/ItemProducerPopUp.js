@@ -59,19 +59,17 @@ function ListItemProducer(props) {
   return (
     <Fragment>
 
-      {producer.salesPoint !== null && (
-        <Card className={classes.card} onMouseEnter={(e) => { e.preventDefault(); handleHover(producer.id); }} onMouseLeave={(e) => { e.preventDefault(); resetHover(); }}>
+      {producer.salespoint !== null && (
+        <Card className={classes.card}>
           <CardActionArea target="_blank">
-            <CardHeader title={producer.salesPoint.name} subheader={producer.salesPoint.address.city} className={classes.titleItem} />
+            <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
             <div className={classes.root}>
               <GridList className={classes.gridList}>
                 {producer.products.map(item => (
-                  <div className={classes.paper} key={item.productType.id}>
+                  <div className={classes.paper}>
                     <GridListTile key={item.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
                       <CardMedia className={classes.media} image={item.productType.image} title={item.productType.name} />
-                      <Typography className={classes.typo} variant="body1" gutterBottom>
-                        {item.productType.name}
-                      </Typography>
+                      <Typography className={classes.typo} variant="body1" gutterBottom> {item.productType.name} </Typography>
                     </GridListTile>
                   </div>
                 ))}

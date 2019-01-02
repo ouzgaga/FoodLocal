@@ -11,6 +11,48 @@ Object {
 }
 `;
 
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType: ProductTypeInputAdd!) should fail adding a new productType because given field "rienAVoir" is not defined in schema 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { name: "pomme", image: "ceci est une image de pomme encodée en base64! :D", categoryId: "5c2a4dd84def0388fcbdb89e", rienAVoir: "ceci est un champ qui n'a rien à faire ici!" }; Field "rienAVoir" is not defined by type ProductTypeInputAdd.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType: ProductTypeInputAdd!) should fail adding a new productType because missing categoryId 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { name: "pomme", image: "ceci est une image de pomme encodée en base64! :D" }; Field value.categoryId of required type ID! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType: ProductTypeInputAdd!) should fail adding a new productType because missing name 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { image: "ceci est une image de pomme encodée en base64! :D", categoryId: "5c2a4dd34def0388fcbdb5fe" }; Field value.name of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType: ProductTypeInputAdd!) should fail adding a new productType because not authenticated 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing addProductType(productType: ProductTypeInputAdd!) should fail adding a new productType because not authenticated as administrator 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be an administrator to do that.],
+  ],
+}
+`;
+
 exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should delete a productType 1`] = `
 Object {
   "data": Object {
@@ -19,6 +61,28 @@ Object {
       "name": "Fruits",
     },
   },
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should fail deleting a productType because not authenticated 1`] = `
+Object {
+  "data": Object {
+    "deleteProductType": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing deleteProductType(productTypeId) should fail deleting a productType because not authenticated as administrator 1`] = `
+Object {
+  "data": Object {
+    "deleteProductType": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be an administrator to do that.],
+  ],
 }
 `;
 
@@ -49,6 +113,60 @@ Object {
   "data": Object {
     "deleteProductType": null,
   },
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because given field "rienAVoir" is not defined in schema 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { id: "5c2a4ded4def0388fcbdc1e4", name: "courgette", image: "ceci est une image de courgette encodée en base64! :D", categoryId: "5c2a4ded4def0388fcbdc1cf", rienAVoir: "ceci est un champ qui n'a rien à faire ici!" }; Field "rienAVoir" is not defined by type ProductTypeInputUpdate.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because missing categoryId 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { id: "5c2a4de84def0388fcbdbf44", name: "courgette", image: "ceci est une image de courgette encodée en base64! :D" }; Field value.categoryId of required type ID! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because missing id 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { name: "courgette", image: "ceci est une image de courgette encodée en base64! :D", categoryId: "5c2a4dea4def0388fcbdc07f" }; Field value.id of required type ID! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because missing name 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$productType" got invalid value { id: "5c2a4de54def0388fcbdbdf4", image: "ceci est une image de courgette encodée en base64! :D", categoryId: "5c2a4de54def0388fcbdbddf" }; Field value.name of required type String! was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because not authenticated 1`] = `
+Object {
+  "data": Object {
+    "updateProductType": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request productType MUTATION productType Testing updateProductType(productType: ProductTypeInputUpdate!) should fail updating a productType because not authenticated as administrator 1`] = `
+Object {
+  "data": Object {
+    "updateProductType": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be an administrator to do that.],
+  ],
 }
 `;
 

@@ -25,7 +25,7 @@ const query = gql`
 `;
 
 const query2 = gql`
-  query Dog($productTypeCategoryId: ID!) {
+  query ($productTypeCategoryId: ID!) {
     productTypesOfCategory(productTypeCategoryId : $productTypeCategoryId) {
       id
       name

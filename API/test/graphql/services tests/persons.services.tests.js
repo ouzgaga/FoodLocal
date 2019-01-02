@@ -27,17 +27,17 @@ describe('tests users services', () => {
   beforeEach(() => clearAndPopulateDB());
 
 
-  describe('tests isEmailUnused', () => {
+  describe('tests isEmailAvailable', () => {
     it('should return false because this email is already used', async() => {
-      let res = await personsServices.isEmailUnused(users[0].email);
+      let res = await personsServices.isEmailAvailable(users[0].email);
       res.should.be.false;
 
-      res = await personsServices.isEmailUnused(producers[0].email);
+      res = await personsServices.isEmailAvailable(producers[0].email);
       res.should.be.false;
     });
 
     it('should return true because this email is not used', async() => {
-      const res = await personsServices.isEmailUnused('coucou@payouz.ch');
+      const res = await personsServices.isEmailAvailable('coucou@payouz.ch');
       res.should.be.true;
     });
   });
