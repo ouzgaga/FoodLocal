@@ -51,7 +51,7 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser({ firstname, lastname, email, password, image }) {
-  if (await personsServices.isEmailUnused(email) && personsServices.checkIfPasswordIsValid(password)) {
+  if (await personsServices.isEmailAvailable(email) && personsServices.checkIfPasswordIsValid(password)) {
     const userToAdd = {
       firstname,
       lastname,
@@ -78,10 +78,11 @@ async function addUser({ firstname, lastname, email, password, image }) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({ id, firstname, lastname, email, image }) {
+async function updateUser({ id, firstname, lastname, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+
   // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
@@ -91,13 +92,15 @@ async function updateUser({ id, firstname, lastname, email, image }) {
     const userToUpdate = {
       firstname,
       lastname,
-      email,
-      // password,
-      image,
-      // followingProducersIds: await getAllUsersInReceivedIdList(followingProducersIds),
       emailValidated,
       isAdmin
     };
+
+    // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
+    if (image !== undefined) {
+      userToUpdate.image = image;
+    }
+
     return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
   } else {
     return new Error('The received id is not in the database!');

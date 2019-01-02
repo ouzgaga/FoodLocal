@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import InscriptionProducer from '../components/NewProducer/InscriptionProducer';
+import InscriptionProducer from '../components/producerRegistration/InscriptionProducer';
 
-class PageBecomeProducer extends Component {
+class PageProducerRegistration extends Component {
   constructor(props) {
     super(props);
     document.title = 'Devenir Producteur';
@@ -16,4 +16,4 @@ class PageBecomeProducer extends Component {
   }
 }
 
-export default PageBecomeProducer;
+export default PageProducerRegistration;

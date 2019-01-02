@@ -17,7 +17,7 @@ type Mutation {
 	validateAProducer(producerId: ID!, validationState: Boolean!): Producer!
 
 	# Ajoute un nouveau producteur avec les informations passées en paramètre.
-	addProducer(producer: ProducerInputAdd!): Producer!
+	# addProducer(producer: ProducerInputAdd!): Producer!
 
 	# Met à jour les informations du producteur reçu en paramètre. Retourne null si ce producteur n'existe pas.
 	updateProducer(producer: ProducerInputUpdate!): Producer
@@ -43,7 +43,7 @@ type Producer implements Person {
 	phoneNumber: String
 	description: String
 	website: String
-	salespoint: SalesPoint
+	salespoint: Salespoint
 	isValidated: Boolean! # validation côté serveur uniquement
 	# Tableau contenant tous les produits proposés par le producteur.
 	products: [Product!]!
@@ -85,7 +85,8 @@ input ProducerInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	email: String!
+	# TODO: tester que l'email ne peut pas être modifié dans un update!
+	# email: String! # l'email ne peut pas être modifié!
 	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String
 

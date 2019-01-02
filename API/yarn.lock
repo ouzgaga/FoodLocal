@@ -1506,6 +1506,11 @@ deep-eql@^3.0.1:
   dependencies:
     type-detect "^4.0.0"
 
+deep-equal@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
+  integrity sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
+
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
@@ -2377,6 +2382,14 @@ graphql-extensions@0.3.6:
   integrity sha512-QGnDQ0TkF1YpVE/ZvKVl3bZ1PfwSbynVBcNU5U1DPU56pLkltETORiFL4TQ/Tt7RzagBX/xVaI3q0xJC6h9M5w==
   dependencies:
     "@apollographql/apollo-tools" "^0.2.6"
+
+graphql-resolvers@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/graphql-resolvers/-/graphql-resolvers-0.3.2.tgz#63d29147054310551597c4d3d6c0dd25a4d12ef5"
+  integrity sha512-hmGqt6P2CzPCvfWZcPMuZjc2m/MwnR0sJLVJ+bVvohxFDwL08B70pvcIUIGMFroav1Z8STcmZxPBBU4YdhRv7A==
+  dependencies:
+    deep-equal "^1.0.1"
+    object-path "^0.11.4"
 
 graphql-subscriptions@^1.0.0:
   version "1.0.0"

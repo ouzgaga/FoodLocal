@@ -1,4 +1,5 @@
-require('../models/producers.modelgql');
+require('../models/producers.modelgql'); // FIXME: checker si vraiment utile....
+const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 
@@ -10,7 +11,7 @@ const PersonType = {
 
 const personsResolvers = {
   Query: {
-    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailUnused(args.email)
+    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email)
   },
 
   Mutation: {
@@ -18,7 +19,10 @@ const personsResolvers = {
 
     removeFollowerToProducer: (parent, args, context) => producersServices.removeFollowerToProducer(args.producerId, args.followerId),
 
-    changePassword: (parent, args, context) => personsServices.changePassword(args.newPassword, args.oldPassword, args.personId)
+    changePassword: async(parent, args, context) => {
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
+      return personsServices.changePassword(args.newPassword, args.oldPassword, args.personId);
+    }
   },
 
   Person: {

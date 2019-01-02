@@ -143,6 +143,38 @@ Object {
 }
 `;
 
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should change the password of the producer 1`] = `
+Object {
+  "data": Object {
+    "changePassword": true,
+  },
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should change the password of the producer 2`] = `
+Object {
+  "data": Object {
+    "changePassword": true,
+  },
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should change the password of the user 1`] = `
+Object {
+  "data": Object {
+    "changePassword": true,
+  },
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should change the password of the user 2`] = `
+Object {
+  "data": Object {
+    "changePassword": true,
+  },
+}
+`;
+
 exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should not change the password of the person because empty new password 1`] = `
 Object {
   "data": null,
@@ -162,6 +194,15 @@ Object {
 `;
 
 exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should not change the password of the person because empty old password 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: The received oldPassword is not correct!],
+  ],
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should not change the password of the person because empty old password 2`] = `
 Object {
   "data": null,
   "errors": Array [
@@ -202,6 +243,24 @@ Object {
   "data": null,
   "errors": Array [
     [GraphQLError: The received oldPassword is not correct!],
+  ],
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should not change the password of the user because user is not logged in 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should not change the password of the user because user try to modify another member 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: You can't modify information of another user than yourself!],
   ],
 }
 `;

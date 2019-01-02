@@ -466,7 +466,11 @@ describe('Testing graphql request persons', () => {
 
     // ----------------------changePassword(newPassword: String!, oldPassword: String!, personId: ID!)-------------------------------------- //
     describe('Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!)', () => {
-      beforeEach(() => clearAndPopulateDB());
+      let context;
+      beforeEach(async() => {
+        await clearAndPopulateDB();
+        context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: tabProducers[0].isAdmin, kind: tabProducers[0].kind };
+      });
 
       const { mutation } = {
         mutation: `
@@ -475,106 +479,82 @@ describe('Testing graphql request persons', () => {
         }`
       };
 
-      const { queryGetProducerById } = {
-        queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
-        }
-      }
-    }`
-      };
-
-      it('should change the password of the person', async(done) => {
-        const variables = {
+      it('should change the password of the producer', async(done) => {
+        let variables = {
           newPwd: 'abcd1234',
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
+        let result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
         expect(result.data.changePassword).toBeTruthy();
+        expect(result).toMatchSnapshot();
+
+        // on change le password pour revenir au password de départ
+        variables = {
+          oldPwd: 'abcd1234',
+          newPwd: '1234abcd',
+          personId: tabProducers[0].id
+        };
+        result = await graphql(schema, mutation, null, context, variables);
+        expect(result.data.changePassword).toBeTruthy();
+        expect(result).toMatchSnapshot();
+
+        done();
+      });
+
+      it('should change the password of the user', async(done) => {
+        context = { id: tabUsers[0].id, email: tabUsers[0].email, isAdmin: tabUsers[0].isAdmin, kind: tabUsers[0].kind };
+        let variables = {
+          newPwd: 'abcd1234',
+          oldPwd: '1234abcd',
+          personId: tabUsers[0].id
+        };
+        let result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.data.changePassword).toBeTruthy();
+        expect(result).toMatchSnapshot();
+
+        // on change le password pour revenir au password de départ
+        variables = {
+          oldPwd: 'abcd1234',
+          newPwd: '1234abcd',
+          personId: tabUsers[0].id
+        };
+        result = await graphql(schema, mutation, null, context, variables);
+        expect(result.data.changePassword).toBeTruthy();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should not change the password of the user because user is not logged in', async(done) => {
+        const variables = {
+          newPwd: 'abcd1234',
+          oldPwd: '1234abcd',
+          // on tente de modifier un autre membre que nous! -> Doit lever une erreur
+          personId: tabUsers[0].id
+        };
+        const result = await graphql(schema, mutation, null, {}, variables);
+        expect.assertions(3);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+
+      it('should not change the password of the user because user try to modify another member', async(done) => {
+        context = { id: tabUsers[0].id, email: tabUsers[0].email, isAdmin: tabUsers[0].isAdmin, kind: tabUsers[0].kind };
+        const variables = {
+          newPwd: 'abcd1234',
+          oldPwd: '1234abcd',
+          // on tente de modifier un autre membre que nous! -> Doit lever une erreur
+          personId: tabProducers[0].id
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(3);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
         expect(result).toMatchSnapshot();
         done();
       });
@@ -585,7 +565,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: 'wrongOldPassword',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('The received oldPassword is not correct!'));
@@ -599,7 +579,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('The received oldPassword is not correct!'));
@@ -613,7 +593,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('New password must be at least 6 characters long.'));
@@ -627,7 +607,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('New password must be at least 6 characters long.'));
@@ -641,7 +621,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('New password must be less than 30 characters long.'));
@@ -655,7 +635,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('New password must contain at least 1 number.'));
@@ -669,7 +649,7 @@ describe('Testing graphql request persons', () => {
           oldPwd: '1234abcd',
           personId: tabProducers[0].id
         };
-        const result = await graphql(schema, mutation, null, null, variables);
+        const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors[0].message).toEqual(expect.stringContaining('New password must contain at least 1 letter.'));

@@ -47,16 +47,24 @@ function getProductTypeByCategory(productTypeCategoryId) {
 
 async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
   // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await getProductTypes({ tags: { _id: { $all: productTypeIdsTab } } });
-  // const productTypes = await ProductTypeModel.find({ _id: { $in: productTypeObjectIdsTab } });
+  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
 
   const producersIds = [];
 
-  // fixme: il faut récupérer l'id des producteurs présent dans chaque productType pour faire un ET. Là, je fais un OU et je récupère plusieurs fois le même
-  //  producteur...!
-  // on récupère tous les ids des producteurs proposant des produits de ces productTypes
-  productTypes.forEach(p => p.producersIds.forEach(id => producersIds.push(id)));
-  producersIds.filter((p1, p2) => p1 !== p2);
+  // TODO: PAUL ou Miguel: Bien bien moche mais fonctionnel... À améliorer..!^^
+  const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
+  // on parcours le taleau de producerIds du premier productType
+  await producersIdsAsString.forEach(async(id) => {
+    const productTypeContainsProducer = await productTypes.map((elem) => {
+      const prodIds = elem.producersIds.map(e => e.toString());
+      return prodIds.includes(id);
+    });
+
+    if (productTypeContainsProducer.reduce((a, b) => a && b, true)) {
+      producersIds.push(id);
+    }
+  });
+
   return producersIds;
 }
 
