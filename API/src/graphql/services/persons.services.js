@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const PersonsModel = require('../models/persons.modelgql');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 async function isEmailAvailable(emailUser) {
@@ -131,3 +130,5 @@ module.exports = {
   checkIfPasswordIsValid,
   validateEmailUserByToken
 };
+
+const PersonsModel = require('../models/persons.modelgql');

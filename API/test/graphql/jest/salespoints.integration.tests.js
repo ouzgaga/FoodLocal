@@ -20,7 +20,7 @@ const clearAndPopulateDB = async() => {
   tabSalespoints = getTabSalespoints();
 };
 
-describe('Testing graphql request salespints', () => {
+describe('Testing graphql request salespoints', () => {
   describe('QUERY salespoint', () => {
     beforeEach(() => clearAndPopulateDB());
 
