@@ -2,11 +2,10 @@
 version: '3'
 services:
   gce:
-    env_file: .env
+    env_file: ./.env
     container_name: "gce"
     build:
-      context: .
-      dockerfile: Dockerfile
+      image: gce_kubectl
       args:
         - GC_CLUSTER_ID=${GC_CLUSTER_ID}
         - GC_ZONE=${GC_ZONE}
