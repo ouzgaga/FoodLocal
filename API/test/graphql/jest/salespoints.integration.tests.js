@@ -740,7 +740,7 @@ describe('Testing graphql request salespoints', () => {
     });
 
     // --------------------updateSalespoint(producerId: ID!, salespoint: SalespointInput!)------------------------------------------ //
-    describe.only('Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!)', () => {
+    describe('Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!)', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();

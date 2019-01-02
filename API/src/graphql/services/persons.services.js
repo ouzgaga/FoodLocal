@@ -122,7 +122,7 @@ module.exports = {
   isEmailAvailable,
   checkIfPersonIdExistInDB,
   getPersonById,
-  getPersonByEmail: getPersonByLogin,
+  getPersonByLogin,
   getAllPersonsInReceivedIdList,
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
