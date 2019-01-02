@@ -340,7 +340,14 @@ describe('tests salespoints services', () => {
       expect(addedSalespoint.schedule).to.be.null;
     });
 
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
+    it('should fail adding a new salespoint because missing mendatory information (name)', async() => {
+      salespointWithoutSchedule.name = undefined;
+      try {
+        await salespointsServices.addSalespoint(salespointWithoutSchedule);
+      } catch (err) {
+        expect(err.message).to.be.equal('salespoints validation failed: name: Path `name` is required.');
+      }
+    });
   });
 
   describe('tests updateSalespoint', () => {
