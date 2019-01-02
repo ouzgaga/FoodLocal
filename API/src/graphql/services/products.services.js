@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const { Products: ProductModel } = require('../models/products.modelgql');
-const productTypeServices = require('./productType.services');
+const ProductsModel = require('../models/products.modelgql');
+const productTypesServices = require('./productTypes.services');
+const producersServices = require('./producers.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -19,46 +20,19 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
     skip = page * limit;
   }
 
-  return ProductModel.find({ tags })
+  return ProductsModel.find({ tags })
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
 }
 
-function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductModel.find({ _id: { $in: listOfIdToGet } });
-}
-
 /**
- * Ajoute un nouveau produit dans la base de données.
- * Attention, doublons autorisés!
- *
- * @param {Integer} product, Les informations du produit à ajouter.
+ * Retourne tous les produits dont l'id se trouve dans la liste passée en paramètre.
+ * @param listOfIdToGet, liste contenant les ids des produits que l'on cherche.
+ * @returns {*}
  */
-async function addProduct(product) {
-  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    const productType = await productTypeServices.getProductTypeById(product.productTypeId);
-
-    if (productType != null) {
-      const newProduct = {
-        description: product.description,
-        productTypeId: productType.id
-      };
-
-      return new ProductModel(newProduct).save();
-    } else {
-      throw new Error("This productType.id doesn't exist!");
-    }
-  }
-}
-
-async function addAllProductsInArray(productsArray) {
-  const promises = [];
-  productsArray.map(product => promises.push(addProduct(product)));
-  const resolvedPromises = await Promise.all(promises);
-  return resolvedPromises.map(res => res.id);
+function getAllProductsInReceivedIdList(listOfIdToGet) {
+  return ProductsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
 /**
@@ -70,7 +44,39 @@ function getProductById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received product.id is invalid!');
   } else {
-    return ProductModel.findById(id);
+    return ProductsModel.findById(id);
+  }
+}
+
+/**
+ * Ajoute un nouveau produit dans la base de données.
+ * Attention, doublons autorisés!
+ *
+ * @param {Integer} product, Les informations du produit à ajouter.
+ * @param producerId, L'id du producteur produisant le produit à ajouter.
+ */
+async function addProduct(product, producerId) {
+  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+    return new Error('Received productType.id is invalid!');
+  } else {
+    const addedProduct = await new ProductsModel(product).save();
+
+    // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
+    await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+
+    // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
+    await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+    return addedProduct;
+  }
+}
+
+async function addAllProductsInArray(productsArray, producerId) {
+  if (productsArray != null && productsArray.length !== 0) {
+    const promisesAddProducts = productsArray.map(product => addProduct(product, producerId));
+    return Promise.all(promisesAddProducts);
+  } else {
+    return new Error('function addAllProductsInArray: received productsArray is null or empty!');
   }
 }
 
@@ -92,7 +98,7 @@ async function updateProduct(product) {
     productTypeId: product.productTypeId
   };
 
-  return ProductModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
+  return ProductsModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -105,7 +111,7 @@ function deleteProduct(id) {
     return new Error('Received product.id is invalid!');
   }
 
-  return ProductModel.findByIdAndRemove(id);
+  return ProductsModel.findByIdAndRemove(id);
 }
 
 module.exports = {

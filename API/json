@@ -1,23 +1,24 @@
 {
-	"producer": {
-		"firstname": "Benoît",
-		"lastname": "Schopfer",
-		"email": "benoit.schopfer5@heig-vd.ch",
+	"producer":  {
+		"firstname": "Antoine",
+		"lastname": "Rochaille",
+		"email": "antoine@paysan.ch",
 		"password": "1234abcd",
 		"image": "Ceci est une image encodée en base64!",
 		"phoneNumber": "0761435196",
-		"description": "Un chouet gaillard!",
-		"website": "benoitschopfer.ch",
-		"salesPoint": {
+		"description": "description",
+		"website": "foodlocal.ch",
+		"salespoint": {
 			"name": "Chez moi",
 			"address": {
 				"number": 6,
 				"street": "Chemin de par ici",
 				"city": "Yverdon",
 				"postalCode": "1400",
+				"state": "Vaud",
 				"country": "Suisse",
-				"longitude": 1.1234567,
-				"latitude": 1.123456789
+				"longitude": 6.6562137,
+				"latitude": 46.7702474
 			},
 			"schedule": {
 				"monday": [
@@ -50,16 +51,32 @@
 		},
 		"products": [
 			{
-				"description": "Une pomme monnnnstre bonne!",
-				"productType": {
-					"id": "5c050afa96f1ff3cca213d1f"
-				}
+				"description": "Une tomme monnnnstre bonne!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d1"
 			},
 			{
-				"description": "Une poire de folie!",
-				"productType": {
-					"id": "5c05ad449fdaf88060a42aef"
-				}
+				"description": "Des spaghettis fait maison!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d6"
+			},
+			{
+				"description": "Du lait hyper frais!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d4"
+			},
+			{
+				"description": "Une biere de ouf!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d2"
+			},
+			{
+				"description": "Un jus de pomme trop bon!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d3"
+			},
+			{
+				"description": "Un jus d'orange trop bon!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d3"
+			},
+			{
+				"description": "Une polenta faite maison!",
+				"productTypeId": "5c14fe6d9ca3777b589bb9d5"
 			}
 		]
 	}

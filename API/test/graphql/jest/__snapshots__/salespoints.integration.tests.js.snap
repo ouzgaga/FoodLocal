@@ -1,0 +1,520 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should add a salespoint to a producer 1`] = `
+Object {
+  "data": Object {
+    "addSalespointToProducer": Object {
+      "email": "jerem@paysan.ch",
+      "firstname": "Jérémie",
+      "lastname": "Chaton",
+      "salespoint": Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7792474,
+          "longitude": 6.6572137,
+          "number": 6,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin monChezMoi",
+        },
+        "name": "Ma maison",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because he already has one. 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: This producer has already a salespoint but a producer can't have more than one salespoint. Try to update the current salespoint.],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because invalid producerId received (too long) 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because invalid producerId received (too short) 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because missing mendatory information (producerId). 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Variable "$producerId" of required type "ID!" was not provided.],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because not authenticated 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because unknown producerId received 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: The received producerId is not in the database!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!) should fail adding a salespoint to a producer because you can't modify someone else than yourself 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: You can't modify information of another user than yourself!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should fail removing the salespoint of a producer because invalid producerId received (too long) 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should fail removing the salespoint of a producer because invalid producerId received (too short) 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should fail removing the salespoint of a producer because not authenticated 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should fail removing the salespoint of a producer because unknown producerId received 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": null,
+  },
+  "errors": Array [
+    [GraphQLError: The received producerId is not in the database!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should fail removing the salespoint of a producer because you can't modify someone else than yourself 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": null,
+  },
+  "errors": Array [
+    [GraphQLError: You can't modify information of another user than yourself!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing deleteSalespointToProducer(producerId: ID!) should remove the salespoint of a producer 1`] = `
+Object {
+  "data": Object {
+    "deleteSalespointToProducer": Object {
+      "email": "antoine@paysan.ch",
+      "firstname": "Antoine",
+      "lastname": "Rochaille",
+      "salespoint": null,
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should fail updating the salespoint of a producer because invalid producerId received (too long) 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should fail updating the salespoint of a producer because invalid producerId received (too short) 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producerId is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should fail updating the salespoint of a producer because not authenticated 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Sorry, you need to be authenticated to do that.],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should fail updating the salespoint of a producer because unknown producerId received 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received producerId is not in the database!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should fail updating the salespoint of a producer because you can't modify someone else than yourself 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: You can't modify information of another user than yourself!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints MUTATION producers Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!) should update the salespoint of a producer 1`] = `
+Object {
+  "data": Object {
+    "updateSalespoint": Object {
+      "email": "antoine@paysan.ch",
+      "firstname": "Antoine",
+      "lastname": "Rochaille",
+      "salespoint": Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7792474,
+          "longitude": 6.6572137,
+          "number": 6,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin monChezMoi",
+        },
+        "name": "Ma maison",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [
+            Object {
+              "closingHour": "10:00",
+              "openingHour": "07:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "15:00",
+            },
+          ],
+          "thursday": Array [],
+          "tuesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "09:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "14:00",
+            },
+          ],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request salespints QUERY salespoint Testing producer(producerId: ID!) should fail getting a salespoint because invalid id received (too long) 1`] = `
+Object {
+  "data": Object {
+    "salespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received salespoint.id is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints QUERY salespoint Testing producer(producerId: ID!) should fail getting a salespoint because invalid id received (too short) 1`] = `
+Object {
+  "data": Object {
+    "salespoint": null,
+  },
+  "errors": Array [
+    [GraphQLError: Received salespoint.id is invalid!],
+  ],
+}
+`;
+
+exports[`Testing graphql request salespints QUERY salespoint Testing producer(producerId: ID!) should fail getting a salespoint because unknown id received 1`] = `
+Object {
+  "data": Object {
+    "salespoint": null,
+  },
+}
+`;
+
+exports[`Testing graphql request salespints QUERY salespoint Testing producer(producerId: ID!) should get a salespoint by id  1`] = `
+Object {
+  "data": Object {
+    "salespoint": Object {
+      "address": Object {
+        "city": "Yverdon",
+        "country": "Suisse",
+        "latitude": 46.7702474,
+        "longitude": 6.6562137,
+        "number": 6,
+        "postalCode": "1400",
+        "state": "Vaud",
+        "street": "Chemin de par ici",
+      },
+      "name": "Chez moi",
+      "schedule": Object {
+        "friday": Array [
+          Object {
+            "closingHour": "12:00",
+            "openingHour": "08:00",
+          },
+        ],
+        "monday": Array [
+          Object {
+            "closingHour": "12:00",
+            "openingHour": "08:00",
+          },
+          Object {
+            "closingHour": "18:00",
+            "openingHour": "13:00",
+          },
+        ],
+        "saturday": Array [],
+        "sunday": Array [],
+        "thursday": Array [],
+        "tuesday": Array [],
+        "wednesday": Array [
+          Object {
+            "closingHour": "12:00",
+            "openingHour": "08:00",
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`Testing graphql request salespints QUERY salespoint Testing salespoints() should get all salespoints 1`] = `
+Object {
+  "data": Object {
+    "salespoints": Array [
+      Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7702474,
+          "longitude": 6.6562137,
+          "number": 6,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin de par ici",
+        },
+        "name": "Chez moi",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+      Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7592474,
+          "longitude": 6.6772137,
+          "number": 12,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin de par là-bas",
+        },
+        "name": "Chez moi",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+      Object {
+        "address": Object {
+          "city": "Yverdon",
+          "country": "Suisse",
+          "latitude": 46.7792474,
+          "longitude": 6.6572137,
+          "number": 6,
+          "postalCode": "1400",
+          "state": "Vaud",
+          "street": "Chemin d'ici",
+        },
+        "name": "Chez moi",
+        "schedule": Object {
+          "friday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+          "monday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+            Object {
+              "closingHour": "18:00",
+              "openingHour": "13:00",
+            },
+          ],
+          "saturday": Array [],
+          "sunday": Array [],
+          "thursday": Array [],
+          "tuesday": Array [],
+          "wednesday": Array [
+            Object {
+              "closingHour": "12:00",
+              "openingHour": "08:00",
+            },
+          ],
+        },
+      },
+    ],
+  },
+}
+`;

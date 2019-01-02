@@ -1,17 +1,34 @@
 const mongoose = require('mongoose');
-const UserSchema = require('./user.modelgql');
+const PersonsModel = require('./persons.modelgql');
+
+const options = {
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true }
+};
+
+const RatingSchema = new mongoose.Schema(
+  {
+    rating: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    },
+    nbRatings: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    }
+  }
+);
 
 /**
- * Producer Schema (hérite du contenu du schéma 'users')
+ * Producer Schema (hérite du contenu du schéma 'persons')
  */
-const options = { discriminatorKey: 'kind' };
-
 const producerSchema = new mongoose.Schema(
   {
-    subscribedUsersIds: [
+    followersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'persons',
+        required: true
       }
     ],
     phoneNumber: {
@@ -24,9 +41,10 @@ const producerSchema = new mongoose.Schema(
     },
     website: {
       type: mongoose.Schema.Types.String,
-      required: false
+      required: false,
+      lowercase: true
     },
-    salesPointId: {
+    salespointId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'salespoints',
       required: false
@@ -38,9 +56,14 @@ const producerSchema = new mongoose.Schema(
     productsIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'products'
+        ref: 'products',
+        required: true
       }
-    ]
+    ],
+    rating: {
+      type: RatingSchema,
+      required: false
+    }
   }, options
 );
 
@@ -48,4 +71,4 @@ const producerSchema = new mongoose.Schema(
  * @typedef Producer
  */
 
-module.exports = UserSchema.discriminator('producers', producerSchema);
+module.exports = PersonsModel.discriminator('producers', producerSchema);

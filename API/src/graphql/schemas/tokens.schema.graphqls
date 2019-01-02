@@ -1,0 +1,26 @@
+type Query {
+    emailValidationTokens: [EmailValidationToken!]
+}
+
+type Mutation {
+    validateAnEmailToken(emailValidationToken: String!): Boolean!
+    askNewEmailToken(idPerson: ID!): Boolean!
+
+    # Permet à un utilisateur ou un producteur enregistré de se connecter à son compte.
+    login(email: String!, password:String!): ConnectionToken!
+
+    # Permet à un nouvel utilisateur de s'inscrire et se créer un compte.
+    signUpAsUser(newUser: UserInputAdd!): ConnectionToken!
+
+    # Permet à un nouveau producteur de s'inscrire et se créer un compte.
+    signUpAsProducer(newProducer: ProducerInputAdd!): ConnectionToken!
+}
+
+type ConnectionToken {
+    token: String!
+}
+
+type EmailValidationToken {
+    value: String!
+    id: ID!
+}
