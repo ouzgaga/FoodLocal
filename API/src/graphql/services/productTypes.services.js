@@ -51,7 +51,7 @@ async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(prod
 
   const producersIds = [];
 
-  // TODO: PAUL ou Miguel: Bien bien moche mais fonctionnel... À améliorer..!^^
+  // TODO: PAUL: Bien bien moche mais fonctionnel... À améliorer en utilisant un aggregate ou un mapReduce...?
   const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
   // on parcours le taleau de producerIds du premier productType
   await producersIdsAsString.forEach(async(id) => {
