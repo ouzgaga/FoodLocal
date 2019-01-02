@@ -69,10 +69,10 @@ class PersonalDescription extends Component {
               type="submit"
               id="change-description-button"
             >
-              { `Valider` }
+              { 'Valider' }
             </Button>
           </BoxLeftRight>
-        </form>     
+        </form>
       </>
 
     );

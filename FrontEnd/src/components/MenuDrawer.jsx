@@ -20,6 +20,8 @@ import SettingsIcone from '@material-ui/icons/Settings';
 
 import UserContext from '../UserContext';
 
+import { AuthContext } from './providers/AuthProvider';
+
 // Pour éviter des lags pour les supports ne supportant pas 60fps
 //https://material-ui.com/demos/drawers/
 const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -47,7 +49,7 @@ class SwipeableTemporaryDrawer extends React.Component {
     isOpen: false,
   };
 
-  toggleDrawer = (open) => () => {
+  toggleDrawer = open => () => {
     this.setState({
       isOpen: open,
     });
@@ -55,6 +57,7 @@ class SwipeableTemporaryDrawer extends React.Component {
 
   render() {
     const { classes, onClick } = this.props;
+    const { isOpen } = this.state;
 
     const staticMenu = (
       <List>
@@ -85,7 +88,7 @@ class SwipeableTemporaryDrawer extends React.Component {
         </Link>
 
       </List>
-    )
+    );
 
     const notLogMenu = (
       <List>
@@ -108,14 +111,14 @@ class SwipeableTemporaryDrawer extends React.Component {
           <ListItemText primary="Se connecter" />
         </ListItem>
       </List>
-    )
+    );
 
     const loggedMenu = (
       <List>
         <Link to="/myWall" className={classes.LinkButton}>
           <ListItem button>
             <ListItemIcon>
-              {/* TODO: icone */ }
+              {/* TODO: icone */}
             </ListItemIcon>
             <ListItemText primary="Mon mur" />
           </ListItem>
@@ -123,7 +126,7 @@ class SwipeableTemporaryDrawer extends React.Component {
         <Link to="/myProducers" className={classes.LinkButton}>
           <ListItem button>
             <ListItemIcon>
-              {/* TODO: icone */ }
+              {/* TODO: icone */}
             </ListItemIcon>
             <ListItemText primary="Mes producteurs" />
           </ListItem>
@@ -136,39 +139,35 @@ class SwipeableTemporaryDrawer extends React.Component {
             <ListItemText primary="Paramètres" />
           </ListItem>
         </Link>
-
         <ListItem
-              button
-              onClick={onClick('logOut')}
-            >
-              <ListItemIcon>
-                <RegisterIcone color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Se déconnecter" />
-            </ListItem>
+          button
+          onClick={onClick('logOut')}
+        >
+          <ListItemIcon>
+            <RegisterIcone color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Se déconnecter" />
+        </ListItem>
       </List>
     )
 
     const personalMenu = (
       <AuthContext>
-        {({ userStatus, isAdmin }) => {
-          
-          
-          
-          switch (userStatus) { 
-            case 'PRODUCER':
-              
-            break;
+        {({ userStatus }) => {
+          switch (userStatus) {
+            case 'USER':
+              return ({});
+              break;
 
             case 'PRODUCER':
-
-            break;
+              return ({});
+              break;
 
             default:
-              return({notLogMenu})
+              return ({ notLogMenu });
+              break;
           }
-        }
-        }
+        }}
       </AuthContext>
     );
 
@@ -178,37 +177,39 @@ class SwipeableTemporaryDrawer extends React.Component {
         {staticMenu}
 
         <Divider />
-        {UserContext.Provider.name == null ?
-          <List>
-            <ListItem
-              button
-              onClick={onClick('newAccountOpen')}
-            >
-              <ListItemIcon>
-                <RegisterIcone color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="S'inscrire" />
-            </ListItem>
-            <ListItem
-              button
-              onClick={onClick('open')}
-            >
-              <ListItemIcon>
-                <AccountIcone color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Se connecter" />
-            </ListItem>
-          </List>
-          :
-          <List>
-            <ListItem button >
-              <ListItemIcon > <DescriptionIcone color="primary" /> </ListItemIcon>
-              <ListItemText primary={"hi" + UserContext.Provider.name} />
-            </ListItem>
-          </List>
+        {UserContext.Provider.name == null
+          ? (
+            <List>
+              <ListItem
+                button
+                onClick={onClick('newAccountOpen')}
+              >
+                <ListItemIcon>
+                  <RegisterIcone color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="S'inscrire" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={onClick('open')}
+              >
+                <ListItemIcon>
+                  <AccountIcone color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="Se connecter" />
+              </ListItem>
+            </List>
+          ) : (
+            <List>
+              <ListItem button>
+                <ListItemIcon>
+                  <DescriptionIcone color="primary" />
+                </ListItemIcon>
+                <ListItemText primary={"hi" + UserContext.Provider.name} />
+              </ListItem>
+            </List>
+          )
         }
-
-
       </div>
     );
 
@@ -217,21 +218,18 @@ class SwipeableTemporaryDrawer extends React.Component {
         <IconButton
           color="inherit"
           aria-label="Open menu"
-          onClick={this.handleDrawerOpen}
           className={classes.menuButton}
           onClick={this.toggleDrawer(true)}
-
         >
           <MenuIcon />
         </IconButton>
         <SwipeableDrawer
           disableBackdropTransition={!iOS}
           disableDiscovery={iOS}
-          open={this.state.isOpen}
+          open={isOpen}
           onClose={this.toggleDrawer(false)}
           onOpen={this.toggleDrawer(true)}
         >
-
           <div
             tabIndex={0}
             role="button"
@@ -239,9 +237,7 @@ class SwipeableTemporaryDrawer extends React.Component {
           >
             {mySideList}
           </div>
-
         </SwipeableDrawer>
-
       </div>
     );
   }
