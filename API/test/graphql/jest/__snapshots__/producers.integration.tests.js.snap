@@ -3108,9 +3108,6 @@ Object {
 exports[`Testing graphql request producers QUERY producers Testing producers() should get all producers 1`] = `
 Object {
   "data": Object {
-<<<<<<< HEAD
-    "producers": Array [],
-=======
     "producers": Array [
       Object {
         "description": "description",
@@ -3666,7 +3663,6 @@ Object {
         "website": null,
       },
     ],
->>>>>>> GraphQL
   },
 }
 `;
