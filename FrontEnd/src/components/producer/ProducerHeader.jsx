@@ -41,8 +41,10 @@ const styles = theme => ({
 });
 
 function ProducerHeader(props) {
-  const { classes, name, description, image, ratingValue, nbRating } = props;
-  
+  const {
+    classes, lastname, firstname, description, image, ratingValue, nbRating
+  } = props;
+
   return (
     <div className={classes.root}>
       <Grid container spacing={16}>
@@ -52,23 +54,23 @@ function ProducerHeader(props) {
               image={image}
             />
           </ButtonBase>
-          
+
           <RatingItem
-            readOnly={true}
+            readOnly
             defaultValue={ratingValue}
           />
           <Typography wrap="nowrap">
-            pour { nbRating || 0 } votes.
+            {`pour ${nbRating || 0} votes.`}
           </Typography>
-            
+
         </Grid>
 
-        <Grid item xs={10} sm container  alignItems="justify">
+        <Grid item xs={10} sm container alignItems="justify">
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-              
+
               <Typography variant="h6" wrap="nowrap">
-                {name || 'Pas de noms'}
+                {`${lastname} ${firstname}` || 'Pas de noms'}
               </Typography>
               <Paper elevation={1}>
                 <Typography gutterBottom variant="body1">

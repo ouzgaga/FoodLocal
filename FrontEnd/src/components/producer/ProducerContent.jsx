@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import ProducerInformations from './ProducerInformations';
 
 const styles = {
   root: {
@@ -16,34 +19,74 @@ const styles = {
   },
 };
 
-function fillaray(){
-  var array=[];
-  for(let i = 0; i < 60; i++){
-    array[i] = <div>{i} <br/></div>;
+const GET_PRODUCER_INFORMATIONS = gql`
+query($producer: ID!) {
+  producer(producerId: $producer) {
+    email
+    phoneNumber
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
+        }
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
   }
-  return array;
 }
+`;
 
 class ProducerContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       value: 0,
-      array: fillaray(),
     };
   }
-  
-
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, producerId } = this.props;
     const { value } = this.state;
-
-    
 
     return (
       <div className={classes.root}>
@@ -58,7 +101,23 @@ class ProducerContent extends React.Component {
           <Tab label="Produits" />
           <Tab label="Fil d'actualités" />
         </Tabs>
-        {value === 0 && this.state.array}
+        {value === 0
+          && (
+            <Query
+              query={GET_PRODUCER_INFORMATIONS}
+              variables={{ producer: producerId }}
+            >
+              {({ data, loading, error }) => {
+                if (error) return 'Oups une erreur est survenue, veuillez rafraichir la page.';
+                if (loading) return 'Loading...';
+                return (
+                  <ProducerInformations data={data} />
+                );
+              }}
+            </Query>
+          )
+
+        }
         {value === 1 && 'Produits'}
         {value === 2 && 'Fil d\'actualité'}
       </div>

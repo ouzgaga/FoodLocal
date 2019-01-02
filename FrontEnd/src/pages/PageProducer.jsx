@@ -7,21 +7,20 @@ import ProducerHeader from '../components/producer/ProducerHeader';
 import ProducerUserInteraction from '../components/producer/ProducerUserInteraction';
 import ProducerContent from '../components/producer/ProducerContent';
 
-const GET_REPOSITORY = gql`
-query ($producer:ProducerInputGetAndDelete!) {
-  producer(producer:$producer){
-    firstname
+const GET_PRODUCER_HEADER = gql`
+query($producer: ID!) {
+  producer(producerId: $producer) {
     lastname
-    email
+    firstname
     image
     description
-    rating 
-    totalCountRating
-    subscribedUsers {
-      totalCount
+    rating {
+      rating
+      nbRatings
     }
   }
-}`;
+}
+`;
 
 
 const styles = theme => ({
@@ -40,43 +39,49 @@ const styles = theme => ({
 });
 
 class PageProducer extends React.Component {
-  
+
   constructor(props) {
     super(props);
     document.title = 'Détails Producteur';
-
-    this.state = {
-      //userId: props.match.params.producerId,
-    };
   }
-
-  /*
-  query = () => {
-    return (
-      <Query query={query}>
-        {({ data, loading, error }) => {
-          if (error) return 'Oups une erreur est survenue, veuillez rfraichir la page.';
-          if (loading) return 'Loading...';
-          return (
-            <MainMap data={data} />
-          );
-        }}
-      </Query>
-    );
-  }
-  */
 
   render() {
-    const { classes } = this.props;
+    const { classes, match } = this.props;
+    const { producerId } = match.params;
 
     return (
       <div className={classes.root}>
-        <ProducerHeader
-        />
+
+        <Query
+          query={GET_PRODUCER_HEADER}
+          variables={{ producer: producerId }}
+        >
+          {({ data, loading, error }) => {
+            if (error) return 'Oups une erreur est survenue, veuillez rafraichir la page.';
+            if (loading) return 'Loading...';
+            const {
+              firstname, lastname, description, image, rating
+            } = data.producer;
+
+            let ratingValue;
+            let nbRatings;
+            if (rating === null) {
+              ratingValue = null;
+              nbRatings = null;
+            } else {
+              ratingValue = rating.rating;
+              nbRatings = { rating };
+            }
+            return (
+              <ProducerHeader lastname={lastname} firstname={firstname} description={description} image={image} ratingValue={ratingValue} nbRating={nbRatings} />
+            );
+          }}
+        </Query>
+
         <ProducerUserInteraction
           followersCount={100}
         />
-        <ProducerContent />
+        <ProducerContent producerId={producerId}/>
       </div>
     );
   }
