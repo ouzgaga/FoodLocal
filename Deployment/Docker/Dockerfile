@@ -10,7 +10,6 @@ RUN mkdir -p /database
 
 WORKDIR /database
 
-ADD ../DB/script/dataBase/dumpDBProd.agz ./
 ADD gc-key.json ./
 ADD initGCE.sh ./
 
