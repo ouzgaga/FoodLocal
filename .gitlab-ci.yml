@@ -54,7 +54,12 @@ test-api:
   script:
   - cd ./API
   - npm i npm@latest -g
-  - npm i
+  - apk update
+  - apk --no-cache add --virtual builds-deps build-base python
+  - npm config set python /usr/bin/python
+  - npm install
+  - npm rebuild bcrypt --build-from-source
+  - apk del builds-deps
   - npm test
   only:
   - prod
