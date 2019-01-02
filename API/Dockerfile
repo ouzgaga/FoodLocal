@@ -20,6 +20,7 @@ COPY package*.json ./
 
 #RUN npm install
 # If you are building your code for production
+RUN apt-get install python
 RUN npm install --only=production
 
 # copy all file from current dir to /api in container
