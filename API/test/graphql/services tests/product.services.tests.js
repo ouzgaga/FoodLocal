@@ -1,8 +1,9 @@
-const productsService = require('../../../src/graphql/services/products.services');
+const productsServices = require('../../../src/graphql/services/products.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductsModel = require('../../../src/graphql/models/products.modelgql');
+const ProductTypesModel = require('../../../src/graphql/models/productTypes.modelgql');
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let productTypeCategory = {
   name: 'Fruits',
@@ -34,19 +35,19 @@ const clearAndPopulateDB = async() => {
   await clearDB();
 
   // on ajoute 1 productTypeCategory
-  productTypeCategory = (await ProductTypeCategoryModel.create(productTypeCategory)).toObject();
+  productTypeCategory = (await ProductTypeCategoriesModel.create(productTypeCategory)).toObject();
 
   // on ajoute 2 productType
   productTypePomme.categoryId = productTypeCategory.id;
-  productTypePomme = (await ProductTypeModel.create(productTypePomme)).toObject();
+  productTypePomme = (await ProductTypesModel.create(productTypePomme)).toObject();
   productTypePoire.categoryId = productTypeCategory.id;
-  productTypePoire = (await ProductTypeModel.create(productTypePoire)).toObject();
+  productTypePoire = (await ProductTypesModel.create(productTypePoire)).toObject();
 
   // on ajoute 2 produits
   productPomme.productTypeId = productTypePomme.id;
-  productPomme = (await ProductModel.create(productPomme)).toObject();
+  productPomme = (await ProductsModel.create(productPomme)).toObject();
   productPoire.productTypeId = productTypePoire.id;
-  productPoire = (await ProductModel.create(productPoire)).toObject();
+  productPoire = (await ProductsModel.create(productPoire)).toObject();
 
   tabProducts = [productPomme, productPoire];
 };
@@ -57,7 +58,7 @@ describe('tests product services', () => {
   describe('tests getProducts', () => {
     it('should get all product', async() => {
       // on récupère un tableau contenant tous les produits
-      let allProducts = await productsService.getProducts();
+      let allProducts = await productsServices.getProducts();
 
       // on transforme chaque producteur du tableau en un objet
       allProducts = allProducts.map(product => product.toObject());
@@ -78,19 +79,19 @@ describe('tests product services', () => {
   describe('tests getAllProductsInReceivedIdList', () => {
     it('should get all product with id in received list', async() => {
       // on récupère 2 produits
-      let products = await productsService.getAllProductsInReceivedIdList([productPoire.id, productPomme.id]);
+      let products = await productsServices.getAllProductsInReceivedIdList([productPoire.id, productPomme.id]);
       products.should.be.not.null;
       products.should.be.an('array');
       products.length.should.be.equal(2);
 
       // on récupère 1 seul produit
-      products = await productsService.getAllProductsInReceivedIdList([productPomme.id]);
+      products = await productsServices.getAllProductsInReceivedIdList([productPomme.id]);
       products.should.be.not.null;
       products.should.be.an('array');
       products.length.should.be.equal(1);
 
       // on récupère aucun produit
-      products = await productsService.getAllProductsInReceivedIdList([]);
+      products = await productsServices.getAllProductsInReceivedIdList([]);
       products.should.be.not.null;
       products.should.be.an('array');
       products.length.should.be.equal(0);
@@ -100,7 +101,7 @@ describe('tests product services', () => {
   describe('tests getProductById', () => {
     it('should get one product', async() => {
       // on récupère le produit correspondant à l'id donné
-      const productGotInDB = (await productsService.getProductById(productPomme.id)).toObject();
+      const productGotInDB = (await productsServices.getProductById(productPomme.id)).toObject();
 
       // on test son contenu
       productGotInDB.should.be.not.null;
@@ -111,21 +112,39 @@ describe('tests product services', () => {
     });
 
     it('should fail getting one product because no id received', async() => {
-      const productGotInDB = await productsService.getProductById({ id: '' });
+      const productGotInDB = await productsServices.getProductById({ id: '' });
       productGotInDB.message.should.be.equal('Received product.id is invalid!');
     });
 
     it('should fail getting one product because unknown id received', async() => {
-      const productGotInDB = await productsService.getProductById('abcdefabcdefabcdefabcdef');
+      const productGotInDB = await productsServices.getProductById('abcdefabcdefabcdefabcdef');
       expect(productGotInDB).to.be.null;
     });
   });
 
   describe('tests addProduct', () => {
-    beforeEach(() => clearAndPopulateDB());
+    let antoine;
+
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+      antoine = {
+        firstname: 'Antoine',
+        lastname: 'Rochaille',
+        email: 'antoine@paysan.ch',
+        password: '1234abcd',
+        image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un vrai payouz!'
+      };
+
+      // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
+      antoine = (await producersServices.addProducer(antoine)).toObject();
+    });
 
     it('should add a new product', async() => {
-      const addedProduct = (await productsService.addProduct(productPomme)).toObject();
+      productPomme.id = undefined;
+      productPomme._id = undefined;
+      const addedProduct = (await productsServices.addProduct(productPomme, antoine.id)).toObject();
       // on test son contenu
       addedProduct.should.be.not.null;
       addedProduct.should.be.an('object');
@@ -135,10 +154,15 @@ describe('tests product services', () => {
     });
 
     it('should fail adding a new product because given productTypeId is unknow', async() => {
+      productPomme.id = undefined;
+      productPomme._id = undefined;
       productPomme.productTypeId = 'abcdefabcdefabcdefabcdef';
-      const addedProduct = await productsService.addProduct(productPomme);
-      // on test son contenu
-      addedProduct.message.should.be.equal('This productType.id doesn\'t exist!');
+      try {
+        await productsServices.addProduct(productPomme, antoine.id);
+      } catch (e) {
+        // on test son contenu
+        e.message.should.be.equal(`The given productTypeId (${productPomme.productTypeId}) doesn’t exist in the database!`);
+      }
     });
 
     // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
@@ -147,13 +171,12 @@ describe('tests product services', () => {
   describe('tests addAllProductsInArray', () => {
     it('should add a new product for all product in received array', async() => {
       // on supprime tout le contenu de la DB de products
-      await ProductModel.deleteMany();
+      await ProductsModel.deleteMany();
 
       // on ajoute tous les produits passés dans le tableau en paramètre
-      const addedProducts = await productsService.addAllProductsInArray([productPomme, productPoire]);
+      const addedProducts = await productsServices.addAllProductsInArray([productPomme, productPoire]);
 
-      const promises = addedProducts.map((async(productId, index) => {
-        const product = await productsService.getProductById(productId);
+      const promises = addedProducts.map((async(product, index) => {
         product.should.be.not.null;
         product.id.should.be.not.null;
         product.description.should.be.equal(tabProducts[index].description);
@@ -168,7 +191,7 @@ describe('tests product services', () => {
 
     it('should update a product', async() => {
       // on récupère un produit
-      let product = await productsService.getProductById(productPomme.id);
+      let product = await productsServices.getProductById(productPomme.id);
       // on le modifie
       product = {
         ...productPoire,
@@ -176,7 +199,7 @@ describe('tests product services', () => {
         _id: product._id
       };
       // on le met à jour
-      const updatedProduct = await productsService.updateProduct(product);
+      const updatedProduct = await productsServices.updateProduct(product);
       // on test son nouveau contenu
       updatedProduct.should.be.not.null;
       updatedProduct.id.should.be.not.null;
@@ -188,28 +211,28 @@ describe('tests product services', () => {
 
     it('should fail updating a product because no id received', async() => {
       productPomme.id = '';
-      const updatedProduct = await productsService.updateProduct(productPomme);
+      const updatedProduct = await productsServices.updateProduct(productPomme);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
 
     it('should fail updating a product because invalid id received', async() => {
       productPomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProduct = await productsService.updateProduct(productPomme);
+      const updatedProduct = await productsServices.updateProduct(productPomme);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
 
     it('should fail updating a product because invalid id received', async() => {
       productPomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProduct = await productsService.updateProduct(productPomme);
+      const updatedProduct = await productsServices.updateProduct(productPomme);
 
       updatedProduct.message.should.be.equal('Received product.id is invalid!');
     });
 
     it('should return null after update a product because unknown id received', async() => {
       productPomme.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProduct = await productsService.updateProduct(productPomme);
+      const updatedProduct = await productsServices.updateProduct(productPomme);
 
       expect(updatedProduct).to.be.null;
     });
@@ -220,20 +243,20 @@ describe('tests product services', () => {
 
     it('should delete a product', async() => {
       // on supprime le produit
-      let deleteProduct = (await productsService.deleteProduct(productPomme.id)).toObject();
+      let deleteProduct = (await productsServices.deleteProduct(productPomme.id)).toObject();
 
       // on test le contenu du produit qui vient d'être supprimé
       deleteProduct.should.be.not.null;
       deleteProduct.id.should.be.eql(productPomme.id);
 
       // on tente de re-supprimer le produit -> retourne null car le produit est introuvable dans la DB
-      deleteProduct = await productsService.getProductById(deleteProduct);
+      deleteProduct = await productsServices.getProductById(deleteProduct);
       expect(deleteProduct).to.be.null;
     });
 
     it('should fail deleting a product because given id not found in DB', async() => {
       // on supprime un product inexistant
-      const deleteProduct = await productsService.deleteProduct('abcdefabcdefabcdefabcdef');
+      const deleteProduct = await productsServices.deleteProduct('abcdefabcdefabcdefabcdef');
       expect(deleteProduct).to.be.null;
     });
   });

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
 const personsServices = require('../services/persons.services');
-const ProducersModel = require('../models/producers.modelgql');
-const tokenValidationEmail = require('./tokenValidationEmail.services');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -51,20 +51,20 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
  * @param {Integer} user, Les informations du producteur à ajouter.
  */
 async function addUser({ firstname, lastname, email, password, image }) {
-  if (await personsServices.isEmailUnused(email)) {
+  if (await personsServices.isEmailAvailable(email) && personsServices.checkIfPasswordIsValid(password)) {
     const userToAdd = {
       firstname,
       lastname,
       email,
-      password,
+      // fixme: Paul: 10 saltRound, c'est suffisant ?
+      password: await bcrypt.hash(password, 10),
       image,
-      followingProducersIds: [],
       emailValidated: false,
       isAdmin: false
     };
 
     const userAdded = await new UsersModel(userToAdd).save();
-    tokenValidationEmail.addTokenValidationEmail(userAdded);
+    tokenValidationEmailServices.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
     return new Error('This email is already used.');
@@ -78,10 +78,11 @@ async function addUser({ firstname, lastname, email, password, image }) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({ id, firstname, lastname, email, password, image, followingProducersIds }) {
+async function updateUser({ id, firstname, lastname, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
+
   // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
@@ -91,13 +92,15 @@ async function updateUser({ id, firstname, lastname, email, password, image, fol
     const userToUpdate = {
       firstname,
       lastname,
-      email,
-      password,
-      image,
-      followingProducersIds: await getAllUsersInReceivedIdList(followingProducersIds),
       emailValidated,
       isAdmin
     };
+
+    // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
+    if (image !== undefined) {
+      userToUpdate.image = image;
+    }
+
     return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
   } else {
     return new Error('The received id is not in the database!');
@@ -117,24 +120,11 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
-// todo: à déplacer dans un fichier Person.services, faire la recherche sur toutes les personnes et faire les tests des tokens!
-async function validateEmailUserByToken(value) {
-  const token = await tokenValidationEmail.validateToken(value);
-  if (token !== null) {
-    const user = await getUserById(token.idPerson);
-    user.emailValidated = true;
-    return updateUser(user) !== null;
-  } else {
-    return new Error('Token not valid');
-  }
-}
-
 module.exports = {
   getUsers,
   addUser,
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList,
-  validateEmailUserByToken
+  getAllUsersInReceivedIdList
 };

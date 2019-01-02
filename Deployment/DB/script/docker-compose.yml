@@ -1,0 +1,12 @@
+version: '3'
+services:
+  gce:
+    env_file: .env
+    container_name: "gce"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - GC_CLUSTER_ID=${GC_CLUSTER_ID}
+        - GC_ZONE=${GC_ZONE}
+        - GC_PROJECT_ID=${GC_PROJECT_ID}

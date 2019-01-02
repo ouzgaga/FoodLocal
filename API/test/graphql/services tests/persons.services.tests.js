@@ -1,8 +1,11 @@
-const personsService = require('../../../src/graphql/services/persons.services');
-const producersService = require('../../../src/graphql/services/producers.services');
-const usersService = require('../../../src/graphql/services/users.services');
+const bcrypt = require('bcrypt');
+const personsServices = require('../../../src/graphql/services/persons.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
+const productsServices = require('../../../src/graphql/services/products.services');
+const productTypeServices = require('../../../src/graphql/services/productTypes.services');
+const usersServices = require('../../../src/graphql/services/users.services');
 const clearDB = require('../clearDB');
-const populateDB = require('../../PopulateDatabase');
+const { populateDB } = require('../../populateDatabase');
 
 let producers = [];
 let users = [];
@@ -14,9 +17,9 @@ const clearAndPopulateDB = async() => {
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   await populateDB();
 
-  users = await usersService.getUsers();
+  users = await usersServices.getUsers();
   users = users.map(u => u.toObject());
-  producers = await producersService.getProducers();
+  producers = await producersServices.getProducers();
   producers = producers.map(p => p.toObject());
 };
 
@@ -24,278 +27,445 @@ describe('tests users services', () => {
   beforeEach(() => clearAndPopulateDB());
 
 
-  describe('tests isEmailUnused', () => {
+  describe('tests isEmailAvailable', () => {
     it('should return false because this email is already used', async() => {
-      let res = await personsService.isEmailUnused(users[0].email);
+      let res = await personsServices.isEmailAvailable(users[0].email);
       res.should.be.false;
 
-      res = await personsService.isEmailUnused(producers[0].email);
+      res = await personsServices.isEmailAvailable(producers[0].email);
       res.should.be.false;
     });
 
     it('should return true because this email is not used', async() => {
-      const res = await personsService.isEmailUnused('coucou@payouz.ch');
+      const res = await personsServices.isEmailAvailable('coucou@payouz.ch');
       res.should.be.true;
     });
   });
 
   describe('tests checkIfPersonIdExistInDB', () => {
     it('should return true because this user is in th DB', async() => {
-      const personIsInDB = await personsService.checkIfPersonIdExistInDB(users[0].id);
+      const personIsInDB = await personsServices.checkIfPersonIdExistInDB(users[0].id);
       personIsInDB.should.be.true;
     });
 
     it('should return true because this producer is in th DB (without check if it is really a producer)', async() => {
-      const personIsInDB = await personsService.checkIfPersonIdExistInDB(producers[0].id);
+      const personIsInDB = await personsServices.checkIfPersonIdExistInDB(producers[0].id);
       personIsInDB.should.be.true;
     });
 
     it('should return true because this producer is in th DB and it is really a producer', async() => {
-      const personIsInDB = await personsService.checkIfPersonIdExistInDB(producers[0].id, true);
+      const personIsInDB = await personsServices.checkIfPersonIdExistInDB(producers[0].id, true);
       personIsInDB.should.be.true;
 
       producers[0].kind.should.be.equal('producers');
     });
 
     it('should return false because the received id is not a producer\'s id', async() => {
-      const personIsInDB = await personsService.checkIfPersonIdExistInDB(users[0].id, true);
+      const personIsInDB = await personsServices.checkIfPersonIdExistInDB(users[0].id, true);
       personIsInDB.should.be.false;
 
       users[0].kind.should.be.equal('users');
     });
 
     it('should return false because the received id is an unknown id', async() => {
-      let personIsInDB = await personsService.checkIfPersonIdExistInDB('abcdefabcdefabcdefabcdef');
+      let personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcdefabcdefabcdefabcdef');
       personIsInDB.should.be.false;
 
-      personIsInDB = await personsService.checkIfPersonIdExistInDB('abcdefabcdefabcdefabcdef', true);
+      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcdefabcdefabcdefabcdef', true);
       personIsInDB.should.be.false;
     });
 
     it('should return false because no id received', async() => {
-      let personIsInDB = await personsService.checkIfPersonIdExistInDB('');
+      let personIsInDB = await personsServices.checkIfPersonIdExistInDB('');
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
 
-      personIsInDB = await personsService.checkIfPersonIdExistInDB('', true);
+      personIsInDB = await personsServices.checkIfPersonIdExistInDB('', true);
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
     });
 
     it('should return false because invalid id received', async() => {
-      let personIsInDB = await personsService.checkIfPersonIdExistInDB('abcedf'); // id trop court (< 24 caractères)
+      let personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedf'); // id trop court (< 24 caractères)
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
 
-      personIsInDB = await personsService.checkIfPersonIdExistInDB('abcedf', true); // id trop court (< 24 caractères)
+      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedf', true); // id trop court (< 24 caractères)
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
 
-      personIsInDB = await personsService.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf'); // id trop long (> 24 caractères)
+      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf'); // id trop long (> 24 caractères)
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
 
-      personIsInDB = await personsService.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf', true); // id trop long (> 24 caractères)
+      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf', true); // id trop long (> 24 caractères)
       personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
     });
   });
 
+  describe('tests getPersonById', () => {
+    it('should get one person (user)', async() => {
+      // on récupère la personne corresondant à l'id donné
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+
+      // on test son contenu
+
+      // on test son contenu
+      expect(user).to.be.not.null;
+      expect(user.id).to.be.eql(users[0].id);
+      expect(user.firstname).to.be.equal(users[0].firstname);
+      expect(user.lastname).to.be.equal(users[0].lastname);
+      expect(user.email).to.be.equal(users[0].email);
+      expect(user.password).to.be.equal(users[0].password);
+      expect(user.image).to.be.equal(users[0].image);
+      expect(user.kind).to.be.equal('users');
+
+      expect(user.followingProducersIds).to.be.an('array');
+      expect(user.followingProducersIds.length).to.be.equal(users[0].followingProducersIds.length);
+
+      expect(user.emailValidated).to.be.equal(users[0].emailValidated);
+    });
+
+    it('should get one person (producer)', async() => {
+      // on récupère la personne corresondant à l'id donné
+      const producer = (await personsServices.getPersonById(producers[0].id)).toObject();
+
+      // on test son contenu
+      producer.should.be.not.null;
+      producer.id.should.be.eql(producers[0].id);
+      producer.firstname.should.be.equal(producers[0].firstname);
+      producer.lastname.should.be.equal(producers[0].lastname);
+      producer.email.should.be.equal(producers[0].email);
+      producer.password.should.be.equal(producers[0].password);
+      producer.image.should.be.equal(producers[0].image);
+      producer.followingProducersIds.should.be.an('array');
+      producer.followingProducersIds.length.should.be.equal(producers[0].followingProducersIds.length);
+      producer.emailValidated.should.be.equal(producers[0].emailValidated);
+      producer.followersIds.should.be.an('array');
+      producer.followersIds.length.should.be.equal(producers[0].followersIds.length);
+      producer.phoneNumber.should.be.equal(producers[0].phoneNumber);
+      producer.description.should.be.equal(producers[0].description);
+      producer.website.should.be.equal(producers[0].website);
+      expect(producer.salespointId).to.be.eql(producers[0].salespointId);
+      producer.isValidated.should.be.equal(producers[0].isValidated);
+
+      // on test le tableau productsIds et son contenu
+      const promisesTestsProductsIds = producer.productsIds.map((async(productId, index) => {
+        productId.toString().should.be.equal(producers[0].productsIds[index].toString());
+
+        // on récupère les infos du produit correspondant
+        const product = (await productsServices.getProductById(productId)).toObject();
+
+        // on récupère les infos du productType correspondant au produit
+        const productType = (await productTypeServices.getProductTypeById(product.productTypeId)).toObject();
+        productType.should.be.not.null;
+        productType.producersIds.should.be.not.null;
+        const addedProducerId = producer.id.toString();
+
+        // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
+        const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
+        filtredTab.length.should.be.equal(1);
+      }));
+      await Promise.all(promisesTestsProductsIds);
+    });
+
+    it('should fail getting one person because no id received', async() => {
+      const personGotInDB = await personsServices.getPersonById('');
+      personGotInDB.message.should.be.equal('Received person.id is invalid!');
+    });
+
+    it('should fail getting one person because invalid id received', async() => {
+      const personGotInDB = await personsServices.getPersonById(users[0].id + users[0].id);
+      personGotInDB.message.should.be.equal('Received person.id is invalid!');
+    });
+
+    it('should fail getting one person because unknown id received', async() => {
+      const personGotInDB = await personsServices.getPersonById('abcdefabcdefabcdefabcdef');
+      expect(personGotInDB).to.be.null;
+    });
+  });
 
   describe('tests getAllPersonsInReceivedIdList', () => {
     it('should get all persons with id in received list', async() => {
       // on récupère 3 personnes dans la DB
-      let persons = await personsService.getAllPersonsInReceivedIdList([users[0].id, users[1].id, producers[0].id]);
+      let persons = await personsServices.getAllPersonsInReceivedIdList([users[0].id, users[1].id, producers[0].id]);
       persons.should.be.an('array');
       persons.length.should.be.equal(3);
 
       // on récupère 2 utilisateurs
-      persons = await personsService.getAllPersonsInReceivedIdList([users[0].id, producers[0].id]);
+      persons = await personsServices.getAllPersonsInReceivedIdList([users[0].id, producers[0].id]);
       persons.should.be.not.null;
       persons.should.be.an('array');
       persons.length.should.be.equal(2);
 
       // on récupère aucun utilisateur
-      persons = await personsService.getAllPersonsInReceivedIdList([]);
+      persons = await personsServices.getAllPersonsInReceivedIdList([]);
       persons.should.be.not.null;
       persons.should.be.an('array');
       persons.length.should.be.equal(0);
     });
   });
 
-  describe('tests subscribePersonToProducer', () => {
+  describe('tests addProducerToPersonsFollowingList', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    it('should add only once a person to the followers of a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await personsService.subscribePersonToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds[0].should.be.eql(producers[0]._id);
+    it('should add only once a producer to the followingProducersIds list of a person', async() => {
+      // on récupère une personne dans la DB
+      let user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
 
-      // on récupère le producteur qui a un nouveau follower
-      let producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
+      // on ajoute un producteur à la liste de producteurs suivis de cet utilisateur
+      user = (await personsServices.addProducerToPersonsFollowingList(user.id, producers[0].id)).toObject();
 
-      // on ajoute à nouveau le follower users[0] au producer producers[0] -> il ne doit pas être ajouté une 2ème fois.
-      person = (await personsService.subscribePersonToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+      expect(user.followingProducersIds.length).to.be.equal(1);
+      expect(user.followingProducersIds[0].toString()).to.be.equal(producers[0].id);
 
-      // on récupère le producteur qui ne devrait pas avoir de 2ème nouveau follower
-      producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
+      // on ajoute le même producteur à la liste de producteurs suivis de cet utilisateur -> il ne doit pas être ajouté une 2ème fois
+      user = (await personsServices.addProducerToPersonsFollowingList(user.id, producers[0].id)).toObject();
+
+      expect(user.followingProducersIds.length).to.be.equal(1);
+      expect(user.followingProducersIds[0].toString()).to.be.equal(producers[0].id);
     });
 
-    it('should add multiple persons to the followers of a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await personsService.subscribePersonToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+    it('should not add a user to the followingProducersIds list of a person', async() => {
+      // on récupère une personne dans la DB
+      let user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
 
-      // on récupère le producteur qui a un nouveau follower
-      let producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
-
-      // on ajoute le follower users[1] au producer producers[0]
-      person = (await personsService.subscribePersonToProducer(producers[0].id, users[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-
-      // on récupère le producteur qui devrait avoir un 2ème follower
-      producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(2);
-      producer0.followersIds.should.contain.deep(users[0]._id);
-      producer0.followersIds.should.contain.deep(users[1]._id);
-
-      // on ajoute le follower producer[1] au producer producers[0]
-      person = (await personsService.subscribePersonToProducer(producers[0].id, producers[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-
-      // on ajoute le follower producer[2] au producer producers[0]
-      person = (await personsService.subscribePersonToProducer(producers[0].id, producers[2].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-
-      // on récupère le producteur qui devrait avoir un total de 4 followers
-      producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(4);
-      producer0.followersIds.should.contain.deep(users[0]._id);
-      producer0.followersIds.should.contain.deep(users[1]._id);
-      producer0.followersIds.should.contain.deep(producers[1]._id);
-      producer0.followersIds.should.contain.deep(producers[2]._id);
+      // on ajoute un utilisateur à la liste de producteurs suivis de cet utilisateur
+      try {
+        user = await personsServices.addProducerToPersonsFollowingList(user.id, users[1].id);
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal(`The given person (with id: ${users[1].id}) is not a producer! You can only follow the producers.`);
+      }
     });
 
-    it('should add multiple producers to the following list of a person', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      let person = (await personsService.subscribePersonToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(1);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
+    it('should not add a producer to the followingProducersIds list of a person because it\'s yourself!', async() => {
+      // on récupère une personne dans la DB
+      let user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
 
-      // on récupère le producer0 qui a un nouveau follower
-      const producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.contain.deep(users[0]._id);
-
-      // on ajoute le follower users[0] au producer producers[1]
-      person = (await personsService.subscribePersonToProducer(producers[1].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(2);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-      person.followingProducersIds.should.contain.deep(producers[1]._id);
-
-      // on récupère le producer1 qui a un nouveau follower
-      const producer1 = (await producersService.getProducerById(producers[1].id)).toObject();
-      producer1.followersIds.length.should.be.equal(1);
-      producer1.followersIds.should.contain.deep(users[0]._id);
-
-      // on ajoute le follower users[0] au producer producers[2]
-      person = (await personsService.subscribePersonToProducer(producers[2].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(3);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-      person.followingProducersIds.should.contain.deep(producers[1]._id);
-      person.followingProducersIds.should.contain.deep(producers[2]._id);
-
-      // on récupère le producer2 qui a un nouveau follower
-      const producer2 = (await producersService.getProducerById(producers[2].id)).toObject();
-      producer2.followersIds.length.should.be.equal(1);
-      producer2.followersIds.should.contain.deep(users[0]._id);
-
-      // on ajoute le follower users[0] au producer producers[3]
-      person = (await personsService.subscribePersonToProducer(producers[3].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(4);
-      person.followingProducersIds.should.contain.deep(producers[0]._id);
-      person.followingProducersIds.should.contain.deep(producers[1]._id);
-      person.followingProducersIds.should.contain.deep(producers[2]._id);
-      person.followingProducersIds.should.contain.deep(producers[3]._id);
-
-      // on récupère le producer3 qui a un nouveau follower
-      const producer3 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer3.followersIds.length.should.be.equal(1);
-      producer3.followersIds.should.contain.deep(users[0]._id);
+      // on ajoute un utilisateur à la liste de producteurs suivis de cet utilisateur
+      try {
+        user = await personsServices.addProducerToPersonsFollowingList(user.id, users[0].id);
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('You can\'t follow yourself!');
+      }
     });
 
-    it('should fail adding a person to the followers of a producer because personId and producerId are the sames', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await personsService.subscribePersonToProducer(producers[0].id, producers[0].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('You can\'t follow yourself!');
+    it('should not add a producer to the followingProducersIds list of a person because invalid personId received!', async() => {
+      try {
+        // on ajoute producteur à la liste de producteurs suivis d'un utilisateur avec un id invalide (trop court)
+        await personsServices.addProducerToPersonsFollowingList('abcdef', producers[0].id); // personId too short
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "persons"');
+      }
     });
 
-    it('should fail adding a person to the followers of a producer because producerId do not refer a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await personsService.subscribePersonToProducer(users[0].id, users[1].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('There is no producer with this id in database!');
+    it('should not add a producer to the followingProducersIds list of a person because invalid personId received!', async() => {
+      try {
+        // on ajoute producteur à la liste de producteurs suivis d'un utilisateur avec un id invalide (trop long)
+        await personsServices.addProducerToPersonsFollowingList('abcdefabcdefabcdefabcdefabcdef', producers[0].id); // personId too long
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because unknow personId received!', async() => {
+      // on ajoute un producteur à la liste de producteurs suivis d'un utilisateur avec un id inconnu (pas dans la DB)
+      const user = await personsServices.addProducerToPersonsFollowingList('abcdefabcdefabcdefabcdef', producers[0].id); // personId too long
+      expect(user).to.be.null;
+    });
+
+
+    it('should not add a producer to the followingProducersIds list of a person because invalid producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur avec un id invalide (trop court) à la liste de producteurs suivis d'un utilisateur
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdef'); // producerId too short
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because invalid producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur avec un id invalide (trop long) à la liste de producteurs suivis d'un utilisateur
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdefabcdefabcdefabcdefabcdef'); // personId too long
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because unknow producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur à la liste de producteurs suivis d'un utilisateur avec un id inconnu (pas dans la DB)
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdefabcdefabcdefabcdef'); // personId too long
+      } catch (err) {
+        expect(err.message).to.be.equal('The given person (with id: abcdefabcdefabcdefabcdef) doesn’t exist in the database!');
+      }
+    });
+  });
+
+  describe('tests removeProducerToPersonsFollowingList', () => {
+    beforeEach(() => clearAndPopulateDB());
+
+    it('should remove a producer from the followingProducersIds list of a person', async() => {
+      // on récupère une personne dans la DB
+      let user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      // on ajoute un producteur à la liste de producteurs suivis de cet utilisateur
+      user = (await personsServices.addProducerToPersonsFollowingList(user.id, producers[0].id)).toObject();
+
+      expect(user.followingProducersIds.length).to.be.equal(1);
+      expect(user.followingProducersIds[0].toString()).to.be.equal(producers[0].id);
+
+      // on supprime un producteur de la liste de producteurs suivis de cet utilisateur
+      user = (await personsServices.removeProducerToPersonsFollowingList(user.id, producers[0].id)).toObject();
+
+      expect(user.followingProducersIds.length).to.be.equal(0);
+    });
+
+
+    it('should not remove a producer to the followingProducersIds list of a person because invalid personId received!', async() => {
+      try {
+        // on ajoute producteur à la liste de producteurs suivis d'un utilisateur avec un id invalide (trop court)
+        await personsServices.addProducerToPersonsFollowingList('abcdef', producers[0].id); // personId too short
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because invalid personId received!', async() => {
+      try {
+        // on ajoute producteur à la liste de producteurs suivis d'un utilisateur avec un id invalide (trop long)
+        await personsServices.addProducerToPersonsFollowingList('abcdefabcdefabcdefabcdefabcdef', producers[0].id); // personId too long
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because unknow personId received!', async() => {
+      // on ajoute un producteur à la liste de producteurs suivis d'un utilisateur avec un id inconnu (pas dans la DB)
+      const user = await personsServices.addProducerToPersonsFollowingList('abcdefabcdefabcdefabcdef', producers[0].id); // personId too long
+      expect(user).to.be.null;
+    });
+
+
+    it('should not add a producer to the followingProducersIds list of a person because invalid producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur avec un id invalide (trop court) à la liste de producteurs suivis d'un utilisateur
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdef'); // producerId too short
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because invalid producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur avec un id invalide (trop long) à la liste de producteurs suivis d'un utilisateur
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdefabcdefabcdefabcdefabcdef'); // personId too long
+      } catch (err) {
+        // lève une erreur car on ne peut suivre que des producteurs!
+        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "persons"');
+      }
+    });
+
+    it('should not add a producer to the followingProducersIds list of a person because unknow producerId received!', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // sa liste de followingProducers est vide
+      expect(user.followingProducersIds).to.be.null;
+
+      try {
+        // on ajoute un producteur à la liste de producteurs suivis d'un utilisateur avec un id inconnu (pas dans la DB)
+        await personsServices.addProducerToPersonsFollowingList(user.id, 'abcdefabcdefabcdefabcdef'); // personId too long
+      } catch (err) {
+        expect(err.message).to.be.equal('The given person (with id: abcdefabcdefabcdefabcdef) doesn’t exist in the database!');
+      }
     });
   });
 
 
-  describe('tests unsubscribePersonToProducer', () => {
+  describe('tests changePassword', () => {
     beforeEach(() => clearAndPopulateDB());
 
-    it('should delete a person from the followers of a producer', async() => {
-      // on ajoute les followers users[0] et users[1] au producer producers[0]
-      await personsService.subscribePersonToProducer(producers[0].id, users[0].id);
-      await personsService.subscribePersonToProducer(producers[0].id, users[1].id);
+    it('should change the password of a person', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // on check son password
+      let match = await bcrypt.compare(user.password, users[0].password);
+      expect(match).to.be.true;
 
-      // on récupère le producer0 qui a deux nouveaux followers
-      let producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(2);
-      producer0.followersIds.should.contain.deep(users[0]._id);
-      producer0.followersIds.should.contain.deep(users[1]._id);
+      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', user.id));
+      expect(pwdModified).to.be.true;
 
-      // on supprime le follower users[0] des followers de producers[0]
-      let person = (await personsService.unsubscribePersonToProducer(producers[0].id, users[0].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(0);
-      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
-
-      // on récupère le producer0 qui n'a plus qu'un follower (users[1])
-      producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(1);
-      producer0.followersIds.should.not.contain.deep(users[0]._id);
-      producer0.followersIds.should.contain.deep(users[1]._id);
-
-      // on supprime le follower users[1] des followers de producers[0]
-      person = (await personsService.unsubscribePersonToProducer(producers[0].id, users[1].id)).toObject();
-      person.followingProducersIds.length.should.be.equal(0);
-      person.followingProducersIds.should.not.contain.deep(producers[0]._id);
-
-      // on récupère le producer0 qui n'a plus qu'un follower (users[1])
-      producer0 = (await producersService.getProducerById(producers[0].id)).toObject();
-      producer0.followersIds.length.should.be.equal(0);
-      producer0.followersIds.should.not.contain.deep(users[0]._id);
-      producer0.followersIds.should.not.contain.deep(users[1]._id);
+      // on check son password
+      match = await bcrypt.compare('newPassword', user.password);
+      expect(match).to.be.true;
     });
 
-    it('should fail unsubscribe a person from the followers of a producer because personId and producerId are the sames', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await personsService.unsubscribePersonToProducer(producers[0].id, producers[0].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('You can\'t follow yourself!');
+    it('should not change the password of a person because wrong oldPassword', async() => {
+      // on récupère une personne dans la DB
+      const user = (await personsServices.getPersonById(users[0].id)).toObject();
+      // on check son password
+      let match = await bcrypt.compare(user.password, users[0].password);
+      expect(match).to.be.true;
+
+      const pwdModified = (await personsServices.changePassword('newPassword', 'wrongOldPassword', user.id));
+      expect(pwdModified).to.be.false;
+
+      // on check son password
+      match = await bcrypt.compare('newPassword', user.password);
+      expect(match).to.be.false;
     });
 
-    it('should fail unsubscribe a person to the followers of a producer because producerId do not refer a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await personsService.unsubscribePersonToProducer(users[0].id, users[1].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('There is no producer with this id in database!');
+    it('should not change the password of a person because invalid personId (too short)', async() => {
+      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdef'));
+      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
+    });
+
+    it('should not change the password of a person because invalid personId (too long)', async() => {
+      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdefabcdef'));
+      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
+    });
+
+    it('should not change the password of a person because unknown personId', async() => {
+      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdef'));
+      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
     });
   });
 });

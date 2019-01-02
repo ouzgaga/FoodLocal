@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const PersonSchema = require('./persons.modelgql');
+const PersonsModel = require('./persons.modelgql');
 
 const options = {
   discriminatorKey: 'kind',
@@ -27,7 +27,8 @@ const producerSchema = new mongoose.Schema(
     followersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'persons'
+        ref: 'persons',
+        required: true
       }
     ],
     phoneNumber: {
@@ -40,7 +41,8 @@ const producerSchema = new mongoose.Schema(
     },
     website: {
       type: mongoose.Schema.Types.String,
-      required: false
+      required: false,
+      lowercase: true
     },
     salespointId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -54,7 +56,8 @@ const producerSchema = new mongoose.Schema(
     productsIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'products'
+        ref: 'products',
+        required: true
       }
     ],
     rating: {
@@ -64,20 +67,8 @@ const producerSchema = new mongoose.Schema(
   }, options
 );
 
-/*
-producerSchema.pre('save', (next, err) => {
-  if (err) {
-    throw err;
-  }
-
-  this.followersIds = this.followersIds.map((person) => person._id);
-  this.productsIds = this.productsIds.map((product) => product._id);
-  next();
-});
-*/
-
 /**
  * @typedef Producer
  */
 
-module.exports = PersonSchema.discriminator('producers', producerSchema);
+module.exports = PersonsModel.discriminator('producers', producerSchema);

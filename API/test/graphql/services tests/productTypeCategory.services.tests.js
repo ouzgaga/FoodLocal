@@ -1,13 +1,6 @@
-const productTypeCategoryService = require('../../../src/graphql/services/productTypeCategory.services');
+const productTypeCategoryServices = require('../../../src/graphql/services/productTypeCategories.services');
 const clearDB = require('../clearDB');
-const ProducersModel = require('../../../src/graphql/models/producers.modelgql');
-const PersonModel = require('../../../src/graphql/models/persons.modelgql');
-const UserModel = require('../../../src/graphql/models/users.modelgql');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../../src/graphql/models/tokensValidationEmail.modelgql');
-const { Products: ProductModel, ProductType: ProductTypeModel, ProductTypeCategory: ProductTypeCategoryModel } = require(
-  '../../../src/graphql/models/products.modelgql'
-);
+const ProductTypeCategoriesModel = require('../../../src/graphql/models/productTypeCategories.modelgql');
 
 let fruits = {
   name: 'Fruits',
@@ -33,10 +26,10 @@ const clearAndPopulateDB = async() => {
 
 
   // on ajoute le contenu de départ
-  fruits = (await ProductTypeCategoryModel.create(fruits)).toObject();
-  legumes = (await ProductTypeCategoryModel.create(legumes)).toObject();
-  viande = (await ProductTypeCategoryModel.create(viande)).toObject();
-  pain = (await ProductTypeCategoryModel.create(pain)).toObject();
+  fruits = (await ProductTypeCategoriesModel.create(fruits)).toObject();
+  legumes = (await ProductTypeCategoriesModel.create(legumes)).toObject();
+  viande = (await ProductTypeCategoriesModel.create(viande)).toObject();
+  pain = (await ProductTypeCategoriesModel.create(pain)).toObject();
 
   tabProductTypeCategory = [fruits, legumes, viande, pain];
 };
@@ -47,7 +40,7 @@ describe('tests productTypeCategory services', () => {
   describe('tests getProductTypeCategories', () => {
     it('should get all productTypeCategory', async() => {
       // on récupère un tableau contenant tous les productTypeCategory
-      let allProductTypeCategory = await productTypeCategoryService.getProductTypeCategories();
+      let allProductTypeCategory = await productTypeCategoryServices.getProductTypeCategories();
 
       // on transforme chaque producteur du tableau en un objet
       allProductTypeCategory = allProductTypeCategory.map(productTypeCategory => productTypeCategory.toObject());
@@ -68,7 +61,7 @@ describe('tests productTypeCategory services', () => {
   describe('tests getProductTypeCategoryById', () => {
     it('should get one productTypeCategory', async() => {
       // on récupère le productTypeCategory corresondant à l'id donné
-      let productTypeCategoryGotInDB = (await productTypeCategoryService.getProductTypeCategoryById(fruits.id)).toObject();
+      let productTypeCategoryGotInDB = (await productTypeCategoryServices.getProductTypeCategoryById(fruits.id)).toObject();
 
       // on test son contenu
       productTypeCategoryGotInDB.should.be.not.null;
@@ -77,7 +70,7 @@ describe('tests productTypeCategory services', () => {
       productTypeCategoryGotInDB.image.should.be.equal(fruits.image);
 
       // on récupère le productTypeCategory corresondant à l'id donné
-      productTypeCategoryGotInDB = (await productTypeCategoryService.getProductTypeCategoryById(viande.id)).toObject();
+      productTypeCategoryGotInDB = (await productTypeCategoryServices.getProductTypeCategoryById(viande.id)).toObject();
 
       // on test son contenu
       productTypeCategoryGotInDB.should.be.not.null;
@@ -87,17 +80,17 @@ describe('tests productTypeCategory services', () => {
     });
 
     it('should fail getting one productTypeCategory because no id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById('');
+      const productTypeCategoryGotInDB = await productTypeCategoryServices.getProductTypeCategoryById('');
       productTypeCategoryGotInDB.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
 
     it('should fail getting one productTypeCategory because invalid id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById(fruits.id + fruits.id);
+      const productTypeCategoryGotInDB = await productTypeCategoryServices.getProductTypeCategoryById(fruits.id + fruits.id);
       productTypeCategoryGotInDB.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
 
     it('should fail getting one productTypeCategory because unknown id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryService.getProductTypeCategoryById('abcdefabcdefabcdefabcdef');
+      const productTypeCategoryGotInDB = await productTypeCategoryServices.getProductTypeCategoryById('abcdefabcdefabcdefabcdef');
       expect(productTypeCategoryGotInDB).to.be.null;
     });
   });
@@ -106,7 +99,7 @@ describe('tests productTypeCategory services', () => {
     it('should add a new productTypeCategory', async() => {
       // on ajoute un nouveau productTypeCategory
       fruits._id = undefined;
-      const addedProductTypeCategory = await productTypeCategoryService.addProductTypeCategory(fruits);
+      const addedProductTypeCategory = await productTypeCategoryServices.addProductTypeCategory(fruits);
 
       // on test son contenu
       addedProductTypeCategory.should.be.not.null;
@@ -122,14 +115,14 @@ describe('tests productTypeCategory services', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should update a productTypeCategory', async() => {
-      let productTypeCategory = (await productTypeCategoryService.getProductTypeCategoryById(fruits.id)).toObject();
+      let productTypeCategory = (await productTypeCategoryServices.getProductTypeCategoryById(fruits.id)).toObject();
       productTypeCategory = {
         id: productTypeCategory.id,
         name: legumes.name,
         image: legumes.image
       };
       // on met à jour dans la DB
-      const updatedProductTypeCategory = (await productTypeCategoryService.updateProductTypeCategory(productTypeCategory)).toObject();
+      const updatedProductTypeCategory = (await productTypeCategoryServices.updateProductTypeCategory(productTypeCategory)).toObject();
 
       updatedProductTypeCategory.should.be.an('object');
       updatedProductTypeCategory.should.be.not.null;
@@ -140,14 +133,14 @@ describe('tests productTypeCategory services', () => {
 
     it('should fail updating a productTypeCategory because no id received', async() => {
       fruits.id = '';
-      const updatedProductTypeCategory = await productTypeCategoryService.updateProductTypeCategory(fruits);
+      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
 
       updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
 
     it('should fail updating a productTypeCategory because invalid id received', async() => {
       fruits.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProductTypeCategory = await productTypeCategoryService.updateProductTypeCategory(fruits);
+      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
 
       updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
@@ -155,14 +148,14 @@ describe('tests productTypeCategory services', () => {
     it('should fail updating a productTypeCategory because invalid id received', async() => {
       fruits.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
 
-      const updatedProductTypeCategory = await productTypeCategoryService.updateProductTypeCategory(fruits);
+      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
 
       updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
     });
 
     it('should return null updating a productTypeCategory because unknown id received', async() => {
       fruits.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProducer = await productTypeCategoryService.updateProductTypeCategory(fruits);
+      const updatedProducer = await productTypeCategoryServices.updateProductTypeCategory(fruits);
       expect(updatedProducer).to.be.null;
     });
   });
@@ -172,18 +165,18 @@ describe('tests productTypeCategory services', () => {
 
     it('should delete a productTypeCategory', async() => {
       // on supprime un productTypeCategory
-      let deleteProductTypeCategory = await productTypeCategoryService.deleteProductTypeCategory(fruits.id);
+      let deleteProductTypeCategory = await productTypeCategoryServices.deleteProductTypeCategory(fruits.id);
       deleteProductTypeCategory.should.be.not.null;
       deleteProductTypeCategory.id.should.be.equal(fruits.id);
 
       // on tente de re-supprimer le même productTypeCategory -> retourne null car le productTypeCategory est introuvable dans la DB
-      deleteProductTypeCategory = await productTypeCategoryService.getProductTypeCategoryById(deleteProductTypeCategory);
+      deleteProductTypeCategory = await productTypeCategoryServices.getProductTypeCategoryById(deleteProductTypeCategory);
       expect(deleteProductTypeCategory).to.be.null;
     });
 
     it('should fail deleting a productTypeCategory because given id not found in DB', async() => {
       // on supprime un productTypeCategory inexistant -> retourne null car le productTypeCategory est introuvable dans la DB
-      const deleteProductType = await productTypeCategoryService.deleteProductTypeCategory('abcdefabcdefabcdefabcdef');
+      const deleteProductType = await productTypeCategoryServices.deleteProductTypeCategory('abcdefabcdefabcdefabcdef');
       expect(deleteProductType).to.be.null;
     });
   });

@@ -1,31 +1,22 @@
 type Query {
-	salespoints: [SalesPoint!]!
+	salespoints: [Salespoint!]!
 
-	salespoint(salespointId: ID!) : SalesPoint
+	salespoint(salespointId: ID!) : Salespoint
 }
 
 type Mutation {
-	addSalespoint(salespoint: SalesPointInputAdd!): SalesPoint!
-	updateSalespoint(salespoint: SalesPointInputUpdate!): SalesPoint
-	deleteSalesPoint(salespointId: ID!): SalesPoint
+	addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!): Producer!
+	updateSalespoint(producerId: ID!, salespoint: SalespointInput!): Producer
+	deleteSalespointToProducer(producerId: ID!): Producer
 }
 
-type SalesPoint {
-	id: ID!
+type Salespoint {
 	name: String!
 	address: Address
 	schedule: Schedule
-	# FIXME: est-ce qu'on enregistre aussi l'ID du producteur pour avoir le lien dans les 2 sens?
 }
 
-input SalesPointInputAdd {
-	name: String!
-	address: AddressInput
-	schedule: ScheduleInput
-}
-
-input SalesPointInputUpdate {
-	id: ID!
+input SalespointInput {
 	name: String!
 	address: AddressInput
 	schedule: ScheduleInput

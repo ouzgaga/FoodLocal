@@ -5,48 +5,6 @@ const options = {
 };
 
 /**
- * ProductTypeCategory Schema
- */
-const ProductTypeCategorySchema = new mongoose.Schema(
-  {
-    name: {
-      type: mongoose.Schema.Types.String,
-      required: true
-    },
-    image: {
-      type: mongoose.Schema.Types.String,
-      required: false
-    }
-  }, options
-);
-
-/**
- * ProductType Schema
- */
-const ProductTypeSchema = new mongoose.Schema(
-  {
-    name: {
-      type: mongoose.Schema.Types.String,
-      required: true
-    },
-    image: {
-      type: mongoose.Schema.Types.String,
-      required: false
-    },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'productTypeCategory',
-      required: true
-    },
-    producersIds: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'producers',
-      required: true
-    }
-  }, options
-);
-
-/**
  * Product Schema
  */
 const ProductSchema = new mongoose.Schema(
@@ -64,9 +22,24 @@ const ProductSchema = new mongoose.Schema(
 );
 
 /**
+ * Vérifie l'existence du productTypeId entrés.
+ * Lève une erreur s'il n'existe pas dans la collection des productType.
+ */
+ProductSchema.pre('save', async function(next) {
+  try {
+    const productTypeId = await ProductTypesModel.findById(this.productTypeId);
+
+    if (!productTypeId) {
+      throw new Error(`The given productTypeId (${this.productTypeId}) doesn’t exist in the database!`);
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * @typedef Product
  */
-
-module.exports.Products = mongoose.model('products', ProductSchema);
-module.exports.ProductType = mongoose.model('productType', ProductTypeSchema);
-module.exports.ProductTypeCategory = mongoose.model('productTypeCategory', ProductTypeCategorySchema);
+module.exports = mongoose.model('products', ProductSchema);
+const ProductTypesModel = require('./productTypes.modelgql');

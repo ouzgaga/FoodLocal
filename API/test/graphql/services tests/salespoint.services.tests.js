@@ -1,63 +1,11 @@
-const salespointService = require('../../../src/graphql/services/salespoints.services');
+const salespointsServices = require('../../../src/graphql/services/salespoints.services');
+const producersServices = require('../../../src/graphql/services/producers.services');
 const clearDB = require('../clearDB');
-const SalespointsModel = require('../../../src/graphql/models/salespoints.modelgql');
 
-let salespointWithSchedule = {
-  name: 'Chez moi',
-  address: {
-    number: 6,
-    street: 'Chemin de par ici',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  },
-  schedule:
-    {
-      monday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        },
-        {
-          openingHour: '13:00',
-          closingHour: '18:00'
-        }
-      ],
-      tuesday: [],
-      wednesday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      thursday: [],
-      friday: [
-        {
-          openingHour: '08:00',
-          closingHour: '12:00'
-        }
-      ],
-      saturday: [],
-      sunday: []
-    }
-};
-
-let salespointWithoutSchedule = {
-  name: 'Chez toi',
-  address: {
-    number: 12,
-    street: 'Chemin de par là-bas',
-    city: 'Yverdon',
-    postalCode: '1400',
-    state: 'Vaud',
-    country: 'Suisse',
-    longitude: 1.1234567,
-    latitude: 1.123456789
-  }
-};
+let benoit;
+let antoine;
+let salespointWithSchedule;
+let salespointWithoutSchedule;
 
 let tabSalespoints = [];
 
@@ -65,11 +13,95 @@ const clearAndPopulateDB = async() => {
   // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
   await clearDB();
 
-  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
-  // on ajoute 1 point de vente avec un horaire
-  salespointWithSchedule = (await SalespointsModel.create(salespointWithSchedule)).toObject();
+  //
+  benoit = {
+    firstname: 'Benoît',
+    lastname: 'Schöpfli',
+    email: 'benoit@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est une image encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un chouet gaillard!',
+    website: 'benoitpaysan.ch'
+  };
 
-  salespointWithoutSchedule = (await SalespointsModel.create(salespointWithoutSchedule)).toObject();
+  antoine = {
+    firstname: 'Antoine',
+    lastname: 'Rochaille',
+    email: 'antoine@paysan.ch',
+    password: '1234abcd',
+    image: 'Ceci est l\'image d\'un tueur encodée en base64!',
+    phoneNumber: '0761435196',
+    description: 'Un vrai payouz!'
+  };
+
+  salespointWithSchedule = {
+    name: 'Chez moi',
+    address: {
+      number: 6,
+      street: 'Chemin de par ici',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 1.1234567,
+      latitude: 1.123456789
+    },
+    schedule:
+      {
+        monday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          },
+          {
+            openingHour: '13:00',
+            closingHour: '18:00'
+          }
+        ],
+        tuesday: [],
+        wednesday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        thursday: [],
+        friday: [
+          {
+            openingHour: '08:00',
+            closingHour: '12:00'
+          }
+        ],
+        saturday: [],
+        sunday: []
+      }
+  };
+
+  salespointWithoutSchedule = {
+    name: 'Chez toi',
+    address: {
+      number: 12,
+      street: 'Chemin de par là-bas',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 1.1234567,
+      latitude: 1.123456789
+    }
+  };
+
+  // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
+  // on ajoute 1 producteur contenant le salespoint 'salespointWithSchedule'
+  benoit = (await producersServices.addProducer(benoit)).toObject();
+  benoit = (await producersServices.addSalespointToProducer(benoit.id, salespointWithSchedule)).toObject();
+  salespointWithSchedule = (await salespointsServices.getSalespointById(benoit.salespointId));
+
+  // on ajoute 1 producteur contenant le salespoint 'salespointWithoutSchedule''
+  antoine = (await producersServices.addProducer(antoine)).toObject();
+  antoine = (await producersServices.addSalespointToProducer(antoine.id, salespointWithoutSchedule)).toObject();
+  salespointWithoutSchedule = (await salespointsServices.getSalespointById(antoine.salespointId));
 
   tabSalespoints = [salespointWithSchedule, salespointWithoutSchedule];
 };
@@ -77,10 +109,10 @@ const clearAndPopulateDB = async() => {
 describe('tests salespoints services', () => {
   beforeEach(() => clearAndPopulateDB());
 
-  describe('tests getSalesPoints', () => {
+  describe('tests getSalespoints', () => {
     it('should get all salespoints', async() => {
       // on récupère un tableau contenant tous les salespoints
-      let allSalespoints = await salespointService.getSalesPoints();
+      let allSalespoints = await salespointsServices.getSalespoints();
 
       // on transforme chaque salespoint du tableau en un objet
       allSalespoints = allSalespoints.map(producer => producer.toObject());
@@ -149,9 +181,9 @@ describe('tests salespoints services', () => {
     });
   });
 
-  describe('tests getSalesPointById', () => {
+  describe('tests getSalespointById', () => {
     it('should get one salespoint', async() => {
-      const salespointGotInDB = (await salespointService.getSalesPointById(salespointWithSchedule.id)).toObject();
+      const salespointGotInDB = (await salespointsServices.getSalespointById(salespointWithSchedule.id)).toObject();
       salespointGotInDB.should.be.not.null;
       salespointGotInDB.id.should.be.equal(salespointWithSchedule.id);
       salespointGotInDB.name.should.be.equal(salespointWithSchedule.name);
@@ -212,27 +244,25 @@ describe('tests salespoints services', () => {
     });
 
     it('should fail getting one salespoint because no id received', async() => {
-      const salespoint = await salespointService.getSalesPointById('');
+      const salespoint = await salespointsServices.getSalespointById('');
       salespoint.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail getting one salespoint because invalid id received', async() => {
-      const salespoint = await salespointService.getSalesPointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
+      const salespoint = await salespointsServices.getSalespointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
       salespoint.message.should.be.equal('Received salespoint.id is invalid!');
     });
 
     it('should fail getting one salespoint because unknown id received', async() => {
-      const salespoint = await salespointService.getSalesPointById('abcdefabcdefabcdefabcdef');
+      const salespoint = await salespointsServices.getSalespointById('abcdefabcdefabcdefabcdef');
       expect(salespoint).to.be.null;
     });
   });
 
-  describe('tests addSalesPoint', () => {
+  describe('tests addSalespoint', () => {
     it('should add a new salespoint with a schedule', async() => {
-      salespointWithSchedule._id = undefined;
-      const addedSalespoint = (await salespointService.addSalesPoint(salespointWithSchedule)).toObject();
+      const addedSalespoint = (await salespointsServices.addSalespoint(salespointWithSchedule)).toObject();
       addedSalespoint.should.be.not.null;
-      addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
       addedSalespoint.name.should.be.equal(salespointWithSchedule.name);
       addedSalespoint.address.should.be.not.null;
       addedSalespoint.address.should.be.an('object');
@@ -291,10 +321,8 @@ describe('tests salespoints services', () => {
     });
 
     it('should add a new salespoint without schedule', async() => {
-      salespointWithoutSchedule._id = undefined;
-      const addedSalespoint = (await salespointService.addSalesPoint(salespointWithoutSchedule)).toObject();
+      const addedSalespoint = (await salespointsServices.addSalespoint(salespointWithoutSchedule)).toObject();
       addedSalespoint.should.be.not.null;
-      addedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithoutSchedule.id
       addedSalespoint.name.should.be.equal(salespointWithoutSchedule.name);
       addedSalespoint.address.should.be.not.null;
       addedSalespoint.address.should.be.an('object');
@@ -315,70 +343,64 @@ describe('tests salespoints services', () => {
     // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
-  describe('tests updateSalesPoint', () => {
+  describe('tests updateSalespoint', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should update a salespoint', async() => {
-      // on récupère un salespoint
-      let salespoint = (await salespointService.getSalesPointById(salespointWithoutSchedule.id)).toObject();
-      // on le modifie
-      salespoint = {
-        ...salespointWithSchedule,
-        id: salespoint.id,
-        _id: salespoint._id
-      };
-      const updatedSalespoint = await salespointService.updateSalesPoint(salespoint);
-      updatedSalespoint.should.be.not.null;
-      updatedSalespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
-      updatedSalespoint.name.should.be.equal(salespointWithSchedule.name);
-      updatedSalespoint.address.should.be.not.null;
-      updatedSalespoint.address.should.be.an('object');
+      const updatedProducerWithSalespoint = await salespointsServices.updateSalespoint(antoine.id, salespointWithSchedule);
+      const salespoint = (await salespointsServices.getSalespointById(updatedProducerWithSalespoint.salespointId)).toObject();
+
+      salespoint.should.be.not.null;
+      salespoint.id.should.be.not.null; // ne peut pas être égal à salespointWithSchedule.id
+      salespoint.name.should.be.equal(salespointWithSchedule.name);
+      salespoint.address.should.be.not.null;
+      salespoint.address.should.be.an('object');
       if (salespointWithSchedule.address.number) {
-        updatedSalespoint.address.number.should.be.equal(salespointWithSchedule.address.number);
+        salespoint.address.number.should.be.equal(salespointWithSchedule.address.number);
       }
-      updatedSalespoint.address.street.should.be.equal(salespointWithSchedule.address.street);
-      updatedSalespoint.address.city.should.be.equal(salespointWithSchedule.address.city);
-      updatedSalespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
-      updatedSalespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
-      updatedSalespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
-      updatedSalespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
-      updatedSalespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
+      salespoint.address.street.should.be.equal(salespointWithSchedule.address.street);
+      salespoint.address.city.should.be.equal(salespointWithSchedule.address.city);
+      salespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
+      salespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
+      salespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
+      salespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
+      salespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
 
       if (salespointWithSchedule.schedule) {
-        updatedSalespoint.schedule.should.be.not.null;
-        updatedSalespoint.schedule.should.be.an('object');
-        updatedSalespoint.schedule.monday.should.be.an('array');
-        const mondayPromise = updatedSalespoint.schedule.monday.map((daySchedule, index) => {
+        salespoint.schedule.should.be.not.null;
+        salespoint.schedule.should.be.an('object');
+        salespoint.schedule.monday.should.be.an('array');
+        const mondayPromise = salespoint.schedule.monday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.monday[index].closingHour);
         });
-        updatedSalespoint.schedule.tuesday.should.be.an('array');
-        const tuesdayPromise = updatedSalespoint.schedule.tuesday.map((daySchedule, index) => {
+        salespoint.schedule.tuesday.should.be.an('array');
+        const tuesdayPromise = salespoint.schedule.tuesday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.tuesday[index].closingHour);
         });
-        updatedSalespoint.schedule.wednesday.should.be.an('array');
-        const wednesdayPromise = updatedSalespoint.schedule.wednesday.map((daySchedule, index) => {
+        salespoint.schedule.wednesday.should.be.an('array');
+        const wednesdayPromise = salespoint.schedule.wednesday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.wednesday[index].closingHour);
         });
-        updatedSalespoint.schedule.thursday.should.be.an('array');
-        const thursdayPromise = updatedSalespoint.schedule.thursday.map((daySchedule, index) => {
+        salespoint.schedule.thursday.should.be.an('array');
+        const thursdayPromise = salespoint.schedule.thursday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.thursday[index].closingHour);
         });
-        updatedSalespoint.schedule.friday.should.be.an('array');
-        const fridayPromise = updatedSalespoint.schedule.friday.map((daySchedule, index) => {
+        salespoint.schedule.friday.should.be.an('array');
+        const fridayPromise = salespoint.schedule.friday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.friday[index].closingHour);
         });
-        updatedSalespoint.schedule.saturday.should.be.an('array');
-        const saturdayPromise = updatedSalespoint.schedule.saturday.map((daySchedule, index) => {
+        salespoint.schedule.saturday.should.be.an('array');
+        const saturdayPromise = salespoint.schedule.saturday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.saturday[index].closingHour);
         });
-        updatedSalespoint.schedule.sunday.should.be.an('array');
-        const sundayPromise = updatedSalespoint.schedule.sunday.map((daySchedule, index) => {
+        salespoint.schedule.sunday.should.be.an('array');
+        const sundayPromise = salespoint.schedule.sunday.map((daySchedule, index) => {
           daySchedule.openingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].openingHour);
           daySchedule.closingHour.should.be.equal(salespointWithSchedule.schedule.sunday[index].closingHour);
         });
@@ -387,52 +409,48 @@ describe('tests salespoints services', () => {
       }
     });
 
-    it('should fail updating a salespoint because no id received', async() => {
-      salespointWithSchedule.id = '';
-      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
+    it('should fail updating a salespoint because no producerId received', async() => {
+      const updatedProduct = await salespointsServices.updateSalespoint(null, salespointWithSchedule);
 
-      updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
+      updatedProduct.message.should.be.equal('Received producerId is invalid!');
     });
 
-    it('should fail updating a salespoint because invalid id received', async() => {
-      salespointWithSchedule.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
+    it('should fail updating a salespoint because invalid id received (too short)', async() => {
+      const updatedProduct = await salespointsServices.updateSalespoint('abcdef', salespointWithSchedule);
 
-      updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
+      updatedProduct.message.should.be.equal('Received producerId is invalid!');
     });
 
-    it('should fail updating a salespoint because invalid id received', async() => {
-      salespointWithSchedule.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProduct = await salespointService.updateSalesPoint(salespointWithSchedule);
+    it('should fail updating a salespoint because invalid id received (too long)', async() => {
+      const updatedProduct = await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdefabcdef', salespointWithSchedule);
 
-      updatedProduct.message.should.be.equal('Received salespoint.id is invalid!');
+      updatedProduct.message.should.be.equal('Received producerId is invalid!');
     });
 
     it('should fail updating a salespoint because unknown id received', async() => {
-      salespointWithSchedule.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProducer = await salespointService.updateSalesPoint(salespointWithSchedule);
+      const updatedProducer = await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdef', salespointWithSchedule);
       expect(updatedProducer).to.be.null;
     });
   });
 
-  describe('tests deleteSalesPoint', () => {
+  describe('tests deleteSalespoint', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should delete a salespoint', async() => {
       // on supprime un salespoint
-      let deleteSalespoint = (await salespointService.deleteSalesPoint(salespointWithSchedule.id)).toObject();
+      let deleteSalespoint = (await salespointsServices.deleteSalespoint(salespointWithSchedule.id)).toObject();
       deleteSalespoint.should.be.not.null;
       deleteSalespoint.id.should.be.eql(salespointWithSchedule.id);
 
       // on tente de récupérer le même salespoint -> retourne null car le salespoint est introuvable dans la DB
-      deleteSalespoint = await salespointService.getSalesPointById(deleteSalespoint);
+      deleteSalespoint = await salespointsServices.getSalespointById(deleteSalespoint);
       expect(deleteSalespoint).to.be.null;
     });
 
     it('should fail deleting a salespoint because given id not found in DB', async() => {
       // on supprime un salepoint inexistant
-      const deleteSalesPoint = await salespointService.deleteSalesPoint('abcdefabcdefabcdefabcdef');
-      expect(deleteSalesPoint).to.be.null;
+      const deleteSalespoint = await salespointsServices.deleteSalespoint('abcdefabcdefabcdefabcdef');
+      expect(deleteSalespoint).to.be.null;
     });
   });
 });

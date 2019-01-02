@@ -31,8 +31,8 @@ To install them, please follow the official documentation: https://docs.helm.sh/
 
 ### Reason
 
-We have to deploy a `nginx-ingress` loadbalancer to handle the http to https redirection. GCE loadbalancer do not handle this.
-
+We have to deploy a `nginx-ingress` loadbalancer to handle the http to https redirection. `GCE loadbalancer` do not handle this.
+Source: https://medium.com/google-cloud/google-cloud-platform-redirecting-http-traffic-to-https-f63c1d7dbc6d
 ### Install
 
 To install `nginx-ingress` we used helm.
@@ -106,3 +106,7 @@ You can find all scripts to install, update, remove in the folder `./script`
 ## Other Scripts
 
 // To Do
+
+## Source
+Authorization: https://cloud.google.com/sdk/docs/authorizing
+Create Project: https://cloud.google.com/sdk/gcloud/reference/projects/create
