@@ -61,6 +61,7 @@ test-api:
   - npm rebuild bcrypt --build-from-source
   - apk del builds-deps
   - npm test
+  - npm run test-jest
   only:
   - prod
   - master
