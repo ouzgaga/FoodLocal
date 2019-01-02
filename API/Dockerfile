@@ -1,7 +1,7 @@
 # Use latest node version
 FROM node:8.12.0-alpine
 
-MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch>
+MAINTAINER Benoît Schopfer <benoit.schopfer@heig-vd.ch.ch>
 
 # create api directory in container
 RUN mkdir -p /api
@@ -20,6 +20,7 @@ COPY package*.json ./
 
 #RUN npm install
 # If you are building your code for production
+RUN apk add python
 RUN npm install --only=production
 
 # copy all file from current dir to /api in container

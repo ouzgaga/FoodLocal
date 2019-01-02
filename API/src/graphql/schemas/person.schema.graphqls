@@ -1,10 +1,29 @@
+type Query {
+	# Retourne true si l'email reçu en paramètre peut être utilisé pour inscrire un nouveau membre. Retourne false si l'email re4u en paramètre est déjà utilisé.
+	checkIfEmailIsAvailable(email: String!): Boolean!
+}
+
+type Mutation {
+	# Ajoute la personne correspondant à l'id 'followerId' à la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	addFollowerToProducer(producerId: ID!, followerId: ID!): Person
+
+	# Supprime la personne correspondant à l'id 'followerId' de la liste des followers du producteur 'producerId'. Retourne la personne mise à jour.
+	removeFollowerToProducer(producerId: ID!, followerId: ID!): Person
+
+	# Permet de modifier le password du producteur correspondant à l'id reçu si l'ancien password entré correspond à celui enregistré dans la base de données. Retourne true si le password a été changé avec succès, false sinon.
+	changePassword(newPassword: String!, oldPassword: String!, personId: ID!): Boolean!
+}
+
 interface Person {
 	id: ID!
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[Producer!]!
+	# password: String! # le password n'est pas accessible côté client!
+	image: String
+	# tableau contenant tous les producteur que la personne suit
+	followingProducers:[Producer!]!
+	# booléen valant true si l'email a été validé par le membre, false sinon
 	emailValidated: Boolean!
+	isAdmin: Boolean!
 }

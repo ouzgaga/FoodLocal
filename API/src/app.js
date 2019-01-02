@@ -1,18 +1,10 @@
 const express = require('express');
-const merge = require('lodash/merge');
 const mongoose = require('mongoose');
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const cors = require('cors');
-const path = require('path');
-const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
+const jwt = require('jsonwebtoken');
+const { resolvers, schema: typeDefs } = require('./graphql/graphqlConfig');
 
-const Producer = require('./graphql/resolvers/producers.resolvers');
-const User = require('./graphql/resolvers/users.resolvers');
-const Utils = require('./graphql/resolvers/utils.resolvers');
-const Person = require('./graphql/resolvers/person.resolvers');
-const Product = require('./graphql/resolvers/products.resolvers');
-const Salespoint = require('./graphql/resolvers/salespoint.resolvers');
-const TokenValidationEmail = require('./graphql/resolvers/tokenValidationEmail.resolvers');
 const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
@@ -26,18 +18,17 @@ const app = express();
 // Active CORS pour le client
 app.use(cors());
 
-const resolvers = merge(
-  Person,
-  Producer,
-  User,
-  Product,
-  Salespoint,
-  Utils,
-  TokenValidationEmail,
-);
+const getToken = async(req) => {
+  const token = req.headers['x-token'];
 
-const typesArray = fileLoader(path.join(__dirname, './graphql/schemas'));
-const typeDefs = mergeTypes(typesArray, { all: true });
+  if (token) {
+    try {
+      return await jwt.verify(token, config.jwtSecret);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+};
 
 // Integrate apollo as a middleware
 const server = new ApolloServer(
@@ -46,6 +37,7 @@ const server = new ApolloServer(
     resolvers,
     introspection: true,
     playground: true,
+    context: ({ req }) => getToken(req)
   }
 );
 server.applyMiddleware({ app });

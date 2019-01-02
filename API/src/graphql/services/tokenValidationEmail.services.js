@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const TokenGenerator = require('uuid-token-generator');
-const TokenValidationEmailsModel = require('../models/tokensValidationEmail.modelgql');
-const mail = require('../../utils/sendEmailFoodlocal');
+const TokenValidationEmailModel = require('../models/tokenValidationEmail.modelgql');
+const mail = require('../utils/sendEmailFoodlocal');
 
 /**
  * get all tokens
@@ -16,7 +16,7 @@ function getTokenValidationEmails({ tags = undefined, limit = 50, page = 0 } = {
     skip = page * limit;
   }
 
-  return TokenValidationEmailsModel.find(tags)
+  return TokenValidationEmailModel.find(tags)
     .sort({ _id: 1 })
     .skip(+skip)
     .limit(+limit);
@@ -28,7 +28,7 @@ function getTokenValidationEmails({ tags = undefined, limit = 50, page = 0 } = {
  * @returns {*} - return the token found
  */
 function getTokenValidationEmailByValue(value) {
-  return TokenValidationEmailsModel.findOne({ value });
+  return TokenValidationEmailModel.findOne({ value });
 }
 
 /**
@@ -38,23 +38,24 @@ function getTokenValidationEmailByValue(value) {
  */
 async function addTokenValidationEmail (user) {
   // check user exist
-  if (user === null) {
-    return null;
+  // TODO: euh... faut faire un check là du coup...?!^^
+  if (user == null) {
+    return false;
   }
 
   // Generate token
   const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
   const token = {
     value: tokenGen.generate(),
-    idUser: user.id
+    idPerson: user.id
   };
   // insert in the database
-  const tokenValidationEmail = await new TokenValidationEmailsModel(token).save();
+  const tokenValidationEmail = await new TokenValidationEmailModel(token).save();
   const name = `${user.firstname} ${user.lastname}`;
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
   // mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
-  return tokenValidationEmail;
+  return tokenValidationEmail != null;
 }
 
 /**
@@ -67,7 +68,7 @@ function deleteTokenValidationEmail(id) {
     return new Error('Received TokenValidationEmail.id is invalid!');
   }
 
-  return TokenValidationEmailsModel.findByIdAndRemove(id);
+  return TokenValidationEmailModel.findByIdAndRemove(id);
 }
 
 function tokenToOld(dateCreation) {

@@ -1,15 +1,28 @@
 type Query {
+	# Retourne tous les producteurs.
 	producers: [Producer!]!
+
+	# Retourne le producteur correspondant à l'id reçu. Retourne null si aucun producteur ne possède cet id.
 	producer(producerId: ID!) : Producer
+
+	# Retourne tous les producteurs attendant d'être validés par un administrateur (isValidated = false).
 	producersWaitingForValidation: [Producer!]!
-	searchProducerByProducts(productsIds: [ID!]!) : [Producer!]!
-	filterProducers(byProductTypeId: [ID!]): [Producer!]!
+
+	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
+	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
+	# Valide le producteur correspondant au producerId si le booléen validationState vaut true, l'invalide s'il vaut false.
 	validateAProducer(producerId: ID!, validationState: Boolean!): Producer!
-	addProducer(producer: ProducerInputAdd!): Producer!
+
+	# Ajoute un nouveau producteur avec les informations passées en paramètre.
+	# addProducer(producer: ProducerInputAdd!): Producer!
+
+	# Met à jour les informations du producteur reçu en paramètre. Retourne null si ce producteur n'existe pas.
 	updateProducer(producer: ProducerInputUpdate!): Producer
+
+	# Supprime le producteur correspondant à l'id reçu en paramètre. Retourne null si l'id reçu ne correspond à aucun producteur.
 	deleteProducer(producerId: ID!): Producer
 }
 
@@ -18,17 +31,31 @@ type Producer implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	subscriptions: [Producer!]!
+	# password: String! # le password n'est pas accessible côté client!
+	image: String
+	# Tableau contenant tous les producteur que la personne suit.
+	followingProducers: [Producer!]!
+	# Booléen valant true si l'email a été validé par le membre, false sinon.
 	emailValidated: Boolean!
-	subscribedUsers : [User!]!
+	isAdmin: Boolean!
+	# Tableau contenant tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
+	followers: [Person!]!
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPoint
+	salespoint: Salespoint
 	isValidated: Boolean! # validation côté serveur uniquement
+	# Tableau contenant tous les produits proposés par le producteur.
 	products: [Product!]!
+	# Note moyenne attribuée au producteur par les autres membres du site.
+	rating: ProducerRating
+}
+
+type ProducerRating {
+	# Nombre total de notes qu'à reçu le producteur
+	nbRatings: Int!
+	# Moyenne des notes qu'à reçu le producteur
+	rating: Float!
 }
 
 input ProducerInputAdd {
@@ -36,33 +63,44 @@ input ProducerInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	# subscriptions:[ProducerInputAdd!]!
+	password: String! # password obligatoire à l'ajout
+	image: String
+
+	# Tableau contenant l'id de tous les producteur que la personne suit.
+	# followingProducersIds:[ID!]!
 	# emailValidated: Boolean!
-	# subscribedUsers : [UserInputAdd!]!
+	# isAdmin: Boolean!
+
+	# Tableau contenant l'id de tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
+	# followersIds: [ID!]!
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputAdd
+	# salespoint: ID # Ajouté via son propre endpoint
 	# isValidated: Boolean!
-	products: [ProductInputAdd!] # pas obligatoire si vide
+	# products: [ProductInputAdd!]
 }
 
 input ProducerInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	email: String!
-	password: String!
-	image: String # fixme: faudra l'encoder en base64
-	subscriptions:[ProducerInputUpdate!] # pas obligatoire si vide
+	# TODO: tester que l'email ne peut pas être modifié dans un update!
+	# email: String! # l'email ne peut pas être modifié!
+	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
+	image: String
+
+	# Tableau contenant l'id de tous les producteur que la personne suit.
+	# followingProducersIds:[ID!] # pas obligatoire si vide
 	# emailValidated: Boolean! # ne peut pas être modifié par le client
-	subscribedUsers : [UserInputUpdate!] # pas obligatoire si vide
+	# isAdmin: Boolean! # ne peut pas être modifié par le client
+
+	# Tableau contenant l'id de tous les followers du producteur. Ces followers peuvent être des utilisateurs mais aussi des producteurs.
+	# followersIds: [ID!] # pas obligatoire si vide
 	phoneNumber: String
 	description: String
 	website: String
-	salesPoint: SalesPointInputUpdate
+	# salespoint: ID # Mis à jour via son propre salespoint
 	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
-	products: [ProductInputUpdate!] # pas obligatoire si vide
+	# products: [ProductInputUpdate!]
 }

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const UsersModel = require('../models/user.modelgql');
-const UtilsServices = require('../services/utils.services');
-const ProducersModel = require('../models/producers.modelgql');
-const tokenValidationEmail = require('./tokenValidationEmail.services');
+const bcrypt = require('bcrypt');
+const UsersModel = require('../models/users.modelgql');
+const personsServices = require('../services/persons.services');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 /**
  * Retourne "limit" producteurs de la base de données, fitlrés
@@ -27,33 +27,6 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
     .limit(+limit);
 }
 
-function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return UsersModel.find({ _id: { $in: listOfIdToGet } });
-}
-
-/**
- * Ajoute un nouveau producteur dans la base de données.
- * Doublons autorisés!
- *
- * @param {Integer} user, Les informations du producteur à ajouter.
- */
-async function addUser(user) {
-  // FIXME: comment faire une transaction aec Mongoose pour rollback en cas d'erreur ?
-  if (await UtilsServices.isEmailUnused(user.email)) {
-    const userToAdd = {
-      ...user,
-      subscriptions: [],
-      emailValidated: false
-    };
-
-    const userAdded = await new UsersModel(userToAdd).save();
-    tokenValidationEmail.addTokenValidationEmail(userAdded);
-    return userAdded;
-  } else {
-    throw new Error('This email is already used.');
-  }
-}
-
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
@@ -67,6 +40,37 @@ function getUserById(id) {
   }
 }
 
+function getAllUsersInReceivedIdList(listOfIdToGet) {
+  return UsersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+}
+
+/**
+ * Ajoute un nouveau producteur dans la base de données.
+ * Doublons autorisés!
+ *
+ * @param {Integer} user, Les informations du producteur à ajouter.
+ */
+async function addUser({ firstname, lastname, email, password, image }) {
+  if (await personsServices.isEmailAvailable(email) && personsServices.checkIfPasswordIsValid(password)) {
+    const userToAdd = {
+      firstname,
+      lastname,
+      email,
+      // fixme: Paul: 10 saltRound, c'est suffisant ?
+      password: await bcrypt.hash(password, 10),
+      image,
+      emailValidated: false,
+      isAdmin: false
+    };
+
+    const userAdded = await new UsersModel(userToAdd).save();
+    tokenValidationEmailServices.addTokenValidationEmail(userAdded);
+    return userAdded;
+  } else {
+    return new Error('This email is already used.');
+  }
+}
+
 /**
  * Met à jour le producteur possédant l'id reçu avec les
  * données reçues. Remplace toutes les données du producteur
@@ -74,24 +78,33 @@ function getUserById(id) {
  *
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
-async function updateUser({
-  id, firstname, lastname, email, password, image, subscriptions, emailValidated 
-}) {
+async function updateUser({ id, firstname, lastname, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return new Error('Received user.id is invalid!');
   }
 
-  const userToUpdate = {
-    firstname,
-    lastname,
-    email,
-    password,
-    image,
-    subscriptions: await getAllUsersInReceivedIdList(subscriptions),
-    emailValidated
-  };
-  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
-  // return UsersModel.updateOne(userInfos); // retourne un OK mais pas l'objet modifié
+  // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
+  const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
+
+  if (userValidation != null) {
+    // si usrValidation n'est pas nul -> l'utilisateur existe dans la DB
+    const { emailValidated, isAdmin } = userValidation;
+    const userToUpdate = {
+      firstname,
+      lastname,
+      emailValidated,
+      isAdmin
+    };
+
+    // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
+    if (image !== undefined) {
+      userToUpdate.image = image;
+    }
+
+    return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  } else {
+    return new Error('The received id is not in the database!');
+  }
 }
 
 /**
@@ -107,23 +120,11 @@ function deleteUser(id) {
   return UsersModel.findByIdAndRemove(id);
 }
 
-async function validateEmailUserByToken(value) {
-  const token = await tokenValidationEmail.validateToken(value);
-  if (token !== null) {
-    const user = await getUserById(token.idUser);
-    user.emailValidated = true;
-    return updateUser(user) !== null;
-  } else {
-    return new Error("Token not valid");
-  }
-}
-
 module.exports = {
   getUsers,
   addUser,
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersInReceivedIdList,
-  validateEmailUserByToken
+  getAllUsersInReceivedIdList
 };

@@ -1,51 +1,85 @@
+const { isAuthenticatedAsProducerAndIsYourself, isAuthenticatedAsAdmin } = require('./authorization.resolvers');
 const productsServices = require('../services/products.services');
-const producerServices = require('../services/producers.services');
-const productTypeServices = require('../services/productType.services');
-const productTypeCategoryServices = require('../services/productTypeCategory.services');
-
+const producersServices = require('../services/producers.services');
+const productTypesServices = require('../services/productTypes.services');
+const productTypeCategoriesServices = require('../services/productTypeCategories.services');
 
 const productResolvers = {
   Query: {
-    products: () => productsServices.getProducts(),
+    // --------------------------------------------------------- Products ---------------------------------------------------------
+    products: (parent, args, context) => productsServices.getProducts(),
 
     product: (parent, args, context) => productsServices.getProductById(args.productId),
 
-    productTypes: () => productTypeServices.getProductTypes(),
+    // --------------------------------------------------------- ProductType ---------------------------------------------------------
+    productTypes: (parent, args, context) => productTypesServices.getProductTypes(),
 
-    productType: (parent, args, context) => productTypeServices.getProductTypeById(args.productTypeId),
+    productType: (parent, args, context) => productTypesServices.getProductTypeById(args.productTypeId),
 
-    productTypesOfCategory: (parent, args, context) => productTypeServices.getProductTypeByCategory(args.productTypeCategoryId),
+    // --------------------------------------------------------- ProductTypeCategory ---------------------------------------------------------
+    productTypesOfCategory: (parent, args, context) => productTypesServices.getProductTypeByCategory(args.productTypeCategoryId),
 
-    productTypeCategories: () => productTypeCategoryServices.getProductsCategories(),
+    productTypeCategories: (parent, args, context) => productTypeCategoriesServices.getProductTypeCategories(),
 
-    productTypeCategory: (parent, args, contet) => productTypeCategoryServices.getProductTypeCategoryById(args.productTypeCategoryId)
+    productTypeCategory: (parent, args, contet) => productTypeCategoriesServices.getProductTypeCategoryById(args.productTypeCategoryId)
 
   },
 
   Mutation: {
-    addProduct: (parent, args, context) => productsServices.addProduct(args.product),
+    // --------------------------------------------------------- Products ---------------------------------------------------------
+    addMultipleProducts: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      return productsServices.addAllProductsInArray(args.products, args.producerId);
+    },
+    addProduct: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      return productsServices.addProduct(args.product, args.producerId);
+    },
+    updateProduct: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      return productsServices.updateProduct(args.product);
+    },
+    deleteProduct: async(parent, args, context) => {
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      return productsServices.deleteProduct(args.productId);
+    },
 
-    updateProduct: (parent, args, contet) => productsServices.updateProduct(args.product),
+    // --------------------------------------------------------- ProductTypes ---------------------------------------------------------
+    addProductType: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypesServices.addProductType(args.productType);
+    },
+    updateProductType: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypesServices.updateProductType(args.productType);
+    },
+    deleteProductType: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypesServices.deleteProductType(args.productTypeId);
+    },
 
-    deleteProduct: async(parent, args, context) => productsServices.deleteProduct(args.productId),
-
-    addProductType: (parent, args, context) => productTypeServices.addProductType(args.productType),
-    addProducerProducingThisProductType: (parent, args, context) => productTypeServices.addProducerProducingThisProductType(args.productTypeId, args.producerId),
-    updateProductType: (parent, args, context) => productTypeServices.updateProductType(args.productType),
-    deleteProductType: (parent, args, context) => productTypeServices.deleteProductType(args.productTypeId),
-
-    addProductTypeCategory: (parent, args, context) => productTypeCategoryServices.addProductTypeCategory(args.productTypeCategory),
-    updateProductTypeCategory: (parent, args, context) => productTypeCategoryServices.updateProductTypeCategory(args.productTypeCategory),
-    deleteProductTypeCategory: (parent, args, context) => productTypeCategoryServices.deleteProductTypeCategory(args.productTypeCategoryId)
+    // --------------------------------------------------------- ProductTypeCategory ---------------------------------------------------------
+    addProductTypeCategory: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypeCategoriesServices.addProductTypeCategory(args.productTypeCategory);
+    },
+    updateProductTypeCategory: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypeCategoriesServices.updateProductTypeCategory(args.productTypeCategory);
+    },
+    deleteProductTypeCategory: async(parent, args, context) => {
+      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
+      return productTypeCategoriesServices.deleteProductTypeCategory(args.productTypeCategoryId);
+    }
   },
 
   Product: {
-    productType: (parent, args, context) => productTypeServices.getProductTypeById(parent.productTypeId)
+    productType: (parent, args, context) => productTypesServices.getProductTypeById(parent.productTypeId)
   },
 
   ProductType: {
-    category: (parent, args, context) => productTypeCategoryServices.getProductTypeCategoryById(parent.categoryId),
-    producers: (parent, args, context) => producerServices.getAllProducersInReceivedIdList(parent.producersIds)
+    category: (parent, args, context) => productTypeCategoriesServices.getProductTypeCategoryById(parent.categoryId),
+    producers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.producersIds)
   }
 };
 module.exports = productResolvers;
