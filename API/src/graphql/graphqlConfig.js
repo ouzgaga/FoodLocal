@@ -11,6 +11,7 @@ const Salespoint = require('./resolvers/salespoints.resolvers');
 const TokenValidationEmail = require('./resolvers/tokens.resolvers');
 const Posts = require('./resolvers/posts.resolvers');
 const Date = require('./resolvers/date.resolvers');
+const Notifications = require('./resolvers/notifications.resolvers');
 
 
 const resolvers = merge(
@@ -22,7 +23,8 @@ const resolvers = merge(
   Salespoint,
   TokenValidationEmail,
   Posts,
-  Date
+  Date,
+  Notifications
 );
 
 const typesArray = fileLoader(path.join(__dirname, './schemas'));

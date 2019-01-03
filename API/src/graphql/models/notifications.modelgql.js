@@ -5,45 +5,32 @@ const options = {
   toObject: { virtuals: true }
 };
 
-/**
- * location of news of producer Schema
- */
-const locationSchema = new mongoose.Schema(
-  {
-    longitude: {
-      type: mongoose.Schema.Types.Number,
-      required: true
-    },
-    latitude: {
-      type: mongoose.Schema.Types.Number,
-      required: true
-    }
-  }
-);
 
 /**
- * posts of producers Schema
+ * notifications of producers Schema
  */
-const postsSchema = new mongoose.Schema(
+const notificationsSchema = new mongoose.Schema(
   {
-    producerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'producers',
+    type: {
+      type: String,
+      enum: [
+        'NEW_POST',
+        'PRODUCER_UPDATE_INFO',
+        'PRODUCER_UPDATE_PRODUCTS_LIST',
+        'PRODUCER_UPDATE_SALESPOINT_INFO'
+      ],
       required: true
     },
-    text: {
-      type: mongoose.Schema.Types.String,
-      required: true
-    },
-    publicationDate: {
+    date: {
       type: mongoose.Schema.Types.Date,
       // FIXME: PAUL: pourquoi le default n'est jamais appelé?!
       // FIXME: Paul: comment changer la timezone de l'heure enregistrée?
       default: mongoose.Schema.Types.Date.now
     },
-    location: {
-      type: locationSchema,
-      required: false
+    producerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'producers',
+      required: true
     }
   }, options
 );
@@ -52,7 +39,7 @@ const postsSchema = new mongoose.Schema(
  * Vérifie l'existence des personId et producerId entrés.
  * Lève une erreur si l'un des deux n'existe pas dans la base de données.
  */
-postsSchema.pre('save', async function(next) {
+notificationsSchema.pre('save', async function(next) {
   try {
     const producerExist = await personsServices.checkIfPersonIdExistInDB(this.producerId, true);
     if (!producerExist) {
@@ -64,9 +51,9 @@ postsSchema.pre('save', async function(next) {
   }
 });
 
-const PostsModel = mongoose.model('posts', postsSchema);
+const NotificationsModel = mongoose.model('notifications', notificationsSchema);
 
 /**
- * @typedef postsSchema
+ * @typedef notificationsSchema
  */
-module.exports = PostsModel;
+module.exports = NotificationsModel;

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const PostsModel = require('../models/posts.modelgql');
+const notificationsServices = require('./notifications.services');
 
 function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
@@ -17,11 +18,17 @@ function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
     .limit(+limit);
 }
 
-function addPostOfProducer(post) {
+async function addPostOfProducer(post) {
   post.publicationDate = Date.now();
 
   // on enregistre le nouveau post dans la base de données
-  return new PostsModel(post).save();
+  const newPost = await new PostsModel(post).save();
+
+  const res = await notificationsServices.addNotification('NEW_POST', post.producerId);
+  if (res.message != null) {
+    return res;
+  }
+  return newPost;
 }
 
 function deletePostOfProducer(id) {

@@ -1,4 +1,3 @@
-const { Kind } = require('graphql/language');
 const { isAuthenticatedAsProducerAndIsYourself } = require('./authorization.resolvers');
 const postsServices = require('../services/posts.services');
 const producersServices = require('../services/producers.services');
