@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import ProducerInformations from './ProducerInformations';
+import ProductsInformations from './ProductsInformations';
 
 const styles = {
   root: {
@@ -72,6 +73,21 @@ query($producer: ID!) {
 }
 `;
 
+const GET_PRODUCER_PRODUCTS = gql`
+query($producer: ID!) {
+  producer(producerId: $producer) {
+    products {
+      description
+      productType {
+        name
+        image
+      }
+    }
+  }
+}
+
+`;
+
 class ProducerContent extends React.Component {
   constructor(props) {
     super(props);
@@ -116,9 +132,21 @@ class ProducerContent extends React.Component {
               }}
             </Query>
           )
-
         }
-        {value === 1 && 'Produits'}
+        {value === 1 && (
+          <Query
+            query={GET_PRODUCER_PRODUCTS}
+            variables={{ producer: producerId }}
+          >
+            {({ data, loading, error }) => {
+              if (error) return 'Oups une erreur est survenue, veuillez rafraichir la page.';
+              if (loading) return 'Loading...';
+              return (
+                <ProductsInformations products={data.producer.products} />
+              );
+            }}
+          </Query>
+        )}
         {value === 2 && 'Fil d\'actualité'}
       </div>
     );
