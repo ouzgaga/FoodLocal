@@ -31,10 +31,10 @@ function getSalespoints({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getSalespointById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received salespoint.id is invalid!');
-  } else {
-    return SalespointsModel.findById(id);
+    throw new Error('Received salespoint.id is invalid!');
   }
+
+  return SalespointsModel.findById(id);
 }
 
 /**
@@ -55,17 +55,19 @@ function addSalespoint(salespoint) {
  * @param {Integer} salespoint, Les informations du point de vente à mettre à jour.
  */
 async function updateSalespoint(producerId, { name, address, schedule }) {
-  const producer = await producersServices.getProducerById(producerId);
-
-  if (producer == null) {
-    return new Error('Received producerId is not in the database!');
-  }
-  if (producer.message != null) {
+  let producer;
+  try {
+    producer = await producersServices.getProducerById(producerId);
+  } catch (err) {
     // l'appel à getProducerById() a retournée l'erreur "Received producer.id is invalid!"
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
+  if (producer == null) {
+    throw new Error('Received producerId is not in the database!');
+  }
+
   if (producer.salespointId == null) {
-    return new Error('Impossible to update this salespoint because this producer doesn\'t have one.');
+    throw new Error('Impossible to update this salespoint because this producer doesn\'t have one.');
   }
 
   const updatedSalespoint = {};
@@ -93,7 +95,7 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
  */
 async function deleteSalespoint(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received salespoint.id is invalid!');
+    throw new Error('Received salespoint.id is invalid!');
   }
 
   return SalespointsModel.findByIdAndRemove(id);

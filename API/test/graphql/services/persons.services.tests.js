@@ -76,25 +76,40 @@ describe('tests users services', () => {
     });
 
     it('should return false because no id received', async() => {
-      let personIsInDB = await personsServices.checkIfPersonIdExistInDB('');
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
-
-      personIsInDB = await personsServices.checkIfPersonIdExistInDB('', true);
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      try {
+        await personsServices.checkIfPersonIdExistInDB('');
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
+      try {
+        await personsServices.checkIfPersonIdExistInDB('', true);
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
     });
 
     it('should return false because invalid id received', async() => {
-      let personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedf'); // id trop court (< 24 caractères)
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      try {
+        await personsServices.checkIfPersonIdExistInDB('abcedf'); // id trop court (< 24 caractères)
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
+      try {
+        await personsServices.checkIfPersonIdExistInDB('abcedf', true); // id trop court (< 24 caractères)
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
 
-      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedf', true); // id trop court (< 24 caractères)
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
-
-      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf'); // id trop long (> 24 caractères)
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
-
-      personIsInDB = await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf', true); // id trop long (> 24 caractères)
-      personIsInDB.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      try {
+        await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf'); // id trop long (> 24 caractères)
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
+      try {
+        await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf', true); // id trop long (> 24 caractères)
+      } catch (err) {
+        err.message.should.be.equal('Received personId is invalid!');
+      }
     });
   });
 
@@ -165,13 +180,19 @@ describe('tests users services', () => {
     });
 
     it('should fail getting one person because no id received', async() => {
-      const personGotInDB = await personsServices.getPersonById('');
-      personGotInDB.message.should.be.equal('Received person.id is invalid!');
+      try {
+        await personsServices.getPersonById('');
+      } catch (err) {
+        err.message.should.be.equal('Received person.id is invalid!');
+      }
     });
 
     it('should fail getting one person because invalid id received', async() => {
-      const personGotInDB = await personsServices.getPersonById(users[0].id + users[0].id);
-      personGotInDB.message.should.be.equal('Received person.id is invalid!');
+      try {
+        await personsServices.getPersonById(users[0].id + users[0].id);
+      } catch (err) {
+        err.message.should.be.equal('Received person.id is invalid!');
+      }
     });
 
     it('should fail getting one person because unknown id received', async() => {
@@ -430,11 +451,11 @@ describe('tests users services', () => {
       let match = await bcrypt.compare(user.password, users[0].password);
       expect(match).to.be.true;
 
-      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', user.id));
+      const pwdModified = (await personsServices.changePassword('newPassword1234', '1234abcd', user.id));
       expect(pwdModified).to.be.true;
 
       // on check son password
-      match = await bcrypt.compare('newPassword', user.password);
+      match = await bcrypt.compare('newPassword1234', user.password);
       expect(match).to.be.true;
     });
 
@@ -445,8 +466,11 @@ describe('tests users services', () => {
       let match = await bcrypt.compare(user.password, users[0].password);
       expect(match).to.be.true;
 
-      const pwdModified = (await personsServices.changePassword('newPassword', 'wrongOldPassword', user.id));
-      expect(pwdModified).to.be.false;
+      try {
+        await personsServices.changePassword('newPassword', 'wrongOldPassword', user.id);
+      } catch (err) {
+        err.message.should.be.equal('The received oldPassword is not correct!');
+      }
 
       // on check son password
       match = await bcrypt.compare('newPassword', user.password);
@@ -454,18 +478,27 @@ describe('tests users services', () => {
     });
 
     it('should not change the password of a person because invalid personId (too short)', async() => {
-      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdef'));
-      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
+      try {
+        await personsServices.changePassword('newPassword', '1234abcd', 'abcdef');
+      } catch (err) {
+        err.message.should.to.be.equal('Received personId can\'t be found in the database!');
+      }
     });
 
     it('should not change the password of a person because invalid personId (too long)', async() => {
-      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdefabcdef'));
-      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
+      try {
+        await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdefabcdef');
+      } catch (err) {
+        err.message.should.be.equal('Received personId can\'t be found in the database!');
+      }
     });
 
     it('should not change the password of a person because unknown personId', async() => {
-      const pwdModified = (await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdef'));
-      expect(pwdModified.message).to.be.equal('Received personId can\'t be found in the database!');
+      try {
+        await personsServices.changePassword('newPassword', '1234abcd', 'abcdefabcdefabcdefabcdef');
+      } catch (err) {
+        err.message.should.be.equal('Received personId can\'t be found in the database!');
+      }
     });
   });
 });

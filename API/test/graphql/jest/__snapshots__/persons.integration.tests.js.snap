@@ -51,7 +51,7 @@ Object {
     "addFollowerToProducer": null,
   },
   "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"],
+    [GraphQLError: Received personId is invalid!],
   ],
 }
 `;
@@ -62,7 +62,7 @@ Object {
     "addFollowerToProducer": null,
   },
   "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"],
+    [GraphQLError: Received personId is invalid!],
   ],
 }
 `;
@@ -131,14 +131,6 @@ Object {
       "isAdmin": false,
       "lastname": "Chaton",
     },
-  },
-}
-`;
-
-exports[`Testing graphql request persons MUTATION persons Testing changePassword(newPassword: String!, oldPassword: String!, personId: ID!) should change the password of the person 1`] = `
-Object {
-  "data": Object {
-    "changePassword": true,
   },
 }
 `;
@@ -265,35 +257,13 @@ Object {
 }
 `;
 
-exports[`Testing graphql request persons MUTATION persons Testing removeFollowerToProducer(producerId: ID!, followerId: ID!) should fail adding a new follower to a producer because invalid producerId received (too long) 1`] = `
-Object {
-  "data": Object {
-    "removeFollowerToProducer": null,
-  },
-  "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"],
-  ],
-}
-`;
-
-exports[`Testing graphql request persons MUTATION persons Testing removeFollowerToProducer(producerId: ID!, followerId: ID!) should fail adding a new follower to a producer because invalid producerId received (too short) 1`] = `
-Object {
-  "data": Object {
-    "removeFollowerToProducer": null,
-  },
-  "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"],
-  ],
-}
-`;
-
 exports[`Testing graphql request persons MUTATION persons Testing removeFollowerToProducer(producerId: ID!, followerId: ID!) should fail removing a follower from a producer because invalid producerId received (too long) 1`] = `
 Object {
   "data": Object {
     "removeFollowerToProducer": null,
   },
   "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"],
+    [GraphQLError: Received personId is invalid!],
   ],
 }
 `;
@@ -304,7 +274,7 @@ Object {
     "removeFollowerToProducer": null,
   },
   "errors": Array [
-    [GraphQLError: Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"],
+    [GraphQLError: Received personId is invalid!],
   ],
 }
 `;
@@ -350,29 +320,6 @@ Object {
   "errors": Array [
     [GraphQLError: There is no person with this id in database!],
   ],
-}
-`;
-
-exports[`Testing graphql request persons MUTATION persons Testing removeFollowerToProducer(producerId: ID!, followerId: ID!) should not add twice the same follower to the same producer 1`] = `
-Object {
-  "data": Object {
-    "removeFollowerToProducer": Object {
-      "__typename": "User",
-      "email": "jerem@user.ch",
-      "emailValidated": false,
-      "firstname": "Jérémie",
-      "followingProducers": Array [
-        Object {
-          "email": "antoine@paysan.ch",
-          "firstname": "Antoine",
-          "lastname": "Rochaille",
-        },
-      ],
-      "image": null,
-      "isAdmin": false,
-      "lastname": "Chaton",
-    },
-  },
 }
 `;
 

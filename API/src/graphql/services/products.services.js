@@ -42,10 +42,10 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  */
 function getProductById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
-  } else {
-    return ProductsModel.findById(id);
+    throw new Error('Received product.id is invalid!');
   }
+
+  return ProductsModel.findById(id);
 }
 
 /**
@@ -56,28 +56,28 @@ function getProductById(id) {
  * @param producerId, L'id du producteur produisant le produit à ajouter.
  */
 async function addProduct(product, producerId) {
-  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    const addedProduct = await new ProductsModel(product).save();
-
-    // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
-    await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
-
-    // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
-    await producersServices.addProductToProducer(addedProduct.id, producerId);
-
-    return addedProduct;
+  if (product.productTypeId == null || !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+    throw new Error('Received productType.id is invalid!');
   }
+
+  const addedProduct = await new ProductsModel(product).save();
+
+  // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
+  await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+
+  // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
+  await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+  return addedProduct;
 }
 
 async function addAllProductsInArray(productsArray, producerId) {
   if (productsArray != null && productsArray.length !== 0) {
     const promisesAddProducts = productsArray.map(product => addProduct(product, producerId));
     return Promise.all(promisesAddProducts);
-  } else {
-    return new Error('function addAllProductsInArray: received productsArray is null or empty!');
   }
+
+  throw new Error('function addAllProductsInArray: received productsArray is null or empty!');
 }
 
 /**
@@ -90,7 +90,7 @@ async function addAllProductsInArray(productsArray, producerId) {
  */
 async function updateProduct(product) {
   if (!mongoose.Types.ObjectId.isValid(product.id)) {
-    return new Error('Received product.id is invalid!');
+    throw new Error('Received product.id is invalid!');
   }
 
   const updatedProduct = {
@@ -108,7 +108,7 @@ async function updateProduct(product) {
  */
 function deleteProduct(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
+    throw new Error('Received product.id is invalid!');
   }
 
   return ProductsModel.findByIdAndRemove(id);

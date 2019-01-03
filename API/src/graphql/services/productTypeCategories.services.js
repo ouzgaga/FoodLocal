@@ -31,10 +31,10 @@ function getProductTypeCategories({ tags = undefined, limit = 50, page = 0 } = {
  */
 function getProductTypeCategoryById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
-  } else {
-    return ProductTypeCategoriesModel.findById(id);
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
+
+  return ProductTypeCategoriesModel.findById(id);
 }
 
 /**
@@ -56,7 +56,7 @@ function addProductTypeCategory(productTypeCategory) {
  */
 function updateProductTypeCategory(productTypeCategory) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategory.id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
 
   return ProductTypeCategoriesModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true }); // retourne l'objet modifié
@@ -69,7 +69,7 @@ function updateProductTypeCategory(productTypeCategory) {
  */
 function deleteProductTypeCategory(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
 
   return ProductTypeCategoriesModel.findByIdAndRemove(id);
