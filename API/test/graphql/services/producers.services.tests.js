@@ -247,13 +247,19 @@ describe('tests producers services', () => {
     });
 
     it('should fail getting one producer because no id received', async() => {
-      const producerGotInDB = await producersServices.getProducerById('');
-      producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
+      try {
+        await producersServices.getProducerById('');
+      } catch (err) {
+        err.message.should.be.equal('Received producer.id is invalid!');
+      }
     });
 
     it('should fail getting one producer because invalid id received', async() => {
-      const producerGotInDB = await producersServices.getProducerById(benoit.id + benoit.id);
-      producerGotInDB.message.should.be.equal('Received producer.id is invalid!');
+      try {
+        await producersServices.getProducerById(benoit.id + benoit.id);
+      } catch (err) {
+        err.message.should.be.equal('Received producer.id is invalid!');
+      }
     });
 
     it('should fail getting one producer because unknown id received', async() => {
@@ -393,10 +399,12 @@ describe('tests producers services', () => {
       addedProducer.lastname.should.be.equal(producerToAdd.lastname);
       addedProducer.email.should.be.equal(producerToAdd.email);
 
-      // on tente d'ajouter à nouveau le même producteur -> erreur car l'email est déjà utilisé
-      const res = await producersServices.addProducer(producerToAdd);
-      res.should.be.not.null;
-      res.message.should.be.equal('This email is already used.');
+      try {
+        // on tente d'ajouter à nouveau le même producteur -> erreur car l'email est déjà utilisé
+        await producersServices.addProducer(producerToAdd);
+      } catch (err) {
+        err.message.should.be.equal('This email is already used.');
+      }
     });
 
     it('should fail adding a new producer because invalid email received (1)', async() => {
@@ -654,10 +662,13 @@ describe('tests producers services', () => {
       expect(salespoint.id).to.be.equal(antoine.salespointId.toString());
       expect(salespoint.name).to.be.equal(salespointBenoit.name);
 
-      // on tente de lui ajouter un nouveau point de vente alors qu'il en a déjà un -> erreur
-      antoine = await producersServices.addSalespointToProducer(antoine.id, salespointBenoit);
-      expect(antoine.message).to.be
-        .equal('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
+      try {
+        // on tente de lui ajouter un nouveau point de vente alors qu'il en a déjà un -> erreur
+        await producersServices.addSalespointToProducer(antoine.id, salespointBenoit);
+      } catch (err) {
+        err.message.should.be
+          .equal('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
+      }
     });
 
     it('should not add a salespoint to a producer because invalid producerId received (too short)', async() => {
@@ -707,9 +718,12 @@ describe('tests producers services', () => {
       // antoine n'a pas encore de point de vente
       expect(antoine.salespointId).to.be.null;
 
-      // on ajoute un point de vente au producteur
-      antoine = await producersServices.addSalespointToProducer('abcdef', salespointBenoit);
-      expect(antoine.message).to.be.equal('Received producerId is invalid!');
+      try {
+        // on ajoute un point de vente au producteur
+        await producersServices.addSalespointToProducer('abcdef', salespointBenoit);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is invalid!');
+      }
     });
 
     it('should not add a salespoint to a producer because invalid producerId received (too long)', async() => {
@@ -759,9 +773,12 @@ describe('tests producers services', () => {
       // antoine n'a pas encore de point de vente
       expect(antoine.salespointId).to.be.null;
 
-      // on ajoute un point de vente au producteur
-      antoine = await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdefabcdef', salespointBenoit);
-      expect(antoine.message).to.be.equal('Received producerId is invalid!');
+      try {
+        // on ajoute un point de vente au producteur
+        await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdefabcdef', salespointBenoit);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is invalid!');
+      }
     });
 
     it('should not add a salespoint to a producer because received producerId is unknown', async() => {
@@ -811,9 +828,12 @@ describe('tests producers services', () => {
       // antoine n'a pas encore de point de vente
       expect(antoine.salespointId).to.be.null;
 
-      // on ajoute un point de vente au producteur
-      antoine = await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdef', salespointBenoit);
-      expect(antoine).to.be.null;
+      try {
+        // on ajoute un point de vente au producteur
+        await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdef', salespointBenoit);
+      } catch (err) {
+        err.message.should.be.equal('The received producerId is not in the database!');
+      }
     });
   });
 
@@ -955,29 +975,38 @@ describe('tests producers services', () => {
 
     it('should fail updating a producer because no id received', async() => {
       benoit.id = '';
-      const updatedProducer = await producersServices.updateProducer(benoit);
-
-      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+      try {
+        await producersServices.updateProducer(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received producer.id is invalid!');
+      }
     });
 
     it('should fail updating a producer because invalid id received', async() => {
       benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProducer = await producersServices.updateProducer(benoit);
-
-      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+      try {
+        await producersServices.updateProducer(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received producer.id is invalid!');
+      }
     });
 
     it('should fail updating a producer because invalid id received', async() => {
       benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProducer = await producersServices.updateProducer(benoit);
-
-      updatedProducer.message.should.be.equal('Received producer.id is invalid!');
+      try {
+        await producersServices.updateProducer(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received producer.id is invalid!');
+      }
     });
 
     it('should fail updating a producer because unknown id received', async() => {
       benoit.id = 'abcdefabcdefabcdefabcdef';
-      const updatedProducer = await producersServices.updateProducer(benoit);
-      updatedProducer.message.should.be.equal('The received id is not in the database!');
+      try {
+        await producersServices.updateProducer(benoit);
+      } catch (err) {
+        err.message.should.be.equal('The received id is not in the database!');
+      }
     });
   });
 
@@ -1087,9 +1116,12 @@ describe('tests producers services', () => {
       producer0.followersIds.should.contain.deep(users[0]._id);
       producer0.followersIds.should.contain.deep(users[1]._id);
 
-      // on ajoute le follower producer[1] au producer producers[1] -> erreur on peut pas se suivre soit même
-      follower = await producersServices.addFollowerToProducer(producers[1].id, producers[1].id);
-      expect(follower.message).to.be.equal('You can\'t follow yourself!');
+      try {
+        // on ajoute le follower producer[1] au producer producers[1] -> erreur on peut pas se suivre soit même
+        await producersServices.addFollowerToProducer(producers[1].id, producers[1].id);
+      } catch (err) {
+        err.message.should.be.equal('You can\'t follow yourself!');
+      }
 
       // on ajoute le follower producer[2] au producer producers[1]
       follower = (await producersServices.addFollowerToProducer(producers[1].id, producers[2].id)).toObject();
@@ -1141,17 +1173,19 @@ describe('tests producers services', () => {
     });
 
     it('should fail adding a person to the followers of a producer because personId and producerId are the sames', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await producersServices.addFollowerToProducer(producers[0].id, producers[0].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('You can\'t follow yourself!');
-    });
+      try {
+        // on ajoute le follower producer[1] au producer producers[1] -> erreur on peut pas se suivre soit même
+        await producersServices.addFollowerToProducer(producers[1].id, producers[1].id);
+      } catch (err) {
+        err.message.should.be.equal('You can\'t follow yourself!');
+      }
 
-    it('should fail adding a person to the followers of a producer because producerId do not refer a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await producersServices.addFollowerToProducer(users[0].id, users[1].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('There is no producer with this id in database!');
+      it('should fail adding a person to the followers of a producer because producerId do not refer a producer', async() => {
+        // on ajoute le follower users[0] au producer producers[0]
+        const person = await producersServices.addFollowerToProducer(users[0].id, users[1].id);
+        person.message.should.not.be.null;
+        person.message.should.be.equal('There is no producer with this id in database!');
+      });
     });
   });
 
@@ -1204,17 +1238,22 @@ describe('tests producers services', () => {
     });
 
     it('should fail unsubscribe a person from the followers of a producer because personId and producerId are the sames', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await producersServices.removeFollowerToProducer(producers[0].id, producers[0].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('You can\'t follow yourself!');
+      try {
+        // on ajoute le follower users[0] au producer producers[0]
+        await producersServices.removeFollowerToProducer(producers[0].id, producers[0].id);
+      } catch (err) {
+        err.message.should.be.equal('You can\'t follow yourself!');
+      }
     });
 
     it('should fail unsubscribe a person to the followers of a producer because producerId do not refer a producer', async() => {
-      // on ajoute le follower users[0] au producer producers[0]
-      const person = await producersServices.removeFollowerToProducer(users[0].id, users[1].id);
-      person.message.should.not.be.null;
-      person.message.should.be.equal('There is no producer with this id in database!');
+
+      try {
+        // on ajoute le follower users[0] au producer producers[0]
+        await producersServices.removeFollowerToProducer(users[0].id, users[1].id);
+      } catch (err) {
+        err.message.should.be.equal('There is no producer with this id in database!');
+      }
     });
   });
 });

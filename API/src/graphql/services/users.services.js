@@ -34,10 +34,10 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getUserById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
-  } else {
-    return UsersModel.findById(id);
+    throw new Error('Received user.id is invalid!');
   }
+
+  return UsersModel.findById(id);
 }
 
 function getAllUsersInReceivedIdList(listOfIdToGet) {
@@ -67,7 +67,7 @@ async function addUser({ firstname, lastname, email, password, image }) {
     tokenValidationEmailServices.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
-    return new Error('This email is already used.');
+    throw new Error('This email is already used.');
   }
 }
 
@@ -80,31 +80,31 @@ async function addUser({ firstname, lastname, email, password, image }) {
  */
 async function updateUser({ id, firstname, lastname, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
+    throw new Error('Received user.id is invalid!');
   }
 
   // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
-  if (userValidation != null) {
-    // si usrValidation n'est pas nul -> l'utilisateur existe dans la DB
-    const { emailValidated, isAdmin } = userValidation;
-    const userToUpdate = {
-      firstname,
-      lastname,
-      emailValidated,
-      isAdmin
-    };
-
-    // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
-    if (image !== undefined) {
-      userToUpdate.image = image;
-    }
-
-    return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
-  } else {
-    return new Error('The received id is not in the database!');
+  if (userValidation == null) {
+    throw new Error('The received id is not in the database!');
   }
+
+  // si userValidation n'est pas nul -> l'utilisateur existe dans la DB
+  const { emailValidated, isAdmin } = userValidation;
+  const userToUpdate = {
+    firstname,
+    lastname,
+    emailValidated,
+    isAdmin
+  };
+
+  // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
+  if (image !== undefined) {
+    userToUpdate.image = image;
+  }
+
+  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -114,7 +114,7 @@ async function updateUser({ id, firstname, lastname, image }) {
  */
 function deleteUser(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
+    throw new Error('Received user.id is invalid!');
   }
 
   return UsersModel.findByIdAndRemove(id);

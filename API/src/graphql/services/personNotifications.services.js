@@ -3,7 +3,7 @@ const PersonsNotificationsModel = require('../models/personNotifications.modelgq
 
 function getAllNotificationsOfPerson(personId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(personId)) {
-    return new Error('Received personId is invalid!');
+    throw new Error('Received personId is invalid!');
   }
 
   let skip;
@@ -19,7 +19,7 @@ function getAllNotificationsOfPerson(personId, { limit = 30, page = 0 } = {}) {
 
 function addNotificationOfPerson(personId, notificationId) {
   if (!mongoose.Types.ObjectId.isValid(personId)) {
-    return new Error('Received personId is invalid!');
+    throw new Error('Received personId is invalid!');
   }
 
   const personNotificationToAdd = {
@@ -39,7 +39,7 @@ function addNotificationOfPersonForAllPersonIdInArray(personIdArray, notificatio
 
 function setPersonNotificationAsSeen(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received personNotification.id is invalid!');
+    throw new Error('Received personNotification.id is invalid!');
   }
 
   return PersonsNotificationsModel.findByIdAndUpdate(id, { seen: true }, { new: true });

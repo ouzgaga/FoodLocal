@@ -86,13 +86,19 @@ describe('tests users services', () => {
     });
 
     it('should fail getting one user because no id received', async() => {
-      const userGotInDB = await usersServices.getUserById('');
-      userGotInDB.message.should.be.equal('Received user.id is invalid!');
+      try {
+        await usersServices.getUserById('');
+      } catch (err) {
+        err.message.should.be.equal('Received user.id is invalid!');
+      }
     });
 
     it('should fail getting one user because invalid id received', async() => {
-      const userGotInDB = await usersServices.getUserById(benoit.id + benoit.id);
-      userGotInDB.message.should.be.equal('Received user.id is invalid!');
+      try {
+        await usersServices.getUserById(benoit.id + benoit.id);
+      } catch (err) {
+        err.message.should.be.equal('Received user.id is invalid!');
+      }
     });
 
     it('should fail getting one user because unknown id received', async() => {
@@ -166,10 +172,12 @@ describe('tests users services', () => {
       addedUser.lastname.should.be.equal(userToAdd.lastname);
       addedUser.email.should.be.equal(userToAdd.email);
 
-      // on tente d'ajouter à nouveau le même utilisateur -> erreur car l'email est déjà utilisé
-      const res = await usersServices.addUser(userToAdd);
-      res.should.be.not.null;
-      res.message.should.be.equal('This email is already used.');
+      try {
+        // on tente d'ajouter à nouveau le même utilisateur -> erreur car l'email est déjà utilisé
+        await usersServices.addUser(userToAdd);
+      } catch (err) {
+        err.message.should.be.equal('This email is already used.');
+      }
     });
 
 
@@ -274,30 +282,39 @@ describe('tests users services', () => {
     });
 
     it('should fail updating a user because no id received', async() => {
-      benoit.id = '';
-      const updatedUser = await usersServices.updateUser(benoit);
-
-      updatedUser.message.should.be.equal('Received user.id is invalid!');
+      try {
+        benoit.id = '';
+        await usersServices.updateUser(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received user.id is invalid!');
+      }
     });
 
-    it('should fail updating a user because invalid id received', async() => {
-      benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedUser = await usersServices.updateUser(benoit);
-
-      updatedUser.message.should.be.equal('Received user.id is invalid!');
+    it('should fail updating a user because invalid id received (too short)', async() => {
+      try {
+        benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
+        await usersServices.updateUser(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received user.id is invalid!');
+      }
     });
 
-    it('should fail updating a user because invalid id received', async() => {
-      benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedUser = await usersServices.updateUser(benoit);
-
-      updatedUser.message.should.be.equal('Received user.id is invalid!');
+    it('should fail updating a user because invalid id received (too long)', async() => {
+      try {
+        benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
+        await usersServices.updateUser(benoit);
+      } catch (err) {
+        err.message.should.be.equal('Received user.id is invalid!');
+      }
     });
 
     it('should fail updating a user because unknown id received', async() => {
-      benoit.id = 'abcdefabcdefabcdefabcdef';
-      const updatedUser = await usersServices.updateUser(benoit);
-      updatedUser.message.should.be.equal('The received id is not in the database!');
+      try {
+        benoit.id = 'abcdefabcdefabcdefabcdef';
+        await usersServices.updateUser(benoit);
+      } catch (err) {
+        err.message.should.be.equal('The received id is not in the database!');
+      }
     });
   });
 

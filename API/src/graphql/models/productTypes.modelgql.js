@@ -51,8 +51,10 @@ productTypeSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {
       const addToSetOperation = this._update.$addToSet;
-      if (addToSetOperation.producersIds != null && !(await personsServices.checkIfPersonIdExistInDB(addToSetOperation.producersIds, true))) {
-        throw new Error(`The given producerId (with id: ${this._update.$addToSet.producersIds}) doesn’t exist in the database or is not a producer!`);
+      try {
+        await personsServices.checkIfPersonIdExistInDB(addToSetOperation.producersIds, true);
+      } catch (err) {
+        throw new Error(`The given producerId (with id: ${addToSetOperation.producersIds}) doesn’t exist in the database or is not a producer!`);
       }
     }
     next();

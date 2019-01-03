@@ -31,18 +31,18 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    return ProductTypesModel.findById(id);
+    throw new Error('Received productType.id is invalid!');
   }
+
+  return ProductTypesModel.findById(id);
 }
 
 function getProductTypeByCategory(productTypeCategoryId) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
-    return new Error('Received productTypeCategory.id is invalid!');
-  } else {
-    return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
+
+  return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
 }
 
 async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
@@ -100,7 +100,7 @@ async function removeProducerProducingThisProductType(productTypeId, producerId)
  */
 function updateProductType(productType) {
   if (!mongoose.Types.ObjectId.isValid(productType.id)) {
-    return new Error('Received productType.id is invalid!');
+    throw new Error('Received productType.id is invalid!');
   }
 
   const updatedProductType = {
@@ -121,7 +121,7 @@ function updateProductType(productType) {
  */
 function deleteProductType(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productType.id is invalid!');
+    throw new Error('Received productType.id is invalid!');
   }
 
   return ProductTypesModel.findByIdAndRemove(id);

@@ -6,9 +6,7 @@ const config = require('../../config/config');
 
 async function login(email, password) {
   const person = await personsServices.getPersonByLogin(email, password);
-  if (person != null && person.message != null) {
-    return person;
-  }
+
   return createConnectionToken(person.id, person.email, person.isAdmin, person.kind);
 }
 

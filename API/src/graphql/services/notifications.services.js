@@ -5,19 +5,19 @@ const producersServices = require('./producers.services');
 
 function getNotificationById(notificationId) {
   if (!mongoose.Types.ObjectId.isValid(notificationId)) {
-    return new Error('Received notificationId is invalid!');
+    throw new Error('Received notificationId is invalid!');
   }
   return NotificationsModel.findById(notificationId);
 }
 
 async function addNotification(type, producerId) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
 
   const producer = await producersServices.getProducerById(producerId);
   if (producer == null) {
-    return new Error(`The given producerId (with id: ${producerId}) doesn’t exist in the database!\``);
+    throw new Error(`The given producerId (with id: ${producerId}) doesn’t exist in the database!\``);
   }
 
   const notificationToAdd = {

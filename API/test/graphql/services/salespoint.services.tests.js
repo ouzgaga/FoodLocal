@@ -244,13 +244,19 @@ describe('tests salespoints services', () => {
     });
 
     it('should fail getting one salespoint because no id received', async() => {
-      const salespoint = await salespointsServices.getSalespointById('');
-      salespoint.message.should.be.equal('Received salespoint.id is invalid!');
+      try {
+        await salespointsServices.getSalespointById('');
+      } catch (err) {
+        err.message.should.be.equal('Received salespoint.id is invalid!');
+      }
     });
 
     it('should fail getting one salespoint because invalid id received', async() => {
-      const salespoint = await salespointsServices.getSalespointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
-      salespoint.message.should.be.equal('Received salespoint.id is invalid!');
+      try {
+        await salespointsServices.getSalespointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
+      } catch (err) {
+        err.message.should.be.equal('Received salespoint.id is invalid!');
+      }
     });
 
     it('should fail getting one salespoint because unknown id received', async() => {
@@ -417,26 +423,35 @@ describe('tests salespoints services', () => {
     });
 
     it('should fail updating a salespoint because no producerId received', async() => {
-      const updatedProduct = await salespointsServices.updateSalespoint(null, salespointWithSchedule);
-
-      updatedProduct.message.should.be.equal('Received producerId is invalid!');
+      try {
+        await salespointsServices.updateSalespoint(null, salespointWithSchedule);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is invalid!');
+      }
     });
 
     it('should fail updating a salespoint because invalid id received (too short)', async() => {
-      const updatedProduct = await salespointsServices.updateSalespoint('abcdef', salespointWithSchedule);
-
-      updatedProduct.message.should.be.equal('Received producerId is invalid!');
+      try {
+        await salespointsServices.updateSalespoint('abcdef', salespointWithSchedule);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is invalid!');
+      }
     });
 
     it('should fail updating a salespoint because invalid id received (too long)', async() => {
-      const updatedProduct = await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdefabcdef', salespointWithSchedule);
-
-      updatedProduct.message.should.be.equal('Received producerId is invalid!');
+      try {
+        await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdefabcdef', salespointWithSchedule);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is invalid!');
+      }
     });
 
     it('should fail updating a salespoint because unknown id received', async() => {
-      const updatedProducer = await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdef', salespointWithSchedule);
-      expect(updatedProducer).to.be.null;
+      try {
+        await salespointsServices.updateSalespoint('abcdefabcdefabcdefabcdef', salespointWithSchedule);
+      } catch (err) {
+        err.message.should.be.equal('Received producerId is not in the database!');
+      }
     });
   });
 
@@ -449,9 +464,12 @@ describe('tests salespoints services', () => {
       deleteSalespoint.should.be.not.null;
       deleteSalespoint.id.should.be.eql(salespointWithSchedule.id);
 
-      // on tente de récupérer le même salespoint -> retourne null car le salespoint est introuvable dans la DB
-      deleteSalespoint = await salespointsServices.getSalespointById(deleteSalespoint);
-      expect(deleteSalespoint).to.be.null;
+      try {
+        // on tente de récupérer le même salespoint -> retourne null car le salespoint est introuvable dans la DB
+        await salespointsServices.getSalespointById(deleteSalespoint.id);
+      } catch (err) {
+        err.message.should.be.euqal('Received salespoint.id is invalid!');
+      }
     });
 
     it('should fail deleting a salespoint because given id not found in DB', async() => {

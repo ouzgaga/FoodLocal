@@ -4,7 +4,7 @@ const notificationsServices = require('./notifications.services');
 
 function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
 
   let skip;
@@ -25,15 +25,13 @@ async function addPostOfProducer(post) {
   const newPost = await new PostsModel(post).save();
 
   const res = await notificationsServices.addNotification('NEW_POST', post.producerId);
-  if (res.message != null) {
-    return res;
-  }
+
   return newPost;
 }
 
 function deletePostOfProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received personRatingProducer.id is invalid!');
+    throw new Error('Received personRatingProducer.id is invalid!');
   }
 
   return PostsModel.findByIdAndRemove(id);
