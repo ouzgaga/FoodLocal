@@ -59,13 +59,6 @@ personRatingProducer.pre('save', function(next) {
     next(err);
   }
 });
-personRatingProducer.pre('findOneAndUpdate', function(next) {
-  try {
-    return checkGivenPersonAndProducerExists(this, next);
-  } catch (err) {
-    next(err);
-  }
-});
 
 
 /**

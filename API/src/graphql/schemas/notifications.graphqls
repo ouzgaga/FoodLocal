@@ -1,0 +1,42 @@
+type Query {
+	# Retourne toutes les notifications de la personne correspondante à l'id 'personId'
+	notificationsOfPerson(personId: ID!): [PersonNotification!]!
+}
+
+type Mutation {
+	# Ajoute une nouvelle news à propos du producteur 'producerId' contenu dans le post reçu en paramètre
+	setNotificationAsSeen(personId: ID!, personNotificationId: ID!): PersonNotification!
+}
+
+scalar Date
+
+type PersonNotification {
+	id: ID!
+	# La personne concernée par la notification
+	person: Person!
+	# La notification
+	notification: Notification!
+	# Booléen valant true si la notification a déjà été lue par la personne, false sinon.
+	seen: Boolean!
+}
+
+enum Type {
+	# Notification émise lors de la publication d'un nouveau post d'un producteur suivi par la personne
+	NEW_POST,
+	# Notification émise lorsqu'un producteur suivi par la personne met à jour ses informations générales
+	PRODUCER_UPDATE_INFO,
+	# Notification émise lorsqu'un producteur suivi par la personne met à jour sa liste de produits
+	PRODUCER_UPDATE_PRODUCTS_LIST,
+	# Notification émise lorsqu'un producteur suivi par la personne met à jour les informations de son point de vente
+	PRODUCER_UPDATE_SALESPOINT_INFO
+}
+
+type Notification {
+	# Le type de notification (nouveau post / MAJ des informations / MAJ de la liste de produits / MAJ des informations d'un point de vente d'un producteur suivi par la personne
+	type: Type!
+	# La date de création de la notification
+	date: Date!
+	# Le producteur dont l'action a entrainé la création de la notification
+	producer: Producer!
+}
+

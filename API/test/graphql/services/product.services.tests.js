@@ -112,8 +112,11 @@ describe('tests product services', () => {
     });
 
     it('should fail getting one product because no id received', async() => {
-      const productGotInDB = await productsServices.getProductById({ id: '' });
-      productGotInDB.message.should.be.equal('Received product.id is invalid!');
+      try {
+        await productsServices.getProductById({ id: '' });
+      } catch (err) {
+        err.message.should.be.equal('Received product.id is invalid!');
+      }
     });
 
     it('should fail getting one product because unknown id received', async() => {
@@ -173,8 +176,19 @@ describe('tests product services', () => {
       // on supprime tout le contenu de la DB de products
       await ProductsModel.deleteMany();
 
+      const producer = (await producersServices.addProducer({
+        firstname: 'Benoît',
+        lastname: 'Schöpfli',
+        email: 'benoit@paysan.ch',
+        password: '1234abcd',
+        image: 'Ceci est une image encodée en base64!',
+        phoneNumber: '0761435196',
+        description: 'Un chouet gaillard!',
+        website: 'benoitpaysan.ch'
+      })).toObject();
+
       // on ajoute tous les produits passés dans le tableau en paramètre
-      const addedProducts = await productsServices.addAllProductsInArray([productPomme, productPoire]);
+      const addedProducts = await productsServices.addAllProductsInArray([productPomme, productPoire], producer.id);
 
       const promises = addedProducts.map((async(product, index) => {
         product.should.be.not.null;
@@ -210,24 +224,30 @@ describe('tests product services', () => {
     });
 
     it('should fail updating a product because no id received', async() => {
-      productPomme.id = '';
-      const updatedProduct = await productsServices.updateProduct(productPomme);
-
-      updatedProduct.message.should.be.equal('Received product.id is invalid!');
+      try {
+        productPomme.id = '';
+        await productsServices.updateProduct(productPomme);
+      } catch (err) {
+        err.message.should.be.equal('Received product.id is invalid!');
+      }
     });
 
-    it('should fail updating a product because invalid id received', async() => {
-      productPomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProduct = await productsServices.updateProduct(productPomme);
-
-      updatedProduct.message.should.be.equal('Received product.id is invalid!');
+    it('should fail updating a product because invalid id received (too short)', async() => {
+      try {
+        productPomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
+        await productsServices.updateProduct(productPomme);
+      } catch (err) {
+        err.message.should.be.equal('Received product.id is invalid!');
+      }
     });
 
-    it('should fail updating a product because invalid id received', async() => {
-      productPomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProduct = await productsServices.updateProduct(productPomme);
-
-      updatedProduct.message.should.be.equal('Received product.id is invalid!');
+    it('should fail updating a product because invalid id received (too long)', async() => {
+      try {
+        productPomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
+        await productsServices.updateProduct(productPomme);
+      } catch (err) {
+        err.message.should.be.equal('Received product.id is invalid!');
+      }
     });
 
     it('should return null after update a product because unknown id received', async() => {
@@ -249,15 +269,19 @@ describe('tests product services', () => {
       deleteProduct.should.be.not.null;
       deleteProduct.id.should.be.eql(productPomme.id);
 
+
       // on tente de re-supprimer le produit -> retourne null car le produit est introuvable dans la DB
-      deleteProduct = await productsServices.getProductById(deleteProduct);
+      deleteProduct = await productsServices.getProductById(deleteProduct.id);
       expect(deleteProduct).to.be.null;
     });
 
     it('should fail deleting a product because given id not found in DB', async() => {
-      // on supprime un product inexistant
-      const deleteProduct = await productsServices.deleteProduct('abcdefabcdefabcdefabcdef');
-      expect(deleteProduct).to.be.null;
+      try {
+        // on supprime un product inexistant
+        await productsServices.deleteProduct('abcdefabcdefabcdefabcdef');
+      } catch (err) {
+        err.message.should.be.equal('Received product.id is invalid');
+      }
     });
   });
 });

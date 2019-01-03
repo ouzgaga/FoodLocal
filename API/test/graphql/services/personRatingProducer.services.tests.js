@@ -137,8 +137,11 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail getting the rating about received producerId made by received personId because invalid producerId received', async() => {
-      const ratings = await personRatingProducerServices.getAllRatingsAboutProducerWithId(benoit.id + benoit.id);
-      ratings.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      try {
+        const ratings = await personRatingProducerServices.getAllRatingsAboutProducerWithId(benoit.id + benoit.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
     });
 
     it('should get no rating about received producerId made by received personId because unknown producerId received', async() => {
@@ -163,16 +166,24 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail getting the rating about received producerId made by received personId because no producerId received', async() => {
-      let rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(null, antoine.id);
-      rating.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
-
-      rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(undefined, antoine.id);
-      rating.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(null, antoine.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(undefined, antoine.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
     });
 
     it('should fail getting the rating about received producerId made by received personId because invalid producerId received', async() => {
-      const rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id + benoit.id, antoine.id);
-      rating.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id + benoit.id, antoine.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+      }
     });
 
     it('should get no rating about received producerId made by received personId because unknown producerId received', async() => {
@@ -181,16 +192,24 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail getting the rating about received producerId made by received personId because no personId received', async() => {
-      let rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, null);
-      rating.message.should.be.equal('Received personRatingProducer.personId is invalid!');
-
-      rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, undefined);
-      rating.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, null);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, undefined);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
     });
 
     it('should fail getting the rating about received producerId made by received personId because invalid personId received', async() => {
-      const rating = await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, antoine.id + antoine.id);
-      rating.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      try {
+        await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, antoine.id + antoine.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
     });
 
     it('should get no rating about received producerId made by received personId because unknown personId received', async() => {
@@ -220,16 +239,24 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail getting all the rating made by received personId because no personId received', async() => {
-      let ratings = await personRatingProducerServices.getAllRatingsMadeByPersonWithId(null);
-      ratings.message.should.be.equal('Received personRatingProducer.personId is invalid!');
-
-      ratings = await personRatingProducerServices.getAllRatingsMadeByPersonWithId(undefined);
-      ratings.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      try {
+        await personRatingProducerServices.getAllRatingsMadeByPersonWithId(null);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
+      try {
+        await personRatingProducerServices.getAllRatingsMadeByPersonWithId(undefined);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
     });
 
     it('should fail getting all the rating made by received personId because invalid personId received', async() => {
-      const ratings = await personRatingProducerServices.getAllRatingsMadeByPersonWithId(benoit.id + benoit.id);
-      ratings.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      try {
+        await personRatingProducerServices.getAllRatingsMadeByPersonWithId(benoit.id + benoit.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+      }
     });
 
     it('should return any rating made by received personId because unknown personId received', async() => {
@@ -276,11 +303,12 @@ describe('tests personRatingProducer services', () => {
       benoitProducer.rating.rating.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
-      // on ajoute le rating ratingBenoit5 alors qu'il a déjà été ajouté -> retournera une erreur
-      const addedRating = await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
-      // on check que les données ajoutées soient bien celles souhaitées
-      addedRating.should.be.not.null;
-      addedRating.message.should.be.equal('This person has already rated this producer! You can\'t rate twice the same producer.');
+      try {
+        // on ajoute le rating ratingBenoit5 alors qu'il a déjà été ajouté -> retournera une erreur
+        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+      } catch (err) {
+        err.message.should.be.equal('This person has already rated this producer! You can\'t rate twice the same producer.');
+      }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
@@ -441,13 +469,6 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail updating a rating because new rating < 1', async() => {
-      // on met un producerId valide mais non présent dans la DB
-      const newRating = {
-        producerId: benoit.id,
-        personId: james.id,
-        rating: 0
-      };
-
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
       benoitProducer.rating.rating.should.be.equal(5);
@@ -455,10 +476,11 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
+        ratingAntoine1.rating = 0;
+
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
       }
 
@@ -469,13 +491,6 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail updating a rating because rating > 5', async() => {
-      // on met un producerId valide mais non présent dans la DB
-      const newRating = {
-        producerId: benoit.id,
-        personId: james.id,
-        rating: 6
-      };
-
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
       benoitProducer.rating.rating.should.be.equal(5);
@@ -483,10 +498,11 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
+        ratingAntoine1.rating = 6;
+
         // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
       }
 
@@ -497,13 +513,6 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail updating a rating because rating is not an integer', async() => {
-      // on met un producerId valide mais non présent dans la DB
-      const newRating = {
-        producerId: benoit.id,
-        personId: james.id,
-        rating: 3.5
-      };
-
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
       benoitProducer.rating.rating.should.be.equal(5);
@@ -511,10 +520,10 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
-        await personRatingProducerServices.updatePersonRatingProducer(newRating);
+        ratingAntoine1.rating = 2.5;
+
+        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.name.should.be.equal('ValidationError');
         error.message.should.be.equal('personRatingProducer validation failed: rating: 3.5 is not an integer value');
       }
 
@@ -576,13 +585,19 @@ describe('tests personRatingProducer services', () => {
     });
 
     it('should fail deleting a personRatingProducer about a producer because no id received', async() => {
-      const rating = (await personRatingProducerServices.deletePersonRatingProducer(''));
-      rating.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      try {
+        await personRatingProducerServices.deletePersonRatingProducer('');
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      }
     });
 
     it('should fail deleting a personRatingProducer about a producer because invalid id received', async() => {
-      const rating = await personRatingProducerServices.deletePersonRatingProducer(benoit.id + benoit.id);
-      rating.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      try {
+        await personRatingProducerServices.deletePersonRatingProducer(benoit.id + benoit.id);
+      } catch (err) {
+        err.message.should.be.equal('Received personRatingProducer.id is invalid!');
+      }
     });
 
     it('should fail deleting a personRatingProducer about a producer because unknown id received', async() => {

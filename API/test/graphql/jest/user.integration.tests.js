@@ -186,7 +186,9 @@ describe('Testing graphql resquest user', () => {
         done();
       });
     });
+  });
 
+  describe('MUTATION user', () => {
     // ----------------------updateUser(user: UserInputUpdate!)-------------------------------------- //
     describe('Testing updateUser(user: UserInputUpdate!)', () => {
       let context;

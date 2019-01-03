@@ -65,13 +65,13 @@ async function addTokenValidationEmail (user) {
  */
 function deleteTokenValidationEmail(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received TokenValidationEmail.id is invalid!');
+    throw new Error('Received TokenValidationEmail.id is invalid!');
   }
 
   return TokenValidationEmailModel.findByIdAndRemove(id);
 }
 
-function tokenToOld(dateCreation) {
+function tokenTooOld(dateCreation) {
   /* const daysAgo = 7;
   const date = new Date() - (daysAgo * 24 * 60 * 60 * 1000);
   return date.getDate() >= dateCreation.getDate(); */
@@ -87,8 +87,10 @@ async function validateToken(value) {
   const token = await getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
   // if token not found return that the token is not valide
   if (token == null) {
+    // fixme: mieux vaut retourner une erreur non?
     return null;
-  } else if (tokenToOld(token.dateCreation)) {
+  } else if (tokenTooOld(token.dateCreation)) {
+    // fixme: mieux vaut retourner une erreur non?
     return null;
   } else { // is a valide token
     await deleteTokenValidationEmail(token.id); // delete token
