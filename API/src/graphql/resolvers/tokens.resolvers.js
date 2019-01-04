@@ -4,17 +4,10 @@ const connectionTokenServices = require('../services/connectionToken.services');
 const personsServices = require('../services/persons.services');
 
 const producerResolvers = {
-  Query: {
-    emailValidationTokens: async(parent, args, context) => {
-      await isAuthenticatedAsAdmin(context.id, context.isAdmin);
-      return tokenValidationEmailServices.getTokenValidationEmails();
-    }
-  },
-
   Mutation: {
     validateAnEmailToken: (parent, args, context) => personsServices.validateEmailUserByToken(args.emailValidationToken),
 
-    askNewEmailToken: (parent, args, context) => tokenValidationEmailServices.addTokenValidationEmail(args.idPerson),
+    askNewEmailToken: (parent, args, context) => tokenValidationEmailServices.askNewEmailToken(args.email, args.password),
 
     login: (parent, args, context) => connectionTokenServices.login(args.email, args.password),
 

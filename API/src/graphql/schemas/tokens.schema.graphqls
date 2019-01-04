@@ -1,11 +1,7 @@
-type Query {
-    emailValidationTokens: [EmailValidationToken!]
-}
-
 type Mutation {
     validateAnEmailToken(emailValidationToken: String!): Boolean!
 
-    askNewEmailToken(idPerson: ID!): Boolean!
+    askNewEmailToken(email:String!, password: String!): Boolean!
 
     # Permet à un utilisateur ou un producteur enregistré de se connecter à son compte.
     login(email: String!, password:String!): ConnectionToken!
