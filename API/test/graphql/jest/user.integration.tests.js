@@ -151,7 +151,6 @@ describe('Testing graphql resquest user', () => {
         done();
       });
 
-
       it('should fail getting a user by id because unknown id received', async(done) => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = { id: context.id };

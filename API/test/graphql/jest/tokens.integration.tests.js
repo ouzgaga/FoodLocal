@@ -757,5 +757,336 @@ describe('Testing graphql resquest user', () => {
         done();
       });
     });
+
+    // ----------------------upgradeUserToProducer(idUserToUpgrade: ID!, password: String!)-------------------------------------- //
+    describe('Testing upgradeUserToProducer(idUserToUpgrade: ID!, password: String!)', () => {
+      let context;
+      beforeEach(async() => {
+        await clearAndPopulateDB();
+        context = { id: tabUsers[0].id, email: tabUsers[0].email, isAdmin: true, kind: tabUsers[0].kind };
+      });
+
+      const { mutation } = {
+        mutation: `mutation($idUser: ID!, $password: String!) {
+                      upgradeUserToProducer(idUserToUpgrade: $idUser, password: $password) {
+                        producer {
+                          firstname
+                          lastname
+                          email
+                          image
+                          followingProducers {
+                            firstname
+                            lastname
+                            email
+                          }
+                          emailValidated
+                          isAdmin
+                          followers {
+                            firstname
+                            lastname
+                            email
+                          }
+                          phoneNumber
+                          description
+                          website
+                          salespoint {
+                            name
+                            address {
+                              number
+                              street
+                              city
+                              postalCode
+                              state
+                              country
+                              longitude
+                              latitude
+                            }
+                            schedule {
+                              monday {
+                                openingHour
+                                closingHour
+                              }
+                              tuesday {
+                                openingHour
+                                closingHour
+                              }
+                              wednesday {
+                                openingHour
+                                closingHour
+                              }
+                              thursday {
+                                openingHour
+                                closingHour
+                              }
+                              friday {
+                                openingHour
+                                closingHour
+                              }
+                              saturday {
+                                openingHour
+                                closingHour
+                              }
+                              sunday {
+                                openingHour
+                                closingHour
+                              }
+                            }
+                          }
+                          isValidated
+                          products {
+                            description
+                            productType {
+                              name
+                              image
+                              category {
+                                name
+                                image
+                              }
+                              producers {
+                                firstname
+                                lastname
+                                email
+                              }
+                            }
+                          }
+                          rating {
+                            nbRatings
+                            rating
+                          }
+                        }
+                        newLoginToken{
+                          token
+                        }
+                      }
+                    }`
+      };
+
+      it('should create a new producer and return a new token', async(done) => {
+        const variables = {
+          idUser: tabUsers[0].id,
+          password: '1234abcd'
+        };
+        let result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(5);
+        expect(result.data.upgradeUserToProducer.producer).not.toBeNull();
+        expect(result.data.upgradeUserToProducer.newLoginToken).not.toBeNull();
+        expect(result).toMatchSnapshot({
+          data: { upgradeUserToProducer: { newLoginToken: { token: expect.any(String) } } }
+        });
+
+        const { query: queryProducer } = {
+          query: `
+    query($id: ID!){
+      producer(producerId: $id){
+        firstname
+        lastname
+        email
+        image
+        followingProducers{
+          firstname
+          lastname
+          email
+        }
+        emailValidated
+        isAdmin
+        followers{
+          firstname
+          lastname
+          email
+        }
+        phoneNumber
+        description
+        website
+        salespoint{
+          name
+          address{
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule{
+            monday{
+              openingHour
+              closingHour
+            }
+            tuesday{
+              openingHour
+              closingHour
+            }
+            wednesday{
+              openingHour
+              closingHour
+            }
+            thursday{
+              openingHour
+              closingHour
+            }
+            friday{
+              openingHour
+              closingHour
+            }
+            saturday{
+              openingHour
+              closingHour
+            }
+            sunday{
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products{
+          description
+          productType{
+            name
+            image
+            category{
+              name
+              image
+            }
+            producers{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        rating{
+          nbRatings
+          rating
+        }
+      }
+    }`
+        };
+        const tokenContent = await jwt.decode(result.data.upgradeUserToProducer.newLoginToken.token);
+
+        const variableQuery = { id: tokenContent.id };
+        result = await graphql(schema, queryProducer, null, null, variableQuery);
+        expect(result.data.producer).not.toBeNull();
+
+        const { query: queryUser } = {
+          query: `
+    query ($id: ID!){
+      user(userId: $id) {
+        firstname
+        lastname
+        email
+        image
+        followingProducers {
+          firstname
+          lastname
+          email
+          image
+          emailValidated
+          phoneNumber
+          rating {
+            nbRatings
+            rating
+          }
+        }
+        emailValidated
+        isAdmin
+      }
+    }`
+        };
+        result = await graphql(schema, queryUser, null, context, variableQuery);
+        expect(result.data.user).toBeNull();
+        done();
+      });
+
+      it('should fail creating a new producer and returning a new token because wrong password', async(done) => {
+        const variables = {
+          idUser: tabUsers[0].id,
+          password: 'wrongPassword'
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual('Received password is not correct!');
+        expect(result.data).toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+      it('should fail creating a new producer and returning a new token because unknown idUser received', async(done) => {
+        context.id = 'abcdefabcdefabcdefabcdef';
+        const variables = {
+          idUser: context.id,
+          password: '1234abcd'
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual('The received idUserToUpgrade is not in the database!');
+        expect(result.data).toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail creating a new producer and returning a new token because idUser received (too short)', async(done) => {
+        context.id = 'abcdef';
+        const variables = {
+          idUser: context.id,
+          password: '1234abcd'
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
+        expect(result.data).toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail creating a new producer and returning a new token because invalid idUser received (too long)', async(done) => {
+        context.id = 'abcdefabcdefabcdefabcdefabcdef';
+        const variables = {
+          idUser: context.id,
+          password: '1234abcd'
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
+        expect(result.data).toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new productType because not authenticated', async(done) => {
+        const variables = {
+          idUser: tabUsers[0].id,
+          password: '1234abcd'
+        };
+
+        const result = await graphql(schema, mutation, null, {}, variables);
+        expect.assertions(4);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should fail adding a new productType because not authenticated as yourself', async(done) => {
+        const variables = {
+          idUser: tabUsers[1].id,
+          password: '1234abcd'
+        };
+
+        const result = await graphql(schema, mutation, null, context, variables);
+        expect.assertions(4);
+        expect(result.errors).not.toBeNull();
+        expect(result.errors.length).toBe(1);
+        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
+        expect(result).toMatchSnapshot();
+        done();
+      });
+    });
   });
 });

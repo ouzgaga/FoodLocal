@@ -11,8 +11,16 @@ type Mutation {
 
     # Permet à un nouveau producteur de s'inscrire et se créer un compte.
     signUpAsProducer(newProducer: ProducerInputAdd!): Token!
+
+    # Permet de transformer l'utiisateur reçu en producteur en conservant ses inforamtions. Retourne un objet contenant le nouveau producteur ainsi que son nouveau token de connexion.
+    upgradeUserToProducer(idUserToUpgrade: ID!, password: String!): ProducerWithToken!
 }
 
 type Token {
     token: String!
+}
+
+type ProducerWithToken{
+    producer: Producer!
+    newLoginToken: Token!
 }

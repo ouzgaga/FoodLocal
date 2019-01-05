@@ -1,4 +1,4 @@
-const { isAuthenticatedAsAdmin } = require('./authorization.resolvers');
+const { isAuthenticatedAsUserAndIsYourself } = require('./authorization.resolvers');
 const tokenValidationEmailServices = require('../services/tokenValidationEmail.services');
 const connectionTokenServices = require('../services/connectionToken.services');
 const personsServices = require('../services/persons.services');
@@ -13,11 +13,17 @@ const producerResolvers = {
 
     signUpAsUser: (parent, args, context) => connectionTokenServices.signUpAsUser(args.newUser),
 
-    signUpAsProducer: (parent, args, context) => connectionTokenServices.signUpAsProducer(args.newProducer)
+    signUpAsProducer: (parent, args, context) => connectionTokenServices.signUpAsProducer(args.newProducer),
+
+    upgradeUserToProducer: async(parent, args, context) => {
+      await isAuthenticatedAsUserAndIsYourself(context.id, args.idUserToUpgrade, context.kind);
+      return connectionTokenServices.upgradeUserToProducer(args.idUserToUpgrade, args.password);
+    }
   },
 
   Token: {
     token: (parent, args, context) => parent
-  }
+  },
+
 };
 module.exports = producerResolvers;
