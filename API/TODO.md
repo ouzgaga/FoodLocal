@@ -2,7 +2,7 @@ API:
 
 Reste à faire:
 
-- Une mise à jour des infos d'un prod ou de ses produits ou de son sales point doit automatiuement créer un post sur son mur si celui-ci le demande.
+- Une mise à jour des infos d'un prod ou de ses produits ou de son sales point doit automatiquement créer un post sur son mur si celui-ci le demande.
 
   ```
   Notre application permettra aux producteurs de partager de petits messages sur leur murs (petites news) contenant du texte et éventuellement une géolocalisation (affichant leur position sur une mini-map).
@@ -23,3 +23,4 @@ Reste à faire:
 - Finir les tests d'intégration et les tests unitaires
 
 - Ajouter une fonction pour upgrade un user en producer!
+

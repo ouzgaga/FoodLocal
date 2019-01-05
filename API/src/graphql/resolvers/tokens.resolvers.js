@@ -13,11 +13,11 @@ const producerResolvers = {
 
     signUpAsUser: (parent, args, context) => connectionTokenServices.signUpAsUser(args.newUser),
 
-    signUpAsProducer: (parent, args, context) => connectionTokenServices.signUpAsProducer(args.newProducer),
+    signUpAsProducer: (parent, args, context) => connectionTokenServices.signUpAsProducer(args.newProducer)
   },
 
-  ConnectionToken: {
+  Token: {
     token: (parent, args, context) => parent
-}
+  }
 };
 module.exports = producerResolvers;

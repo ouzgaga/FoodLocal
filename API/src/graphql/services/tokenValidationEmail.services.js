@@ -13,7 +13,7 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
   // mail.sendMailConfirmation(email, firstname, lastname, token);
-  return true;
+  return token;
 }
 
 /**
@@ -23,10 +23,17 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
  */
 async function validateToken(token) {
   try {
-    const person = await jwt.verify(token, config.jwtSecret, { maxAge: '7d' });
+    const tokenContent = await jwt.verify(token, config.jwtSecret, { maxAge: '7d' });
 
-    await personsServices.checkIfPersonIdExistInDB(person.id);
-    return person;
+    const person = await personsServices.getPersonById(tokenContent.id);
+    if (person == null) {
+      throw new Error('The id found in the token doesn\'t exist in the database!');
+    }
+    if (person.emailValidated) {
+      // l'email de la personne est déjà validé
+      throw new Error('Email already validated!');
+    }
+    return tokenContent;
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
       throw new Error('Your token is expired. Please ask for a new one.');
