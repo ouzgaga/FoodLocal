@@ -56,15 +56,6 @@ const populateDB = async() => {
     }
   );
 
-  // on regroupe toutes les catgéories de produits dans un tableau pour les tests d'intégration
-  tabProductTypeCategories = [
-    categoriesCereales,
-    categoriesBoissons,
-    categoriesAutres,
-    categoriesFruits,
-    categoriesLegumes,
-    categoriesViandes
-  ];
   // ---------------------------------------------------------------- ajout des productType ----------------------------------------------------------------
 
   // ---------------------------------------------------------------- productType: autres ------------------------------------------------------------------
@@ -223,30 +214,6 @@ const populateDB = async() => {
   );
   // FIXME: ajouter les catégories manquantes...!
 
-  // on regroupe tous les types de produits dans un tableau pour les tests d'intégration
-  tabProductTypes = [
-    productTypeFleurs,
-    productTypeFromagesProduitsLaitiers,
-    productTypeHuiles,
-    productTypeMiel,
-    productTypeOeufs,
-    productTypePains,
-    productTypePatisserie,
-    productTypeSapin,
-    productTypeAlcoolsForts,
-    productTypeBiereCidre,
-    productTypeJusDeFruits,
-    productTypeLait,
-    productTypeMousseux,
-    productTypeVin,
-    productTypeFarine,
-    productTypePolenta,
-    productTypeQuinoa,
-    productTypePates,
-    productTypePomme,
-    productTypePoire
-  ];
-
   // ------------------------------------------------------------------ ajout de products --------------------------------------------------------------------
   const tomme = {
     description: 'Une tomme monnnnstre bonne!',
@@ -303,7 +270,7 @@ const populateDB = async() => {
   // on ajoute des produits au producteur
   const productsProducer1 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, biere, jusOrange, jusPomme, polenta], producer1.id);
   // on ajoute un point de vente au producteur
-  await producersServices.addSalespointToProducer(producer1.id, {
+  producer1 = await producersServices.addSalespointToProducer(producer1.id, {
     name: 'Chez moi',
     address: {
       number: 6,
@@ -363,7 +330,7 @@ const populateDB = async() => {
   // on ajoute des produits au producteur
   const productsProducer2 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, polenta], producer2.id);
   // on ajoute un point de vente au producteur
-  await producersServices.addSalespointToProducer(producer2.id, {
+  producer2 = await producersServices.addSalespointToProducer(producer2.id, {
     name: 'Chez moi',
     address: {
       number: 12,
@@ -406,7 +373,7 @@ const populateDB = async() => {
   });
 
   // on ajoute un producteur
-  const producer3 = await producersServices.addProducer(
+  let producer3 = await producersServices.addProducer(
     {
       firstname: 'James',
       lastname: 'submith',
@@ -422,7 +389,7 @@ const populateDB = async() => {
   const productsProducer3 = await productsServices.addAllProductsInArray([tomme, jusPomme], producer3.id);
 
   // on ajoute un point de vente au producteur
-  await producersServices.addSalespointToProducer(producer3.id, {
+  producer3 = await producersServices.addSalespointToProducer(producer3.id, {
     name: 'Chez moi',
     address: {
       number: 6,
@@ -474,9 +441,6 @@ const populateDB = async() => {
     }
   );
 
-  tabProducers = [producer1, producer2, producer3, producer4];
-  tabSalespoints = await salespointsServices.getSalespoints();
-
   // ------------------------------------------------------------------- ajout de 2 users ----------------------------------------------------------------------
   // on ajoute un utilisateur
   const user1 = await usersServices.addUser(
@@ -499,8 +463,6 @@ const populateDB = async() => {
     }
   );
 
-  tabUsers = [user1, user2];
-
   // ------------------------------------------------------------------- ajout de ratings ----------------------------------------------------------------------
   // ajout de ratings pour le producer1
   const rating1p1 = await personRatingProducersServices.addPersonRatingProducer({ personId: user1.id, producerId: producer1.id, rating: 5 });
@@ -517,7 +479,6 @@ const populateDB = async() => {
   const rating3p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: producer1.id, producerId: producer3.id, rating: 4 });
   const rating4p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: producer2.id, producerId: producer3.id, rating: 2 });
 
-  tabRatings = [rating1p1, rating2p1, rating3p1, rating1p2, rating2p2, rating1p3, rating2p3, rating3p3, rating4p3];
   // -------------------------------------------------------------------- ajout de followers -------------------------------------------------------------------
   // ajout de 3 followers de producer1
   const follower1p1 = await producersServices.addFollowerToProducer(producer1.id, user1.id);
@@ -527,6 +488,20 @@ const populateDB = async() => {
   // ajout de 2 followers de producer4
   const follower1p2 = await producersServices.addFollowerToProducer(producer4.id, producer1.id);
   const follower2p2 = await producersServices.addFollowerToProducer(producer4.id, producer2.id);
+
+
+  // ------------------------------------------------------------------------- tableaux ------------------------------------------------------------------------
+  // on regroupe chaque élément dans des tableaux pour les tests d'intégration
+  tabProductTypes = await productTypesServices.getProductTypes();
+
+  tabProductTypeCategories = await productTypesServices.getProductTypes();
+
+  tabProducers = await producersServices.getProducers();
+  tabSalespoints = await salespointsServices.getSalespoints();
+
+  tabUsers = await usersServices.getUsers();
+
+  tabRatings = [rating1p1, rating2p1, rating3p1, rating1p2, rating2p2, rating1p3, rating2p3, rating3p3, rating4p3];
 };
 
 it('should populate the database!', populateDB);

@@ -88,17 +88,24 @@ async function addAllProductsInArray(productsArray, producerId) {
  *
  * @param product, Les informations du produit à mettre à jour.
  */
-async function updateProduct(product) {
-  if (!mongoose.Types.ObjectId.isValid(product.id)) {
+async function updateProduct({ id, description, productTypeId }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Received product.id is invalid!');
   }
 
   const updatedProduct = {
-    ...product,
-    productTypeId: product.productTypeId
+    id
   };
+  // on ne déclare la description et le productTypeId que s'il est réellement donné, sinon, on ne les déclare même pas (pour
+  // ne pas remplacer les données dans la DB par null sans le vouloir
+  if (description !== undefined) {
+    updatedProduct.description = description;
+  }
+  if (productTypeId !== undefined) {
+    updatedProduct.productTypeId = productTypeId;
+  }
 
-  return ProductsModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
+  return ProductsModel.findByIdAndUpdate(id, updatedProduct, { new: true }); // retourne l'objet modifié
 }
 
 /**

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 
 async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
@@ -115,16 +114,13 @@ function checkIfPasswordIsValid(password) {
 
 // TODO: à ajouter aux tests!
 async function validateEmailUserByToken(emailValidationToken) {
-  const token = await tokenValidationEmailServices.validateToken(emailValidationToken);
-  if (token === null) {
-    throw new Error('The token is not valid');
-  }
+  const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
-  const updatedPerson = await PersonsModel.findByIdAndUpdate(token.idPerson, { emailValidated: true }, { new: true }); // retourne l'objet modifié
-  return updatedPerson !== null;
+  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { emailValidated: true }, { new: true }); // retourne l'objet modifié
+  return updatedPerson.emailValidated;
 }
 
-// TODO: Ajouter une fonction pour upgrade un utilsiateur en producteur !
+// TODO: Ajouter une fonction pour upgrade un utilisateur en producteur !
 
 module.exports = {
   isEmailAvailable,
@@ -140,3 +136,4 @@ module.exports = {
 };
 
 const PersonsModel = require('../models/persons.modelgql');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
