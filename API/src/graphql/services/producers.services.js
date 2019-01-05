@@ -48,7 +48,7 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return ProducersModel.find({ _id: { $in: listOfIdToGet } });
+  return ProducersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
 /**
