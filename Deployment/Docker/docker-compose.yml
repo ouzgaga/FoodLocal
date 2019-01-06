@@ -1,8 +1,8 @@
 version: '3'
 services:
-  db:
+  gce:
     env_file: ./.env
-    image: gce_db:latest
+    image: gce_kubectl:latest
     build:
       context: .
       args:
