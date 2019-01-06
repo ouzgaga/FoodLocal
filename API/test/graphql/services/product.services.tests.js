@@ -167,8 +167,6 @@ describe('tests product services', () => {
         e.message.should.be.equal(`The given productTypeId (${productPomme.productTypeId}) doesn’t exist in the database!`);
       }
     });
-
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests addAllProductsInArray', () => {

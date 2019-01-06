@@ -160,11 +160,11 @@ describe('Testing graphql request productType', () => {
 
       const { mutation } = {
         mutation: `mutation($productType: ProductTypeInputAdd!) {
-     addProductType(productType: $productType) {
-       name
-       image
-     }
-   }`
+                     addProductType(productType: $productType) {
+                       name
+                       image
+                     }
+                   }`
       };
 
       it('should add a new productType', async(done) => {

@@ -154,8 +154,6 @@ describe('tests users services', () => {
       addedUser.emailValidated.should.be.equal(benoit.emailValidated);
     });
 
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
-
     it('should fail adding a new user with an already used email', async() => {
       const userToAdd = {
         ...benoit,

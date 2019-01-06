@@ -2,7 +2,7 @@ API:
 
 Reste à faire:
 
-- Une mise à jour des infos d'un prod ou de ses produits ou de son sales point doit automatiquement créer un post sur son mur si celui-ci le demande.
+- Une mise à jour des infos d'un prod ou de ses produits ou de son salespoint doit automatiquement créer un post sur son mur si celui-ci le demande.
 
   ```
   Notre application permettra aux producteurs de partager de petits messages sur leur murs (petites news) contenant du texte et éventuellement une géolocalisation (affichant leur position sur une mini-map).
@@ -16,11 +16,34 @@ Reste à faire:
   - par nom de produit
   - par description de produit
   - par catégorie
-  - par lieu
+  - par lieu 
+    - https://docs.mongodb.com/manual/reference/command/geoSearch/#dbcmd.geoSearch
+    - https://docs.mongodb.com/manual/tutorial/build-a-geohaystack-index/index.html
 
 - Ajouter la pagination de chaque tableau!
 
-- Finir les tests d'intégration et les tests unitaires
+- Supprimer touuuutes les infos d'un producteur / Utilisateur lorsqu'on le supprime
 
-- Ajouter une fonction pour upgrade un user en producer!
+  - Producteur:
+    - Il faut delete tous ses produits
+    - Il faut delete son salespoint (s'il n'est pas partagé avec un autre producteur)
+    - Il faut delete l'id de tous les tableaux où il apparait :
+      - followers/follows de chaque producteur/user de la DB
+      - producerId des productType
+      - delete tous ses posts
+      - delete toutes ses notifications
+      - envoyer une notification à tous ses followers pour dire qu'il a supprimé son compte
+  - User:
+    - il faut delete son id de tous les tableaux followers des producteurs de la DB
+    - delete toutes ses notifications
 
+- Finir les tests d'intégration :
+
+  - Il reste à faire les schémas :
+    - Notifications
+    - PersonRatingProducers
+    - Posts
+
+- Finir les tests unitaires
+
+- Refaire toute la java doc!

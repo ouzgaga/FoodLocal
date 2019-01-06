@@ -10,6 +10,8 @@ type Query {
 
 	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
 	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
+
+	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
@@ -24,6 +26,12 @@ type Mutation {
 
 	# Supprime le producteur correspondant à l'id reçu en paramètre. Retourne null si l'id reçu ne correspond à aucun producteur.
 	deleteProducer(producerId: ID!): Producer
+}
+
+input ClientLocation {
+	longitude: Float!
+	latitude: Float!
+	maxDistance: Float!
 }
 
 type Producer implements Person {
@@ -85,7 +93,6 @@ input ProducerInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	# TODO: tester que l'email ne peut pas être modifié dans un update!
 	# email: String! # l'email ne peut pas être modifié!
 	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String
@@ -101,6 +108,6 @@ input ProducerInputUpdate {
 	description: String
 	website: String
 	# salespoint: ID # Mis à jour via son propre salespoint
-	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
+	# isValidated: Boolean! # ne peut pas être modifié par le client
 	# products: [ProductInputUpdate!]
 }

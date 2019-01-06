@@ -54,16 +54,18 @@ async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(prod
   // TODO: PAUL: Bien bien moche mais fonctionnel... À améliorer en utilisant un aggregate ou un mapReduce...?
   const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
   // on parcours le taleau de producerIds du premier productType
-  await producersIdsAsString.forEach(async(id) => {
-    const productTypeContainsProducer = await productTypes.map((elem) => {
-      const prodIds = elem.producersIds.map(e => e.toString());
+  const promises = await producersIdsAsString.map(async(id) => {
+    const productTypeContainsProducer = await productTypes.map(async(elem) => {
+      const prodIds = await elem.producersIds.map(e => e.toString());
       return prodIds.includes(id);
     });
 
     if (productTypeContainsProducer.reduce((a, b) => a && b, true)) {
-      producersIds.push(id);
+      await producersIds.push(id);
     }
   });
+
+  Promise.all(promises);
 
   return producersIds;
 }

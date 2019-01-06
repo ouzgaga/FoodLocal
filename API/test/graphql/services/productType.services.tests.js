@@ -295,8 +295,6 @@ describe('tests productType services', () => {
       });
       await Promise.all(promisesProducersIds);
     });
-
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests addProducerProducingThisProductType', () => {

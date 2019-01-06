@@ -279,8 +279,9 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6562137,
-      latitude: 46.7702474
+      // longitude: 6.6562137,
+      // latitude: 46.7702474
+      location: [6.6562137, 46.7702474]
     },
     schedule: {
       monday: [
@@ -339,8 +340,9 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6772137,
-      latitude: 46.7592474
+      // longitude: 6.6772137,
+      // latitude: 46.7592474
+      location: [46.7592474, 6.6772137]
     },
     schedule: {
       monday: [
@@ -398,8 +400,9 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6572137,
-      latitude: 46.7792474
+      // longitude: 6.6572137,
+      // latitude: 46.7792474
+      location: [46.7792474, 6.6572137]
     },
     schedule: {
       monday: [
@@ -494,7 +497,7 @@ const populateDB = async() => {
   // on regroupe chaque élément dans des tableaux pour les tests d'intégration
   tabProductTypes = await productTypesServices.getProductTypes();
 
-  tabProductTypeCategories = await productTypesServices.getProductTypes();
+  tabProductTypeCategories = await productTypeCategoriesServices.getProductTypeCategories();
 
   tabProducers = await producersServices.getProducers();
   tabSalespoints = await salespointsServices.getSalespoints();

@@ -113,8 +113,6 @@ describe('tests productTypeCategory services', () => {
       addedProductTypeCategory.name.should.be.equal(fruits.name);
       addedProductTypeCategory.image.should.be.equal(fruits.image);
     });
-
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests updateProductTypeCategory', () => {

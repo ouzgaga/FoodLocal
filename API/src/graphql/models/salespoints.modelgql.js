@@ -33,16 +33,30 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
+    location: {
+      type: [mongoose.Schema.Types.Number],
+      minLength: 2,
+      maxLength: 2,
+      required: true
+    }
+    /*
     longitude: {
       type: mongoose.Schema.Types.Number,
+      min: -180,
+      max: 180,
       required: true
     },
     latitude: {
       type: mongoose.Schema.Types.Number,
+      min: -90,
+      max: 90,
       required: true
     }
+    */
   }, options
 );
+
+addressSchema.index({ location: 'geoHaystack', type: 1 }, { bucketSize: 0.5 });
 
 /**
  * DaySchedule Schema

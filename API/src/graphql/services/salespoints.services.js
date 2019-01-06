@@ -37,6 +37,11 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
+async function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
+  const res = await SalespointsModel.geoSearch({ }, { near: [longitude, latitude], maxDistance });
+  return res;
+}
+
 /**
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
@@ -103,6 +108,7 @@ async function deleteSalespoint(id) {
 
 module.exports = {
   getSalespoints,
+  geoFilterSalespoints,
   addSalespoint,
   getSalespointById,
   updateSalespoint,

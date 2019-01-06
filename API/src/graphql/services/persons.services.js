@@ -27,7 +27,6 @@ function getPersonById(id) {
   return PersonsModel.findById(id);
 }
 
-// TODO: à ajouter aux tests des services et d'intégration!
 async function getPersonByLogin(email, password) {
   const person = await PersonsModel.findOne({ email });
 
@@ -112,15 +111,12 @@ function checkIfPasswordIsValid(password) {
   return true;
 }
 
-// TODO: à ajouter aux tests!
 async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { emailValidated: true }, { new: true }); // retourne l'objet modifié
   return updatedPerson.emailValidated;
 }
-
-// TODO: Ajouter une fonction pour upgrade un utilisateur en producteur !
 
 module.exports = {
   isEmailAvailable,

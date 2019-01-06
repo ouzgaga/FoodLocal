@@ -1,4 +1,3 @@
-require('../models/producers.modelgql'); // FIXME: checker si vraiment utile....
 const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');

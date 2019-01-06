@@ -1705,7 +1705,6 @@ describe('Testing graphql request producers', () => {
         result = await graphql(schema, queryGetProducerById, null, context, variables);
         expect(result.data.producer).toBeNull();
 
-        // fixme: tester que toutes trace du producteur ait été effacées (point de vente, produits, id dans tableau des productType, ......)
         done();
       });
 

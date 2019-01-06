@@ -382,8 +382,6 @@ describe('tests producers services', () => {
       await Promise.all(promisesTestsProductsIds);
     });
 
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
-
     it('should fail adding a new producer with an already used email', async() => {
       const producerToAdd = {
         ...benoit,
@@ -968,7 +966,7 @@ describe('tests producers services', () => {
 
         // on vérifie que l'id du producteur ait bien été ajouté dans le tableau 'productersIds' du productType
         const filtredTab = await productType.producersIds.filter(elem => elem.toString() === addedProducerId);
-        filtredTab.length.should.be.equal(1); // FIXME: bug dans la 2ème itération...!
+        filtredTab.length.should.be.equal(1);
       }));
       await Promise.all(promisesTestsProductsIds);
     });

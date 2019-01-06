@@ -100,7 +100,6 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
 }
 
 async function updateProducerRating(producerId) {
-  // TODO: tester si ça fonctionne de lui passer un objectId !
   let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(producerId) } },
     { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },

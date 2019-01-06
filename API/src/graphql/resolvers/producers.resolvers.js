@@ -16,6 +16,8 @@ const producerResolvers = {
     },
 
     filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
+
+    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
   },
 
   Mutation: {
