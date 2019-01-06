@@ -34,10 +34,15 @@ const addressSchema = new mongoose.Schema(
       required: true
     },
     location: {
-      type: [mongoose.Schema.Types.Number],
-      minLength: 2,
-      maxLength: 2,
-      required: true
+      type: {
+        type: String,
+        enum: ['Point'],
+        required: true
+      },
+      coordinates: {
+        type: [Number],
+        required: true
+      }
     }
     /*
     longitude: {
@@ -56,7 +61,7 @@ const addressSchema = new mongoose.Schema(
   }, options
 );
 
-addressSchema.index({ location: 'geoHaystack', type: 1 }, { bucketSize: 0.5 });
+addressSchema.index({ location: '2dsphere' });
 
 /**
  * DaySchedule Schema

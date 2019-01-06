@@ -83,14 +83,6 @@ async function filterProducers(byProductTypeIds) {
   }
 }
 
-/**
- * Filtre tous les producteurs en fonction des productTypeId reçus.
- * Seul les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu sont retournés.
- * Si aucun producteur ne produit ce type de produit, alors tous les producteurs sont retournés.
- *
- * @param byProductTypeIds, tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
- * @returns {Promise<*>}
- */
 async function geoFilterProducers({ longitude, latitude, maxDistance }) {
   const salespoints = await salespointsServices.geoFilterSalespoints({ longitude, latitude, maxDistance });
 
@@ -250,11 +242,11 @@ function updateProducerRating(producerId, rating) {
   return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true });
 }
 
-async function validateAProducer(producerId, validationState) {
+async function validateAProducer(producerId, validationState, session) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     throw new Error('Received producer.id is invalid!');
   }
-  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true }); // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { session, new: true }); // retourne l'objet modifié
 }
 
 /**

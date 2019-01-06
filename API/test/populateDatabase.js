@@ -265,6 +265,7 @@ const populateDB = async() => {
       website: 'foodlocal.ch'
     }
   );
+
   // on valide ce producteur
   producer1 = await producersServices.validateAProducer(producer1.id, true);
   // on ajoute des produits au producteur
@@ -281,7 +282,10 @@ const populateDB = async() => {
       country: 'Suisse',
       // longitude: 6.6562137,
       // latitude: 46.7702474
-      location: [6.6562137, 46.7702474]
+      location: {
+        type: 'Point',
+        coordinates: [6.6562137, 46.7702474]
+      }
     },
     schedule: {
       monday: [
@@ -342,7 +346,10 @@ const populateDB = async() => {
       country: 'Suisse',
       // longitude: 6.6772137,
       // latitude: 46.7592474
-      location: [46.7592474, 6.6772137]
+      location: {
+        type: 'Point',
+        coordinates: [6.6772137, 46.7592474]
+      }
     },
     schedule: {
       monday: [
@@ -402,7 +409,10 @@ const populateDB = async() => {
       country: 'Suisse',
       // longitude: 6.6572137,
       // latitude: 46.7792474
-      location: [46.7792474, 6.6572137]
+      location: {
+        type: 'Point',
+        coordinates: [6.6572137, 46.7792474]
+      }
     },
     schedule: {
       monday: [

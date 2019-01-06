@@ -37,9 +37,17 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
-async function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
-  const res = await SalespointsModel.geoSearch({ }, { near: [longitude, latitude], maxDistance });
-  return res;
+function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
+  return SalespointsModel.aggregate([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [longitude, latitude] },
+        spherical: true,
+        distanceField: 'distance',
+        maxDistance
+      }
+    }
+  ]);
 }
 
 /**
