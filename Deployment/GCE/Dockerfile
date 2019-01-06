@@ -1,12 +1,13 @@
-FROM gce_foodlocal
+FROM google/cloud-sdk:alpine
 
 MAINTAINER James Smith <james.smith@heig-vd.ch>
 
-ADD kubectlCmd.sh ./
-ADD ../DB ./
-ADD ../Frontend ./
-ADD ../API ./
-ADD ../Ingress ./
-ADD ../cert-manager ./
+ARG GC_CLUSTER_ID
+ARG GC_ZONE
+ARG GC_PROJECT_ID
 
-CMD ["sh","kubectlCmd.sh"]
+ADD gc-key.json ./
+ADD kubectlCmd.sh ./
+ADD ./dataBase/dumpDBProd.agz ./
+
+ENTRYPOINT ["sh","kubectlCmd.sh"]
