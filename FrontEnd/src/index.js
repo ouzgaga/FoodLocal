@@ -31,15 +31,17 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <Router>
-    <MuiThemeProvider theme={Theme}>
-      <ApolloProvider client={client}>
+  <ApolloProvider client={client}>
+    <Router>
+      <MuiThemeProvider theme={Theme}>
+
         <AuthProvider>
           <App />
         </AuthProvider>
-      </ApolloProvider>
-    </MuiThemeProvider>
-  </Router>,
+
+      </MuiThemeProvider>
+    </Router>
+  </ApolloProvider>,
   document.getElementById('root')
 );
 

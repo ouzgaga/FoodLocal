@@ -71,8 +71,7 @@ class PageProducer extends React.Component {
 
     return (
       <div className={classes.root}>
-        <ProducerHeader
-        />
+        <ProducerHeader />
         <ProducerUserInteraction
           followersCount={100}
         />

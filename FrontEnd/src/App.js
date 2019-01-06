@@ -82,7 +82,7 @@ class App extends React.Component {
             <Route path="/" exact component={PageAcceuil} classes={classes} />
             <Route default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-                  <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
+            <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <Route path="/admin" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
             <Route path="/producer/:producerId" component={ProducerVue} />

@@ -12,7 +12,7 @@ import { withStyles } from '@material-ui/core';
 import compose from 'recompose/compose';
 
 import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
+import { withApollo, Mutation } from 'react-apollo';
 
 import StatusForm from './StatusForm';
 import GeneralsConditionForm from './GeneralsConditionForm';
@@ -69,9 +69,28 @@ const styles = theme => ({
 const steps = ['Informations', 'Status', 'Conditions générales'];
 const errorNoCG = 'Veuillez accepter les conditions générales.';
 
+// Query pour verifier si l'email est unique
 const queryCheckEmail = gql`
   query ($email: String!) {
     checkIfEmailIsAvailable(email:$email)
+  }
+  `;
+
+// Mutation pour ajouter un nouvel utilisateur
+const mutSingUpUser = gql`
+  mutation ($user: UserInputAdd!){
+    signUpAsUser(newUser:$user){
+      token
+    }
+  }
+  `;
+
+// Mutation pour ajouter un nouveau producteur
+const mutSingUpProducer = gql`
+  mutation ($producer: ProducerInputAdd!){
+    signUpAsProducer(newProducer:$producer){
+      token
+    }
   }
   `;
 
@@ -94,7 +113,6 @@ class InscriptionContainer extends React.Component {
     };
   }
 
-  
   getStepContent(step) {
     const { email, lastName, firstName, password, passwordConf, status, GC } = this.state;
 
@@ -121,7 +139,6 @@ class InscriptionContainer extends React.Component {
 
   queryEmailExist = (email) => {
     const { client } = this.props;
-    console.info(email);
     return client.query({ query: queryCheckEmail, variables: { email } }).then(
       (data) => {
         if (data) {
@@ -161,11 +178,9 @@ class InscriptionContainer extends React.Component {
       case 0:
 
         const emailIsAvailable = await this.queryEmailExist(email);
-
-        console.log(emailIsAvailable);
-
+        
         if (!emailIsAvailable) {
-          errors.push(`L'email : ${email} est déjà utilisée.`);
+          errors.push(`L'email : ${email} est déjà utilisé.`);
         }
 
         if (passwordConf !== password) {
@@ -192,6 +207,31 @@ class InscriptionContainer extends React.Component {
         activeStep: state.activeStep + 1,
       }));
     }
+  }
+
+  singUp = () => {
+    return(
+      <Mutation mutation={ADD_TODO}>
+        {(addTodo, { data }) => (
+          <div>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                addTodo({ variables: { type: input.value } });
+                input.value = "";
+              }}
+            >
+              <input
+                ref={node => {
+                  input = node;
+                }}
+              />
+              <button type="submit">Add Todo</button>
+            </form>
+          </div>
+        )}
+      </Mutation>
+    )
   }
 
 

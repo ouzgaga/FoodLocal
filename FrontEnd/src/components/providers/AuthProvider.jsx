@@ -2,12 +2,24 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
+
+
 const {
   Provider: AuthContextProvider,
   Consumer: AuthContext,
 } = React.createContext();
 
-class AuthProvider extends Component {  
+const mutLogin = gql`
+  mutation ($email: String!, $password: String!){
+    login(email:$email, password:$password){
+      token
+    }
+  }
+  `;
+
+class AuthProvider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -25,35 +37,52 @@ class AuthProvider extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const token = window.localStorage.getItem('token');
-    if(token){
+    if (token) {
       // Récupéréer client.query()
     }
   }
 
-  signIn = ({ userMail, password }) => {
-    //const { client } = this.props;
-    // TODO: requête user password
+  executeLogin = (email, password) => {
+    const { client } = this.props;
 
-    console.info({ userMail, password });
+    return client.mutate({ mutation: mutLogin, variables: { email, password } }).then(
+      (data) => {
+        console.info(data.data.login.token);
+        return data.login.token;
+      }
+    ).catch(error => {
+      console.log(error);
+      return null;
+    });
+  }
 
-    if (password === '1234') {
+  signIn = async ({ userMail, password }) => {
+    
+    const tmpToken = await this.executeLogin(userMail, password);
+
+    if (tmpToken === null) {
       this.setState({
         error: 'Email ou mot de passe invalide.',
       });
     } else {
+      const payload = tmpToken.substring(
+        tmpToken.indexOf('.') + 1,
+        tmpToken.lastIndexOf('.')
+      );
+  
+      const objJsonB64 = Buffer.from(payload).toString("base64");
+      console.info(objJsonB64);
 
-
-      const token = '1234567890';
       this.setState({
         userMail: userMail,
         userStatus: 'admin',
-        userToken: token,
-        error: ''
+        userToken: tmpToken,
+        error: '',
       });
 
-      window.localStorage.setItem('token', token);
+      window.localStorage.setItem('token', tmpToken);
     }
   }
 
@@ -84,4 +113,7 @@ AuthProvider.defaultProps = {
 };
 
 export { AuthContext };
-export default AuthProvider;
+export default withApollo(AuthProvider);
+
+
+

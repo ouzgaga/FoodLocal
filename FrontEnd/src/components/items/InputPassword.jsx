@@ -37,7 +37,7 @@ class InputPassword extends React.Component {
     const { classes, label, required, onChange, id, value } = this.props;
     const { showPassword } = this.state;
     return (
-      <React.Fragment> 
+      <React.Fragment>
         <FormControl margin="normal" required={required} fullWidth>
           <InputLabel htmlFor="password">{label}</InputLabel>
           <Input
