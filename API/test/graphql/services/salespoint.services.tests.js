@@ -96,12 +96,12 @@ const clearAndPopulateDB = async() => {
   // on ajoute 1 producteur contenant le salespoint 'salespointWithSchedule'
   benoit = (await producersServices.addProducer(benoit)).toObject();
   benoit = (await producersServices.addSalespointToProducer(benoit.id, salespointWithSchedule)).toObject();
-  salespointWithSchedule = (await salespointsServices.getSalespointById(benoit.salespointId));
+  salespointWithSchedule = (await salespointsServices.getSalespointById(benoit.salespointId)).toObject();
 
   // on ajoute 1 producteur contenant le salespoint 'salespointWithoutSchedule''
   antoine = (await producersServices.addProducer(antoine)).toObject();
   antoine = (await producersServices.addSalespointToProducer(antoine.id, salespointWithoutSchedule)).toObject();
-  salespointWithoutSchedule = (await salespointsServices.getSalespointById(antoine.salespointId));
+  salespointWithoutSchedule = (await salespointsServices.getSalespointById(antoine.salespointId)).toObject();
 
   tabSalespoints = [salespointWithSchedule, salespointWithoutSchedule];
 };
@@ -132,8 +132,8 @@ describe('tests salespoints services', () => {
         salespoint.address.postalCode.should.be.equal(tabSalespoints[index].address.postalCode);
         salespoint.address.state.should.be.equal(tabSalespoints[index].address.state);
         salespoint.address.country.should.be.equal(tabSalespoints[index].address.country);
-        salespoint.address.longitude.should.be.equal(tabSalespoints[index].address.longitude);
-        salespoint.address.latitude.should.be.equal(tabSalespoints[index].address.latitude);
+        salespoint.address.location.coordinates[0].should.be.equal(tabSalespoints[index].address.location.coordinates[0]);
+        salespoint.address.location.coordinates[1].should.be.equal(tabSalespoints[index].address.location.coordinates[1]);
 
         if (tabSalespoints[index].schedule) {
           salespoint.schedule.should.be.not.null;
@@ -182,6 +182,19 @@ describe('tests salespoints services', () => {
   });
 
   describe('tests getSalespointById', () => {
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+
+      tabSalespoints[0]._id = undefined;
+      tabSalespoints[0].address.location = undefined;
+      tabSalespoints[0].address.longitude = 1.1234567;
+      tabSalespoints[0].address.latitude = 1.123456789;
+      tabSalespoints[1]._id = undefined;
+      tabSalespoints[1].address.location = undefined;
+      tabSalespoints[1].address.longitude = 1.1234567;
+      tabSalespoints[1].address.latitude = 1.123456789;
+    });
+
     it('should get one salespoint', async() => {
       const salespointGotInDB = (await salespointsServices.getSalespointById(salespointWithSchedule.id)).toObject();
       salespointGotInDB.should.be.not.null;
@@ -197,8 +210,8 @@ describe('tests salespoints services', () => {
       salespointGotInDB.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
       salespointGotInDB.address.state.should.be.equal(salespointWithSchedule.address.state);
       salespointGotInDB.address.country.should.be.equal(salespointWithSchedule.address.country);
-      salespointGotInDB.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
-      salespointGotInDB.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
+      salespointGotInDB.address.location.coordinates[0].should.be.equal(salespointWithSchedule.address.longitude);
+      salespointGotInDB.address.location.coordinates[1].should.be.equal(salespointWithSchedule.address.latitude);
 
       if (salespointWithSchedule.schedule) {
         salespointGotInDB.schedule.should.be.not.null;
@@ -266,6 +279,19 @@ describe('tests salespoints services', () => {
   });
 
   describe('tests addSalespoint', () => {
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+
+      tabSalespoints[0]._id = undefined;
+      tabSalespoints[0].address.location = undefined;
+      tabSalespoints[0].address.longitude = 1.1234567;
+      tabSalespoints[0].address.latitude = 1.123456789;
+      tabSalespoints[1]._id = undefined;
+      tabSalespoints[1].address.location = undefined;
+      tabSalespoints[1].address.longitude = 1.1234567;
+      tabSalespoints[1].address.latitude = 1.123456789;
+    });
+
     it('should add a new salespoint with a schedule', async() => {
       const addedSalespoint = (await salespointsServices.addSalespoint(salespointWithSchedule)).toObject();
       addedSalespoint.should.be.not.null;
@@ -280,8 +306,8 @@ describe('tests salespoints services', () => {
       addedSalespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
       addedSalespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
       addedSalespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
-      addedSalespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
-      addedSalespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
+      addedSalespoint.address.location.coordinates[0].should.be.equal(salespointWithSchedule.address.longitude);
+      addedSalespoint.address.location.coordinates[1].should.be.equal(salespointWithSchedule.address.latitude);
 
       if (salespointWithSchedule.schedule) {
         addedSalespoint.schedule.should.be.not.null;
@@ -340,8 +366,8 @@ describe('tests salespoints services', () => {
       addedSalespoint.address.postalCode.should.be.equal(salespointWithoutSchedule.address.postalCode);
       addedSalespoint.address.state.should.be.equal(salespointWithoutSchedule.address.state);
       addedSalespoint.address.country.should.be.equal(salespointWithoutSchedule.address.country);
-      addedSalespoint.address.longitude.should.be.equal(salespointWithoutSchedule.address.longitude);
-      addedSalespoint.address.latitude.should.be.equal(salespointWithoutSchedule.address.latitude);
+      addedSalespoint.address.location.coordinates[0].should.be.equal(salespointWithoutSchedule.address.longitude);
+      addedSalespoint.address.location.coordinates[1].should.be.equal(salespointWithoutSchedule.address.latitude);
 
       expect(addedSalespoint.schedule).to.be.null;
     });
@@ -357,7 +383,18 @@ describe('tests salespoints services', () => {
   });
 
   describe('tests updateSalespoint', () => {
-    beforeEach(() => clearAndPopulateDB());
+    beforeEach(async() => {
+      await clearAndPopulateDB();
+
+      tabSalespoints[0]._id = undefined;
+      tabSalespoints[0].address.location = undefined;
+      tabSalespoints[0].address.longitude = 1.1234567;
+      tabSalespoints[0].address.latitude = 1.123456789;
+      tabSalespoints[1]._id = undefined;
+      tabSalespoints[1].address.location = undefined;
+      tabSalespoints[1].address.longitude = 1.1234567;
+      tabSalespoints[1].address.latitude = 1.123456789;
+    });
 
     it('should update a salespoint', async() => {
       const updatedProducerWithSalespoint = await salespointsServices.updateSalespoint(antoine.id, salespointWithSchedule);
@@ -376,8 +413,8 @@ describe('tests salespoints services', () => {
       salespoint.address.postalCode.should.be.equal(salespointWithSchedule.address.postalCode);
       salespoint.address.state.should.be.equal(salespointWithSchedule.address.state);
       salespoint.address.country.should.be.equal(salespointWithSchedule.address.country);
-      salespoint.address.longitude.should.be.equal(salespointWithSchedule.address.longitude);
-      salespoint.address.latitude.should.be.equal(salespointWithSchedule.address.latitude);
+      salespoint.address.location.coordinates[0].should.be.equal(salespointWithSchedule.address.longitude);
+      salespoint.address.location.coordinates[1].should.be.equal(salespointWithSchedule.address.latitude);
 
       if (salespointWithSchedule.schedule) {
         salespoint.schedule.should.be.not.null;

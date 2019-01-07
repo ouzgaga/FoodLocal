@@ -280,12 +280,8 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      // longitude: 6.6562137,
-      // latitude: 46.7702474
-      location: {
-        type: 'Point',
-        coordinates: [6.6562137, 46.7702474]
-      }
+      longitude: 6.6562137,
+      latitude: 46.7702474
     },
     schedule: {
       monday: [
@@ -344,12 +340,8 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      // longitude: 6.6772137,
-      // latitude: 46.7592474
-      location: {
-        type: 'Point',
-        coordinates: [6.6772137, 46.7592474]
-      }
+      longitude: 6.6772137,
+      latitude: 46.7592474
     },
     schedule: {
       monday: [
@@ -407,12 +399,8 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      // longitude: 6.6572137,
-      // latitude: 46.7792474
-      location: {
-        type: 'Point',
-        coordinates: [6.6572137, 46.7792474]
-      }
+      longitude: 6.6572137,
+      latitude: 46.7792474
     },
     schedule: {
       monday: [

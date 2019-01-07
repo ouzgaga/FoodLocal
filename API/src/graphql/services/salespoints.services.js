@@ -57,7 +57,28 @@ function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
  * @param salespoint, Les informations du point de vente à ajouter.
  */
 function addSalespoint(salespoint) {
-  return new SalespointsModel(salespoint).save();
+  const salespointToAdd = {
+    ...salespoint
+  };
+
+  if (salespoint.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = salespoint.address;
+
+    salespointToAdd.address = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+  }
+
+  return new SalespointsModel(salespointToAdd).save();
 }
 
 /**
@@ -91,7 +112,20 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
     updatedSalespoint.name = name;
   }
   if (address !== undefined) {
-    updatedSalespoint.address = address;
+    const { number, street, city, postalCode, state, country, longitude, latitude } = address;
+    const addressToUpdate = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+    updatedSalespoint.address = addressToUpdate;
   }
   if (schedule !== undefined) {
     updatedSalespoint.schedule = schedule;
