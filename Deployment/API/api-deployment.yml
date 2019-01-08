@@ -28,8 +28,10 @@ spec:
             - name: MONGODB_PORT_PROD
               value: "27017"
             - name: MONGODB_HOST_PROD
-              value: "mongo"
+              value: "foodlocal-db-mongodb-replicaset"
             - name: MONGODB_DBNAME_PROD
               value: "api_foodlocal_production"
             - name: JWT_SECRET
               value: "pr0PGBl7WvdQ3zHNSxoiVTCjqBqv3v"
+		    - name: REPLICA_SET_NAME_PROD
+		      value: "rs0"

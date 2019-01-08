@@ -10,7 +10,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: `mongodb://${process.env.MONGODB_HOST_DEV}:${process.env.MONGODB_PORT_DEV}/${process.env.MONGODB_DBNAME_DEV}`,
+    db: `mongodb://${process.env.MONGODB_HOST_DEV}:${process.env.MONGODB_PORT_DEV}/${process.env.MONGODB_DBNAME_DEV}?replicaSet=${process.env.REPLICA_SET_NAME_DEV}`,
     jwtSecret: process.env.JWT_SECRET
   },
 
@@ -20,7 +20,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: `mongodb://${process.env.MONGODB_HOST_TEST}:${process.env.MONGODB_PORT_TEST}/${process.env.MONGODB_DBNAME_TEST}`,
+    db: `mongodb://${process.env.MONGODB_HOST_TEST}:${process.env.MONGODB_PORT_TEST}/${process.env.MONGODB_DBNAME_TEST}?replicaSet=${process.env.REPLICA_SET_NAME_TEST}`,
     jwtSecret: process.env.JWT_SECRET
   },
 
@@ -30,7 +30,7 @@ const config = {
       name: 'API FoodLocal'
     },
     port: process.env.PORT || 3000,
-    db: `mongodb://${process.env.MONGODB_HOST_PROD}:${process.env.MONGODB_PORT_PROD}/${process.env.MONGODB_DBNAME_PROD}`,
+    db: `mongodb://${process.env.MONGODB_HOST_PROD}:${process.env.MONGODB_PORT_PROD}/${process.env.MONGODB_DBNAME_PROD}?replicaSet=${process.env.REPLICA_SET_NAME_PROD}`,
     jwtSecret: process.env.JWT_SECRET
   }
 };
