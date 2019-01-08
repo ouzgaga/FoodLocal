@@ -209,7 +209,15 @@ configmap:
 #     fork: false
 #     pidFilePath: /opt/bitnami/mongodb/tmp/mongodb.pid
 #  # set parameter options
-#  setParameter:
+#  s"errors": [
+    #    {
+    #      "message": "Topology was destroyed",
+    #      "locations": [
+    #        {
+    #          "line": 2,
+    #          "column": 3
+    #        }
+    #      ],etParameter:
 #     enableLocalhostAuthBypass: true
 #  # security options
 #  security:
