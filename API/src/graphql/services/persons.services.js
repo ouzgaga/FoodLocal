@@ -1,5 +1,7 @@
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const config = require('../../config/config');
 
 async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
@@ -41,6 +43,15 @@ async function getPersonByLogin(email, password) {
   }
   // si le mdp est correct, on retourne la personne
   return person;
+}
+
+async function getPersonByToken(token) {
+  const tokenContent = await jwt.verify(token, config.jwtSecret);
+
+  if (tokenContent == null || tokenContent.id == null) {
+    return null;
+  }
+  return getPersonById(tokenContent.id);
 }
 
 function getAllPersonsInReceivedIdList(listOfIdToGet) {
@@ -127,6 +138,7 @@ module.exports = {
   checkIfPersonIdExistInDB,
   getPersonById,
   getPersonByLogin,
+  getPersonByToken,
   getAllPersonsInReceivedIdList,
   countNbPersonsInDB,
   addProducerToPersonsFollowingList,

@@ -56,6 +56,7 @@ module.exports = {
   login,
   signUpAsUser,
   signUpAsProducer,
+  createConnectionToken,
   upgradeUserToProducer
 };
 const PersonsModel = require('../models/persons.modelgql');

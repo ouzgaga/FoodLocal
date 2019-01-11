@@ -10,7 +10,9 @@ const PersonType = {
 
 const personsResolvers = {
   Query: {
-    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email)
+    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email),
+
+    me: (parent, args, context) => personsServices.getPersonByToken(args.token)
   },
 
   Mutation: {

@@ -1,4 +1,5 @@
 type Mutation {
+    # Permet de valider l'email d'un utilisateur à l'aide
     validateAnEmailToken(emailValidationToken: String!): Boolean!
 
     askNewEmailToken(email:String!, password: String!): Token!
@@ -6,13 +7,16 @@ type Mutation {
     # Permet à un utilisateur ou un producteur enregistré de se connecter à son compte.
     login(email: String!, password:String!): Token!
 
+    # Permet de renouveller le token de connection.
+    renewToken: Token!
+
     # Permet à un nouvel utilisateur de s'inscrire et se créer un compte.
     signUpAsUser(newUser: UserInputAdd!): Token!
 
     # Permet à un nouveau producteur de s'inscrire et se créer un compte.
     signUpAsProducer(newProducer: ProducerInputAdd!): Token!
 
-    # Permet de transformer l'utiisateur reçu en producteur en conservant ses inforamtions. Retourne un objet contenant le nouveau producteur ainsi que son nouveau token de connexion.
+    # Permet de transformer l'utiisateur reçu en producteur en conservant ses informations. Retourne un objet contenant le nouveau producteur ainsi que son nouveau token de connexion.
     upgradeUserToProducer(idUserToUpgrade: ID!, password: String!): ProducerWithToken!
 }
 
@@ -20,7 +24,7 @@ type Token {
     token: String!
 }
 
-type ProducerWithToken{
+type ProducerWithToken {
     producer: Producer!
     newLoginToken: Token!
 }

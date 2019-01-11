@@ -36,6 +36,7 @@ Reste à faire:
   - User:
     - il faut delete son id de tous les tableaux followers des producteurs de la DB
     - delete toutes ses notifications
+  - Conseil de Paul -> ne jamais rien supprimer -> mettre un paramètre disable à true et filtrer les données pour ignorer ces éléments.
 
 - Finir les tests d'intégration :
 
@@ -47,3 +48,7 @@ Reste à faire:
 - Finir les tests unitaires
 
 - Refaire toute la java doc!
+
+- Filtrer les producteurs qui n'ont pas été validés par un admin!
+
+- Ajouter les subscription pour les notifications
