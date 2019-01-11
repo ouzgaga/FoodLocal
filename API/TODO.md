@@ -52,3 +52,5 @@ Reste à faire:
 - Filtrer les producteurs qui n'ont pas été validés par un admin!
 
 - Ajouter les subscription pour les notifications
+
+- Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!

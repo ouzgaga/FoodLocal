@@ -1,13 +1,13 @@
 type Query {
-	# Retourne toutes les news du producteur correspondant à l'id 'producerId'
+	# Retourne tous les posts du producteur correspondant à l'id 'producerId'
 	postsOfProducer(producerId: ID!): [Post!]!
 }
 
 type Mutation {
-	# Ajoute une nouvelle news à propos du producteur 'producerId' contenu dans le post reçu en paramètre
+	# Ajoute un nouveau post à propos du producteur 'producerId' contenu dans le post reçu en paramètre
 	addPostOfProducer(post: PostInputAdd!): Post!
 
-	# Supprime la news correspondant à l'id 'newsId' créée par le producteur 'producerId'
+	# Supprime le post correspondant à l'id 'newsId' créée par le producteur 'producerId'
 	deletePostOfProducer(producerId: ID!, postId: ID!): Post
 }
 
@@ -15,20 +15,20 @@ scalar Date
 
 type Post {
 	id: ID!
-	# L'id du producteur qui a créé la news
+	# L'id du producteur qui a créé le post
 	producer: Producer!
-	# Le texte de la news
+	# Le texte du post
 	text: String!
-	# La date de publication de la news
+	# La date de publication du post
 	publicationDate: Date!
-	# La localisation du producteur lorsqu'il a créé la news. N'existe que si le producteur a précisé sa position lors de la création de la news.
+	# La localisation du producteur lorsqu'il a créé le post. N'existe que si le producteur a précisé sa position lors de la création du post.
 	location: Location
 }
 
 input PostInputAdd {
-	# L'id du producteur qui a créé la news
+	# L'id du producteur qui a créé le post
 	producerId: ID!
-	# Le texte de la news
+	# Le texte du post
 	text: String!
 	# La localisation du producteur
 	location: LocationInputAdd

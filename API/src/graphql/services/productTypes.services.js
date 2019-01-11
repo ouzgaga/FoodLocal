@@ -46,9 +46,8 @@ function getProductTypeByCategory(productTypeCategoryId) {
   return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
 }
 
-async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
-
-  const res = await ProducerModel.aggregate(
+function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
+  return ProducerModel.aggregate(
     [
       { $match: { kind: 'producers' } },
       {
@@ -77,26 +76,6 @@ async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(prod
       }
     ]
   );
-
-  console.log(res);
-  /*
-  // TODO: PAUL: Bien bien moche mais fonctionnel... À améliorer en utilisant un aggregate ou un mapReduce...?
-  const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
-  // on parcours le taleau de producerIds du premier productType
-  const promises = await producersIdsAsString.map(async(id) => {
-    const productTypeContainsProducer = await productTypes.map(async(elem) => {
-      const prodIds = await elem.producersIds.map(e => e.toString());
-      return prodIds.includes(id);
-    });
-
-    if (productTypeContainsProducer.reduce((a, b) => a && b, true)) {
-      await producersIds.push(id);
-    }
-  });
-
-  Promise.all(promises);
-*/
-  return res;
 }
 
 /**

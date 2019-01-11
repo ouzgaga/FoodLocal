@@ -7,8 +7,8 @@
 	"scripts": {
 		"start": "node ./src/server.js",
 		"dev": "nodemon ./src/server.js --watch src",
-		"test": "NODE_ENV=test mocha --recursive test/graphql/services --exit",
-		"test-jest": "NODE_ENV=test jest --config=jest.config.js --forceExit --runInBand"
+		"test": "NODE_ENV=testMocha mocha --recursive test/graphql/services --exit",
+		"test-jest": "NODE_ENV=testJest jest --config=jest.config.js --forceExit --runInBand"
 	},
 	"dependencies": {
 		"@sendgrid/mail": "^6.3.1",
