@@ -25,8 +25,6 @@ const personsResolvers = {
   },
 
   Person: {
-
-    // FIXME: PAUL: ya moyen de renommer ce resolveType en 'kind' ou qqch de plus parlant?
     __resolveType(obj) {
       switch (obj.kind) {
         case PersonType.USER:

@@ -23,7 +23,7 @@ async function addNotification(type, producerId) {
   const notificationToAdd = {
     type,
     producerId: producer.id,
-    date: Date.now()
+    // date: Date.now()
   };
   // on enregistre le nouveau post dans la base de données
   const notification = await new NotificationsModel(notificationToAdd).save();

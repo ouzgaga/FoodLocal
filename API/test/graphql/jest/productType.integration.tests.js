@@ -17,9 +17,9 @@ const clearAndPopulateDB = async() => {
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabProductTypes = getTabProductTypes();
-  tabProductTypeCategories = getTabProductTypeCategories();
+  tabProducers = await getTabProducers();
+  tabProductTypes = await getTabProductTypes();
+  tabProductTypeCategories = await getTabProductTypeCategories();
 };
 
 describe('Testing graphql request productType', () => {

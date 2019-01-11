@@ -38,7 +38,6 @@ const postsSchema = new mongoose.Schema(
     publicationDate: {
       type: mongoose.Schema.Types.Date,
       // FIXME: PAUL: pourquoi le default n'est jamais appelé?!
-      // FIXME: Paul: comment changer la timezone de l'heure enregistrée?
       default: mongoose.Schema.Types.Date.now
     },
     location: {

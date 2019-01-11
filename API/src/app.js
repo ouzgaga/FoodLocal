@@ -9,7 +9,7 @@ const config = require('./config/config');
 
 mongoose.Promise = require('bluebird');
 
-mongoose.connect(config.db, { useNewUrlParser: true })
+mongoose.connect(config.db, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
   .then(() => console.log(`connecté à la base de donnée de ${process.env.NODE_ENV} --> ${config.db}`))
   .catch(error => console.log(`la connexion à la database ${config.db} a échoué\n${error.message}`));
 
@@ -41,8 +41,5 @@ const server = new ApolloServer(
   }
 );
 server.applyMiddleware({ app });
-
-// close connection
-// mongoose.connection.close(); // FIXME: faut-il fermer la connexion...?
 
 module.exports = require('./config/express')(app, config);

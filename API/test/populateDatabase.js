@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const clearDB = require('./graphql/clearDB');
 const personRatingProducersServices = require('../src/graphql/services/personRatingProducers.services');
 const usersServices = require('../src/graphql/services/users.services');
@@ -268,6 +269,7 @@ const populateDB = async() => {
 
   // on valide ce producteur
   producer1 = await producersServices.validateAProducer(producer1.id, true);
+
   // on ajoute des produits au producteur
   const productsProducer1 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, biere, jusOrange, jusPomme, polenta], producer1.id);
   // on ajoute un point de vente au producteur
@@ -493,6 +495,7 @@ const populateDB = async() => {
 
   // ------------------------------------------------------------------------- tableaux ------------------------------------------------------------------------
   // on regroupe chaque élément dans des tableaux pour les tests d'intégration
+  /*
   tabProductTypes = await productTypesServices.getProductTypes();
 
   tabProductTypeCategories = await productTypeCategoriesServices.getProductTypeCategories();
@@ -501,6 +504,7 @@ const populateDB = async() => {
   tabSalespoints = await salespointsServices.getSalespoints();
 
   tabUsers = await usersServices.getUsers();
+  */
 
   tabRatings = [rating1p1, rating2p1, rating3p1, rating1p2, rating2p2, rating1p3, rating2p3, rating3p3, rating4p3];
 };
@@ -509,10 +513,10 @@ it('should populate the database!', populateDB);
 
 module.exports = {
   populateDB,
-  getTabProductTypeCategories: () => tabProductTypeCategories,
-  getTabProductTypes: () => tabProductTypes,
-  getTabProducers: () => tabProducers,
-  getTabSalespoints: () => tabSalespoints,
-  getTabUsers: () => tabUsers,
+  getTabProductTypeCategories: () => productTypeCategoriesServices.getProductTypeCategories(),
+  getTabProductTypes: () => productTypesServices.getProductTypes(),
+  getTabProducers: () => producersServices.getProducers(),
+  getTabSalespoints: () => salespointsServices.getSalespoints(),
+  getTabUsers: () => usersServices.getUsers(),
   getTabRatings: () => tabRatings
 };

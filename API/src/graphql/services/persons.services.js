@@ -89,7 +89,7 @@ async function changePassword(newPassword, oldPassword, personId) {
   checkIfPasswordIsValid(newPassword);
 
   // si on arrive ici, alors le nouveau mot de passe est un mot de passe valide.
-  person.password = await bcrypt.hash(newPassword, 10); // fixme: Paul: 10 saltRound, c'est suffisant ?
+  person.password = await bcrypt.hash(newPassword, 10);
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
   return updatedPerson != null;
 }

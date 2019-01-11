@@ -16,7 +16,7 @@ const clearAndPopulateDB = async() => {
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   await populateDB();
 
-  tabUsers = getTabUsers();
+  tabUsers = await getTabUsers();
 };
 
 describe('Testing graphql resquest user', () => {
