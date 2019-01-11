@@ -9,10 +9,13 @@ metadata:
   kubernetes.io/tls-acme: "true"
   ingress.kubernetes.io/force-ssl-redirect: "true"
   certmanager.k8s.io/cluster-issuer: letsencrypt
+  ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   tls:
   - hosts:
+    - www.foodlocal.ch
     - foodlocal.ch
+    - www.api.foodlocal.ch
     - api.foodlocal.ch
     secretName: foodlocal-crt
   rules:
@@ -22,7 +25,19 @@ spec:
         - backend:
             serviceName: frontend-service
             servicePort: 80
+  - host: www.foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: frontend-service
+            servicePort: 80
   - host: api.foodlocal.ch
+    http:
+      paths:
+        - backend:
+            serviceName: api-service
+            servicePort: 4040
+  - host: www.api.foodlocal.ch
     http:
       paths:
         - backend:
