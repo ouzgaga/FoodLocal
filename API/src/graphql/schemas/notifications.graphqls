@@ -1,6 +1,6 @@
 type Query {
 	# Retourne toutes les notifications de la personne correspondante à l'id 'personId'
-	notificationsOfPerson(personId: ID!): [PersonNotification!]!
+	notificationsOfPerson(personId: ID!): PersonNotificationConnection! @connection
 }
 
 type Mutation {
@@ -40,3 +40,13 @@ type Notification {
 	producer: Producer!
 }
 
+type PersonNotificationConnection {
+	pageInfo: PageInfo!
+	edges: [PersonNotificationEdge!]!
+	totalCount: Int!
+}
+
+type PersonNotificationEdge {
+	node: PersonNotification!
+	cursor: String!
+}

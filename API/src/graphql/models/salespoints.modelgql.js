@@ -147,4 +147,7 @@ const salespointSchema = new mongoose.Schema(
  * @typedef salespoints
  */
 
-module.exports = mongoose.model('salespoints', salespointSchema);
+module.exports = {
+  SalespointsModel: mongoose.model('salespoints', salespointSchema),
+  addressSchema
+};

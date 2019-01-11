@@ -1,5 +1,5 @@
 type Query {
-	users: [User!]!
+	users: UserConnection! @connection
 	user(userId: ID!) : User
 }
 
@@ -43,4 +43,15 @@ input UserInputUpdate {
 	# followingProducersIds:[ID!]  # pas obligatoire si vide
 	# emailValidated: Boolean!
 	# isAdmin: Boolean! # ne peut pas être modifié par le client
+}
+
+type UserConnection {
+	pageInfo: PageInfo!
+	edges: [UserEdge!]!
+	totalCount: Int!
+}
+
+type UserEdge {
+	node: User!
+	cursor: String!
 }

@@ -80,6 +80,14 @@ const productResolvers = {
   ProductType: {
     category: (parent, args, context) => productTypeCategoriesServices.getProductTypeCategoryById(parent.categoryId),
     producers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.producersIds)
+  },
+
+  ProductTypeConnection: {
+    totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB()
+  },
+
+  ProductTypeCategoryConnection: {
+    totalCount: (parent, args, context) => productTypeCategoriesServices.countNbProductTypeCategoriesInDB()
   }
 };
 module.exports = productResolvers;

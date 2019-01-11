@@ -41,11 +41,7 @@ const producerResolvers = {
   },
 
   Producer: {
-    followingProducers: async(parent, args, context) => {
-      const producers = await producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds);
-      const res = connectionFromArray(producers, args);
-      return res;
-    },
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 

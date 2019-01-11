@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const SalespointsModel = require('./salespoints.modelgql');
+const { SalespointsModel } = require('./salespoints.modelgql');
 
 /**
  * Person Schema

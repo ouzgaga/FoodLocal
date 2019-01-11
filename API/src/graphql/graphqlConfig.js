@@ -13,6 +13,7 @@ const Posts = require('./resolvers/posts.resolvers');
 const Date = require('./resolvers/date.resolvers');
 const Notifications = require('./resolvers/notifications.resolvers');
 
+const connectionDirective = require('./schemaDirectives/connectionDirective');
 
 const resolvers = merge(
   Person,
@@ -32,5 +33,6 @@ const schema = mergeTypes(typesArray, { all: true });
 
 module.exports = {
   resolvers,
-  schema
+  schema,
+  connectionDirective
 };

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const SalespointsModel = require('../models/salespoints.modelgql');
+const { SalespointsModel } = require('../models/salespoints.modelgql');
 
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
@@ -50,6 +50,10 @@ function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
   ]);
 }
 
+function countNbSalespointInDB() {
+  return SalespointsModel.countDocuments();
+}
+
 /**
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
@@ -61,8 +65,8 @@ function addSalespoint(salespoint) {
     ...salespoint
   };
 
-  if (salespoint.address != null) {
-    const { number, street, city, postalCode, state, country, longitude, latitude } = salespoint.address;
+  if (salespointToAdd.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = salespointToAdd.address;
 
     salespointToAdd.address = {
       number,
@@ -113,7 +117,7 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
   }
   if (address !== undefined) {
     const { number, street, city, postalCode, state, country, longitude, latitude } = address;
-    const addressToUpdate = {
+    updatedSalespoint.address = {
       number,
       street,
       city,
@@ -125,7 +129,6 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
         coordinates: [longitude, latitude]
       }
     };
-    updatedSalespoint.address = addressToUpdate;
   }
   if (schedule !== undefined) {
     updatedSalespoint.schedule = schedule;
@@ -151,6 +154,7 @@ async function deleteSalespoint(id) {
 module.exports = {
   getSalespoints,
   geoFilterSalespoints,
+  countNbSalespointInDB,
   addSalespoint,
   getSalespointById,
   updateSalespoint,
