@@ -17,6 +17,12 @@ module.exports = (app, config) => {
   app.use(compress());
   app.use(methodOverride());
 
+  app.use('/', (req, res, next) => {
+    res.status(httpStatus.MOVED_PERMANENTLY);
+    res.location(`${req.protocol}://${req.get('host')}${req.originalUrl}graphql`);
+    res.send();
+  });
+
   app.use((req, res, next) => {
     const err = new Error('Not Found');
     err.status = httpStatus.NOT_FOUND;
