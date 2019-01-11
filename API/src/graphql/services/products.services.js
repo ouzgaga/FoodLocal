@@ -48,6 +48,10 @@ function getProductById(id) {
   return ProductsModel.findById(id);
 }
 
+function countNbProductsOfProducer(producerId) {
+  return ProductsModel.countDocuments(producerId);
+}
+
 /**
  * Ajoute un nouveau produit dans la base de données.
  * Attention, doublons autorisés!
@@ -124,6 +128,7 @@ function deleteProduct(id) {
 module.exports = {
   getProducts,
   getAllProductsInReceivedIdList,
+  countNbProductsOfProducer,
   addAllProductsInArray,
   addProduct,
   getProductById,

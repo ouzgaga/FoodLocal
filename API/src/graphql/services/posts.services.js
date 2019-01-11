@@ -18,6 +18,10 @@ function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
     .limit(+limit);
 }
 
+function countNbPostsOfProducerInDB(producerId) {
+  return PostsModel.countDocuments(producerId);
+}
+
 async function addPostOfProducer(post) {
   post.publicationDate = Date.now();
 
@@ -39,6 +43,7 @@ function deletePostOfProducer(id) {
 
 module.exports = {
   getAllPostsOfProducer,
+  countNbPostsOfProducerInDB,
   addPostOfProducer,
   deletePostOfProducer
 };

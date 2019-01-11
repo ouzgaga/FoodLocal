@@ -2,7 +2,6 @@ const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const producersServices = require('../../../src/graphql/services/producers.services');
-const clearDB = require('../clearDB');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

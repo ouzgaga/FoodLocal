@@ -1,7 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -10,9 +9,6 @@ let tabProducers;
 let tabProductTypes;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
-  await clearDB();
-
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
@@ -27,7 +23,6 @@ describe('Testing graphql request products', () => {
     // ----------------------products()-------------------------------------- //
     describe('Testing products()', () => {
       it('should get all products', async(done) => {
-        console.log('1111111');
         const { query } = {
           query: `query {
                     products {
@@ -51,7 +46,6 @@ describe('Testing graphql request products', () => {
         const result = await graphql(schema, query, null, null, null);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
-        console.log('22222222222');
         done();
       });
     });
@@ -80,13 +74,11 @@ describe('Testing graphql request products', () => {
       };
 
       it('should get a product by id', async(done) => {
-        console.log('333333333333');
         const variables = { productId: tabProducers[2].productsIds[0].toString() };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         expect(result.data.product).not.toBeNull();
         expect(result).toMatchSnapshot();
-        console.log('44444444444');
         done();
       });
 

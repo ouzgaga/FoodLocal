@@ -59,6 +59,10 @@ function getAllProducerWaitingForValidation() {
   return ProducersModel.find({ isValidated: false });
 }
 
+function countProducersIndBD() {
+  return ProducersModel.countDocuments();
+}
+
 /**
  * Filtre tous les producteurs en fonction des productTypeId reçus.
  * Seul les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu sont retournés.
@@ -325,6 +329,7 @@ module.exports = {
   getProducerById,
   getAllProducerWaitingForValidation,
   getAllProducersInReceivedIdList,
+  countProducersIndBD,
   filterProducers,
   geoFilterProducers,
   addProducer,

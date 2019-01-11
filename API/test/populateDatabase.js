@@ -271,7 +271,14 @@ const populateDB = async() => {
   producer1 = await producersServices.validateAProducer(producer1.id, true);
 
   // on ajoute des produits au producteur
-  const productsProducer1 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, biere, jusOrange, jusPomme, polenta], producer1.id);
+  await productsServices.addProduct(tomme, producer1.id);
+  await productsServices.addProduct(lait, producer1.id);
+  await productsServices.addProduct(spaghetti, producer1.id);
+  await productsServices.addProduct(biere, producer1.id);
+  await productsServices.addProduct(jusOrange, producer1.id);
+  await productsServices.addProduct(jusPomme, producer1.id);
+  await productsServices.addProduct(polenta, producer1.id);
+
   // on ajoute un point de vente au producteur
   producer1 = await producersServices.addSalespointToProducer(producer1.id, {
     name: 'Chez moi',
@@ -331,7 +338,11 @@ const populateDB = async() => {
   // on valide ce producteur
   producer2 = await producersServices.validateAProducer(producer2.id, true);
   // on ajoute des produits au producteur
-  const productsProducer2 = await productsServices.addAllProductsInArray([tomme, lait, spaghetti, polenta], producer2.id);
+  await productsServices.addProduct(tomme, producer2.id);
+  await productsServices.addProduct(lait, producer2.id);
+  await productsServices.addProduct(spaghetti, producer2.id);
+  await productsServices.addProduct(polenta, producer2.id);
+
   // on ajoute un point de vente au producteur
   producer2 = await producersServices.addSalespointToProducer(producer2.id, {
     name: 'Chez moi',
@@ -389,7 +400,8 @@ const populateDB = async() => {
     }
   );
   // on ajoute des produits au producteur
-  const productsProducer3 = await productsServices.addAllProductsInArray([tomme, jusPomme], producer3.id);
+  await productsServices.addProduct(tomme, producer3.id);
+  await productsServices.addProduct(jusPomme, producer3.id);
 
   // on ajoute un point de vente au producteur
   producer3 = await producersServices.addSalespointToProducer(producer3.id, {

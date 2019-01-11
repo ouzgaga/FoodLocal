@@ -42,7 +42,7 @@ type Producer implements Person {
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# Tableau contenant tous les producteur que la personne suit.
-	followingProducers: [Producer!]!
+	followingProducers(after: String, before: String, first: Int, last: Int): ProducerConnection!
 	# Booléen valant true si l'email a été validé par le membre, false sinon.
 	emailValidated: Boolean!
 	isAdmin: Boolean!
@@ -57,6 +57,32 @@ type Producer implements Person {
 	products: [Product!]!
 	# Note moyenne attribuée au producteur par les autres membres du site.
 	rating: ProducerRating
+}
+
+type ProducerConnection {
+	pageInfo: PageInfo!
+	edges: [ProducerEdge!]!
+	totalCount: Int!
+}
+
+type ProducerEdge {
+	node: Producer!
+	cursor: String!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+	# When paginating forwards, are there more items?
+	hasNextPage: Boolean
+
+	# When paginating backwards, are there more items?
+	hasPreviousPage: Boolean
+
+	# When paginating backwards, the cursor to continue.
+	startCursor: String
+
+	# When paginating forwards, the cursor to continue.
+	endCursor: String
 }
 
 type ProducerRating {

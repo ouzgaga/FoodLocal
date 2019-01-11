@@ -47,6 +47,10 @@ function getAllPersonsInReceivedIdList(listOfIdToGet) {
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
+function countNbPersonsInDB() {
+  return PersonsModel.countDocuments();
+}
+
 function addProducerToPersonsFollowingList(personId, producerId) {
   if (personId === producerId) {
     throw new Error('You can\'t follow yourself!');
@@ -124,6 +128,7 @@ module.exports = {
   getPersonById,
   getPersonByLogin,
   getAllPersonsInReceivedIdList,
+  countNbPersonsInDB,
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
   changePassword,

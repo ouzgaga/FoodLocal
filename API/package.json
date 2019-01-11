@@ -8,7 +8,7 @@
 		"start": "node ./src/server.js",
 		"dev": "nodemon ./src/server.js --watch src",
 		"test": "NODE_ENV=test mocha --recursive test/graphql/services --exit",
-		"test-jest": "NODE_ENV=test jest --detectOpenHandles --runInBand"
+		"test-jest": "NODE_ENV=test jest --config=jest.config.js --forceExit --runInBand"
 	},
 	"dependencies": {
 		"@sendgrid/mail": "^6.3.1",
@@ -23,6 +23,7 @@
 		"express": "^4.16.4",
 		"graphql": "^14.0.2",
 		"graphql-iso-date": "^3.6.1",
+		"graphql-relay": "^0.5.5",
 		"graphql-resolvers": "^0.3.2",
 		"graphql-tools": "^4.0.3",
 		"http-status": "^1.3.1",

@@ -16,7 +16,7 @@ type User implements Person {
 	email: String!
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
-	followingProducers:[Producer!]!
+	followingProducers: ProducerConnection!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }

@@ -71,6 +71,14 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
     .limit(+limit);
 }
 
+function countNbRatingsMadeByPersonWithId(personId) {
+  return PersonRatingProducersModel.countDocuments({ personId });
+}
+
+function countNbRatingsAboutProducerWithId(producerId) {
+  return PersonRatingProducersModel.countDocuments({ producerId });
+}
+
 /**
  * Ajoute un nouveau rating dans la base de données.
  * Doublons autorisés!
@@ -155,6 +163,8 @@ module.exports = {
   getAllRatingsAboutProducerWithId,
   getRatingAboutProducerIdMadeByPersonId,
   getAllRatingsMadeByPersonWithId,
+  countNbRatingsMadeByPersonWithId,
+  countNbRatingsAboutProducerWithId,
   addPersonRatingProducer,
   updatePersonRatingProducer,
   deletePersonRatingProducer
