@@ -16,7 +16,7 @@ type User implements Person {
 	email: String!
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
-	followingProducers:[Producer!]!
+	followingProducers: ProducerConnection!
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }
@@ -37,7 +37,6 @@ input UserInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	# TODO: tester que l'email ne peut pas être modifié dans un update!
 	# email: String! # l'email ne peut pas être modifié!
 	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String # faudra l'encoder en base64

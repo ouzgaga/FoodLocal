@@ -37,6 +37,19 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
+function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
+  return SalespointsModel.aggregate([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [longitude, latitude] },
+        spherical: true,
+        distanceField: 'distance',
+        maxDistance
+      }
+    }
+  ]);
+}
+
 /**
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
@@ -44,7 +57,28 @@ function getSalespointById(id) {
  * @param salespoint, Les informations du point de vente à ajouter.
  */
 function addSalespoint(salespoint) {
-  return new SalespointsModel(salespoint).save();
+  const salespointToAdd = {
+    ...salespoint
+  };
+
+  if (salespoint.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = salespoint.address;
+
+    salespointToAdd.address = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+  }
+
+  return new SalespointsModel(salespointToAdd).save();
 }
 
 /**
@@ -78,7 +112,20 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
     updatedSalespoint.name = name;
   }
   if (address !== undefined) {
-    updatedSalespoint.address = address;
+    const { number, street, city, postalCode, state, country, longitude, latitude } = address;
+    const addressToUpdate = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+    updatedSalespoint.address = addressToUpdate;
   }
   if (schedule !== undefined) {
     updatedSalespoint.schedule = schedule;
@@ -103,6 +150,7 @@ async function deleteSalespoint(id) {
 
 module.exports = {
   getSalespoints,
+  geoFilterSalespoints,
   addSalespoint,
   getSalespointById,
   updateSalespoint,

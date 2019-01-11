@@ -1,7 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -10,14 +9,11 @@ let tabProducers;
 let tabProductTypes;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
-  await clearDB();
-
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabProductTypes = getTabProductTypes();
+  tabProducers = await getTabProducers();
+  tabProductTypes = await getTabProductTypes();
 };
 
 describe('Testing graphql request products', () => {

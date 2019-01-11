@@ -17,6 +17,10 @@ function getAllNotificationsOfPerson(personId, { limit = 30, page = 0 } = {}) {
     .limit(+limit);
 }
 
+function countNbNotificationsOfPerson(personId) {
+  return PersonsNotificationsModel.countDocuments({ personId });
+}
+
 function addNotificationOfPerson(personId, notificationId) {
   if (!mongoose.Types.ObjectId.isValid(personId)) {
     throw new Error('Received personId is invalid!');
@@ -48,6 +52,7 @@ function setPersonNotificationAsSeen(id) {
 
 module.exports = {
   getAllNotificationsOfPerson,
+  countNbNotificationsOfPerson,
   addNotificationOfPersonForAllPersonIdInArray,
   setPersonNotificationAsSeen
 };

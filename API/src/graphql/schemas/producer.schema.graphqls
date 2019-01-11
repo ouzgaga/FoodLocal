@@ -10,6 +10,8 @@ type Query {
 
 	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
 	filterProducers(byProductTypeIds: [ID!]): [Producer!]!
+
+	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!]): [Producer!]!
 }
 
 type Mutation {
@@ -26,6 +28,12 @@ type Mutation {
 	deleteProducer(producerId: ID!): Producer
 }
 
+input ClientLocation {
+	longitude: Float!
+	latitude: Float!
+	maxDistance: Float!
+}
+
 type Producer implements Person {
 	id: ID!
 	firstname: String!
@@ -34,7 +42,7 @@ type Producer implements Person {
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# Tableau contenant tous les producteur que la personne suit.
-	followingProducers: [Producer!]!
+	followingProducers(after: String, before: String, first: Int, last: Int): ProducerConnection!
 	# Booléen valant true si l'email a été validé par le membre, false sinon.
 	emailValidated: Boolean!
 	isAdmin: Boolean!
@@ -49,6 +57,32 @@ type Producer implements Person {
 	products: [Product!]!
 	# Note moyenne attribuée au producteur par les autres membres du site.
 	rating: ProducerRating
+}
+
+type ProducerConnection {
+	pageInfo: PageInfo!
+	edges: [ProducerEdge!]!
+	totalCount: Int!
+}
+
+type ProducerEdge {
+	node: Producer!
+	cursor: String!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+	# When paginating forwards, are there more items?
+	hasNextPage: Boolean
+
+	# When paginating backwards, are there more items?
+	hasPreviousPage: Boolean
+
+	# When paginating backwards, the cursor to continue.
+	startCursor: String
+
+	# When paginating forwards, the cursor to continue.
+	endCursor: String
 }
 
 type ProducerRating {
@@ -85,7 +119,6 @@ input ProducerInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	# TODO: tester que l'email ne peut pas être modifié dans un update!
 	# email: String! # l'email ne peut pas être modifié!
 	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
 	image: String
@@ -101,6 +134,6 @@ input ProducerInputUpdate {
 	description: String
 	website: String
 	# salespoint: ID # Mis à jour via son propre salespoint
-	# isValidated: Boolean! # ne peut pas être modifié par le client # FIXME: à voir comment vérifier via mail...
+	# isValidated: Boolean! # ne peut pas être modifié par le client
 	# products: [ProductInputUpdate!]
 }

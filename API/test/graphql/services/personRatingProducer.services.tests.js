@@ -327,7 +327,6 @@ describe('tests personRatingProducer services', () => {
 
       try {
         // on ajoute le rating ratingBenoit5 avec un producerId inconnu -> retournera une erreur
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
@@ -351,7 +350,6 @@ describe('tests personRatingProducer services', () => {
 
       try {
         // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
@@ -379,7 +377,6 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -407,7 +404,6 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -436,7 +432,6 @@ describe('tests personRatingProducer services', () => {
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.addPersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
@@ -478,7 +473,6 @@ describe('tests personRatingProducer services', () => {
       try {
         ratingAntoine1.rating = 0;
 
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
@@ -500,7 +494,6 @@ describe('tests personRatingProducer services', () => {
       try {
         ratingAntoine1.rating = 6;
 
-        // FIXME: PAUL: j'arrive pas à faire marcher le expect().to.throw()...
         await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
         error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');

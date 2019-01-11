@@ -33,16 +33,35 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        required: true
+      },
+      coordinates: {
+        type: [Number],
+        required: true
+      }
+    }
+    /*
     longitude: {
       type: mongoose.Schema.Types.Number,
+      min: -180,
+      max: 180,
       required: true
     },
     latitude: {
       type: mongoose.Schema.Types.Number,
+      min: -90,
+      max: 90,
       required: true
     }
+    */
   }, options
 );
+
+addressSchema.index({ location: '2dsphere' });
 
 /**
  * DaySchedule Schema

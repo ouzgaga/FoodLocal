@@ -1,4 +1,4 @@
-const { isAuthenticatedAsUserAndIsYourself } = require('./authorization.resolvers');
+const { isAuthenticatedAsUserAndIsYourself, isAuthenticated } = require('./authorization.resolvers');
 const tokenValidationEmailServices = require('../services/tokenValidationEmail.services');
 const connectionTokenServices = require('../services/connectionToken.services');
 const personsServices = require('../services/persons.services');
@@ -10,6 +10,11 @@ const producerResolvers = {
     askNewEmailToken: (parent, args, context) => tokenValidationEmailServices.askNewEmailToken(args.email, args.password),
 
     login: (parent, args, context) => connectionTokenServices.login(args.email, args.password),
+
+    renewToken: async(parent, args, context) => {
+      await isAuthenticated(context.id);
+      return connectionTokenServices.createConnectionToken(context.id, context.email, context.isAdmin, context.kind);
+    },
 
     signUpAsUser: (parent, args, context) => connectionTokenServices.signUpAsUser(args.newUser),
 

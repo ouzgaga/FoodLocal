@@ -22,14 +22,37 @@ spec:
               name: api-deployment
           env:
             - name: PORT
-              value: "4040"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: PORT
             - name: NODE_ENV
-              value: "production"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: NODE_ENV
             - name: MONGODB_PORT_PROD
-              value: "27017"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: MONGODB_PORT_PROD
             - name: MONGODB_HOST_PROD
-              value: "mongo"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: MONGODB_HOST_PROD
             - name: MONGODB_DBNAME_PROD
-              value: "api_foodlocal_production"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: MONGODB_DBNAME_PROD
             - name: JWT_SECRET
-              value: "pr0PGBl7WvdQ3zHNSxoiVTCjqBqv3v"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: JWT_SECRET
+            - name: REPLICA_SET_NAME_PROD
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: REPLICA_SET_NAME_PROD

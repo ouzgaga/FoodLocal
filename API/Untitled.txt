@@ -1,0 +1,29 @@
+db.getCollection("persons").aggregate(
+    [
+      { $match: { kind: 'producers' } },
+      {
+        $lookup: { from: 'products', localField: 'productsIds', foreignField: '_id', as: 'products' }
+      },
+      {
+        $project: {
+          products: { productTypeId: true }
+        }
+      },
+      {
+        $group: {
+          _id: { producer: '$_id' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
+        }
+      },
+      {
+        $unwind: { path: '$productTypeIds' }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
+      }
+    ]
+  );

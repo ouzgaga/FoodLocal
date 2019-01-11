@@ -2,7 +2,6 @@ const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
 const producersServices = require('../../../src/graphql/services/producers.services');
-const clearDB = require('../clearDB');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -11,14 +10,12 @@ let tabProducers;
 let tabProductTypes;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
-  await clearDB();
-
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabProductTypes = getTabProductTypes();
+  // FIXME: appeler les fonction getTab directement dans les tests (pour n'appeler que celles que j'utilise réellement!)
+  tabProducers = await getTabProducers();
+  tabProductTypes = await getTabProductTypes();
 };
 
 describe('Testing graphql request producers', () => {
@@ -507,7 +504,7 @@ describe('Testing graphql request producers', () => {
       };
 
       it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers"', async(done) => {
-        const variables = { id: [tabProductTypes[1].id] };
+        const variables = { id: [tabProductTypes[1]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
@@ -518,7 +515,7 @@ describe('Testing graphql request producers', () => {
 
       it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
          + ' productTypeCategory "Jus de fruits"', async(done) => {
-        const variables = { id: [tabProductTypes[10].id, tabProductTypes[1].id] };
+        const variables = { id: [tabProductTypes[10]._id, tabProductTypes[1]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers" et un ou plusieurs produits
@@ -531,7 +528,7 @@ describe('Testing graphql request producers', () => {
 
       it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
          + ' productTypeCategory "Jus de fruits" AND one or more products of productTypeCategory "Pâtes"', async(done) => {
-        const variables = { id: [tabProductTypes[1].id, tabProductTypes[10].id, tabProductTypes[17].id] };
+        const variables = { id: [tabProductTypes[1]._id, tabProductTypes[10]._id, tabProductTypes[17]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien qu'un producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers", un ou plusieurs produits
@@ -1705,7 +1702,6 @@ describe('Testing graphql request producers', () => {
         result = await graphql(schema, queryGetProducerById, null, context, variables);
         expect(result.data.producer).toBeNull();
 
-        // fixme: tester que toutes trace du producteur ait été effacées (point de vente, produits, id dans tableau des productType, ......)
         done();
       });
 

@@ -1,4 +1,3 @@
-require('../models/producers.modelgql'); // FIXME: checker si vraiment utile....
 const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
@@ -11,7 +10,9 @@ const PersonType = {
 
 const personsResolvers = {
   Query: {
-    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email)
+    checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email),
+
+    me: (parent, args, context) => personsServices.getPersonByToken(args.token)
   },
 
   Mutation: {
@@ -26,8 +27,6 @@ const personsResolvers = {
   },
 
   Person: {
-
-    // FIXME: PAUL: ya moyen de renommer ce resolveType en 'kind' ou qqch de plus parlant?
     __resolveType(obj) {
       switch (obj.kind) {
         case PersonType.USER:

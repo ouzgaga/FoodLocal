@@ -59,6 +59,10 @@ function getAllProducerWaitingForValidation() {
   return ProducersModel.find({ isValidated: false });
 }
 
+function countProducersIndBD() {
+  return ProducersModel.countDocuments();
+}
+
 /**
  * Filtre tous les producteurs en fonction des productTypeId reçus.
  * Seul les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu sont retournés.
@@ -83,6 +87,12 @@ async function filterProducers(byProductTypeIds) {
   }
 }
 
+async function geoFilterProducers({ longitude, latitude, maxDistance }) {
+  const salespoints = await salespointsServices.geoFilterSalespoints({ longitude, latitude, maxDistance });
+
+  return ProducersModel.find({ salespointId: { $in: salespoints } }).sort({ _id: 1 });
+}
+
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -95,7 +105,6 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       firstname,
       lastname,
       email,
-      // fixme: Paul: 10 saltRound, c'est suffisant ?
       password: await bcrypt.hash(password, 10),
       image,
       // followingProducersIds: [],
@@ -253,6 +262,8 @@ function deleteProducer(id) {
     throw new Error('Received producer.id is invalid!');
   }
 
+  // ajouter une propriété deleted (bool) au producteur et la mettre à true quand on le supprime mais ne jamais le supprimer...! disable ne doit pas être
+  // modifiable dans l'update!! -> faire un plugin pour filtrer tout les
   // FIXME: il faut supprimer toutes les informations du producteur -> les produits, le point de vente, son id dans les productType qu'il produisait, ......
 
   return ProducersModel.findByIdAndRemove(id);
@@ -318,7 +329,9 @@ module.exports = {
   getProducerById,
   getAllProducerWaitingForValidation,
   getAllProducersInReceivedIdList,
+  countProducersIndBD,
   filterProducers,
+  geoFilterProducers,
   addProducer,
   addProductToProducer,
   addSalespointToProducer,

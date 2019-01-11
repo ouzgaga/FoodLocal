@@ -11,3 +11,5 @@ node_modules
 cert-key.json
 
 Deployment/DB/script/gc-key\.json
+
+Deployment/API/api-secret\.yml

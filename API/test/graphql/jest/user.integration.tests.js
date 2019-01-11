@@ -1,7 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabUsers } = require('../../populateDatabase');
 
 // Making schema graphql
@@ -10,13 +9,10 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 let tabUsers;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await clearDB();
-
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   await populateDB();
 
-  tabUsers = getTabUsers();
+  tabUsers = await getTabUsers();
 };
 
 describe('Testing graphql resquest user', () => {
