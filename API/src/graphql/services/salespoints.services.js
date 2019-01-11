@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const SalespointsModel = require('../models/salespoints.modelgql');
+const { SalespointsModel } = require('../models/salespoints.modelgql');
 
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
@@ -65,8 +65,8 @@ function addSalespoint(salespoint) {
     ...salespoint
   };
 
-  if (salespoint.address != null) {
-    const { number, street, city, postalCode, state, country, longitude, latitude } = salespoint.address;
+  if (salespointToAdd.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = salespointToAdd.address;
 
     salespointToAdd.address = {
       number,
@@ -117,7 +117,7 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
   }
   if (address !== undefined) {
     const { number, street, city, postalCode, state, country, longitude, latitude } = address;
-    const addressToUpdate = {
+    updatedSalespoint.address = {
       number,
       street,
       city,
@@ -129,7 +129,6 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
         coordinates: [longitude, latitude]
       }
     };
-    updatedSalespoint.address = addressToUpdate;
   }
   if (schedule !== undefined) {
     updatedSalespoint.schedule = schedule;

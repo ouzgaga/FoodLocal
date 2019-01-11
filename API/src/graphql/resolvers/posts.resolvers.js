@@ -21,7 +21,6 @@ const postsResolvers = {
 
   Post: {
     producer: (parent, args, context) => producersServices.getProducerById(parent.producerId),
-
   },
 
   PostConnection: {

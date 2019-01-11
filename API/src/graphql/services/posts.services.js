@@ -23,12 +23,32 @@ function countNbPostsOfProducerInDB(producerId) {
 }
 
 async function addPostOfProducer(post) {
-  post.publicationDate = Date.now();
+  const postToAdd = {
+    ...post,
+    publicationDate: Date.now()
+  };
+
+  if (postToAdd.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = postToAdd.address;
+
+    postToAdd.address = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+  }
 
   // on enregistre le nouveau post dans la base de données
-  const newPost = await new PostsModel(post).save();
+  const newPost = await new PostsModel(postToAdd).save();
 
-  const res = await notificationsServices.addNotification('NEW_POST', post.producerId);
+  const res = await notificationsServices.addNotification('NEW_POST', newPost.producerId);
 
   return newPost;
 }

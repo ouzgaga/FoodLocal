@@ -22,7 +22,7 @@ type Post {
 	# La date de publication du post
 	publicationDate: Date!
 	# La localisation du producteur lorsqu'il a créé le post. N'existe que si le producteur a précisé sa position lors de la création du post.
-	location: Location
+	address: Address
 }
 
 input PostInputAdd {
@@ -31,17 +31,7 @@ input PostInputAdd {
 	# Le texte du post
 	text: String!
 	# La localisation du producteur
-	location: LocationInputAdd
-}
-
-type Location {
-	longitude: Float!
-	latitude: Float!
-}
-
-input LocationInputAdd {
-	longitude: Float!
-	latitude: Float!
+	address: AddressInput
 }
 
 type PostConnection {
