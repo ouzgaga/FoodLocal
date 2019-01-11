@@ -75,9 +75,9 @@ test-api-full:
   - apk --no-cache add --virtual builds-deps build-base python
   - npm config set python /usr/bin/python
   - npm install
+  - npm install --save run-rs
   - npm rebuild bcrypt --build-from-source
   - apk del builds-deps
-  - npm install run-rs
   - node ./node_modules/run-rs/
   - npm test
   - npm test-jest
