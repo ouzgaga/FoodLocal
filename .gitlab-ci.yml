@@ -77,6 +77,8 @@ test-api-full:
   - npm install
   - npm rebuild bcrypt --build-from-source
   - apk del builds-deps
+  - npm install run-rs -g
+  - run-rs
   - npm test
   - npm test-jest
   only:
