@@ -263,13 +263,13 @@ describe('tests productType services', () => {
       ], antoine.id);
 
       // On récupère tous les producteurs produisant un ou plusieurs produits de type productTypePoire
-      let producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePoire.id]);
+      let producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePoire._id]);
       producersOfFruits.should.be.not.null;
       producersOfFruits.should.be.an('array');
       producersOfFruits.length.should.be.equal(1);
 
       // On récupère tous les producteurs produisant un ou plusieurs produits de type productTypePomme
-      producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePomme.id]);
+      producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePomme._id]);
       producersOfFruits.should.be.not.null;
       producersOfFruits.should.be.an('array');
       producersOfFruits.length.should.be.equal(2);

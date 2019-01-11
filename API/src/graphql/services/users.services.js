@@ -56,7 +56,6 @@ async function addUser({ firstname, lastname, email, password, image }) {
       firstname,
       lastname,
       email,
-      // fixme: Paul: 10 saltRound, c'est suffisant ?
       password: await bcrypt.hash(password, 10),
       image,
       emailValidated: false,
@@ -83,7 +82,6 @@ async function updateUser({ id, firstname, lastname, image }) {
     throw new Error('Received user.id is invalid!');
   }
 
-  // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
   if (userValidation == null) {

@@ -16,8 +16,8 @@ const clearAndPopulateDB = async() => {
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabProductTypes = getTabProductTypes();
+  tabProducers = await getTabProducers();
+  tabProductTypes = await getTabProductTypes();
 };
 
 describe('Testing graphql request products', () => {
@@ -27,6 +27,7 @@ describe('Testing graphql request products', () => {
     // ----------------------products()-------------------------------------- //
     describe('Testing products()', () => {
       it('should get all products', async(done) => {
+        console.log('1111111');
         const { query } = {
           query: `query {
                     products {
@@ -50,6 +51,7 @@ describe('Testing graphql request products', () => {
         const result = await graphql(schema, query, null, null, null);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
+        console.log('22222222222');
         done();
       });
     });
@@ -78,11 +80,13 @@ describe('Testing graphql request products', () => {
       };
 
       it('should get a product by id', async(done) => {
+        console.log('333333333333');
         const variables = { productId: tabProducers[2].productsIds[0].toString() };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         expect(result.data.product).not.toBeNull();
         expect(result).toMatchSnapshot();
+        console.log('44444444444');
         done();
       });
 

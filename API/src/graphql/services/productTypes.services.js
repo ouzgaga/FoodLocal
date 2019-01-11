@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ProductTypesModel = require('../models/productTypes.modelgql');
+const ProducerModel = require('../models/producers.modelgql');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -46,11 +47,39 @@ function getProductTypeByCategory(productTypeCategoryId) {
 }
 
 async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
-  // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
 
-  const producersIds = [];
+  const res = await ProducerModel.aggregate(
+    [
+      { $match: { kind: 'producers' } },
+      {
+        $lookup: { from: 'products', localField: 'productsIds', foreignField: '_id', as: 'products' }
+      },
+      {
+        $project: {
+          products: { productTypeId: true }
+        }
+      },
+      {
+        $group: {
+          _id: { producer: '$_id' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
+        }
+      },
+      {
+        $unwind: { path: '$productTypeIds' }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
+      }
+    ]
+  );
 
+  console.log(res);
+  /*
   // TODO: PAUL: Bien bien moche mais fonctionnel... À améliorer en utilisant un aggregate ou un mapReduce...?
   const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
   // on parcours le taleau de producerIds du premier productType
@@ -66,8 +95,8 @@ async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(prod
   });
 
   Promise.all(promises);
-
-  return producersIds;
+*/
+  return res;
 }
 
 /**

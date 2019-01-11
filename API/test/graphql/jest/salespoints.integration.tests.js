@@ -16,8 +16,8 @@ const clearAndPopulateDB = async() => {
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabSalespoints = getTabSalespoints();
+  tabProducers = await getTabProducers();
+  tabSalespoints = await getTabSalespoints();
 };
 
 describe('Testing graphql request salespoints', () => {

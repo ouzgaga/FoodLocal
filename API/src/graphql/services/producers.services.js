@@ -101,7 +101,6 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       firstname,
       lastname,
       email,
-      // fixme: Paul: 10 saltRound, c'est suffisant ?
       password: await bcrypt.hash(password, 10),
       image,
       // followingProducersIds: [],
@@ -242,11 +241,11 @@ function updateProducerRating(producerId, rating) {
   return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true });
 }
 
-async function validateAProducer(producerId, validationState, session) {
+async function validateAProducer(producerId, validationState) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     throw new Error('Received producer.id is invalid!');
   }
-  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { session, new: true }); // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -259,6 +258,8 @@ function deleteProducer(id) {
     throw new Error('Received producer.id is invalid!');
   }
 
+  // ajouter une propriété deleted (bool) au producteur et la mettre à true quand on le supprime mais ne jamais le supprimer...! disable ne doit pas être
+  // modifiable dans l'update!! -> faire un plugin pour filtrer tout les
   // FIXME: il faut supprimer toutes les informations du producteur -> les produits, le point de vente, son id dans les productType qu'il produisait, ......
 
   return ProducersModel.findByIdAndRemove(id);

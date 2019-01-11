@@ -24,8 +24,7 @@ const notificationsSchema = new mongoose.Schema(
     date: {
       type: mongoose.Schema.Types.Date,
       // FIXME: PAUL: pourquoi le default n'est jamais appelé?!
-      // FIXME: Paul: comment changer la timezone de l'heure enregistrée?
-      default: mongoose.Schema.Types.Date.now
+      default: Date.now,
     },
     producerId: {
       type: mongoose.Schema.Types.ObjectId,
