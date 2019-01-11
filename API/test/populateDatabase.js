@@ -8,13 +8,9 @@ const productsServices = require('../src/graphql/services/products.services');
 const productTypesServices = require('../src/graphql/services/productTypes.services');
 const productTypeCategoriesServices = require('../src/graphql/services/productTypeCategories.services');
 
-let tabProductTypeCategories;
-let tabProductTypes;
-let tabProducers;
-let tabSalespoints;
-let tabUsers;
 let tabRatings;
 
+const generateId = () => mongoose.Schema.Types.ObjectId();
 
 const populateDB = async() => {
   await clearDB();
