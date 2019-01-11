@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 kubectl apply -f ./Ingress/ingress.yml
 kubectl apply -f ./API/api-service.yml
 kubectl apply -f ./API/api-deployment.yml

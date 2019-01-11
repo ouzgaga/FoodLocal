@@ -73,7 +73,7 @@ You can find all scripts to install, update, remove in the folder `./script`
   # Creating a Secret for the cert-manager
   kubectl create secret generic ${NAME} --from-file=../${KEY} --namespace=cert-manager
   
-  # Note: The key (cert-key.json) will be generate in the parent folder to be seen by the certmanager.yml
+  temp
   ```
 
   - `NAME` is the name of the service-account we will create

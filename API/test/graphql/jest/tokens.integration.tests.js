@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabUsers, getTabProducers } = require('../../populateDatabase');
 
 // Making schema graphql
@@ -12,14 +11,11 @@ let tabUsers;
 let tabProducers;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await clearDB();
-
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   await populateDB();
 
-  tabUsers = getTabUsers();
-  tabProducers = getTabProducers();
+  tabUsers = await getTabUsers();
+  tabProducers = await getTabProducers();
 };
 
 describe('Testing graphql resquest user', () => {

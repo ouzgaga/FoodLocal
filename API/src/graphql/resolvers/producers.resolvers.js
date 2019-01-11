@@ -1,3 +1,4 @@
+const { connectionFromArray } = require('graphql-relay');
 const { isAuthenticatedAsProducerAndIsYourself, isAuthenticatedAsAdmin } = require('./authorization.resolvers');
 const productsServices = require('../services/products.services');
 const producersServices = require('../services/producers.services');
@@ -16,6 +17,8 @@ const producerResolvers = {
     },
 
     filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
+
+    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
   },
 
   Mutation: {
@@ -38,13 +41,21 @@ const producerResolvers = {
   },
 
   Producer: {
-    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
+    followingProducers: async(parent, args, context) => {
+      const producers = await producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds);
+      const res = connectionFromArray(producers, args);
+      return res;
+    },
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
     salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalespointById(parent.salespointId) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
+  },
+
+  ProducerConnection: {
+    totalCount: (parent, args, context) => producersServices.countProducersIndBD()
   }
 };
 

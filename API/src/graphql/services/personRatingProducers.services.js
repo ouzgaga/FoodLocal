@@ -71,6 +71,14 @@ function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}
     .limit(+limit);
 }
 
+function countNbRatingsMadeByPersonWithId(personId) {
+  return PersonRatingProducersModel.countDocuments({ personId });
+}
+
+function countNbRatingsAboutProducerWithId(producerId) {
+  return PersonRatingProducersModel.countDocuments({ producerId });
+}
+
 /**
  * Ajoute un nouveau rating dans la base de données.
  * Doublons autorisés!
@@ -100,7 +108,6 @@ async function addPersonRatingProducer({ personId, producerId, rating }) {
 }
 
 async function updateProducerRating(producerId) {
-  // TODO: tester si ça fonctionne de lui passer un objectId !
   let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(producerId) } },
     { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
@@ -156,6 +163,8 @@ module.exports = {
   getAllRatingsAboutProducerWithId,
   getRatingAboutProducerIdMadeByPersonId,
   getAllRatingsMadeByPersonWithId,
+  countNbRatingsMadeByPersonWithId,
+  countNbRatingsAboutProducerWithId,
   addPersonRatingProducer,
   updatePersonRatingProducer,
   deletePersonRatingProducer

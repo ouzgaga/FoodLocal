@@ -1,5 +1,7 @@
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const config = require('../../config/config');
 
 async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
@@ -27,7 +29,6 @@ function getPersonById(id) {
   return PersonsModel.findById(id);
 }
 
-// TODO: à ajouter aux tests des services et d'intégration!
 async function getPersonByLogin(email, password) {
   const person = await PersonsModel.findOne({ email });
 
@@ -44,8 +45,21 @@ async function getPersonByLogin(email, password) {
   return person;
 }
 
+async function getPersonByToken(token) {
+  const tokenContent = await jwt.verify(token, config.jwtSecret);
+
+  if (tokenContent == null || tokenContent.id == null) {
+    return null;
+  }
+  return getPersonById(tokenContent.id);
+}
+
 function getAllPersonsInReceivedIdList(listOfIdToGet) {
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+}
+
+function countNbPersonsInDB() {
+  return PersonsModel.countDocuments();
 }
 
 function addProducerToPersonsFollowingList(personId, producerId) {
@@ -90,7 +104,7 @@ async function changePassword(newPassword, oldPassword, personId) {
   checkIfPasswordIsValid(newPassword);
 
   // si on arrive ici, alors le nouveau mot de passe est un mot de passe valide.
-  person.password = await bcrypt.hash(newPassword, 10); // fixme: Paul: 10 saltRound, c'est suffisant ?
+  person.password = await bcrypt.hash(newPassword, 10);
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
   return updatedPerson != null;
 }
@@ -112,7 +126,6 @@ function checkIfPasswordIsValid(password) {
   return true;
 }
 
-// TODO: à ajouter aux tests!
 async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
@@ -120,14 +133,14 @@ async function validateEmailUserByToken(emailValidationToken) {
   return updatedPerson.emailValidated;
 }
 
-// TODO: Ajouter une fonction pour upgrade un utilisateur en producteur !
-
 module.exports = {
   isEmailAvailable,
   checkIfPersonIdExistInDB,
   getPersonById,
   getPersonByLogin,
+  getPersonByToken,
   getAllPersonsInReceivedIdList,
+  countNbPersonsInDB,
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
   changePassword,

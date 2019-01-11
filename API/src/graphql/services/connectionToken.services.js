@@ -8,7 +8,7 @@ const config = require('../../config/config');
 async function login(email, password) {
   const person = await personsServices.getPersonByLogin(email, password);
 
-  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind);
+  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind, person.emailValidated);
 }
 
 async function signUpAsUser(newUser) {
@@ -16,7 +16,7 @@ async function signUpAsUser(newUser) {
   const person = await usersServices.addUser(newUser);
 
   // on crée et retourne un token de connection
-  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind);
+  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind, person.emailValidated);
 }
 
 async function signUpAsProducer(newProducer) {
@@ -24,11 +24,11 @@ async function signUpAsProducer(newProducer) {
   const person = await producersServices.addProducer(newProducer);
 
   // on crée et retourne un token de connection
-  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind);
+  return createConnectionToken(person.id, person.email, person.isAdmin, person.kind, person.emailValidated);
 }
 
-function createConnectionToken(id, email, isAdmin, kind) {
-  return jwt.sign({ id, email, isAdmin, kind }, config.jwtSecret);
+function createConnectionToken(id, email, isAdmin, kind, emailValidated) {
+  return jwt.sign({ id, email, isAdmin, kind, emailValidated }, config.jwtSecret);
 }
 
 async function upgradeUserToProducer(idUserToUpgrade, password) {
@@ -47,7 +47,7 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
   const producer = await PersonsModel.findByIdAndUpdate(user.id, { kind: 'producers', followersIds: [], productsIds: [], isValidated: false },
     { new: true, strict: false });
 
-  const token = await createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind);
+  const token = await createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind, producer.emailValidated);
   return { producer, newLoginToken: token };
 }
 
@@ -56,6 +56,7 @@ module.exports = {
   login,
   signUpAsUser,
   signUpAsProducer,
+  createConnectionToken,
   upgradeUserToProducer
 };
 const PersonsModel = require('../models/persons.modelgql');

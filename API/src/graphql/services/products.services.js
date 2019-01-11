@@ -48,6 +48,10 @@ function getProductById(id) {
   return ProductsModel.findById(id);
 }
 
+function countNbProductsOfProducer(producerId) {
+  return ProductsModel.countDocuments(producerId);
+}
+
 /**
  * Ajoute un nouveau produit dans la base de données.
  * Attention, doublons autorisés!
@@ -63,7 +67,7 @@ async function addProduct(product, producerId) {
   const addedProduct = await new ProductsModel(product).save();
 
   // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
-  await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+  const res = await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
 
   // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
   await producersServices.addProductToProducer(addedProduct.id, producerId);
@@ -124,6 +128,7 @@ function deleteProduct(id) {
 module.exports = {
   getProducts,
   getAllProductsInReceivedIdList,
+  countNbProductsOfProducer,
   addAllProductsInArray,
   addProduct,
   getProductById,
