@@ -19,7 +19,7 @@ function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
 }
 
 function countNbPostsOfProducerInDB(producerId) {
-  return PostsModel.countDocuments(producerId);
+  return PostsModel.countDocuments({ producerId });
 }
 
 async function addPostOfProducer(post) {

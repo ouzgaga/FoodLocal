@@ -29,8 +29,8 @@ const notificationsResolvers = {
     producer: (parent, args, context) => producersServices.getProducerById(parent.producer)
   },
 
-  Type: {
-
+  PersonNotificationConnection: {
+    totalCount: (parent, args, context) => personNotificationsServices.countNbNotificationsOfPerson()
   }
 };
 

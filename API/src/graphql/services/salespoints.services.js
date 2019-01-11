@@ -50,6 +50,10 @@ function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
   ]);
 }
 
+function countNbSalespointInDB() {
+  return SalespointsModel.countDocuments();
+}
+
 /**
  * Ajoute un nouveau point de vente dans la base de données.
  * Doublons autorisés!
@@ -151,6 +155,7 @@ async function deleteSalespoint(id) {
 module.exports = {
   getSalespoints,
   geoFilterSalespoints,
+  countNbSalespointInDB,
   addSalespoint,
   getSalespointById,
   updateSalespoint,

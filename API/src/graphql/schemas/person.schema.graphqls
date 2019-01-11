@@ -30,3 +30,14 @@ interface Person {
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }
+
+type PersonConnection {
+	pageInfo: PageInfo!
+	edges: [PersonEdge!]!
+	totalCount: Int!
+}
+
+type PersonEdge {
+	node: Person!
+	cursor: String!
+}

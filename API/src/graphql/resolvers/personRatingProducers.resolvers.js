@@ -39,6 +39,20 @@ const personRatingProducersResolvers = {
     person: (parent, args, context) => personsServices.getPersonById(parent.personId),
 
     producer: (parent, args, context) => producersServices.getProducerById(parent.producerId)
+  },
+
+  PersonRatingProducerConnectionProducer: {
+    totalCount: (parent, args, context) => {
+      const producerId = parent.edges[0] != null ? parent.edges[0].node.producerId : null;
+      return personRatingProducersServices.countNbRatingsAboutProducerWithId(producerId);
+    }
+  },
+
+  PersonRatingProducerConnectionPerson: {
+    totalCount: (parent, args, context) => {
+      const personId = parent.edges[0] != null ? parent.edges[0].node.personId : null;
+      return personRatingProducersServices.countNbRatingsMadeByPersonWithId(personId);
+    }
   }
 };
 module.exports = personRatingProducersResolvers;

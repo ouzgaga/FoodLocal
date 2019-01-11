@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { resolvers, schema: typeDefs } = require('./graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('./graphql/graphqlConfig');
 
 const config = require('./config/config');
 
@@ -35,6 +35,9 @@ const server = new ApolloServer(
   {
     typeDefs,
     resolvers,
+    schemaDirectives: {
+      connection: connectionDirective
+    },
     introspection: true,
     playground: true,
     context: ({ req }) => getToken(req)

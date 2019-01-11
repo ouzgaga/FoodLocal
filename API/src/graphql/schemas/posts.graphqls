@@ -1,6 +1,6 @@
 type Query {
 	# Retourne tous les posts du producteur correspondant à l'id 'producerId'
-	postsOfProducer(producerId: ID!): [Post!]!
+	postsOfProducer(producerId: ID!): PostConnection! @connection
 }
 
 type Mutation {
@@ -42,4 +42,15 @@ type Location {
 input LocationInputAdd {
 	longitude: Float!
 	latitude: Float!
+}
+
+type PostConnection {
+	pageInfo: PageInfo!
+	edges: [PostEdge!]!
+	totalCount: Int!
+}
+
+type PostEdge {
+	node: Post!
+	cursor: String!
 }
