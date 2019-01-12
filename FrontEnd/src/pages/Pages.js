@@ -8,6 +8,8 @@ import PageAcceuil from './PageAcceuil';
 import PageEmailValidation from './PageEmailValidation';
 import PageAdmin from './PageAdmin';
 import PagePersonalInformations from './PagePersonalInformations';
+import PageErrorLogin from './PageErrorLogin';
+import PageErrorEmail from './PageErrorEmail';
 
 export {
   PageAbout,
@@ -20,4 +22,6 @@ export {
   PageError404,
   PageAdmin,
   PagePersonalInformations,
+  PageErrorLogin,
+  PageErrorEmail,
 };

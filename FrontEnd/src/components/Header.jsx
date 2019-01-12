@@ -64,7 +64,7 @@ class MenuAppBar extends React.Component {
 
   render() {
     const { classes, width } = this.props;
-
+    const { connectEmail } = this.state;
     const menuLarge = (
       <div>
         <Link to="/" className={classes.LinkButton} readOnly tabIndex="-1"><Button id="accueilButton">Accueil</Button></Link>
@@ -119,7 +119,7 @@ class MenuAppBar extends React.Component {
             onClick2={this.handleOpenAndClose}
           />
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {this.state.connectEmail}
+            {connectEmail}
           </Typography>
         </AppBar>
       </div>

@@ -69,6 +69,10 @@ class MyLogin extends React.Component {
     };
   }
 
+  componentDidMount(){
+    // TODO Clear error AuthContext.resetError()
+  }
+
   handleChange = prop => (event) => {
     this.setState({ [prop]: event.target.value });
   }
@@ -81,8 +85,14 @@ class MyLogin extends React.Component {
           const onSubmit = (event) => {
             event.preventDefault();
             const { userMail, password } = this.state;
-
-            signIn({ userMail, password });
+            
+            signIn({ userMail, password })
+            .then(data => {     // Résultat du login pour fermer la pop-up
+              if(data)
+                onClose();
+            }).catch((error) => {
+              console.info(error);
+            });
           };
 
 
