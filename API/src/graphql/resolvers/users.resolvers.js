@@ -31,6 +31,10 @@ const producerResolvers = {
 
   User: {
     followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
+  },
+
+  UserConnection: {
+    totalCount: (parent, args, context) => usersServices.countNbUsersInDB()
   }
 };
 module.exports = producerResolvers;

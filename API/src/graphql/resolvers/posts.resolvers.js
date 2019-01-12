@@ -21,7 +21,13 @@ const postsResolvers = {
 
   Post: {
     producer: (parent, args, context) => producersServices.getProducerById(parent.producerId),
+  },
 
+  PostConnection: {
+    totalCount: (parent, args, context) => {
+      const producerId = parent.edges[0] != null ? parent.edges[0].node.producerId : null;
+      return postsServices.countNbPostsOfProducerInDB(producerId);
+    }
   }
 };
 

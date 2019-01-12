@@ -44,6 +44,10 @@ function getAllUsersInReceivedIdList(listOfIdToGet) {
   return UsersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
+function countNbUsersInDB() {
+  return UsersModel.countDocuments();
+}
+
 /**
  * Ajoute un nouveau producteur dans la base de données.
  * Doublons autorisés!
@@ -120,6 +124,7 @@ function deleteUser(id) {
 
 module.exports = {
   getUsers,
+  countNbUsersInDB,
   addUser,
   getUserById,
   updateUser,

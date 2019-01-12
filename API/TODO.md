@@ -53,4 +53,4 @@ Reste à faire:
 
 - Ajouter les subscription pour les notifications
 
-- Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!
+- Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!cd 

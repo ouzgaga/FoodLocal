@@ -1,25 +1,10 @@
 const mongoose = require('mongoose');
+const { addressSchema } = require('./salespoints.modelgql');
 const personsServices = require('../services/persons.services');
 
 const options = {
   toObject: { virtuals: true }
 };
-
-/**
- * location of news of producer Schema
- */
-const locationSchema = new mongoose.Schema(
-  {
-    longitude: {
-      type: mongoose.Schema.Types.Number,
-      required: true
-    },
-    latitude: {
-      type: mongoose.Schema.Types.Number,
-      required: true
-    }
-  }
-);
 
 /**
  * posts of producers Schema
@@ -37,11 +22,10 @@ const postsSchema = new mongoose.Schema(
     },
     publicationDate: {
       type: mongoose.Schema.Types.Date,
-      // FIXME: PAUL: pourquoi le default n'est jamais appelé?!
       default: mongoose.Schema.Types.Date.now
     },
-    location: {
-      type: locationSchema,
+    address: {
+      type: addressSchema,
       required: false
     }
   }, options

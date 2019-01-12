@@ -39,6 +39,10 @@ const personsResolvers = {
     },
 
     followingProducers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followingProducersIds)
+  },
+
+  PersonConnection: {
+    totalCount: (parent, args, context) => personsServices.countNbPersonsInDB()
   }
 };
 

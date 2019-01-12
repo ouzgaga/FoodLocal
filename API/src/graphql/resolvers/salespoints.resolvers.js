@@ -30,6 +30,10 @@ const salespointsResolvers = {
     longitude: (parent, args, context) => parent.location.coordinates[0],
 
     latitude: (parent, args, context) => parent.location.coordinates[1]
+  },
+
+  SalespointConnection: {
+    totalCount: (parent, args, context) => salespointsServices.countNbSalespointInDB()
   }
 };
 module.exports = salespointsResolvers;

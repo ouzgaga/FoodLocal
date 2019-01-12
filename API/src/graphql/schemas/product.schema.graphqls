@@ -1,18 +1,18 @@
 type Query {
 	#Retourne tous les produits de la base de données
-	products: [Product!]!
+	products: ProductConnection! @connection
 	#Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
 	product(productId: ID!) : Product
 
 	#Retourne tous les type de produits de la base de données
-	productTypes: [ProductType!]!
+	productTypes: ProductTypeConnection! @connection
 	#Retourne le type de produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
 	productType(productTypeId: ID!): ProductType
 	#Retourne tous les types de produits de la catégorie dont l'id est passé en paramètre.
-	productTypesOfCategory(productTypeCategoryId: ID!): [ProductType!]!
+	productTypesOfCategory(productTypeCategoryId: ID!): ProductTypeConnection! @connection
 
 	#Retourne toutes les catégories de produits de la base de données
-	productTypeCategories: [ProductTypeCategory!]!
+	productTypeCategories: ProductTypeCategoryConnection! @connection
 	#Retourne la catégorie de produits correspondant à l'ide reçu en paramètre. Retourne null si elle n'existe pas dans la base de données.
 	productTypeCategory(productTypeCategoryId: ID!): ProductTypeCategory
 
@@ -20,7 +20,7 @@ type Query {
 
 type Mutation {
 	#Ajoute à la base de données tous les produits du tableau reçu comme des produits proposés par le producteur correspondant à l'id reçu en paramère.
-	addMultipleProducts(producerId: ID!, products: [ProductInputAdd!]!): [Product!]!
+	addMultipleProducts(producerId: ID!, products: [ProductInputAdd!]!): ProductConnection! @connection
 	#Ajoute à la base de données un nouveau produit proposé par le producteur correspondant à l'id reçu en paramère.
 	addProduct(producerId: ID!, product: ProductInputAdd!): Product!
 	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
@@ -81,7 +81,7 @@ type ProductType {
 	category: ProductTypeCategory!
 
 	# Tableau contenant tous les producteurs produisant au moins un produit de ce type.
-	producers: [Producer!]!
+	producers: ProducerConnection! @connection
 }
 
 input ProductTypeInputAdd {
@@ -117,4 +117,36 @@ input ProductTypeCategoryInputUpdate {
 	id: ID!
 	name: String!
 	image: String
+}
+
+type ProductConnection {
+	pageInfo: PageInfo!
+	edges: [ProductEdge!]!
+}
+
+type ProductEdge {
+	node: Product!
+	cursor: String!
+}
+
+type ProductTypeConnection {
+	pageInfo: PageInfo!
+	edges: [ProductTypeEdge!]!
+	totalCount: Int!
+}
+
+type ProductTypeEdge {
+	node: ProductType!
+	cursor: String!
+}
+
+type ProductTypeCategoryConnection {
+	pageInfo: PageInfo!
+	edges: [ProductTypeCategoryEdge!]!
+	totalCount: Int!
+}
+
+type ProductTypeCategoryEdge {
+	node: ProductTypeCategory!
+	cursor: String!
 }

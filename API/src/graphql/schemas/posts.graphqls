@@ -1,6 +1,6 @@
 type Query {
 	# Retourne tous les posts du producteur correspondant à l'id 'producerId'
-	postsOfProducer(producerId: ID!): [Post!]!
+	postsOfProducer(producerId: ID!): PostConnection! @connection
 }
 
 type Mutation {
@@ -22,7 +22,7 @@ type Post {
 	# La date de publication du post
 	publicationDate: Date!
 	# La localisation du producteur lorsqu'il a créé le post. N'existe que si le producteur a précisé sa position lors de la création du post.
-	location: Location
+	address: Address
 }
 
 input PostInputAdd {
@@ -31,15 +31,16 @@ input PostInputAdd {
 	# Le texte du post
 	text: String!
 	# La localisation du producteur
-	location: LocationInputAdd
+	address: AddressInput
 }
 
-type Location {
-	longitude: Float!
-	latitude: Float!
+type PostConnection {
+	pageInfo: PageInfo!
+	edges: [PostEdge!]!
+	totalCount: Int!
 }
 
-input LocationInputAdd {
-	longitude: Float!
-	latitude: Float!
+type PostEdge {
+	node: Post!
+	cursor: String!
 }

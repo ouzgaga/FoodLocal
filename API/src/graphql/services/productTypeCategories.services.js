@@ -37,6 +37,10 @@ function getProductTypeCategoryById(id) {
   return ProductTypeCategoriesModel.findById(id);
 }
 
+function countNbProductTypeCategoriesInDB() {
+  return ProductTypeCategoriesModel.countDocuments();
+}
+
 /**
  * Ajoute une nouvelle catégorie de produits dans la base de données.
  * Attention, doublons autorisés!
@@ -77,8 +81,9 @@ function deleteProductTypeCategory(id) {
 
 module.exports = {
   getProductTypeCategories,
-  addProductTypeCategory,
   getProductTypeCategoryById,
+  countNbProductTypeCategoriesInDB,
+  addProductTypeCategory,
   updateProductTypeCategory,
   deleteProductTypeCategory
 };

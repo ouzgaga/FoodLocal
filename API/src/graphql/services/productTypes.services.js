@@ -78,6 +78,10 @@ function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTyp
   );
 }
 
+function countNbProductTypesInDB() {
+  return ProductTypesModel.countDocuments();
+}
+
 /**
  * Ajoute un nouveau type de produit dans la base de données.
  * Attention, doublons autorisés!
@@ -141,6 +145,7 @@ module.exports = {
   getProductTypes,
   getProductTypeByCategory,
   getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
+  countNbProductTypesInDB,
   addProductType,
   addProducerProducingThisProductType,
   removeProducerProducingThisProductType,
