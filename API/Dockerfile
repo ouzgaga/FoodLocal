@@ -20,6 +20,7 @@ COPY package*.json ./
 
 #RUN npm install
 # If you are building your code for production
+RUN apk add build-essential
 RUN apk add python
 RUN npm install --only=production
 
