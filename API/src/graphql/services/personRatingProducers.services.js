@@ -147,16 +147,12 @@ async function updatePersonRatingProducer({ id, rating }) {
  *
  * @param {Integer} id, L'id du rating à supprimer.
  */
-async function deletePersonRatingProducer(id) {
+function deletePersonRatingProducer(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Received personRatingProducer.id is invalid!');
   }
 
-  const deletedRating = await PersonRatingProducersModel.findByIdAndRemove(id);
-  if (deletedRating != null) {
-    await updateProducerRating(deletedRating.producerId);
-  }
-  return deletedRating;
+  return PersonRatingProducersModel.findByIdAndRemove(id);
 }
 
 module.exports = {

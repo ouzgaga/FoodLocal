@@ -1,4 +1,4 @@
-const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
+const { isAuthenticatedAndIsYourself, isAuthenticated } = require('./authorization.resolvers');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 
@@ -23,6 +23,11 @@ const personsResolvers = {
     changePassword: async(parent, args, context) => {
       await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personsServices.changePassword(args.newPassword, args.oldPassword, args.personId);
+    },
+
+    deletePersonAccount: async(parent, args, context) => {
+      await isAuthenticated(context.id);
+      return personsServices.deletePersonAccount(context.id, context.kind);
     }
   },
 

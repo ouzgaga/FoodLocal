@@ -15,6 +15,9 @@ type Mutation {
 
 	# Permet de modifier le password du producteur correspondant à l'id reçu si l'ancien password entré correspond à celui enregistré dans la base de données. Retourne true si le password a été changé avec succès, false sinon.
 	changePassword(newPassword: String!, oldPassword: String!, personId: ID!): Boolean!
+
+	# Supprime le compte de l'utilisateur correspondant à l'id du token reçu en entête.
+	deletePersonAccount: Boolean!
 }
 
 interface Person {
