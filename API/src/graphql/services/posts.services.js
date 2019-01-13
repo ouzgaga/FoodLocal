@@ -58,6 +58,7 @@ function deletePostOfProducer(id) {
     throw new Error('Received personRatingProducer.id is invalid!');
   }
 
+  // FIXME: il faut supprimer les notifications ou les rediriger sur un message type "ce post a été supprimé par son auteur"!
   return PostsModel.findByIdAndRemove(id);
 }
 

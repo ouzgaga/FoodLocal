@@ -41,7 +41,7 @@ const productResolvers = {
     },
     deleteProduct: async(parent, args, context) => {
       await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
-      return productsServices.deleteProduct(args.productId);
+      return productsServices.deleteProduct(args.productId, context.id);
     },
 
     // --------------------------------------------------------- ProductTypes ---------------------------------------------------------

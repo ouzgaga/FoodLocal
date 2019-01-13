@@ -20,8 +20,6 @@ Reste à faire:
     - https://docs.mongodb.com/manual/reference/command/geoSearch/#dbcmd.geoSearch
     - https://docs.mongodb.com/manual/tutorial/build-a-geohaystack-index/index.html
 
-- Ajouter la pagination de chaque tableau!
-
 - Supprimer touuuutes les infos d'un producteur / Utilisateur lorsqu'on le supprime
 
   - Producteur:
@@ -53,4 +51,6 @@ Reste à faire:
 
 - Ajouter les subscription pour les notifications
 
-- Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!cd 
+- Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!
+
+- Ajouter la pagination entre la DB et le serveur!!! (répliquer les paramètres reçus dans les appels à la DB)

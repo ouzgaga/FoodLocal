@@ -1,4 +1,3 @@
-const { connectionFromArray } = require('graphql-relay');
 const { isAuthenticatedAsProducerAndIsYourself, isAuthenticatedAsAdmin } = require('./authorization.resolvers');
 const productsServices = require('../services/products.services');
 const producersServices = require('../services/producers.services');
@@ -27,16 +26,9 @@ const producerResolvers = {
       return producersServices.validateAProducer(args.producerId, args.validationState);
     },
 
-    // addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
-
     updateProducer: async(parent, args, context) => {
       await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
       return producersServices.updateProducer(args.producer);
-    },
-
-    deleteProducer: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
-      return producersServices.deleteProducer(args.producerId);
     }
   },
 

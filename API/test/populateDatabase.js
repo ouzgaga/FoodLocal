@@ -504,7 +504,7 @@ const populateDB = async() => {
   // -------------------------------------------------------------------- ajout de posts -------------------------------------------------------------------
   const post1p1 = await postsServices.addPostOfProducer({
     producerId: producer1.id,
-    text: 'Ceci est un nouveau post! :D',
+    text: 'Ceci est un 1er post! :D',
     address: {
       number: 6,
       street: 'Chemin de par ici',
@@ -512,18 +512,18 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6562137,
-      latitude: 46.7702474
+      longitude: 6.0562137,
+      latitude: 46.3702474
     }
   });
 
   const post2p1 = await postsServices.addPostOfProducer({
     producerId: producer1.id,
-    text: 'Ceci est un 2ème nouveau post sans localisation! :D'
+    text: 'Ceci est un 2ème post! :D'
   });
   const post3p1 = await postsServices.addPostOfProducer({
     producerId: producer1.id,
-    text: 'Ceci est un 3ème nouveau post! :D',
+    text: 'Ceci est un 3ème post! :D',
     address: {
       number: 6,
       street: 'Chemin de par ici',
@@ -531,14 +531,46 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6562137,
-      latitude: 46.7702474
+      longitude: 6.6062137,
+      latitude: 46.7002474
+    }
+  });
+  const post4p1 = await postsServices.addPostOfProducer({
+    producerId: producer1.id,
+    text: 'Ceci est un 4ème post! :D',
+    address: {
+      number: 6,
+      street: 'Chemin de par ici',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 6.2562137,
+      latitude: 46.9702474
+    }
+  });
+  const post5p1 = await postsServices.addPostOfProducer({
+    producerId: producer1.id,
+    text: 'Ceci est un 5ème post! :D'
+  });
+  const post6p1 = await postsServices.addPostOfProducer({
+    producerId: producer1.id,
+    text: 'Ceci est un 6ème post! :D',
+    address: {
+      number: 6,
+      street: 'Chemin de par ici',
+      city: 'Yverdon',
+      postalCode: '1400',
+      state: 'Vaud',
+      country: 'Suisse',
+      longitude: 6.7562137,
+      latitude: 46.6702474
     }
   });
 
   const post1p2 = await postsServices.addPostOfProducer({
-    producerId: producer1.id,
-    text: 'Ceci est un nouveau post d\'un autre producteur avec localisation! :D',
+    producerId: producer2.id,
+    text: 'Ceci est un 1er post! :D',
     address: {
       number: 6,
       street: 'Chemin de par ici',
@@ -546,13 +578,17 @@ const populateDB = async() => {
       postalCode: '1400',
       state: 'Vaud',
       country: 'Suisse',
-      longitude: 6.6562137,
-      latitude: 46.7702474
+      longitude: 6.6362137,
+      latitude: 46.7002474
     }
+  });
+  const post2p2 = await postsServices.addPostOfProducer({
+    producerId: producer2.id,
+    text: 'Ceci est 2ème post ! :D'
   });
 
   const post1p3 = await postsServices.addPostOfProducer({
-    producerId: producer1.id,
+    producerId: producer3.id,
     text: 'Ceci est un post d\'un troisième producteur sans localisation! :D'
   });
 

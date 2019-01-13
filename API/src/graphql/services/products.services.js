@@ -113,12 +113,20 @@ async function updateProduct({ id, description, productTypeId }) {
  *
  * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct(id) {
+async function deleteProduct(id, producerId) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Received product.id is invalid!');
   }
 
-  return ProductsModel.findByIdAndRemove(id);
+  const product = await ProductsModel.findByIdAndRemove(id);
+
+  // on supprime l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType du produit supprimé
+  const res = await productTypesServices.removeProducerProducingThisProductType(product.productTypeId, producerId);
+
+  // on supprime l'id du produit dans le tableau des produits proposés par ce producteur
+  await producersServices.removeProductFromProducer(product.id, producerId);
+
+  return product;
 }
 
 module.exports = {

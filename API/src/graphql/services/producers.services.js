@@ -258,15 +258,24 @@ async function validateAProducer(producerId, validationState) {
  * @param {Integer} id, L'id du producteur à supprimer.
  */
 function deleteProducer(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received producer.id is invalid!');
-  }
-
-  // ajouter une propriété deleted (bool) au producteur et la mettre à true quand on le supprime mais ne jamais le supprimer...! disable ne doit pas être
-  // modifiable dans l'update!! -> faire un plugin pour filtrer tout les
-  // FIXME: il faut supprimer toutes les informations du producteur -> les produits, le point de vente, son id dans les productType qu'il produisait, ......
-
-  return ProducersModel.findByIdAndRemove(id);
+  return ProducersModel.findByIdAndUpdate(id, {
+    firstname: null,
+    lastname: null,
+    email: null,
+    password: null,
+    image: null,
+    // followingProducers: null,
+    emailValidated: null,
+    isAdmin: null,
+    // followers: null,
+    phoneNumber: null,
+    description: null,
+    website: null,
+    // salespoint: null,
+    isValidated: null,
+    // products: null,
+    rating: null
+  });
 }
 
 async function addFollowerToProducer(producerId, followerId) {
