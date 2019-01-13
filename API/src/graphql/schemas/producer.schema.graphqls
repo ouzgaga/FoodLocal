@@ -22,9 +22,6 @@ type Mutation {
 
 	# Met à jour les informations du producteur reçu en paramètre. Retourne null si ce producteur n'existe pas.
 	updateProducer(producer: ProducerInputUpdate!): Producer
-
-	# Supprime le producteur correspondant à l'id reçu en paramètre. Retourne null si l'id reçu ne correspond à aucun producteur.
-	deleteProducer(producerId: ID!): Producer
 }
 
 # Représente la localisation du client faisant l'appel à l'API.

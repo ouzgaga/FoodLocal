@@ -12,7 +12,7 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
   const token = await jwt.sign({ id, email }, config.jwtSecret, { expiresIn: '7d' });
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
-  // mail.sendMailConfirmation(email, firstname, lastname, token);
+  mail.sendMailConfirmation(email, firstname, lastname, token);
   return token;
 }
 

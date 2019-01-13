@@ -4,7 +4,7 @@ const producersServices = require('../services/producers.services');
 
 const postsResolvers = {
   Query: {
-    postsOfProducer: (parent, args, context) => postsServices.getAllPostsOfProducer(args.producerId)
+    postsOfProducer: (parent, args, context) => postsServices.getAllPostsOfProducer(args.producerId, args)
   },
 
   Mutation: {

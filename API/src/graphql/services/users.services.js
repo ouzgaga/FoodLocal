@@ -110,16 +110,21 @@ async function updateUser({ id, firstname, lastname, image }) {
 }
 
 /**
- * Supprime le producteur correspondant à l'id reçu.
+ * Supprime l'utilisateur correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du producteur à supprimer.
+ * @param {Integer} id, L'id de l'utilsiateur à supprimer.
  */
 function deleteUser(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received user.id is invalid!');
-  }
-
-  return UsersModel.findByIdAndRemove(id);
+  return UsersModel.findByIdAndUpdate(id, {
+    firstname: null,
+    lastname: null,
+    email: null,
+    password: null,
+    image: null,
+    // followingProducers: null,
+    emailValidated: null,
+    isAdmin: null
+  });
 }
 
 module.exports = {

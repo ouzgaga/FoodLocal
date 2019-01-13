@@ -133,6 +133,14 @@ async function validateEmailUserByToken(emailValidationToken) {
   return updatedPerson.emailValidated;
 }
 
+function deletePersonAccount(personId, kind) {
+  if (kind === 'producers') {
+    return producersServices.deleteProducer(personId);
+  } else {
+    return usersServices.deleteUser(personId);
+  }
+}
+
 module.exports = {
   isEmailAvailable,
   checkIfPersonIdExistInDB,
@@ -145,8 +153,11 @@ module.exports = {
   removeProducerToPersonsFollowingList,
   changePassword,
   checkIfPasswordIsValid,
-  validateEmailUserByToken
+  validateEmailUserByToken,
+  deletePersonAccount
 };
 
 const PersonsModel = require('../models/persons.modelgql');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
+const producersServices = require('./producers.services');
+const usersServices = require('./users.services');

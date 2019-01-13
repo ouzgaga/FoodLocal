@@ -4,9 +4,7 @@ type Query {
 }
 
 type Mutation {
-	# addUser(user: UserInputAdd!): User!
 	updateUser(user: UserInputUpdate!): User
-	deleteUser(userId: ID!): User
 }
 
 type User implements Person {
