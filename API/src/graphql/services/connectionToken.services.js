@@ -1,5 +1,14 @@
+module.exports = {
+  login,
+  signUpAsUser,
+  signUpAsProducer,
+  createConnectionToken,
+  upgradeUserToProducer
+};
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const PersonsModel = require('../models/persons.modelgql');
 const personsServices = require('./persons.services');
 const usersServices = require('./users.services');
 const producersServices = require('./producers.services');
@@ -50,13 +59,3 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
   const token = await createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind, producer.emailValidated);
   return { producer, newLoginToken: token };
 }
-
-
-module.exports = {
-  login,
-  signUpAsUser,
-  signUpAsProducer,
-  createConnectionToken,
-  upgradeUserToProducer
-};
-const PersonsModel = require('../models/persons.modelgql');

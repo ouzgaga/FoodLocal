@@ -1,3 +1,13 @@
+module.exports = {
+  getUsers,
+  countNbUsersInDB,
+  addUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAllUsersInReceivedIdList
+};
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
@@ -120,13 +130,3 @@ function deleteUser(id) {
     isAdmin: null
   });
 }
-
-module.exports = {
-  getUsers,
-  countNbUsersInDB,
-  addUser,
-  getUserById,
-  updateUser,
-  deleteUser,
-  getAllUsersInReceivedIdList
-};

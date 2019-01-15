@@ -1,5 +1,27 @@
+module.exports = {
+  getProducers,
+  getProducerById,
+  getAllProducerWaitingForValidation,
+  getAllProducersInReceivedIdList,
+  countProducersIndBD,
+  filterProducers,
+  geoFilterProducers,
+  addProducer,
+  addProductToProducer,
+  addSalespointToProducer,
+  removeSalespointToProducer,
+  removeProductFromProducer,
+  updateProducer,
+  updateProducerRating,
+  validateAProducer,
+  deleteProducer,
+  addFollowerToProducer,
+  removeFollowerToProducer
+};
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const salespointsServices = require('./salespoints.services');
 const notificationsServices = require('./notifications.services');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
@@ -324,27 +346,3 @@ async function removeFollowerToProducer(producerId, followerId) {
   // on ajoute le producerId au tableaux d'ids des producteurs suivi par la personne et on met à jour la personne dans la base de données
   return personsServices.removeProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
-
-
-module.exports = {
-  getProducers,
-  getProducerById,
-  getAllProducerWaitingForValidation,
-  getAllProducersInReceivedIdList,
-  countProducersIndBD,
-  filterProducers,
-  geoFilterProducers,
-  addProducer,
-  addProductToProducer,
-  addSalespointToProducer,
-  removeSalespointToProducer,
-  removeProductFromProducer,
-  updateProducer,
-  updateProducerRating,
-  validateAProducer,
-  deleteProducer,
-  addFollowerToProducer,
-  removeFollowerToProducer
-};
-
-const salespointsServices = require('./salespoints.services');

@@ -1,4 +1,15 @@
+module.exports = {
+  getSalespoints,
+  geoFilterSalespoints,
+  countNbSalespointInDB,
+  addSalespoint,
+  getSalespointById,
+  updateSalespoint,
+  deleteSalespoint
+};
+
 const mongoose = require('mongoose');
+const producersServices = require('./producers.services');
 const { SalespointsModel } = require('../models/salespoints.modelgql');
 
 /**
@@ -144,15 +155,3 @@ async function deleteSalespoint(id) {
 
   return SalespointsModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getSalespoints,
-  geoFilterSalespoints,
-  countNbSalespointInDB,
-  addSalespoint,
-  getSalespointById,
-  updateSalespoint,
-  deleteSalespoint
-};
-
-const producersServices = require('./producers.services');

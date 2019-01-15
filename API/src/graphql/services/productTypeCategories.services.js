@@ -1,3 +1,12 @@
+module.exports = {
+  getProductTypeCategories,
+  getProductTypeCategoryById,
+  countNbProductTypeCategoriesInDB,
+  addProductTypeCategory,
+  updateProductTypeCategory,
+  deleteProductTypeCategory
+};
+
 const mongoose = require('mongoose');
 const ProductTypeCategoriesModel = require('../models/productTypeCategories.modelgql');
 
@@ -72,12 +81,3 @@ function deleteProductTypeCategory(id) {
 
   return ProductTypeCategoriesModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getProductTypeCategories,
-  getProductTypeCategoryById,
-  countNbProductTypeCategoriesInDB,
-  addProductTypeCategory,
-  updateProductTypeCategory,
-  deleteProductTypeCategory
-};

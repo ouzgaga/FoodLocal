@@ -1,8 +1,18 @@
+module.exports = {
+  getProducts,
+  getAllProductsInReceivedIdList,
+  addAllProductsInArray,
+  addProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct
+};
+
 const mongoose = require('mongoose');
-const notificationsServices = require('./notifications.services');
 const ProductsModel = require('../models/products.modelgql');
 const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
+const notificationsServices = require('./notifications.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -126,13 +136,3 @@ async function deleteProduct(id, producerId) {
 
   return product;
 }
-
-module.exports = {
-  getProducts,
-  getAllProductsInReceivedIdList,
-  addAllProductsInArray,
-  addProduct,
-  getProductById,
-  updateProduct,
-  deleteProduct
-};

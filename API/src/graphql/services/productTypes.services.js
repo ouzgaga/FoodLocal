@@ -1,3 +1,16 @@
+module.exports = {
+  getProductTypes,
+  getProductTypeByCategory,
+  getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
+  countNbProductTypesInDB,
+  addProductType,
+  addProducerProducingThisProductType,
+  removeProducerProducingThisProductType,
+  getProductTypeById,
+  updateProductType,
+  deleteProductType
+};
+
 const mongoose = require('mongoose');
 const ProductTypesModel = require('../models/productTypes.modelgql');
 const ProducerModel = require('../models/producers.modelgql');
@@ -130,16 +143,3 @@ function deleteProductType(id) {
 
   return ProductTypesModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getProductTypes,
-  getProductTypeByCategory,
-  getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
-  countNbProductTypesInDB,
-  addProductType,
-  addProducerProducingThisProductType,
-  removeProducerProducingThisProductType,
-  getProductTypeById,
-  updateProductType,
-  deleteProductType
-};
