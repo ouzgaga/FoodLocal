@@ -1,6 +1,6 @@
 type Mutation {
     # Permet de valider l'email d'un utilisateur à l'aide
-    validateAnEmailToken(emailValidationToken: String!): Boolean!
+    validateAnEmailToken(emailValidationToken: String!): Token!
 
     askNewEmailToken(email:String!, password: String!): Token!
 

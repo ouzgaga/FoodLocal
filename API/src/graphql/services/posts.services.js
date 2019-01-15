@@ -23,7 +23,7 @@ function getAllPostsOfProducer(producerId, { first, after, last, before }) {
 
   return PostsModel.find({ _id: idCursor, producerId })
     .sort({ publicationDate: -1 })
-    .limit(limit);
+    .limit(limit + 1);
 }
 
 function countNbPostsOfProducerInDB(producerId) {
