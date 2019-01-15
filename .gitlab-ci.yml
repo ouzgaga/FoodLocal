@@ -26,7 +26,6 @@ build-api:
   - docker push $CONTAINER_TEST_IMAGE_API
   only:
   - prod
-  - master
   - API
 
 build-frontend:
@@ -41,7 +40,6 @@ build-frontend:
   only:
   - 10-site-web-creation-des-pages-principales-carte
   - prod
-  - master
 
 ##########
 ###TEST###
