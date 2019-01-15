@@ -143,7 +143,7 @@ async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { emailValidated: true }, { new: true }); // retourne l'objet modifié
-  return updatedPerson.emailValidated;
+  return connectionTokenServices.createConnectionToken(updatedPerson.id, updatedPerson.email, updatedPerson.isAdmin, updatedPerson.kind, updatedPerson.emailValidated);
 }
 
 function deletePersonAccount(personId, kind) {
@@ -175,3 +175,4 @@ const PersonsModel = require('../models/persons.modelgql');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 const producersServices = require('./producers.services');
 const usersServices = require('./users.services');
+const connectionTokenServices = require('./connectionToken.services');
