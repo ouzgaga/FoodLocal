@@ -112,7 +112,7 @@ class MenuDrawer extends React.Component {
       </List>
     );
 
-    const loggedMenu = (userStatus, isAdmin) => (
+    const loggedMenu = (userStatus, isAdmin, signOut) => (
       <List>
         <Link to="/myWall" className={classes.LinkButton}>
           <ListItem button>
@@ -171,7 +171,12 @@ class MenuDrawer extends React.Component {
 
         <ListItem
           button
-          onClick={onClick('logOut')}
+          onClick={
+            () => {
+              signOut();
+              onClick('logOut');
+            }
+          }
         >
           <ListItemIcon>
             <RegisterIcone color="primary" />
@@ -179,14 +184,14 @@ class MenuDrawer extends React.Component {
           <ListItemText primary="Se déconnecter" />
         </ListItem>
       </List>
-    )
+    );
 
     const personalMenu = (
       <AuthContext>
-        {({ userStatus, isAdmin }) => (
+        {({ userStatus, isAdmin, signOut }) => (
           userStatus ? (
             <>
-              {loggedMenu(userStatus, isAdmin)}
+              {loggedMenu(userStatus, isAdmin, signOut)}
             </>
           ) : (
             <>

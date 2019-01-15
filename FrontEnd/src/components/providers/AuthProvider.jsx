@@ -39,7 +39,7 @@ class AuthProvider extends React.Component {
       userMail: null,
       userStatus: null,
       isAdmin: false,
-      userIsValidate: false,
+      userEmailValidated: false,
       userToken: null,
 
 
@@ -47,6 +47,7 @@ class AuthProvider extends React.Component {
 
       signIn: this.signIn,
       signOut: this.signOut,
+      //renewToken: this.renewToken,
       resetError: this.setState({error: null}),
     };
   }
@@ -60,31 +61,53 @@ class AuthProvider extends React.Component {
       client.mutate({ mutation: mutRelog })
         .then(
           (data) => {
-            this.addState(data.data.renewToken.token);
+            //this.addState(data.data.renewToken.token);
+            const decoded = jwtDecode(token);
+            this.setState({
+              userID: decoded.id,
+              userMail: decoded.email,
+              userStatus: decoded.kind,
+              isAdmin: decoded.isAdmin,
+              userEmailValidated: decoded.emailValidated,
+              userToken: token,
+        
+              error: null,
+            });
+            console.info(this.state.userID)
+            console.info(this.state.userToken);
             window.localStorage.setItem('token', data.data.renewToken.token);
           }
         ).catch(
           (error) => {
-            console.log(error);
+            console.log("Error relog", error);
             this.signOut();
           }
         );
     }
   }
 
+  // permet de mettre à jour le token
+  renewToken = (token) => {
+    window.localStorage.setItem('token', token);
+    this.addState(token);
+  }
+
   // Décode le token et l'insère dans le state
   addState = (token) => {
     const decoded = jwtDecode(token);
+    console.info("token", token);
     this.setState({
       userID: decoded.id,
       userMail: decoded.email,
       userStatus: decoded.kind,
       isAdmin: decoded.isAdmin,
-      userEmailValidated: decoded.emailValidated, //TODO nom var
+      userEmailValidated: decoded.emailValidated,
       userToken: token,
 
       error: null,
     });
+    console.info(this.state.userID)
+    console.info(this.state.userToken);
   }
 
   signIn = async ({ userMail, password }) => {

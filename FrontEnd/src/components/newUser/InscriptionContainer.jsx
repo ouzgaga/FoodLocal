@@ -18,6 +18,24 @@ import StatusForm from './StatusForm';
 import GeneralsConditionForm from './GeneralsConditionForm';
 import InformationsForm from './InformationsForm';
 
+// Classe permettant d'executer une mutation à sa création
+class MutExec extends React.Component {
+  componentDidMount() {
+    this.props.execute();
+  }
+
+  render() {
+    const { data, loading, error, children } = this.props;
+    return (
+      <div>
+        {loading && <p>Chargement...</p>}
+        {error && <p>Une erreur est survenur, veuillez essayer plus tard</p>}
+        {data && (<>{children}</>) }
+      </div>
+    );
+  }
+}
+
 
 const styles = theme => ({
   layout: {
@@ -87,13 +105,12 @@ const mutSingUpUser = gql`
 
 // Mutation pour ajouter un nouveau producteur
 const mutSingUpProducer = gql`
-  mutation ($producer: ProducerInputAdd!){
-    signUpAsProducer(newProducer:$producer){
+  mutation ($user: ProducerInputAdd!){
+    signUpAsProducer(newProducer:$user){
       token
     }
   }
   `;
-
 
 class InscriptionContainer extends React.Component {
 
@@ -139,7 +156,7 @@ class InscriptionContainer extends React.Component {
 
   queryEmailExist = (email) => {
     const { client } = this.props;
-    return client.query({ query: queryCheckEmail, variables: { email } }).then(
+    return client.query({ query: queryCheckEmail, variables: { email }, option: { fetchPolicy: 'network-only' }}).then(
       (data) => {
         if (data) {
           return data.data.checkIfEmailIsAvailable;
@@ -178,7 +195,7 @@ class InscriptionContainer extends React.Component {
       case 0:
 
         const emailIsAvailable = await this.queryEmailExist(email);
-        
+
         if (!emailIsAvailable) {
           errors.push(`L'email : ${email} est déjà utilisé.`);
         }
@@ -209,21 +226,10 @@ class InscriptionContainer extends React.Component {
     }
   }
 
-  singUp = () => {
-    /*return(
-      <Mutation mutation={ADD_TODO}>
-        {(addTodo, { data }) => (
-
-        )}
-      </Mutation>
-    )*/
-  }
-
-
   render() {
     const { classes, onValidate, onClose } = this.props;
 
-    const { activeStep, errorMessages, email } = this.state;
+    const { activeStep, errorMessages, email, lastName, firstName, password, status } = this.state;
 
     return (
       <React.Fragment>
@@ -243,85 +249,107 @@ class InscriptionContainer extends React.Component {
             <form id="form-inscritpion" onSubmit={this.handleSubmit}>
               <React.Fragment>
                 {activeStep === steps.length ? (
-                  <React.Fragment>
-                    <Typography variant="subtitle1">
-                      {`Votre compte à été créé: ${email}`}
-                      <br />
-                      {`Veuillez-aller sur votre adresse mail pour confirmer l'inscrition.`}             
-                    </Typography>
-                    <Button
-                      onClick={onValidate}
-                      variant="contained"
-                      className={classes.button}
-                      color="primary"
+                  <>
+                    <Mutation
+                      mutation={(status === 'user' ? mutSingUpUser : mutSingUpProducer)}
+                      variables={{
+                        user: {
+                          firstname: firstName,
+                          lastname: lastName,
+                          email: email,
+                          password: password
+                        }
+                      }}
                     >
-                      {'fermer'}
-                    </Button>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    {this.getStepContent(activeStep)}
-
-                    {errorMessages.map((data, id) => {
-                      return (
-                        <Typography
-                          key={id}
-                          color="error"
+                      {(updateTodo, { data, loading, error }) => (
+                        <MutExec
+                          execute={updateTodo}
+                          data={data}
+                          loading={loading}
+                          error={error}
                         >
-                          {data}
-                        </Typography>
-                      );
-                    })}
-
-
-                    <Stepper activeStep={activeStep} className={classes.stepper}>
-                      {steps.map(label => (
-                        <Step key={label}>
-                          <StepLabel>{label}</StepLabel>
-                        </Step>
-                      ))}
-                    </Stepper>
-                    <div className={classes.buttons}>
-
-                      <Button
-                        onClick={onClose}
-                        className={classes.button}
-                        tabIndex="-1"
-                      >
-                        {'Annuler'}
-                      </Button>
-                      <div className={classes.grow} />
-                      {activeStep !== 0 && (
-                        <Button onClick={this.handleBack} className={classes.button}>
-                          {'Retour'}
-                        </Button>
+                          <Typography variant="subtitle1">
+                            {`Votre compte à été créé: ${email}`}
+                            <br />
+                            {`Veuillez-aller sur votre adresse mail pour confirmer l'inscrition.`}
+                          </Typography>
+                        </MutExec>
                       )}
+                    </Mutation>
+  
                       <Button
+                        onClick={onValidate}
                         variant="contained"
-                        color="primary"
-                        type="submit"
-                        id="register-button-step"
                         className={classes.button}
+                        color="primary"
                       >
-                        {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
+                        {'fermer'}
                       </Button>
-                    </div>
-                  </React.Fragment>
-                )}
+                  </>
+                    ) : (
+                    <React.Fragment>
+                      {this.getStepContent(activeStep)}
+
+                      {errorMessages.map((data, id) => {
+                        return (
+                          <Typography
+                            key={id}
+                            color="error"
+                          >
+                            {data}
+                          </Typography>
+                        );
+                      })}
+
+
+                      <Stepper activeStep={activeStep} className={classes.stepper}>
+                        {steps.map(label => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <div className={classes.buttons}>
+
+                        <Button
+                          onClick={onClose}
+                          className={classes.button}
+                          tabIndex="-1"
+                        >
+                          {'Annuler'}
+                        </Button>
+                        <div className={classes.grow} />
+                        {activeStep !== 0 && (
+                          <Button onClick={this.handleBack} className={classes.button}>
+                            {'Retour'}
+                          </Button>
+                        )}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                          id="register-button-step"
+                          className={classes.button}
+                        >
+                          {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
+                        </Button>
+                      </div>
+                    </React.Fragment>
+                    )}
               </React.Fragment>
             </form>
           </div>
         </main>
-      </React.Fragment>
-    );
-  }
-}
-
+      </React.Fragment >
+          );
+        }
+      }
+      
 InscriptionContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default compose(
-  withApollo,
-  withStyles(styles)
-)(InscriptionContainer);
+            classes: PropTypes.object.isRequired,
+        };
+        
+        export default compose(
+          withApollo,
+          withStyles(styles)
+        )(InscriptionContainer);

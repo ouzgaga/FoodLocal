@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
+
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import BorderedCountField from '../items/fields/BorderedCountField';
 import BoxLeftRight from './BoxLeftRight';
@@ -46,7 +50,7 @@ class PersonalDescription extends Component {
 
 
   render() {
-    const { classes } = this.props;
+    const { classes, userId, status, token } = this.props;
     const { description } = this.state;
 
     return (
@@ -78,5 +82,12 @@ class PersonalDescription extends Component {
     );
   }
 }
+
+PersonalDescription.propTypes = {
+  classes: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+};
 
 export default withStyles(styles)(PersonalDescription);

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import { withStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 
 import BorderedPasswordField from '../items/fields/BorderedPasswordField';
@@ -64,7 +66,7 @@ class ChangePassword extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, userId, status, token } = this.props;
     const { oldPassword, newPassword, confPassword } = this.state;
 
     return (
@@ -125,5 +127,12 @@ class ChangePassword extends Component {
     );
   }
 }
+
+ChangePassword.propTypes = {
+  classes: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+};
 
 export default withStyles(styles)(ChangePassword);

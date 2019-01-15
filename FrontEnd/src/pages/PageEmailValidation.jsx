@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import CenteredPaper from '../components/items/CenteredPaper';
-import Button from '@material-ui/core/Button';
+import NewValidationEmail from '../components/NewValidationEmail';  
+
+//import { AuthContext } from '../components/providers/AuthProvider';
 
 const styles = {
   paper: {
@@ -15,9 +16,20 @@ const styles = {
 
 const mutation = gql`
     mutation($token: String!){
-        validateToken(token: $token)
+      validateAnEmailToken(token: $token)
     }
 `;
+
+/*
+TODO, renew token
+const mutation = gql`
+    mutation($token: String!){
+      validateAnEmailToken(token: $token){
+        token
+      }
+    }
+`;
+*/
 
 class DoMutation extends React.Component {
   componentDidMount() {
@@ -45,13 +57,20 @@ class PageEmailValidation extends Component {
               <div>
                 <DoMutation mutate={validate} />
                 {error && (
-                  <div>
-                    <Typography variant="h3" color="secondary">Error - Token not valide</Typography>
-                    <Button>Send new email confimation</Button> {/* TODO */}
-                  </div>
+                  <>
+                    <br/>
+                    <Typography  color="error">Le lien de validation n'est plus valide</Typography>
+                    <br/>
+                    <NewValidationEmail />
+                  </>
                 )}
-                {loading && <Typography variant="h3" color="secondary">Loading</Typography>}
-                {data && <Typography variant="h3" color="secondary">Email confirmé</Typography>}
+                {loading && <Typography  color="secondary">Loading</Typography>}
+                {data && (
+                  <>
+                    <Typography color="secondary">Email confirmé, vous pouvez vous connecter</Typography>
+
+                  </>
+                )}
               </div>
             )}
           </Mutation>

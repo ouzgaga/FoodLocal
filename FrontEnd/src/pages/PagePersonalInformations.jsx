@@ -5,24 +5,7 @@ import PersonalInformation from '../components/accouontCRUD/PersonalInformation'
 import PersonalDescription from '../components/accouontCRUD/PersonalDescription';
 import ChangePassword from '../components/accouontCRUD/ChangePassword';
 import BoxWithHeader from '../components/items/BoxWithHeader';
-
-/*
-const GET_REPOSITORY = gql`
-query ($producer:ProducerInputGetAndDelete!) {
-  producer(producer:$producer){
-    firstname
-    lastname
-    email
-    image
-    description
-    rating 
-    totalCountRating
-    subscribedUsers {
-      totalCount
-    }
-  }
-}`;
-*/
+import { AuthContext } from '../components/providers/AuthProvider'
 
 const styles = theme => ({
   root: {
@@ -50,42 +33,58 @@ class PagePersonalInformations extends React.Component {
     };
   }
 
-  /*
-  query = () => {
-    return (
-      <Query query={query}>
-        {({ data, loading, error }) => {
-          if (error) return 'Oups une erreur est survenue, veuillez rfraichir la page.';
-          if (loading) return 'Loading...';
-          return (
-            <MainMap data={data} />
-          );
-        }}
-      </Query>
-    );
-  }
-  */
-
   render() {
     const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
+    const userSettings = (userId, status, token) => (
+      <>
         <BoxWithHeader
           header="Informations personnels"
         >
-          <PersonalInformation />
+          <PersonalInformation userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Changer de mot de passe"
         >
-          <ChangePassword />
+          <ChangePassword userId={userId} status={status} token={token} />
+        </BoxWithHeader>
+      </>
+    );
+
+    const producerSettings = (userId, status, token) => (
+      <>
+        <BoxWithHeader
+          header="Informations personnels"
+        >
+          <PersonalInformation userId={userId} status={status} token={token} />
+        </BoxWithHeader>
+        <BoxWithHeader
+          header="Changer de mot de passe"
+        >
+          <ChangePassword userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Changer votre description"
         >
-          <PersonalDescription />
+          <PersonalDescription userId={userId} status={status} token={token} />
         </BoxWithHeader>
+      </>
+    );
+
+
+    return (
+      <div className={classes.root}>
+        <AuthContext>
+          {({ userId, userStatus, userToken }) => {
+            console.info(userId, userStatus, userToken)
+            return(userStatus === 'producers' ?
+              producerSettings(userId, userStatus, userToken)
+            :
+              userSettings(userId, userStatus, userToken));
+          }
+          }
+        </AuthContext>
+
+
       </div>
     );
   }
