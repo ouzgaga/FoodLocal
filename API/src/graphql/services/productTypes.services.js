@@ -68,8 +68,8 @@ function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTyp
   );
 }
 
-function countNbProductTypesInDB() {
-  return ProductTypesModel.countDocuments();
+function countNbProductTypesInDB(filtersObject) {
+  return ProductTypesModel.countDocuments(filtersObject);
 }
 
 /**

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const notificationsServices = require('./notifications.services');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
@@ -170,6 +171,9 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
   if (website !== undefined) {
     producerToUpdate.website = website;
   }
+
+  // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_INFO', id);
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
 }

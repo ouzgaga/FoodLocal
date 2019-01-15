@@ -86,6 +86,10 @@ const productResolvers = {
     totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB()
   },
 
+  ProductTypeOfCategoryConnection: {
+    totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB({ categoryId: parent.edges[0].node.categoryId })
+  },
+
   ProductTypeCategoryConnection: {
     totalCount: (parent, args, context) => productTypeCategoriesServices.countNbProductTypeCategoriesInDB()
   }

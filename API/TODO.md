@@ -53,7 +53,7 @@ Reste à faire:
 
 - Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!
 
-- Ajouter la pagination entre la DB et le serveur!!! (répliquer les paramètres reçus dans les appels à la DB)
+- Ajouter la pagination entre la DB et le serveur!!!
 
 - Ajouter le geoFilter au filtre des byProductsTypesId!
 

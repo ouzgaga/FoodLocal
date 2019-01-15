@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const notificationsServices = require('./notifications.services');
 const ProductsModel = require('../models/products.modelgql');
 const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
@@ -61,6 +62,9 @@ async function addProduct(product, producerId) {
 
   // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
   await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+  // on ajoute une nouvelle notification signalant l'ajout d'un nouveau produit proposé par le producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_PRODUCTS_LIST', producerId);
 
   return addedProduct;
 }
