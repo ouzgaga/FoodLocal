@@ -1,11 +1,16 @@
 const { defaultFieldResolver } = require('graphql');
-const { connectionFromArray, connectionArgs } = require('graphql-relay');
+const { mongooseConnection } = require('graphql-relay-connection');
+const { connectionArgs } = require('graphql-relay');
 const { SchemaDirectiveVisitor } = require('apollo-server-express');
 
 class ConnectionDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     // get original resolver
     const { resolve = defaultFieldResolver } = field;
+
+    const {
+      connectionFromArray
+    } = mongooseConnection;
 
     // add connections arguments
     field.args.push({ name: 'after', type: connectionArgs.after.type });

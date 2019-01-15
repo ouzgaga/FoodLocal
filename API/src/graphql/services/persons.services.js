@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const config = require('../../config/config');
 
 async function isEmailAvailable(emailUser) {
@@ -109,6 +110,18 @@ async function changePassword(newPassword, oldPassword, personId) {
   return updatedPerson != null;
 }
 
+async function resetPassword(email) {
+  const person = await PersonsModel.findOne({ email });
+
+  if (person == null || person.id == null) {
+    throw new Error(`There is no user corresponding to the email "${email}"`);
+  }
+  const password = crypto.randomBytes(20).toString('hex');
+  person.password = await bcrypt.hash(password, 10);
+  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
+  return updatedPerson != null;
+}
+
 function checkIfPasswordIsValid(password) {
   if (password.length < 6) {
     throw new Error('New password must be at least 6 characters long.');
@@ -152,6 +165,7 @@ module.exports = {
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
   changePassword,
+  resetPassword,
   checkIfPasswordIsValid,
   validateEmailUserByToken,
   deletePersonAccount
