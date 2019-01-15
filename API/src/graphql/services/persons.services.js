@@ -56,6 +56,7 @@ async function getPersonByToken(token) {
 }
 
 function getAllPersonsInReceivedIdList(listOfIdToGet) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 

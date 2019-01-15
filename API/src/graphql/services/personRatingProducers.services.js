@@ -7,20 +7,10 @@ const producersServices = require('./producers.services');
  *
  * @param {Integer} producerId, L'id du producteur dont on souhaite récupérer tous les ratings le concernant.
  */
-function getAllRatingsAboutProducerWithId(producerId, { limit = 30, page = 0 } = {}) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received personRatingProducer.producerId is invalid!');
-  }
-
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getAllRatingsAboutProducerWithId(producerId) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PersonRatingProducersModel.find({ producerId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -55,20 +45,10 @@ async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { li
  *
  * @param {Integer} personId, L'id de la personne dont on souhaite récupérer tous les ratings qu'il a fait.
  */
-function getAllRatingsMadeByPersonWithId(personId, { limit = 30, page = 0 } = {}) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    throw new Error('Received personRatingProducer.personId is invalid!');
-  }
-
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getAllRatingsMadeByPersonWithId(personId) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PersonRatingProducersModel.find({ personId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 function countNbRatingsMadeByPersonWithId(personId) {
