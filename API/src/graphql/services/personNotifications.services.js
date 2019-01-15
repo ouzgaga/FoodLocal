@@ -1,20 +1,10 @@
 const mongoose = require('mongoose');
 const PersonsNotificationsModel = require('../models/personNotifications.modelgql');
 
-function getAllNotificationsOfPerson(personId, { limit = 30, page = 0 } = {}) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    throw new Error('Received personId is invalid!');
-  }
-
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getAllNotificationsOfPerson(personId) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PersonsNotificationsModel.find({ personId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 function countNbNotificationsOfPerson(personId) {

@@ -13,16 +13,10 @@ const ProducerModel = require('../models/producers.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" types de produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 types de produits, soit les types de produits 41 à 60.
  */
-function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getProductTypes({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return ProductTypesModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -39,10 +33,6 @@ function getProductTypeById(id) {
 }
 
 function getProductTypeByCategory(productTypeCategoryId) {
-  if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
-    throw new Error('Received productTypeCategory.id is invalid!');
-  }
-
   return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
 }
 

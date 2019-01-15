@@ -16,16 +16,10 @@ const productTypesServices = require('./productTypes.services');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
  */
-function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getProducers({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return ProducersModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -48,7 +42,7 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return ProducersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+  return getProducers({ _id: { $in: listOfIdToGet } });
 }
 
 /**
@@ -56,7 +50,7 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
  * @returns {*}
  */
 function getAllProducerWaitingForValidation() {
-  return ProducersModel.find({ isValidated: false });
+  return getProducers({ isValidated: false });
 }
 
 function countProducersIndBD() {
@@ -81,10 +75,11 @@ function filterProducers(byProductTypeIds) {
   return getProducers();
 }
 
-async function geoFilterProducers({ longitude, latitude, maxDistance }) {
+async function geoFilterProducers({ longitude, latitude, maxDistance }, byProductTypeIds) {
   const salespoints = await salespointsServices.geoFilterSalespoints({ longitude, latitude, maxDistance });
 
-  return ProducersModel.find({ salespointId: { $in: salespoints } }).sort({ _id: 1 });
+  // fixme: à retapper pour retourner le champ distance (entre le user et le salespoint) et ajouter le filtre par productId!!
+  return getProducers({ salespointId: { $in: salespoints } });
 }
 
 /**
