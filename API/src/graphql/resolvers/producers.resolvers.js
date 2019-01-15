@@ -15,7 +15,10 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
+    geoFilterProducers: async(parent, args, context) => {
+      const res = await producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds);
+      return res;
+    }
   },
 
   Mutation: {

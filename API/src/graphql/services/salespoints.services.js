@@ -1,6 +1,6 @@
 module.exports = {
   getSalespoints,
-  geoFilterSalespoints,
+  geoFilterProducersSalespoints,
   countNbSalespointInDB,
   addSalespoint,
   getSalespointById,
@@ -42,17 +42,141 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
-function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
-  return SalespointsModel.aggregate([
-    {
-      $geoNear: {
-        near: { type: 'Point', coordinates: [longitude, latitude] },
-        spherical: true,
-        distanceField: 'distance',
-        maxDistance
+function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  // FIXME: PAUL: est-ce possible de faire en sorte que GraphQL convertisse automatiquement les ID en ObjectID ?
+  productTypeIdsTab = productTypeIdsTab.map(e => mongoose.Types.ObjectId(e));
+
+  return SalespointsModel.aggregate(
+    [
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [
+              longitude,
+              latitude
+            ]
+          },
+          spherical: true,
+          distanceField: 'distance',
+          maxDistance
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            salespoint: '$$ROOT'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'persons',
+          localField: 'salespoint._id',
+          foreignField: 'salespointId',
+          as: 'producer'
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  '$producer',
+                  0.0
+                ]
+              },
+              '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productsIds',
+          foreignField: '_id',
+          as: 'products'
+        }
+      },
+      {
+        $project: {
+          salespointId: false,
+          producer: false,
+          productsIds: false
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          followersIds: {
+            $first: '$followersIds'
+          },
+          followingProducersIds: {
+            $first: '$followingProducersIds'
+          },
+          kind: {
+            $first: '$kind'
+          },
+          firstname: {
+            $first: '$firstname'
+          },
+          lastname: {
+            $first: '$lastname'
+          },
+          email: {
+            $first: '$email'
+          },
+          password: {
+            $first: '$password'
+          },
+          image: {
+            $first: '$image'
+          },
+          emailValidated: {
+            $first: '$emailValidated'
+          },
+          isAdmin: {
+            $first: '$isAdmin'
+          },
+          phoneNumber: {
+            $first: '$phoneNumber'
+          },
+          description: {
+            $first: '$description'
+          },
+          isValidated: {
+            $first: '$isValidated'
+          },
+          rating: {
+            $first: '$rating'
+          },
+          salespoint: {
+            $first: '$salespoint'
+          },
+          products: {
+            $first: '$products'
+          },
+          productTypeIds: {
+            $addToSet: '$products.productTypeId'
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$productTypeIds'
+        }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
       }
-    }
-  ]);
+    ]
+  );
 }
 
 function countNbSalespointInDB() {

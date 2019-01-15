@@ -89,20 +89,21 @@ function countProducersIndBD() {
  * @returns {Promise<*>}
  */
 function filterProducers(byProductTypeIds) {
-  if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
-    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+  if (byProductTypeIds == null) {
+    throw new Error('Received parameter "byProductTypeIds" cannot be null!');
   }
 
-  // pas de filtre --> on retourne tous les producteurs
-  return getProducers();
+  if (byProductTypeIds.length !== 0) {
+    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
+    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+  } else {
+    // pas de filtre --> on retourne tous les producteurs
+    return getProducers();
+  }
 }
 
-async function geoFilterProducers({ longitude, latitude, maxDistance }, byProductTypeIds) {
-  const salespoints = await salespointsServices.geoFilterSalespoints({ longitude, latitude, maxDistance });
-
-  // fixme: à retapper pour retourner le champ distance (entre le user et le salespoint) et ajouter le filtre par productId!!
-  return getProducers({ salespointId: { $in: salespoints } });
+function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  return salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab);
 }
 
 /**
