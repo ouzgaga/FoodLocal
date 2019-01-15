@@ -26,21 +26,13 @@ input UserInputAdd {
 	email: String!
 	password: String! # password obligatoire à l'ajout
 	image: String
-	# followingProducersIds:[ID!]
-	# emailValidated: Boolean!
-	# isAdmin: Boolean! # ne peut pas être modifié par le client
 }
 
 input UserInputUpdate {
 	id: ID!
 	firstname: String!
 	lastname: String!
-	# email: String! # l'email ne peut pas être modifié!
-	# password: String! # le password ne peut être modifié que via son propre endpoint (changePassword())
-	image: String # faudra l'encoder en base64
-	# followingProducersIds:[ID!]  # pas obligatoire si vide
-	# emailValidated: Boolean!
-	# isAdmin: Boolean! # ne peut pas être modifié par le client
+	image: String
 }
 
 type UserConnection {

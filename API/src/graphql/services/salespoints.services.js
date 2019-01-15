@@ -12,16 +12,10 @@ const { SalespointsModel } = require('../models/salespoints.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalespoints({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getSalespoints({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return SalespointsModel.find({ tags })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
