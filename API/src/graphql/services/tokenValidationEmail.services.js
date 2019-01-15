@@ -9,9 +9,10 @@ async function askNewEmailToken(email, password) {
 }
 
 async function addTokenValidationEmail({ id, email, firstname, lastname }) {
-  const token = await jwt.sign({ id, email }, config.jwtSecret, { expiresIn: '7d' });
+  const token = await jwt.sign({ id, email }, config.jwtSecret, { expiresIn: '7d', subject: 'emailValidationToken' });
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
+  console.log(`token evoyé : ${token}`);
   mail.sendMailConfirmation(email, firstname, lastname, token);
   return token;
 }
@@ -23,7 +24,7 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
  */
 async function validateToken(token) {
   try {
-    const tokenContent = await jwt.verify(token, config.jwtSecret, { maxAge: '7d' });
+    const tokenContent = await jwt.verify(token, config.jwtSecret, { maxAge: '7d', subject: 'emailValidationToken' });
 
     const person = await personsServices.getPersonById(tokenContent.id);
     if (person == null) {

@@ -23,9 +23,9 @@ const getToken = async(req) => {
 
   if (token) {
     try {
-      return await jwt.verify(token, config.jwtSecret);
+      return await jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' });
     } catch (e) {
-      throw new AuthenticationError('Your session expired. Sign in again.');
+      throw new AuthenticationError(e.message);
     }
   }
 };

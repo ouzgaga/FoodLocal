@@ -28,7 +28,7 @@ async function signUpAsProducer(newProducer) {
 }
 
 function createConnectionToken(id, email, isAdmin, kind, emailValidated) {
-  return jwt.sign({ id, email, isAdmin, kind, emailValidated }, config.jwtSecret);
+  return jwt.sign({ id, email, isAdmin, kind, emailValidated }, config.jwtSecret, { subject: 'connectionToken' });
 }
 
 async function upgradeUserToProducer(idUserToUpgrade, password) {

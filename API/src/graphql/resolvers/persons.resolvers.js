@@ -25,6 +25,8 @@ const personsResolvers = {
       return personsServices.changePassword(args.newPassword, args.oldPassword, args.personId);
     },
 
+    resetPassword: (parent, args, context) => personsServices.resetPassword(args.email),
+
     deletePersonAccount: async(parent, args, context) => {
       await isAuthenticated(context.id);
       return personsServices.deletePersonAccount(context.id, context.kind);

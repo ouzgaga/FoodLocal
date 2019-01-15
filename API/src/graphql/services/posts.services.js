@@ -1,21 +1,29 @@
 const mongoose = require('mongoose');
+const { mongooseConnection } = require('graphql-relay-connection');
 const PostsModel = require('../models/posts.modelgql');
 const notificationsServices = require('./notifications.services');
 
-function getAllPostsOfProducer(producerId, { limit = 30, page = 0 } = {}) {
+function getAllPostsOfProducer(producerId, { first, after, last, before }) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     throw new Error('Received producerId is invalid!');
   }
 
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
+  const { cursorToDocument } = mongooseConnection;
+
+  const limit = first || last || 50;
+
+  let idCursor = { $ne: null };
+  if (after != null) {
+    const doc = cursorToDocument(after);
+    idCursor = { $gt: doc && doc._id };
+  } else if (before != null) {
+    const doc = cursorToDocument(before);
+    idCursor = { $lt: doc && doc._id };
   }
 
-  return PostsModel.find({ producerId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+  return PostsModel.find({ _id: idCursor, producerId })
+    .sort({ publicationDate: -1 })
+    .limit(limit);
 }
 
 function countNbPostsOfProducerInDB(producerId) {
