@@ -71,20 +71,14 @@ function countProducersIndBD() {
  * @param byProductTypeIds, tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
  * @returns {Promise<*>}
  */
-async function filterProducers(byProductTypeIds) {
-  let filtredProducersObjectIds;
-
+function filterProducers(byProductTypeIds) {
   if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
     // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    filtredProducersObjectIds = await productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
   }
 
-  if (filtredProducersObjectIds != null && filtredProducersObjectIds.length !== 0) {
-    return getAllProducersInReceivedIdList(filtredProducersObjectIds);
-  } else {
-    // pas de filtre --> on retourne tous les producteurs
-    return getProducers();
-  }
+  // pas de filtre --> on retourne tous les producteurs
+  return getProducers();
 }
 
 async function geoFilterProducers({ longitude, latitude, maxDistance }) {

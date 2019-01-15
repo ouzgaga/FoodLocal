@@ -55,4 +55,3 @@ Reste à faire:
 
 - Ajouter la pagination entre la DB et le serveur!!! (répliquer les paramètres reçus dans les appels à la DB)
 
-- Retourner le nouveau token dans la mutation validateAnEmailToken() au lieu d'un booléen (inutile)

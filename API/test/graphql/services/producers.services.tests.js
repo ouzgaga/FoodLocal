@@ -309,7 +309,6 @@ describe('tests producers services', () => {
   });
 
   describe('tests filterProducers by productTypeIds', () => {
-    /*
     it('should return only producers that produce some products of the given productTypeIds', async() => {
       // on récupère tous les producteurs produisant des produits de la catégorie 'productTypePomme'
       const producersOfPommes = await producersServices.filterProducers([productTypePomme._id]);
@@ -321,7 +320,6 @@ describe('tests producers services', () => {
       producersOfPoires.should.be.an('array');
       producersOfPoires.length.should.be.equal(1);
     });
-    */
   });
 
   describe('tests addProducer', () => {
