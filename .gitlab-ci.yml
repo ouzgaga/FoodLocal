@@ -185,4 +185,3 @@ deploy-frontend:
   - kubectl apply -f ./Deployment/Frontend/frontend-deploy.yml
   only:
   - prod
-
