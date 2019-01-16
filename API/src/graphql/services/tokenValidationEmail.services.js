@@ -1,4 +1,11 @@
+module.exports = {
+  askNewEmailToken,
+  addTokenValidationEmail,
+  validateToken
+};
+
 const jwt = require('jsonwebtoken');
+const personsServices = require('./persons.services');
 const config = require('../../config/config');
 const mail = require('../utils/sendEmailFoodlocal');
 
@@ -43,11 +50,3 @@ async function validateToken(token) {
     throw err;
   }
 }
-
-module.exports = {
-  askNewEmailToken,
-  addTokenValidationEmail,
-  validateToken
-};
-
-const personsServices = require('./persons.services');

@@ -1,4 +1,15 @@
+module.exports = {
+  getSalespoints,
+  geoFilterProducersSalespoints,
+  countNbSalespointInDB,
+  addSalespoint,
+  getSalespointById,
+  updateSalespoint,
+  deleteSalespoint
+};
+
 const mongoose = require('mongoose');
+const producersServices = require('./producers.services');
 const { SalespointsModel } = require('../models/salespoints.modelgql');
 
 /**
@@ -14,7 +25,7 @@ const { SalespointsModel } = require('../models/salespoints.modelgql');
  */
 function getSalespoints({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return SalespointsModel.find({ tags })
+  return SalespointsModel.find(tags)
     .sort({ _id: 1 });
 }
 
@@ -31,17 +42,100 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
-function geoFilterSalespoints({ longitude, latitude, maxDistance }) {
-  return SalespointsModel.aggregate([
-    {
-      $geoNear: {
-        near: { type: 'Point', coordinates: [longitude, latitude] },
-        spherical: true,
-        distanceField: 'distance',
-        maxDistance
+function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  // FIXME: PAUL: est-ce possible de faire en sorte que GraphQL convertisse automatiquement les ID en ObjectID ?
+  productTypeIdsTab = productTypeIdsTab.map(e => mongoose.Types.ObjectId(e));
+
+  return SalespointsModel.aggregate(
+    [
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [
+              longitude,
+              latitude
+            ]
+          },
+          spherical: true,
+          distanceField: 'distance',
+          maxDistance
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            salespoint: '$$ROOT'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'persons',
+          localField: 'salespoint._id',
+          foreignField: 'salespointId',
+          as: 'producer'
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  '$producer',
+                  0.0
+                ]
+              },
+              '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productsIds',
+          foreignField: '_id',
+          as: 'products'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          kind: { $first: '$kind' },
+          firstname: { $first: '$firstname' },
+          lastname: { $first: '$lastname' },
+          email: { $first: '$email' },
+          image: { $first: '$image' },
+          followingProducersIds: { $first: '$followingProducersIds' },
+          emailValidated: { $first: '$emailValidated' },
+          isAdmin: { $first: '$isAdmin' },
+          followersIds: { $first: '$followersIds' },
+          phoneNumber: { $first: '$phoneNumber' },
+          description: { $first: '$description' },
+          website: { $first: '$website' },
+          salespointId: { $first: '$salespointId' },
+          isValidated: { $first: '$isValidated' },
+          productsIds: { $first: '$productsIds' },
+          rating: { $first: '$rating' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
+        }
+      },
+      {
+        $unwind: {
+          path: '$productTypeIds'
+        }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
       }
-    }
-  ]);
+    ]
+  );
 }
 
 function countNbSalespointInDB() {
@@ -144,15 +238,3 @@ async function deleteSalespoint(id) {
 
   return SalespointsModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getSalespoints,
-  geoFilterSalespoints,
-  countNbSalespointInDB,
-  addSalespoint,
-  getSalespointById,
-  updateSalespoint,
-  deleteSalespoint
-};
-
-const producersServices = require('./producers.services');

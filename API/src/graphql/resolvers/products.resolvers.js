@@ -74,6 +74,8 @@ const productResolvers = {
   },
 
   Product: {
+    id: (parent, args, context) => parent._id.toString(),
+
     productType: (parent, args, context) => productTypesServices.getProductTypeById(parent.productTypeId)
   },
 
@@ -84,6 +86,10 @@ const productResolvers = {
 
   ProductTypeConnection: {
     totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB()
+  },
+
+  ProductTypeOfCategoryConnection: {
+    totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB({ categoryId: parent.edges[0].node.categoryId })
   },
 
   ProductTypeCategoryConnection: {

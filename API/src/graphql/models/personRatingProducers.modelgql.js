@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const personsServices = require('../services/persons.services');
-const ProducersModel = require('../models/producers.modelgql');
 
 const options = {
   toObject: { virtuals: true }
@@ -100,3 +98,5 @@ const PersonRatingProducersModel = mongoose.model('personRatingProducer', person
  * @typedef personRatingProducer
  */
 module.exports = PersonRatingProducersModel;
+const personsServices = require('../services/persons.services');
+const ProducersModel = require('../models/producers.modelgql');

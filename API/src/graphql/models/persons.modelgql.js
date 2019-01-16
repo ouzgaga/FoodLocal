@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { SalespointsModel } = require('./salespoints.modelgql');
 
 /**
  * Person Schema
@@ -97,6 +96,5 @@ const PersonsModel = mongoose.model('persons', personSchema);
  * @typedef Person
  */
 module.exports = PersonsModel;
-
-// Très moche, mais permet de résoudre le problème de dépendances circulaires...
 const ProductsModel = require('../models/products.modelgql');
+const { SalespointsModel } = require('./salespoints.modelgql');

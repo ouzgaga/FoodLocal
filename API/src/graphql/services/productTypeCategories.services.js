@@ -1,3 +1,12 @@
+module.exports = {
+  getProductTypeCategories,
+  getProductTypeCategoryById,
+  countNbProductTypeCategoriesInDB,
+  addProductTypeCategory,
+  updateProductTypeCategory,
+  deleteProductTypeCategory
+};
+
 const mongoose = require('mongoose');
 const ProductTypeCategoriesModel = require('../models/productTypeCategories.modelgql');
 
@@ -14,7 +23,7 @@ const ProductTypeCategoriesModel = require('../models/productTypeCategories.mode
  */
 function getProductTypeCategories({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return ProductTypeCategoriesModel.find({ tags })
+  return ProductTypeCategoriesModel.find(tags)
     .sort({ _id: 1 });
 }
 
@@ -72,12 +81,3 @@ function deleteProductTypeCategory(id) {
 
   return ProductTypeCategoriesModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getProductTypeCategories,
-  getProductTypeCategoryById,
-  countNbProductTypeCategoriesInDB,
-  addProductTypeCategory,
-  updateProductTypeCategory,
-  deleteProductTypeCategory
-};

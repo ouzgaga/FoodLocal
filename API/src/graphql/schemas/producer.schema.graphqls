@@ -78,8 +78,8 @@ input ProducerInputAdd {
 
 input ProducerInputUpdate {
 	id: ID!
-	firstname: String!
-	lastname: String!
+	firstname: String
+	lastname: String
 	image: String
 	phoneNumber: String
 	description: String

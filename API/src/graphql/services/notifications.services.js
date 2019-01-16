@@ -1,7 +1,12 @@
+module.exports = {
+  getNotificationById,
+  addNotification
+};
+
 const mongoose = require('mongoose');
+const producersServices = require('./producers.services');
 const NotificationsModel = require('../models/notifications.modelgql');
 const personNotificationsServices = require('./personNotifications.services');
-const producersServices = require('./producers.services');
 
 function getNotificationById(notificationId) {
   if (!mongoose.Types.ObjectId.isValid(notificationId)) {
@@ -33,8 +38,3 @@ async function addNotification(type, producerId) {
 
   return notification;
 }
-
-module.exports = {
-  getNotificationById,
-  addNotification
-};
