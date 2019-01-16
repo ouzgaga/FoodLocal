@@ -74,6 +74,8 @@ const productResolvers = {
   },
 
   Product: {
+    id: (parent, args, context) => parent._id.toString(),
+
     productType: (parent, args, context) => productTypesServices.getProductTypeById(parent.productTypeId)
   },
 

@@ -65,7 +65,7 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return getProducers({ _id: { $in: listOfIdToGet } });
+  return getProducers({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
@@ -73,7 +73,7 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
  * @returns {*}
  */
 function getAllProducerWaitingForValidation() {
-  return getProducers({ isValidated: false });
+  return getProducers({ tags: { isValidated: false } });
 }
 
 function countProducersIndBD() {
@@ -164,24 +164,26 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
 
   const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
+  // si producerValidation est nul -> l'utilisateur n'existe pas dans la DB
   if (producerValidation == null) {
     throw new Error('The received id is not in the database!');
   }
 
-  // si producerValidation n'est pas nul -> l'utilisateur existe dans la DB
   const { emailValidated, isValidated, isAdmin } = producerValidation;
 
   const producerToUpdate = {
-    id,
-    firstname,
-    lastname,
     emailValidated,
     isAdmin,
     isValidated
   };
 
-  // on ne déclare l'image, le phoneNumber, la description ou le website que s'il est réellement donné, sinon, on ne les déclare même pas (pour
-  // ne pas remplacer l'image dans la DB par null sans le vouloir
+  // si un élément est donnée, on l'update, sinon, on ne le déclare même pas (pour ne pas remplacer l'élément dans la DB par null sans le vouloir)
+  if (firstname !== undefined) {
+    producerToUpdate.firstname = firstname;
+  }
+  if (lastname !== undefined) {
+    producerToUpdate.lastname = lastname;
+  }
   if (image !== undefined) {
     producerToUpdate.image = image;
   }
@@ -273,8 +275,8 @@ async function validateAProducer(producerId, validationState) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer(id) {
-  return ProducersModel.findByIdAndUpdate(id, {
+async function deleteProducer(id) {
+  const producer = await ProducersModel.findByIdAndUpdate(id, {
     firstname: null,
     lastname: null,
     email: null,
@@ -292,6 +294,10 @@ function deleteProducer(id) {
     // products: null,
     rating: null
   });
+
+  const salespoint = salespointsServices.deleteSalespoint(producer.salespointId);
+
+  return producer;
 }
 
 async function addFollowerToProducer(producerId, followerId) {

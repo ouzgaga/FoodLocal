@@ -2,7 +2,7 @@ API:
 
 Reste à faire:
 
-- Une mise à jour des infos d'un prod ou de ses produits ou de son salespoint doit automatiquement créer un post sur son mur si celui-ci le demande.
+- **Une mise à jour des infos d'un prod ou de ses produits ou de son salespoint doit automatiquement créer un post sur son mur si celui-ci le demande.**
 
   ```
   Notre application permettra aux producteurs de partager de petits messages sur leur murs (petites news) contenant du texte et éventuellement une géolocalisation (affichant leur position sur une mini-map).
@@ -47,14 +47,12 @@ Reste à faire:
 
 - Refaire toute la java doc!
 
-- Filtrer les producteurs qui n'ont pas été validés par un admin!
+- **Filtrer les producteurs qui n'ont pas été validés par un admin!**
 
-- Ajouter les subscription pour les notifications
+- **Ajouter les subscription pour les notifications**
 
 - Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!
 
 - Ajouter la pagination entre la DB et le serveur!!!
 
-- Ajouter le geoFilter au filtre des byProductsTypesId!
-
-- rajouter l'envoi du mail lorsqu'on génère un novueau password
+- **rajouter l'envoi du mail lorsqu'on génère un nouveau password**

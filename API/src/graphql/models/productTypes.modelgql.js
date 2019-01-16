@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const ProductTypeCategoriesModel = require('./productTypeCategories.modelgql');
 
 const options = {
   toObject: { virtuals: true }
@@ -67,5 +66,5 @@ productTypeSchema.pre('findOneAndUpdate', async function(next) {
  * @typedef ProductType
  */
 module.exports = mongoose.model('productType', productTypeSchema);
-
 const personsServices = require('../services/persons.services');
+const ProductTypeCategoriesModel = require('./productTypeCategories.modelgql');

@@ -45,7 +45,7 @@ function getUserById(id) {
 }
 
 function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return getUsers({ _id: { $in: listOfIdToGet } });
+  return getUsers({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 function countNbUsersInDB() {
@@ -99,13 +99,17 @@ async function updateUser({ id, firstname, lastname, image }) {
   // si userValidation n'est pas nul -> l'utilisateur existe dans la DB
   const { emailValidated, isAdmin } = userValidation;
   const userToUpdate = {
-    firstname,
-    lastname,
     emailValidated,
     isAdmin
   };
 
-  // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
+  // si un élément est donnée, on l'update, sinon, on ne le déclare même pas (pour ne pas remplacer l'élément dans la DB par null sans le vouloir)
+  if (firstname !== undefined) {
+    userToUpdate.firstname = firstname;
+  }
+  if (lastname !== undefined) {
+    userToUpdate.lastname = lastname;
+  }
   if (image !== undefined) {
     userToUpdate.image = image;
   }

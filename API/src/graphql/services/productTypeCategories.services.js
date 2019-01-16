@@ -23,7 +23,7 @@ const ProductTypeCategoriesModel = require('../models/productTypeCategories.mode
  */
 function getProductTypeCategories({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return ProductTypeCategoriesModel.find({ tags })
+  return ProductTypeCategoriesModel.find(tags)
     .sort({ _id: 1 });
 }
 

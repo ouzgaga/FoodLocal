@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { addressSchema } = require('./salespoints.modelgql');
-const personsServices = require('../services/persons.services');
 
 const options = {
   toObject: { virtuals: true }
@@ -53,3 +52,4 @@ const PostsModel = mongoose.model('posts', postsSchema);
  * @typedef postsSchema
  */
 module.exports = PostsModel;
+const personsServices = require('../services/persons.services');

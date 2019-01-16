@@ -15,9 +15,8 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    geoFilterProducers: async(parent, args, context) => {
-      const res = await producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds);
-      return res;
+    geoFilterProducers: (parent, args, context) => {
+      return producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds);
     }
   },
 
@@ -34,6 +33,8 @@ const producerResolvers = {
   },
 
   Producer: {
+    id: (parent, args, context) => parent._id.toString(),
+
     followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),

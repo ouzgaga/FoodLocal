@@ -27,7 +27,7 @@ const notificationsServices = require('./notifications.services');
  */
 function getProducts({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return ProductsModel.find({ tags })
+  return ProductsModel.find(tags)
     .sort({ _id: 1 });
 }
 
@@ -37,7 +37,7 @@ function getProducts({ tags = undefined } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return getProducts({ _id: { $in: listOfIdToGet } });
+  return getProducts({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**

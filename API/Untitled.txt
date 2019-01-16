@@ -1,3 +1,25 @@
+// Stages that have been excluded from the aggregation pipeline query
+__3tsoftwarelabs_disabled_aggregation_stages = [
+
+	{
+		// Stage 4 - excluded
+		stage: 4,  source: {
+			$unwind: { path: '$productTypeIds' }
+		}
+	},
+
+	{
+		// Stage 5 - excluded
+		stage: 5,  source: {
+			$match: {
+			  productTypeIds: {
+			    $all: [ObjectId("5c3e2537e5b4c15bd0fe95bf"), ObjectId("5c3e2537e5b4c15bd0fe95c0")]
+			  }
+			}
+		}
+	},
+]
+
 db.getCollection("persons").aggregate(
 
 	// Pipeline
@@ -15,22 +37,8 @@ db.getCollection("persons").aggregate(
 		// Stage 3
 		{
 			$group: {
-			  _id: { producer: '$_id' },
-			  productTypeIds: { $addToSet: '$products.productTypeId' }
-			}
-		},
-
-		// Stage 4
-		{
-			$unwind: { path: '$productTypeIds' }
-		},
-
-		// Stage 5
-		{
-			$match: {
-			  productTypeIds: {
-			    $all: [ObjectId("5c38a3c4f305a311a931f205"), ObjectId("5c38a3c4f305a311a931f206")]
-			  }
+			  _id: '$_id',
+			  productTypeIds: { $addToSet: '$products.productTypeId'}
 			}
 		},
 

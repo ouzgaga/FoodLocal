@@ -1,3 +1,16 @@
+// Stages that have been excluded from the aggregation pipeline query
+__3tsoftwarelabs_disabled_aggregation_stages = [
+
+	{
+		// Stage 6 - excluded
+		stage: 6,  source: {
+			$project: {
+			    salespointId: false, producer: false, productsIds: false
+			}
+		}
+	},
+]
+
 db.getCollection("salespoints").aggregate(
 
 	// Pipeline
@@ -5,10 +18,10 @@ db.getCollection("salespoints").aggregate(
 		// Stage 1
 		{
 			$geoNear: {
-				near: { type: 'Point', coordinates: [6.68, 46.76] },
+			    near: { type: 'Point', coordinates: [6.68, 46.76] },
 			    spherical: true,
 			    distanceField: 'distance',
-			    maxDistance: 5000
+			    maxDistance: 3000
 			}
 		},
 
@@ -30,9 +43,9 @@ db.getCollection("salespoints").aggregate(
 		{
 			$replaceRoot: {
 			    newRoot: {
-			    	$mergeObjects: [
-			    		{ $arrayElemAt: ["$producer", 0]}, "$$ROOT"
-			    	]
+			        $mergeObjects: [
+			            { $arrayElemAt: ["$producer", 0]}, "$$ROOT"
+			        ]
 			    }
 			}
 		},
@@ -42,19 +55,12 @@ db.getCollection("salespoints").aggregate(
 			$lookup: { from: 'products', localField: 'productsIds', foreignField: '_id', as: 'products' }
 		},
 
-		// Stage 6
-		{
-			$project: {
-			    salespointId: false, producer: false, productsIds: false
-			}
-		},
-
 		// Stage 7
 		{
 			$group: {
-			  	_id: '$_id',
-			    followersIds: {$first: '$followersIds'},
-			    followingProducersIds: {$first: '$followingProducersIds'},
+			      _id: '$_id',
+			   	  followersIds: {$first: '$followersIds'},
+			      followingProducersIds: {$first: '$followingProducersIds'},
 			      kind: {$first: '$kind'},
 			      firstname: {$first: '$firstname'},
 			      lastname: {$first: '$lastname'},
@@ -69,7 +75,9 @@ db.getCollection("salespoints").aggregate(
 			      rating: {$first: '$rating'},
 			      salespoint: {$first: '$salespoint'},
 			      products: {$first: '$products'},
-			  productTypeIds: { $addToSet: '$products.productTypeId'},
+			 	  productTypeIds: { $addToSet: '$products.productTypeId'},
+			  	  salespointId: {$first: '$salespointId'},
+			  	  productsIds: {$first: '$productsIds'}
 			}
 		},
 
@@ -82,7 +90,7 @@ db.getCollection("salespoints").aggregate(
 		{
 			$match: {
 			  productTypeIds: {
-			    $all: [ObjectId("5c3df2e5e1abee4a38356edb"), ObjectId("5c3df2e5e1abee4a38356ed2"), ObjectId("5c3df2e5e1abee4a38356ee2")]
+			    $all: [ObjectId("5c3efe96d51af507c5310a3a"), ObjectId("5c3efe96d51af507c5310a43")]
 			  }
 			}
 		},

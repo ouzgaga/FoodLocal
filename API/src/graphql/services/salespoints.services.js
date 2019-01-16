@@ -25,7 +25,7 @@ const { SalespointsModel } = require('../models/salespoints.modelgql');
  */
 function getSalespoints({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return SalespointsModel.find({ tags })
+  return SalespointsModel.find(tags)
     .sort({ _id: 1 });
 }
 
@@ -101,66 +101,25 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, pro
         }
       },
       {
-        $project: {
-          salespointId: false,
-          producer: false,
-          productsIds: false
-        }
-      },
-      {
         $group: {
           _id: '$_id',
-          followersIds: {
-            $first: '$followersIds'
-          },
-          followingProducersIds: {
-            $first: '$followingProducersIds'
-          },
-          kind: {
-            $first: '$kind'
-          },
-          firstname: {
-            $first: '$firstname'
-          },
-          lastname: {
-            $first: '$lastname'
-          },
-          email: {
-            $first: '$email'
-          },
-          password: {
-            $first: '$password'
-          },
-          image: {
-            $first: '$image'
-          },
-          emailValidated: {
-            $first: '$emailValidated'
-          },
-          isAdmin: {
-            $first: '$isAdmin'
-          },
-          phoneNumber: {
-            $first: '$phoneNumber'
-          },
-          description: {
-            $first: '$description'
-          },
-          isValidated: {
-            $first: '$isValidated'
-          },
-          rating: {
-            $first: '$rating'
-          },
-          salespoint: {
-            $first: '$salespoint'
-          },
-          products: {
-            $first: '$products'
-          },
-          productTypeIds: {
-            $addToSet: '$products.productTypeId'
-          }
+          kind: { $first: '$kind' },
+          firstname: { $first: '$firstname' },
+          lastname: { $first: '$lastname' },
+          email: { $first: '$email' },
+          image: { $first: '$image' },
+          followingProducersIds: { $first: '$followingProducersIds' },
+          emailValidated: { $first: '$emailValidated' },
+          isAdmin: { $first: '$isAdmin' },
+          followersIds: { $first: '$followersIds' },
+          phoneNumber: { $first: '$phoneNumber' },
+          description: { $first: '$description' },
+          website: { $first: '$website' },
+          salespointId: { $first: '$salespointId' },
+          isValidated: { $first: '$isValidated' },
+          productsIds: { $first: '$productsIds' },
+          rating: { $first: '$rating' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
         }
       },
       {
