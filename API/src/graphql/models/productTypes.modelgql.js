@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const ProductTypeCategoriesModel = require('./productTypeCategories.modelgql');
-const personsServices = require('../services/persons.services');
 
 const options = {
   toObject: { virtuals: true }
@@ -52,8 +50,10 @@ productTypeSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {
       const addToSetOperation = this._update.$addToSet;
-      if (addToSetOperation.producersIds != null && !(await personsServices.checkIfPersonIdExistInDB(addToSetOperation.producersIds, true))) {
-        throw new Error(`The given producerId (with id: ${this._update.$addToSet.producersIds}) doesn’t exist in the database or is not a producer!`);
+      try {
+        await personsServices.checkIfPersonIdExistInDB(addToSetOperation.producersIds, true);
+      } catch (err) {
+        throw new Error(`The given producerId (with id: ${addToSetOperation.producersIds}) doesn’t exist in the database or is not a producer!`);
       }
     }
     next();
@@ -66,3 +66,5 @@ productTypeSchema.pre('findOneAndUpdate', async function(next) {
  * @typedef ProductType
  */
 module.exports = mongoose.model('productType', productTypeSchema);
+const personsServices = require('../services/persons.services');
+const ProductTypeCategoriesModel = require('./productTypeCategories.modelgql');

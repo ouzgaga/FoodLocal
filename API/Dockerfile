@@ -20,8 +20,12 @@ COPY package*.json ./
 
 #RUN npm install
 # If you are building your code for production
-RUN apk add python
+RUN apk update
+RUN apk --no-cache add --virtual builds-deps build-base python
+RUN npm config set python /usr/bin/python
 RUN npm install --only=production
+RUN npm rebuild bcrypt --build-from-source
+RUN apk del builds-deps
 
 # copy all file from current dir to /api in container
 COPY . /api/

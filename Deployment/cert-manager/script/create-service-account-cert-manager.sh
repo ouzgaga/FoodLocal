@@ -13,4 +13,4 @@ gcloud projects add-iam-policy-binding ${PROJECT} --member=serviceAccount:${NAME
 # Creating a Secret for the cert-manager
 kubectl create secret generic ${NAME} --from-file=../${KEY} --namespace=cert-manager
 
-# Note: The key (cert-key.json) will be generate in the parent folder to be seen by the certmanager.yml
+# Note: The key (cert-key.json) will be generate in the parent tmp to be seen by the certmanager.yml

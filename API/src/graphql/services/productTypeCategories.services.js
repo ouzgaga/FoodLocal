@@ -1,3 +1,12 @@
+module.exports = {
+  getProductTypeCategories,
+  getProductTypeCategoryById,
+  countNbProductTypeCategoriesInDB,
+  addProductTypeCategory,
+  updateProductTypeCategory,
+  deleteProductTypeCategory
+};
+
 const mongoose = require('mongoose');
 const ProductTypeCategoriesModel = require('../models/productTypeCategories.modelgql');
 
@@ -12,16 +21,10 @@ const ProductTypeCategoriesModel = require('../models/productTypeCategories.mode
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" catégories de produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 catégories de produits, soit les catégories de produits 41 à 60.
  */
-function getProductTypeCategories({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
-  return ProductTypeCategoriesModel.find({ tags })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+function getProductTypeCategories({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
+  return ProductTypeCategoriesModel.find(tags)
+    .sort({ _id: 1 });
 }
 
 /**
@@ -31,10 +34,14 @@ function getProductTypeCategories({ tags = undefined, limit = 50, page = 0 } = {
  */
 function getProductTypeCategoryById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
-  } else {
-    return ProductTypeCategoriesModel.findById(id);
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
+
+  return ProductTypeCategoriesModel.findById(id);
+}
+
+function countNbProductTypeCategoriesInDB() {
+  return ProductTypeCategoriesModel.countDocuments();
 }
 
 /**
@@ -56,7 +63,7 @@ function addProductTypeCategory(productTypeCategory) {
  */
 function updateProductTypeCategory(productTypeCategory) {
   if (!mongoose.Types.ObjectId.isValid(productTypeCategory.id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
 
   return ProductTypeCategoriesModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true }); // retourne l'objet modifié
@@ -69,16 +76,8 @@ function updateProductTypeCategory(productTypeCategory) {
  */
 function deleteProductTypeCategory(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productTypeCategory.id is invalid!');
+    throw new Error('Received productTypeCategory.id is invalid!');
   }
 
   return ProductTypeCategoriesModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getProductTypeCategories,
-  addProductTypeCategory,
-  getProductTypeCategoryById,
-  updateProductTypeCategory,
-  deleteProductTypeCategory
-};

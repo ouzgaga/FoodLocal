@@ -12,7 +12,8 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-underscore-dangle': 'off',
     'object-curly-newline': 'off',
-    'func-names': 'off'
+    'func-names': 'off',
+    'no-param-reassign': 'off'
   },
   'env': {
     'mocha': true

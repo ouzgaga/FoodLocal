@@ -1,83 +1,14 @@
 {
-	"producer":  {
-		"firstname": "Antoine",
-		"lastname": "Rochaille",
-		"email": "antoine@paysan.ch",
-		"password": "1234abcd",
-		"image": "Ceci est une image encodée en base64!",
-		"phoneNumber": "0761435196",
-		"description": "description",
-		"website": "foodlocal.ch",
-		"salespoint": {
-			"name": "Chez moi",
-			"address": {
-				"number": 6,
-				"street": "Chemin de par ici",
-				"city": "Yverdon",
-				"postalCode": "1400",
-				"state": "Vaud",
-				"country": "Suisse",
-				"longitude": 6.6562137,
-				"latitude": 46.7702474
-			},
-			"schedule": {
-				"monday": [
-					{
-						"openingHour": "08:00",
-						"closingHour": "12:00"
-					},
-					{
-						"openingHour": "13:00",
-						"closingHour": "18:00"
-					}
-				],
-				"tuesday": [],
-				"wednesday": [
-					{
-						"openingHour": "08:00",
-						"closingHour": "12:00"
-					}
-				],
-				"thursday": [],
-				"friday": [
-					{
-						"openingHour": "08:00",
-						"closingHour": "12:00"
-					}
-				],
-				"saturday": [],
-				"sunday": []
-			}
-		},
-		"products": [
-			{
-				"description": "Une tomme monnnnstre bonne!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d1"
-			},
-			{
-				"description": "Des spaghettis fait maison!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d6"
-			},
-			{
-				"description": "Du lait hyper frais!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d4"
-			},
-			{
-				"description": "Une biere de ouf!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d2"
-			},
-			{
-				"description": "Un jus de pomme trop bon!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d3"
-			},
-			{
-				"description": "Un jus d'orange trop bon!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d3"
-			},
-			{
-				"description": "Une polenta faite maison!",
-				"productTypeId": "5c14fe6d9ca3777b589bb9d5"
-			}
-		]
-	}
+	"producerId": "5c2cf19a5ec125daf4cc98ad",
+	"product": [
+		{
+			"description": "Une Pomme monnnnstre bonne!",
+			"productTypeId": "5c30a18bc65a466f978643f8"
+		},{
+			"description": "Une Poire trop beeeeelle!",
+			"productTypeId": "5c30a18bc65a466f978643f8"
+		},{
+			"productTypeId": "5c30a18bc65a466f978643f8"
+		}
+	]
 }
