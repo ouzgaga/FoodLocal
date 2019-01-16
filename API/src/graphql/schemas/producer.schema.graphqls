@@ -28,7 +28,7 @@ input ClientLocation {
 	latitude: Float!
 
 	# la distance maximale des producteurs à retourner. Tout producteur situé à plus de maxDistance mètres du client seront ignorés.
-	maxDistance: Float!
+	maxDistance: Float
 }
 
 type Producer implements Person {
