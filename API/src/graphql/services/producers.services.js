@@ -68,6 +68,10 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return getProducers({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
+function getAllProducersWithSalespointInReceivedIdList(listOfSalespointsIdToGet) {
+  return getProducers({ tags: { salespointId: { $in: listOfSalespointsIdToGet } } });
+}
+
 /**
  * Retourne tous les producteurs qui n'ont pas encore été validés (isValidated = false)
  * @returns {*}
@@ -102,8 +106,13 @@ function filterProducers(byProductTypeIds) {
   }
 }
 
-function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
-  return salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab);
+async function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
+    const salespointsIds = await salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance });
+    return getAllProducersWithSalespointInReceivedIdList(salespointsIds);
+  }
+
+  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab);
 }
 
 /**
