@@ -7,15 +7,17 @@ import Typography from '@material-ui/core/Typography';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-
 import AccountIcon from '@material-ui/icons/AccountCircleRounded';
-
-
 import { withStyles } from '@material-ui/core';
+import compose from 'recompose/compose';
+
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
 
 import StatusForm from './StatusForm';
 import GeneralsConditionForm from './GeneralsConditionForm';
 import InformationsForm from './InformationsForm';
+
 
 const styles = theme => ({
   layout: {
@@ -65,7 +67,14 @@ const styles = theme => ({
 });
 
 const steps = ['Informations', 'Status', 'Conditions générales'];
-const errorNoCG = 'Vous devez accetter les conditions générales avant de pouvoir continuer.';
+const errorNoCG = 'Veuillez accepter les conditions générales.';
+
+const queryCheckEmail = gql`
+  query ($email: String!) {
+    checkIfEmailIsAvailable(email:$email)
+  }
+  `;
+
 
 class InscriptionContainer extends React.Component {
 
@@ -74,7 +83,7 @@ class InscriptionContainer extends React.Component {
 
     this.state = {
       activeStep: 0,
-      errorMessage: '',
+      errorMessages: [],
       email: '',
       lastName: '',
       firstName: '',
@@ -85,29 +94,10 @@ class InscriptionContainer extends React.Component {
     };
   }
 
-
-
-
-  handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-    }));
-  };
-
-  handleChange = prop => (event) => {
-    this.setState({
-      [prop]: event.target.value,
-    });
-  };
-
-  handleChangeCheckBox = prop => (event) => {
-    this.setState({
-      [prop]: event.target.checked,
-    });
-  };
-
+  
   getStepContent(step) {
     const { email, lastName, firstName, password, passwordConf, status, GC } = this.state;
+
     switch (step) {
       case 0:
         return (
@@ -129,22 +119,86 @@ class InscriptionContainer extends React.Component {
     }
   }
 
-  handleSubmit = (event) => {
+  queryEmailExist = (email) => {
+    const { client } = this.props;
+    console.info(email);
+    return client.query({ query: queryCheckEmail, variables: { email } }).then(
+      (data) => {
+        if (data) {
+          return data.data.checkIfEmailIsAvailable;
+        } else {
+          return false;
+        }
+      }
+    ).catch(error => console.log(error));
+  };
+
+  handleBack = () => {
+    this.setState(state => ({
+      errorMessages: [],
+      activeStep: state.activeStep - 1,
+    }));
+  };
+
+  handleChange = prop => (event) => {
+    this.setState({
+      [prop]: event.target.value,
+    });
+  };
+
+  handleChangeCheckBox = prop => (event) => {
+    this.setState({
+      [prop]: event.target.checked,
+    });
+  };
+
+
+  handleSubmit = async (event) => {
     event.preventDefault();
-    if (!this.state.GC && this.state.activeStep === 2) {
-      this.setState({ errorMessage: errorNoCG });
+    const { activeStep, email, lastName, firstName, password, passwordConf, status, GC } = this.state;
+    const errors = [];
+    switch (activeStep) {
+      case 0:
+
+        const emailIsAvailable = await this.queryEmailExist(email);
+
+        console.log(emailIsAvailable);
+
+        if (!emailIsAvailable) {
+          errors.push(`L'email : ${email} est déjà utilisée.`);
+        }
+
+        if (passwordConf !== password) {
+          errors.push(`Les mots de passes doivent être égaux.`);
+        }
+
+        break;
+      case 1:
+        break;
+      case 2:
+        if (!GC) {
+          errors.push(errorNoCG);
+        }
+        break;
+      default:
+        throw new Error('Erreur');
+    }
+
+    if (errors.length !== 0) {
+      this.setState({ errorMessages: errors });
     } else {
       this.setState(state => ({
-        errorMessage: '',
+        errorMessages: [],
         activeStep: state.activeStep + 1,
       }));
     }
   }
 
-  render() {
-    const { classes, onValidate, onClose  } = this.props;
 
-    const { activeStep, errorMessage, email } = this.state;
+  render() {
+    const { classes, onValidate, onClose } = this.props;
+
+    const { activeStep, errorMessages, email } = this.state;
 
     return (
       <React.Fragment>
@@ -158,17 +212,17 @@ class InscriptionContainer extends React.Component {
 
             <Typography paragraph component="h1" variant="h5">
               {`Création d'un nouveau compte`}
-              <br/>
+              <br />
 
             </Typography>
-            <form id="form" onSubmit={this.handleSubmit}>
+            <form id="form-inscritpion" onSubmit={this.handleSubmit}>
               <React.Fragment>
                 {activeStep === steps.length ? (
                   <React.Fragment>
                     <Typography variant="subtitle1">
-                      Votre compte à été créé: {email}
+                      {`Votre compte à été créé: ${email}`}
                       <br />
-                      Veuillez-aller sur votre adresse mail pour confirmer l'inscrition.
+                      {`Veuillez-aller sur votre adresse mail pour confirmer l'inscrition.`}             
                     </Typography>
                     <Button
                       onClick={onValidate}
@@ -176,53 +230,59 @@ class InscriptionContainer extends React.Component {
                       className={classes.button}
                       color="primary"
                     >
-                      fermer
+                      {'fermer'}
                     </Button>
                   </React.Fragment>
                 ) : (
-                    <React.Fragment>
-                      
-                      
-                      {this.getStepContent(activeStep)}
+                  <React.Fragment>
+                    {this.getStepContent(activeStep)}
 
-                      <Typography color="error">
-                        {errorMessage}
-                      </Typography>
-
-                      <Stepper activeStep={activeStep} className={classes.stepper}>
-                        {steps.map(label => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                      <div className={classes.buttons}>
-
-                        <Button
-                          onClick={onClose}
-                          className={classes.button}
-                          tabindex="-1"
+                    {errorMessages.map((data, id) => {
+                      return (
+                        <Typography
+                          key={id}
+                          color="error"
                         >
-                          Annuler
+                          {data}
+                        </Typography>
+                      );
+                    })}
+
+
+                    <Stepper activeStep={activeStep} className={classes.stepper}>
+                      {steps.map(label => (
+                        <Step key={label}>
+                          <StepLabel>{label}</StepLabel>
+                        </Step>
+                      ))}
+                    </Stepper>
+                    <div className={classes.buttons}>
+
+                      <Button
+                        onClick={onClose}
+                        className={classes.button}
+                        tabIndex="-1"
+                      >
+                        {'Annuler'}
+                      </Button>
+                      <div className={classes.grow} />
+                      {activeStep !== 0 && (
+                        <Button onClick={this.handleBack} className={classes.button}>
+                          {'Retour'}
                         </Button>
-                        <div className={classes.grow} />
-                        {activeStep !== 0 && (
-                          <Button onClick={this.handleBack} className={classes.button}>
-                            Retour
-                          </Button>
-                        )}
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          type="submit"
-                          id="register-button-step"
-                          className={classes.button}
-                        >
-                          {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
-                        </Button>
-                      </div>
-                    </React.Fragment>
-                  )}
+                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        id="register-button-step"
+                        className={classes.button}
+                      >
+                        {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
+                      </Button>
+                    </div>
+                  </React.Fragment>
+                )}
               </React.Fragment>
             </form>
           </div>
@@ -236,4 +296,7 @@ InscriptionContainer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(InscriptionContainer);
+export default compose(
+  withApollo,
+  withStyles(styles)
+)(InscriptionContainer);

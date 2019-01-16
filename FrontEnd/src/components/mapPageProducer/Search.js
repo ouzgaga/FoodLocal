@@ -1,43 +1,15 @@
 import React from 'react';
 
-import red from '@material-ui/core/colors/red';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
+import InfiniteScroll from 'react-infinite-scroller';
+
 import ListItemProducer from './ListItemProducer';
+import Loading from '../Loading';
+import ErrorLoading from '../ErrorLoading';
 
-const styles = theme => ({
-
-  card: {
-    maxWidth: '400px',
-    maxHeight: '300px',
-
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
-  },
-  subheader: {
-    width: '100%',
-  },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
-  },
-  title: {
-    color: theme.palette.primary.light,
-  },
-  titleBar: {
-    background:
-      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-  },
+const styles = ({
   list: {
     backgroundColor: 'transparent',
   },
@@ -52,28 +24,35 @@ const styles = theme => ({
 class Search extends React.Component {
 
   render() {
-    const { classes, data, handleHover, resetHover } = this.props;
+    const { classes, handleHover, resetHover, latitude, longitude, maxDistance, entries, onLoadMore } = this.props;
+
+    console.log(onLoadMore)
     return (
-      <div className={classes.list}>
+      <div style={{ minHeight: `100vh - 64px` }}>
 
-        <List key="list" className={classes.list}>
+          <List className={classes.list}>
 
-          {data.producers.map(tile => (
+            <InfiniteScroll
+              loadMore={onLoadMore}
+              hasMore={this.props.entries.pageInfo.hasNextPage}
+              loader={<p>Loading...</p>}
+            >
 
-            <ListItem className={classes.listItem} key={tile.id}>
+              {entries.edges.map(({ node }) => (
 
-              <ListItemProducer key={tile.id} salepoint={tile} producer={tile} handleHover={handleHover} resetHover={resetHover}/>
+                <ListItem className={classes.listItem} key={node.id}>
 
-            </ListItem>
-          ))
-          }
+                  <ListItemProducer producer={node} handleHover={handleHover} resetHover={resetHover} />
 
-        </List>
+                </ListItem>
+              ))
+              }
+            </InfiniteScroll>
+
+          </List>
       </div>
     );
   }
 }
-
-
 
 export default withStyles(styles)(Search);
