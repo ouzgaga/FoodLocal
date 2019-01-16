@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import BorderedTextField from '../items/fields/BorderedTextField';
 import BoxLeftRight from './BoxLeftRight';
@@ -18,14 +19,8 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
-  centerBox: {
-    justifyContent: 'flex-start',
-  },
-  rightBox: {
-    justifyContent: 'flex-start',
-  },
-  leftBox: {
-    justifyContent: 'flex-end',
+  button: {
+    margin: theme.spacing.unit,
   },
 });
 
@@ -47,40 +42,60 @@ class PersonalInformation extends Component {
     });
   }
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+  }
+
+
   render() {
     const { classes } = this.props;
     const { lastName, firstName } = this.state;
 
     return (
       <>
-        <BoxLeftRight
-          title="Nom"
-        >
-          <BorderedTextField
-              id="personal-information-lastName"
+        <form id="form-name-firstname" onSubmit={this.handleSubmit}>
+        
+          <BoxLeftRight
+            title="Nom"
+          >
+            <BorderedTextField
+              id="personal-information-name"
               className={classes.textField}
               onChange={this.handleChange('firstName')}
               defaultValue={firstName}
+              fullWidth
+              required
+            />  
+          </BoxLeftRight>
+          <BoxLeftRight
+            title="Prénom"
+          >
+            <BorderedTextField
+              id="personal-information-lastName"
+              className={classes.textField}
+              onChange={this.handleChange('lastName')}
+              defaultValue={lastName}
+              fullWidth
+              required
             />
-        </BoxLeftRight>
-        <BoxLeftRight
-          title="Prénom"
-        >
-          <BorderedTextField
-            id="personal-information-lastName"
-            className={classes.textField}
-            onChange={this.handleChange('lastName')}
-            defaultValue={lastName}
-          />
-        </BoxLeftRight>
-
-          {/*
-          <Grid item xs={12}>
+          </BoxLeftRight>
+          <BoxLeftRight
+            title=""
+          >
+            <Button
+              variant="contained"
+              className={classes.button}
+              //onClick={this.handleClick}
+              color="primary"
+              type="submit"
+              id="change-personal-informations-button"
+            >
+              { `Valider` }
+            </Button>
             
-          </Grid>
-          */}
-        
-        </>
+          </BoxLeftRight>
+        </form>     
+      </>
 
     );
   }

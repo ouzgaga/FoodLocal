@@ -55,22 +55,22 @@ const styles = theme => ({
 function ListItemProducer(props) {
   const { classes } = props;
   const { producer, handleHover, resetHover } = props;
-  //const link = `/producer/${salepoint.producers[0]}`; // TODO
+  const link = `/producer/${producer.id}`;
+
   return (
     <Fragment>
-
       {producer.salespoint !== null && (
         <Card className={classes.card} onMouseEnter={(e) => { e.preventDefault(); handleHover(producer.id); }} onMouseLeave={(e) => { e.preventDefault(); resetHover(); }}>
-          <CardActionArea target="_blank">
+          <CardActionArea href={link} target="_blank">
             <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
             <div className={classes.root}>
               <GridList className={classes.gridList}>
-                {producer.products.map(item => (
-                  <div className={classes.paper} key={item.productType.id}>
-                    <GridListTile key={item.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
-                      <CardMedia className={classes.media} image={item.productType.image} title={item.productType.name} />
+                {producer.products.edges.map(({ node }) => (
+                  <div className={classes.paper} key={node.productType.id}>
+                    <GridListTile key={node.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
+                      <CardMedia className={classes.media} image={node.productType.image} title={node.productType.name} />
                       <Typography className={classes.typo} variant="body1" gutterBottom>
-                        {item.productType.name}
+                        {node.productType.name}
                       </Typography>
                     </GridListTile>
                   </div>

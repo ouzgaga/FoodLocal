@@ -16,17 +16,17 @@ class PageError404 extends Component {
     super(props);
     document.title = 'Error 404';
   }
-  
+
   render() {
     const { classes, location } = this.props;
     return (
       <CenteredPaper className={classes.paper}>
-          <Typography variant="h3" color="Secondary">Error404: Page NotFound. </Typography>
-          <Typography variant="h6" color="Primary">
-            No match for: www.foodlocal.ch
-            {location.pathname}
-            {' '}
-          </Typography>
+        <Typography variant="h3" color="secondary">Error404: Page NotFound. </Typography>
+        <Typography variant="h6" color="primary">
+          {'No match for: www.foodlocal.ch'}
+          {location.pathname}
+          {' '}
+        </Typography>
       </CenteredPaper>
     );
   }

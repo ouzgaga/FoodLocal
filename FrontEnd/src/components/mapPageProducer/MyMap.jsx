@@ -5,6 +5,7 @@ import {
 } from 'react-leaflet';
 import { withStyles } from '@material-ui/core/styles';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 import FilterProducts from './FilterProducts';
@@ -52,43 +53,7 @@ const myIcon2 = L.icon({
 class MyMap extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      items: [],
-
-      location: {
-        // par défaut, position de Lausanne
-        latitude: 46.5333,
-        longitude: 6.6667,
-      },
-      zoom: 8, // on zoom sur la location de l'utilisateur
-      salespoints: [],
-      userHasALocation: false, // indique si l'utilisateur a accepté de donner sa position
-    };
   }
-
-  componentDidMount() {
-    this.setState({
-      location: {
-        // par défaut, position de Lausanne
-        latitude: 46.533,
-        longitude: 6.667,
-      },
-      zoom: 10, // on zoom sur la location de l'utilisateur
-    });
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({
-        location: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        },
-        zoom: 12, // on zoom sur la location de l'utilisateur
-        userHasALocation: true,
-      });
-    });
-  }
-
 
   // ouvre le pop-up pour les filtres
   handleClickOpenFilters = () => {
@@ -100,35 +65,17 @@ class MyMap extends React.Component {
     this.setState({ openFiltres: false });
   };
 
-  addItem = newItem => () => {
-    const { items } = this.state;
-    this.setState({
-      items: [...items, newItem]
-    });
-  }
-
-  // supprime un produit du tableau des produits
-  removeItem = itemToDelete => () => {
-    const { items } = this.state;
-    const newItems = items.filter(item => item !== itemToDelete);
-
-    this.setState({
-      items: [...newItems]
-    });
-  }
 
   render() {
-    const { location, zoom, userHasALocation } = this.state;
+    const { classes, producers, products, addProduct, removeProduct, location, maxDistance, changeMaxDistance } = this.props;
     const { latitude, longitude } = location;
-    const { classes, data, items, addItem, removeItem } = this.props;
 
 
     return (
 
       <div className={classes.map}>
 
-        <FilterProducts items={items} addItem={addItem} removeItem={removeItem} />
-        <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
+        <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={12} maxZoom={20}>
 
           <TileLayer
             key="tileLayer"
@@ -136,31 +83,34 @@ class MyMap extends React.Component {
             url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
           />
 
-          {
-            // si l'utilisateur a accepté de donner sa location, l'affiche sur la carte
-            userHasALocation
-            && (
-              <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
-            )
-          }
+          <CircleMarker key="userPosition" center={[latitude, longitude]} />
 
-          {
-            data.producers.map(tile => (
-              tile.salespoint !== null && (
-                this.props.iconDrag === tile.id ? (
-                  <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon2}>
-                    <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
-                      <ItemProducerPopUp producer={tile} />
-                    </Popup>
-                  </Marker>
-                ) : (
-                    <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon}>
-                      <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
-                        <ItemProducerPopUp producer={tile} />
-                      </Popup>
-                    </Marker>
-                  )
-              )))}
+          <MarkerClusterGroup>
+
+            {
+              producers.map(({ node }) => (
+                node.salespoint !== null && (
+
+
+                  this.props.iconDrag === node.id
+                    ? (
+                      <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon2}>
+                        <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
+                          <ItemProducerPopUp producerId={node.id} />
+                        </Popup>
+                      </Marker>
+                    )
+                    : (
+                      <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon}>
+                        <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
+                          <ItemProducerPopUp producerId={node.id} />
+                        </Popup>
+                      </Marker>
+                    )
+
+                )))}
+          </MarkerClusterGroup>
+
         </Map>
       </div>
     );

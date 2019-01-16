@@ -10,13 +10,14 @@ import UserContext from '../UserContext';
 
 import RatingItem from '../items/RatingItem';
 import SimpleInfoDialog from '../items/SimpleInfoDialog';
+import { Hidden } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    width:'100%',
+    width: '100%',
     height: '100%',
-    
+
     padding: theme.spacing.unit * 2,
     textAlign: 'justify',
     backgroundColor: 'rgba(255, 255, 240, 0.8)',
@@ -49,7 +50,7 @@ class ProducerUserInteraction extends React.Component {
 
   componentWillMount() {
     let userRating = 0;
-    if(UserContext.Provider.jsToken){
+    if (UserContext.Provider.jsToken) {
       // Fetch data => rank of this producer from user
     }
     this.setState({
@@ -60,7 +61,7 @@ class ProducerUserInteraction extends React.Component {
   handleClose = () => {
     this.setState({ infoDialogOpen: false });
   }
-  
+
   handleChangeUserRating = (value) => {
     this.setState({
       userRating: value,
@@ -74,7 +75,7 @@ class ProducerUserInteraction extends React.Component {
   }
 
   handleClickRating = () => {
-    
+
     if (!UserContext.Provider.jsToken) {
       this.setState({
         infoDialogText: DIALOG_USER_NOT_LOG,
@@ -112,7 +113,7 @@ class ProducerUserInteraction extends React.Component {
     }
     return ('Ne plus suivre');
   }
-  
+
 
   render() {
     const { classes, followersCount } = this.props;
@@ -122,56 +123,61 @@ class ProducerUserInteraction extends React.Component {
     // fromatage du text en français
     function displayFolowerCount(count) {
       if (count <= 1) {
-        return 'count lapin suivt ce producteur';
+        return (`${count} abonnés`);
       }
-      return (`${count} lapins suivent ce producteur `);
+      return (`${count} abonnés`);
     }
 
     return (
       <div className={classes.root}>
-        { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté*/ }
+        { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté*/}
         <SimpleInfoDialog
           open={infoDialogOpen}
           handleClose={this.handleClose.bind(this)}
           text={infoDialogText}
         />
 
-        <Grid container spacing={16}>
-          <Grid item xs={8} sm container alignItems="center" className={classes.centerBox}>
-            <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
-              {this.displayIfUserFollow()}
-            </Button>
-        
-            <Typography>
-              {displayFolowerCount(followersCount)}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm container alignItems="center" className={classes.centerBox}>
-            
-        
-            <Typography>
-              Vous aimez ce producteur?
-              <br/>
-              Donnez lui des carottes!!
-              {userRating}
-            </Typography>
+        <Grid container spacing={16} justify="center">
+          <Grid container alignItems="center" className={classes.centerBox}>
+            <Grid item sm={6} xs={12}>
+            <Grid container alignItems="center" className={classes.centerBox}>
 
-            <RatingItem 
-              onChange={this.handleChangeUserRating}
-              defaultValue={userRating}
-            />
+                <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
+                  {this.displayIfUserFollow()}
+                </Button>
 
-            <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
-              Vote
-            </Button>
+                <Typography>
+                  {displayFolowerCount(followersCount)}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Hidden smUp>
+              <div style={{ height: 100 }} />
+            </Hidden>
+
+
+            <Grid item sm={6} xs={12}>
+
+              <Grid container alignItems="center" className={classes.centerBox}>
+
+              <RatingItem
+                onChange={this.handleChangeUserRating}
+                defaultValue={userRating}
+              />
+              </Grid>
+
+              <Grid container alignItems="center" className={classes.centerBox}>
+                <Typography>Notez ce producteur</Typography>
+                <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>Vote</Button>
+              </Grid>
+            </Grid>
           </Grid>
-            
+
         </Grid>
-
-        
       </div>
     );
-  };
+  }
 }
 
 ProducerUserInteraction.propTypes = {

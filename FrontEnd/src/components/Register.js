@@ -136,7 +136,7 @@ class MyLogin extends React.Component {
                                 color="primary"
                                 className={classes.submit}
                                 onClick={this.handleNewAccount}  >
-                                <Link to="/newAccount" className={classes.LinkButton} readonly tabindex="-1">
+                                <Link to="/newAccount" className={classes.LinkButton} readonly tabIndex="-1">
                                     Creat new account
                         </Link>
                             </Button>

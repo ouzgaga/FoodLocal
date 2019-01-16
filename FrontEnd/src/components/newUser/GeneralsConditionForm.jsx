@@ -28,46 +28,45 @@ const styles = theme => ({
 });
 
 const GENERALS_CONDITIONS = (
-  <div>
+  <>
     Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
-              facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-              at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus
-              sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum
-              nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur
-              et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras
-              mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-              egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-              sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-              Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-              consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-              egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-              sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-              Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-              consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-              egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-              sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-              Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-              consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-              egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-              sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-              Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-              consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-              egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-              sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-              Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
-            
-  </div>
-)
+    facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
+    at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus
+    sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum
+    nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur
+    et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras
+    mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+    egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+    lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
+    sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+    Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
+    consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+    egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+    lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
+    sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+    Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
+    consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+    egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+    lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
+    sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+    Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
+    consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+    egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+    lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
+    sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+    Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
+    consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+    egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+    lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
+    sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+    Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.    
+  </>
+);
 
 class GeneralsConditionForm extends React.Component {
 
@@ -75,29 +74,19 @@ class GeneralsConditionForm extends React.Component {
     super(props);
 
     document.title = 'Nouveau Compte - Conditions Générales'; // changement du titre de la page
-
-    this.state = {
-      value: false,
-    };
   }
 
-  handleChange = (event) => {
-    this.setState({ value: event.target.checked });
-    this.props.onChange('GC');
-  };
 
   render() {
-    const { classes, value, onChange} = this.props;
-    const {  } = this.state;
+    const { classes, value, onChange } = this.props;
 
     return (
       <React.Fragment>
         <CssBaseline />
-        
- 
-
         <FormGroup row>
-          <FormLabel component="legend">Conditions générales d'utilisation</FormLabel>
+          <FormLabel component="legend">
+            {`Conditions générales d'utilisation`}
+          </FormLabel>
           <div className={classes.text}>
             <GridList className={classes.gridList} cols={1}>
               <Typography align="justify">
@@ -106,28 +95,25 @@ class GeneralsConditionForm extends React.Component {
             </GridList>
           </div>
           <FormControlLabel
-            onClick={onChange('GC')}
-            label="J'ai lu et j'accépte les conditions générales"
-            control={
+            label="J'ai lu et j'accepte les conditions générales"
+            control={(
               <Checkbox
+                onChange={onChange('GC')}
                 checked={value}
-                
                 value="checked"
               />
-            }
+            )}
           />
         </FormGroup>
       </React.Fragment>
     );
   }
-
-
 }
 
 GeneralsConditionForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  onChange: PropTypes.func,
-  value: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.bool.isRequired,
 
 };
 

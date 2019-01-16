@@ -6,22 +6,24 @@ import { Query } from 'react-apollo';
 import ProducerHeader from '../components/producer/ProducerHeader';
 import ProducerUserInteraction from '../components/producer/ProducerUserInteraction';
 import ProducerContent from '../components/producer/ProducerContent';
+import ErrorLoading from '../components/ErrorLoading';
+import Loading from '../components/Loading';
+import PageError404 from './PageError404';
 
-const GET_REPOSITORY = gql`
-query ($producer:ProducerInputGetAndDelete!) {
-  producer(producer:$producer){
-    firstname
+const GET_PRODUCER_HEADER = gql`
+query($producer: ID!) {
+  producer(producerId: $producer) {
     lastname
-    email
+    firstname
     image
     description
-    rating 
-    totalCountRating
-    subscribedUsers {
-      totalCount
+    rating {
+      rating
+      nbRatings
     }
   }
-}`;
+}
+`;
 
 
 const styles = theme => ({
@@ -40,43 +42,55 @@ const styles = theme => ({
 });
 
 class PageProducer extends React.Component {
-  
+
   constructor(props) {
     super(props);
     document.title = 'Détails Producteur';
-
-    this.state = {
-      //userId: props.match.params.producerId,
-    };
   }
-
-  /*
-  query = () => {
-    return (
-      <Query query={query}>
-        {({ data, loading, error }) => {
-          if (error) return 'Oups une erreur est survenue, veuillez rfraichir la page.';
-          if (loading) return 'Loading...';
-          return (
-            <MainMap data={data} />
-          );
-        }}
-      </Query>
-    );
-  }
-  */
 
   render() {
-    const { classes } = this.props;
+    const { classes, match } = this.props;
+    const { producerId } = match.params;
 
     return (
       <div className={classes.root}>
-        <ProducerHeader
-        />
-        <ProducerUserInteraction
-          followersCount={100}
-        />
-        <ProducerContent />
+
+        <Query
+          query={GET_PRODUCER_HEADER}
+          variables={{ producer: producerId }}
+        >
+          {({ data, loading, error }) => {
+            if (error) return <ErrorLoading />;
+            if (loading) return <Loading />;
+
+            if (data.producer === null) return <PageError404 location={{ pathname: `/producer/${producerId}` }} />;
+            const {
+              firstname, lastname, description, image, rating
+            } = data.producer;
+
+            let ratingValue;
+            let nbRatings;
+            if (rating === null) {
+              ratingValue = null;
+              nbRatings = null;
+            } else {
+              ratingValue = rating.rating;
+              nbRatings = rating.nbRatings;
+            }
+            return (
+              <>
+                <ProducerHeader lastname={lastname} firstname={firstname} description={description} image={image} ratingValue={ratingValue} nbRating={nbRatings} />
+
+                <ProducerUserInteraction
+                  followersCount={100}
+                />
+                <ProducerContent producerId={producerId} />
+              </>
+            );
+          }}
+        </Query>
+
+
       </div>
     );
   }

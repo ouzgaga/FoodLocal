@@ -5,9 +5,19 @@ import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Search from './Search';
+import InfiniteScroll from 'react-infinite-scroller';
+
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 import MyMap from './MyMap';
+
 import './PageMap.css';
+import ErrorLoading from '../ErrorLoading';
+import Loading from '../Loading';
+import Search from './Search';
+import FilterProducts from './FilterProducts';
+import { List, ListItem } from '@material-ui/core';
+import ListItemProducer from './ListItemProducer';
 
 const drawerWidth = 400;
 
@@ -27,10 +37,10 @@ const styles = theme => ({
     right: 16,
     zIndex: 2000,
     rotate: 90,
-    backgroundColor: '#66CCCC',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+    backgroundColor: '#66CCCC'
   },
   expandMoreIcon: {
     transform: 'rotate(90deg)',
@@ -50,7 +60,6 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    backgroundColor: '#66CCCC',
     height: '400',
   },
   drawer: {
@@ -58,6 +67,7 @@ const styles = theme => ({
     backgroundColor: '#FFFFFF',
   },
 });
+
 
 class MainMap extends React.Component {
 
@@ -83,13 +93,35 @@ class MainMap extends React.Component {
 
   render() {
     const {
-      classes, theme, data, items, addItem, removeItem
+      classes, theme, products, addProduct, removeProduct, location, maxDistance, changeMaxDistance, entries, onLoadMore, loading
     } = this.props;
 
     const drawer = (
-      <div>
-        <Search data={data} handleHover={this.handleHover} resetHover={this.resetHover} />
-      </div>
+      <>
+        <List className={classes.list}>
+
+          <InfiniteScroll
+          pageStart={0}
+            loadMore={() => onLoadMore()}
+            hasMore={entries.pageInfo.hasNextPage}
+            loader={<p>Loading...</p>}
+          >
+
+            {entries.edges.map(({ node }) => (
+
+              <ListItem key={node.id} className={classes.listItem}>
+
+                <ListItemProducer producer={node} handleHover={this.handleHover} resetHover={this.resetHover} />
+
+              </ListItem>
+            ))
+            }
+          </InfiniteScroll>
+
+        </List>
+
+        <Button onClick={onLoadMore} variant="contained">Voir plus de producteurs</Button>
+      </>
     );
 
     return (
@@ -104,7 +136,24 @@ class MainMap extends React.Component {
             <ExpandMoreIcon className={classes.expandMoreIcon} />
           </Button>
 
-          <MyMap data={data} iconDrag={this.state.iconDrag} items={items} addItem={addItem} removeItem={removeItem} />
+          <FilterProducts
+            products={products}
+            addProduct={addProduct}
+            removeProduct={removeProduct}
+            maxDistance={maxDistance}
+            changeMaxDistance={changeMaxDistance}
+          />
+
+          <MyMap
+            producers={entries.edges}
+            location={location}
+            iconDrag={this.state.iconDrag}
+            products={products}
+            addProduct={addProduct}
+            removeProduct={removeProduct}
+            maxDistance={maxDistance}
+            changeMaxDistance={changeMaxDistance}
+          />
 
         </main>
 

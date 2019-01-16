@@ -46,11 +46,11 @@ class PageAcceuil extends Component {
     return (
       <div>
         <Paper className={classes.paper} elevation={10}>
-          <Typography variant="h3" color="Secondary">Bienvenue sur foodlocal.ch </Typography>
-          <br/>
+          <Typography variant="h3" color="secondary">Bienvenue sur foodlocal.ch </Typography>
+          <br />
           <Typography variant="subtitle1">
             Cette plateforme vous permet de rechercher des producteurs locaux ou des produits.
-            <br/>
+            <br />
             Vous pouvez aussi directement accéder à 
             <Link to="/map" className={classes.linkButton} readOnly tabIndex="-1">
               {' la carte '}
@@ -61,7 +61,7 @@ class PageAcceuil extends Component {
           </Typography>
           
           <div className={classes.resarch}>
-            <Typography variant="h6" color="Primary">Rechercher un lieu</Typography>
+            <Typography variant="h6" color="primary">Rechercher un lieu</Typography>
             <Input
               defaultValue=""
               className={classes.input}
@@ -74,7 +74,7 @@ class PageAcceuil extends Component {
           </div>
 
           <div className={classes.resarch}>
-            <Typography variant="h6" color="Primary">Rechercher un producteur</Typography>
+            <Typography variant="h6" color="primary">Rechercher un producteur</Typography>
             <Input
               className={classes.input}
               inputProps={{
@@ -85,7 +85,7 @@ class PageAcceuil extends Component {
           </div>
 
           <div className={classes.resarch}>
-            <Typography variant="h6" color="Primary">Rechercher un produit</Typography>
+            <Typography variant="h6" color="primary">Rechercher un produit</Typography>
             <Input
               className={classes.input}
               inputProps={{
