@@ -15,7 +15,9 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
+    geoFilterProducers: (parent, args, context) => {
+      return producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds);
+    }
   },
 
   Mutation: {
@@ -24,20 +26,15 @@ const producerResolvers = {
       return producersServices.validateAProducer(args.producerId, args.validationState);
     },
 
-    // addProducer: (parent, args, context) => producersServices.addProducer(args.producer),
-
     updateProducer: async(parent, args, context) => {
       await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
       return producersServices.updateProducer(args.producer);
-    },
-
-    deleteProducer: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
-      return producersServices.deleteProducer(args.producerId);
     }
   },
 
   Producer: {
+    id: (parent, args, context) => parent._id.toString(),
+
     followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
@@ -45,6 +42,10 @@ const producerResolvers = {
     salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalespointById(parent.salespointId) : null),
 
     products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
+  },
+
+  ProducerConnection: {
+    totalCount: (parent, args, context) => producersServices.countProducersIndBD()
   }
 };
 

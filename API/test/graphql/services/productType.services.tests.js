@@ -124,13 +124,19 @@ describe('tests productType services', () => {
     });
 
     it('should fail getting one productType because no id received', async() => {
-      const productTypeGotInDB = await productTypeServices.getProductTypeById('');
-      productTypeGotInDB.message.should.be.equal('Received productType.id is invalid!');
+      try {
+        await productTypeServices.getProductTypeById('');
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
     it('should fail getting one productType because invalid id received', async() => {
-      const productTypeGotInDB = await productTypeServices.getProductTypeById(productTypePomme.id + productTypePomme.id);
-      productTypeGotInDB.message.should.be.equal('Received productType.id is invalid!');
+      try {
+        await productTypeServices.getProductTypeById(productTypePomme.id + productTypePomme.id);
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
     it('should fail getting one productType because unknown id received', async() => {
@@ -257,13 +263,13 @@ describe('tests productType services', () => {
       ], antoine.id);
 
       // On récupère tous les producteurs produisant un ou plusieurs produits de type productTypePoire
-      let producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePoire.id]);
+      let producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePoire._id]);
       producersOfFruits.should.be.not.null;
       producersOfFruits.should.be.an('array');
       producersOfFruits.length.should.be.equal(1);
 
       // On récupère tous les producteurs produisant un ou plusieurs produits de type productTypePomme
-      producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePomme.id]);
+      producersOfFruits = await productTypeServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds([productTypePomme._id]);
       producersOfFruits.should.be.not.null;
       producersOfFruits.should.be.an('array');
       producersOfFruits.length.should.be.equal(2);
@@ -289,8 +295,6 @@ describe('tests productType services', () => {
       });
       await Promise.all(promisesProducersIds);
     });
-
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests addProducerProducingThisProductType', () => {
@@ -374,7 +378,7 @@ describe('tests productType services', () => {
       try {
         productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdef')).toObject();
       } catch (err) {
-        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "producersIds"');
+        expect(err.message).to.be.equal('The given producerId (with id: abcdef) doesn’t exist in the database or is not a producer!');
       }
     });
 
@@ -383,21 +387,24 @@ describe('tests productType services', () => {
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       try {
-        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdefabcdef')).toObject();
+        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id,
+          'abcdefabcdefabcdefabcdefabcdef')).toObject();
       } catch (err) {
-        expect(err.message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "producersIds"');
+        expect(err.message).to.be.equal('The given producerId (with id: abcdefabcdefabcdefabcdefabcdef) doesn’t exist in the database or is not a producer!');
       }
     });
 
-    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is unknown', async() => {
-      // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
-      productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
-      try {
-        productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdefabcdefabcdefabcdef')).toObject();
-      } catch (err) {
-        expect(err.message).to.be.equal('The given producerId (with id: abcdefabcdefabcdefabcdef) doesn’t exist in the database or is not a producer!');
-      }
-    });
+    it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is unknown',
+      async() => {
+        // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+        productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
+        try {
+          productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id,
+            'abcdefabcdefabcdefabcdef')).toObject();
+        } catch (err) {
+          expect(err.message).to.be.equal('The given producerId (with id: abcdefabcdefabcdefabcdef) doesn’t exist in the database or is not a producer!');
+        }
+      });
   });
 
   describe('tests removeProducerProducingThisProductType', () => {
@@ -458,24 +465,30 @@ describe('tests productType services', () => {
     });
 
     it('should fail updating a productType because no id received', async() => {
-      productTypePomme.id = '';
-      const updatedProductType = await productTypeServices.updateProductType(productTypePomme);
-
-      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
+      try {
+        productTypePomme.id = '';
+        await productTypeServices.updateProductType(productTypePomme);
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
-      productTypePomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProductType = await productTypeServices.updateProductType(productTypePomme);
-
-      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
+    it('should fail updating a productType because invalid id received (too short)', async() => {
+      try {
+        productTypePomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
+        await productTypeServices.updateProductType(productTypePomme);
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
-    it('should fail updating a productType because invalid id received', async() => {
-      productTypePomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-      const updatedProductType = await productTypeServices.updateProductType(productTypePomme);
-
-      updatedProductType.message.should.be.equal('Received productType.id is invalid!');
+    it('should fail updating a productType because invalid id received (too long)', async() => {
+      try {
+        productTypePomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
+        await productTypeServices.updateProductType(productTypePomme);
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
     it('should fail updating a producer because unknown id received', async() => {
@@ -490,13 +503,16 @@ describe('tests productType services', () => {
 
     it('should delete a productType', async() => {
       // on supprime un productType
-      let deleteProductType = await productTypeServices.deleteProductType(productTypePomme._id);
+      const deleteProductType = await productTypeServices.deleteProductType(productTypePomme._id);
       deleteProductType.should.be.not.null;
       deleteProductType._id.should.be.eql(productTypePomme._id);
 
-      // on tente de re-supprimer le même productType -> retourne null car le productType est introuvable dans la DB
-      deleteProductType = await productTypeServices.getProductTypeById(deleteProductType);
-      expect(deleteProductType).to.be.null;
+      try {
+        // on tente de re-supprimer le même productType -> retourne null car le productType est introuvable dans la DB
+        await productTypeServices.getProductTypeById(deleteProductType.id);
+      } catch (err) {
+        err.message.should.be.equal('Received productType.id is invalid!');
+      }
     });
 
     it('should fail deleting a productType because given id not found in DB', async() => {

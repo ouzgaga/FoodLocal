@@ -1,5 +1,28 @@
+module.exports = {
+  getProducers,
+  getProducerById,
+  getAllProducerWaitingForValidation,
+  getAllProducersInReceivedIdList,
+  countProducersIndBD,
+  filterProducers,
+  geoFilterProducers,
+  addProducer,
+  addProductToProducer,
+  addSalespointToProducer,
+  removeSalespointToProducer,
+  removeProductFromProducer,
+  updateProducer,
+  updateProducerRating,
+  validateAProducer,
+  deleteProducer,
+  addFollowerToProducer,
+  removeFollowerToProducer
+};
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const salespointsServices = require('./salespoints.services');
+const notificationsServices = require('./notifications.services');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
@@ -16,16 +39,10 @@ const productTypesServices = require('./productTypes.services');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
  */
-function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getProducers({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return ProducersModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -36,10 +53,10 @@ function getProducers({ tags = undefined, limit = 30, page = 0 } = {}) {
  */
 function getProducerById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received producer.id is invalid!');
-  } else {
-    return ProducersModel.findById(id);
+    throw new Error('Received producer.id is invalid!');
   }
+
+  return ProducersModel.findById(id);
 }
 
 /**
@@ -48,7 +65,7 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return ProducersModel.find({ _id: { $in: listOfIdToGet } });
+  return getProducers({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
@@ -56,7 +73,11 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
  * @returns {*}
  */
 function getAllProducerWaitingForValidation() {
-  return ProducersModel.find({ isValidated: false });
+  return getProducers({ tags: { isValidated: false } });
+}
+
+function countProducersIndBD() {
+  return ProducersModel.countDocuments();
 }
 
 /**
@@ -67,19 +88,22 @@ function getAllProducerWaitingForValidation() {
  * @param byProductTypeIds, tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
  * @returns {Promise<*>}
  */
-async function filterProducers(byProductTypeIds) {
-  let filtredProducersObjectIds;
-  if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
-    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    filtredProducersObjectIds = await productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+function filterProducers(byProductTypeIds) {
+  if (byProductTypeIds == null) {
+    throw new Error('Received parameter "byProductTypeIds" cannot be null!');
   }
 
-  if (filtredProducersObjectIds != null && filtredProducersObjectIds.length !== 0) {
-    return getAllProducersInReceivedIdList(filtredProducersObjectIds);
+  if (byProductTypeIds.length !== 0) {
+    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
+    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
   } else {
     // pas de filtre --> on retourne tous les producteurs
     return getProducers();
   }
+}
+
+function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  return salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab);
 }
 
 /**
@@ -94,7 +118,6 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       firstname,
       lastname,
       email,
-      // fixme: Paul: 10 saltRound, c'est suffisant ?
       password: await bcrypt.hash(password, 10),
       image,
       // followingProducersIds: [],
@@ -105,7 +128,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
       description,
       website,
       // salespointId: salespoint, // salespoint contient l'id du point de vente
-      isValidated: false,
+      isValidated: false
       // productsIds: []
     };
 
@@ -116,7 +139,7 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
     await tokenValidationEmailServices.addTokenValidationEmail(producerAdded);
     return producerAdded;
   } else { // l'email est déjà utilisé -> on ne peut pas ajouter ce producteur!
-    return new Error('This email is already used.');
+    throw new Error('This email is already used.');
   }
 }
 
@@ -136,43 +159,48 @@ function removeProductFromProducer(productId, producerId) {
  */
 async function updateProducer({ id, firstname, lastname, image, phoneNumber, description, website }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received producer.id is invalid!');
+    throw new Error('Received producer.id is invalid!');
   }
 
   const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
-  if (producerValidation != null) {
-    // si producerValidation n'est pas nul -> l'utilisateur existe dans la DB
-    const { emailValidated, isValidated, isAdmin } = producerValidation;
-
-    const producerToUpdate = {
-      id,
-      firstname,
-      lastname,
-      emailValidated,
-      isAdmin,
-      isValidated,
-    };
-
-    // on ne déclare l'image, le phoneNumber, la description ou le website que s'il est réellement donné, sinon, on ne les déclare même pas (pour
-    // ne pas remplacer l'image dans la DB par null sans le vouloir
-    if (image !== undefined) {
-      producerToUpdate.image = image;
-    }
-    if (phoneNumber !== undefined) {
-      producerToUpdate.phoneNumber = phoneNumber;
-    }
-    if (description !== undefined) {
-      producerToUpdate.description = description;
-    }
-    if (website !== undefined) {
-      producerToUpdate.website = website;
-    }
-
-    return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
-  } else {
-    return new Error('The received id is not in the database!');
+  // si producerValidation est nul -> l'utilisateur n'existe pas dans la DB
+  if (producerValidation == null) {
+    throw new Error('The received id is not in the database!');
   }
+
+  const { emailValidated, isValidated, isAdmin } = producerValidation;
+
+  const producerToUpdate = {
+    emailValidated,
+    isAdmin,
+    isValidated
+  };
+
+  // si un élément est donnée, on l'update, sinon, on ne le déclare même pas (pour ne pas remplacer l'élément dans la DB par null sans le vouloir)
+  if (firstname !== undefined) {
+    producerToUpdate.firstname = firstname;
+  }
+  if (lastname !== undefined) {
+    producerToUpdate.lastname = lastname;
+  }
+  if (image !== undefined) {
+    producerToUpdate.image = image;
+  }
+  if (phoneNumber !== undefined) {
+    producerToUpdate.phoneNumber = phoneNumber;
+  }
+  if (description !== undefined) {
+    producerToUpdate.description = description;
+  }
+  if (website !== undefined) {
+    producerToUpdate.website = website;
+  }
+
+  // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_INFO', id);
+
+  return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -183,15 +211,15 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
  */
 async function addSalespointToProducer(producerId, salespoint) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
 
   const producer = await getProducerById(producerId);
   if (producer == null) {
-    return new Error('The received producerId is not in the database!');
+    throw new Error('The received producerId is not in the database!');
   }
   if (producer.salespointId != null) {
-    return new Error('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
+    throw new Error('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
   }
 
   // on ajoute le salespoint dans la collection des salespoint
@@ -208,14 +236,14 @@ async function addSalespointToProducer(producerId, salespoint) {
  */
 async function removeSalespointToProducer(producerId) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
 
   // on supprime le salespointId contenu dans les informations du producteur
   const producer = await ProducersModel.findByIdAndUpdate(producerId, { salespointId: null }, { new: false }); // retourne l'objet avant sa modification
 
   if (producer == null) {
-    return new Error('The received producerId is not in the database!');
+    throw new Error('The received producerId is not in the database!');
   }
   // on supprime le salespoint correspondant au salespointId du producteur
   await salespointsServices.deleteSalespoint(producer.salespointId);
@@ -228,7 +256,7 @@ async function removeSalespointToProducer(producerId) {
 // TOD: à ajouter dans les tests des services!!!
 function updateProducerRating(producerId, rating) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producer.id is invalid!');
+    throw new Error('Received producer.id is invalid!');
   }
 
   // retourne l'objet modifié
@@ -237,7 +265,7 @@ function updateProducerRating(producerId, rating) {
 
 async function validateAProducer(producerId, validationState) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    return new Error('Received producer.id is invalid!');
+    throw new Error('Received producer.id is invalid!');
   }
   return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true }); // retourne l'objet modifié
 }
@@ -247,22 +275,37 @@ async function validateAProducer(producerId, validationState) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received producer.id is invalid!');
-  }
+async function deleteProducer(id) {
+  const producer = await ProducersModel.findByIdAndUpdate(id, {
+    firstname: null,
+    lastname: null,
+    email: null,
+    password: null,
+    image: null,
+    // followingProducers: null,
+    emailValidated: null,
+    isAdmin: null,
+    // followers: null,
+    phoneNumber: null,
+    description: null,
+    website: null,
+    // salespoint: null,
+    isValidated: null,
+    // products: null,
+    rating: null
+  });
 
-  // FIXME: il faut supprimer toutes les informations du producteur -> les produits, le point de vente, son id dans les productType qu'il produisait, ......
+  const salespoint = salespointsServices.deleteSalespoint(producer.salespointId);
 
-  return ProducersModel.findByIdAndRemove(id);
+  return producer;
 }
 
 async function addFollowerToProducer(producerId, followerId) {
   if (!mongoose.Types.ObjectId.isValid(followerId)) {
-    return new Error('Received followerId is invalid!');
+    throw new Error('Received followerId is invalid!');
   }
   if (producerId === followerId) {
-    return new Error('You can\'t follow yourself!');
+    throw new Error('You can\'t follow yourself!');
   }
 
   const personIsInDB = await personsServices.checkIfPersonIdExistInDB(followerId);
@@ -270,11 +313,11 @@ async function addFollowerToProducer(producerId, followerId) {
 
   // on check que le followerId soit présent dans la DB
   if (!personIsInDB) {
-    return new Error('There is no person with this id in database!');
+    throw new Error('There is no person with this id in database!');
   }
   // on check que le producerId soit présent dans la DB
   if (!producerIsInDB) {
-    return new Error('There is no producer with this id in database!');
+    throw new Error('There is no producer with this id in database!');
   }
 
   // on ajoute le nouveau follower au tableaux d'ids des followers du producteur et on met à jour le producteur dans la base de données
@@ -286,10 +329,10 @@ async function addFollowerToProducer(producerId, followerId) {
 
 async function removeFollowerToProducer(producerId, followerId) {
   if (!mongoose.Types.ObjectId.isValid(followerId)) {
-    return new Error('Received followerId is invalid!');
+    throw new Error('Received followerId is invalid!');
   }
   if (producerId === followerId) {
-    return new Error('You can\'t follow yourself!');
+    throw new Error('You can\'t follow yourself!');
   }
 
   const personIsInDB = await personsServices.checkIfPersonIdExistInDB(followerId);
@@ -297,11 +340,11 @@ async function removeFollowerToProducer(producerId, followerId) {
 
   // on check que le followerId soit présent dans la DB
   if (!personIsInDB) {
-    return new Error('There is no person with this id in database!');
+    throw new Error('There is no person with this id in database!');
   }
   // on check que le producerId soit présent dans la DB
   if (!producerIsInDB) {
-    return new Error('There is no producer with this id in database!');
+    throw new Error('There is no producer with this id in database!');
   }
 
   // on supprime followerId du tableaux d'ids des followers du producteur et on met à jour le producteur dans la base de données
@@ -310,25 +353,3 @@ async function removeFollowerToProducer(producerId, followerId) {
   // on ajoute le producerId au tableaux d'ids des producteurs suivi par la personne et on met à jour la personne dans la base de données
   return personsServices.removeProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
-
-
-module.exports = {
-  getProducers,
-  getProducerById,
-  getAllProducerWaitingForValidation,
-  getAllProducersInReceivedIdList,
-  filterProducers,
-  addProducer,
-  addProductToProducer,
-  addSalespointToProducer,
-  removeSalespointToProducer,
-  removeProductFromProducer,
-  updateProducer,
-  updateProducerRating,
-  validateAProducer,
-  deleteProducer,
-  addFollowerToProducer,
-  removeFollowerToProducer
-};
-
-const salespointsServices = require('./salespoints.services');

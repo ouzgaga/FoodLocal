@@ -1,5 +1,16 @@
+module.exports = {
+  getSalespoints,
+  geoFilterProducersSalespoints,
+  countNbSalespointInDB,
+  addSalespoint,
+  getSalespointById,
+  updateSalespoint,
+  deleteSalespoint
+};
+
 const mongoose = require('mongoose');
-const SalespointsModel = require('../models/salespoints.modelgql');
+const producersServices = require('./producers.services');
+const { SalespointsModel } = require('../models/salespoints.modelgql');
 
 /**
  * Retourne "limit" points de vente de la base de données, fitlrés
@@ -12,16 +23,10 @@ const SalespointsModel = require('../models/salespoints.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" points de vente. Par
  *   exemple, si "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 points de vente, soit les points de vente 41 à 60.
  */
-function getSalespoints({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
-  return SalespointsModel.find({ tags })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+function getSalespoints({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
+  return SalespointsModel.find(tags)
+    .sort({ _id: 1 });
 }
 
 /**
@@ -31,10 +36,110 @@ function getSalespoints({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getSalespointById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received salespoint.id is invalid!');
-  } else {
-    return SalespointsModel.findById(id);
+    throw new Error('Received salespoint.id is invalid!');
   }
+
+  return SalespointsModel.findById(id);
+}
+
+function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  // FIXME: PAUL: est-ce possible de faire en sorte que GraphQL convertisse automatiquement les ID en ObjectID ?
+  productTypeIdsTab = productTypeIdsTab.map(e => mongoose.Types.ObjectId(e));
+
+  return SalespointsModel.aggregate(
+    [
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [
+              longitude,
+              latitude
+            ]
+          },
+          spherical: true,
+          distanceField: 'distance',
+          maxDistance
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            salespoint: '$$ROOT'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'persons',
+          localField: 'salespoint._id',
+          foreignField: 'salespointId',
+          as: 'producer'
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  '$producer',
+                  0.0
+                ]
+              },
+              '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productsIds',
+          foreignField: '_id',
+          as: 'products'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          kind: { $first: '$kind' },
+          firstname: { $first: '$firstname' },
+          lastname: { $first: '$lastname' },
+          email: { $first: '$email' },
+          image: { $first: '$image' },
+          followingProducersIds: { $first: '$followingProducersIds' },
+          emailValidated: { $first: '$emailValidated' },
+          isAdmin: { $first: '$isAdmin' },
+          followersIds: { $first: '$followersIds' },
+          phoneNumber: { $first: '$phoneNumber' },
+          description: { $first: '$description' },
+          website: { $first: '$website' },
+          salespointId: { $first: '$salespointId' },
+          isValidated: { $first: '$isValidated' },
+          productsIds: { $first: '$productsIds' },
+          rating: { $first: '$rating' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
+        }
+      },
+      {
+        $unwind: {
+          path: '$productTypeIds'
+        }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
+      }
+    ]
+  );
+}
+
+function countNbSalespointInDB() {
+  return SalespointsModel.countDocuments();
 }
 
 /**
@@ -44,7 +149,28 @@ function getSalespointById(id) {
  * @param salespoint, Les informations du point de vente à ajouter.
  */
 function addSalespoint(salespoint) {
-  return new SalespointsModel(salespoint).save();
+  const salespointToAdd = {
+    ...salespoint
+  };
+
+  if (salespointToAdd.address != null) {
+    const { number, street, city, postalCode, state, country, longitude, latitude } = salespointToAdd.address;
+
+    salespointToAdd.address = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
+  }
+
+  return new SalespointsModel(salespointToAdd).save();
 }
 
 /**
@@ -55,17 +181,19 @@ function addSalespoint(salespoint) {
  * @param {Integer} salespoint, Les informations du point de vente à mettre à jour.
  */
 async function updateSalespoint(producerId, { name, address, schedule }) {
-  const producer = await producersServices.getProducerById(producerId);
-
-  if (producer == null) {
-    return new Error('Received producerId is not in the database!');
-  }
-  if (producer.message != null) {
+  let producer;
+  try {
+    producer = await producersServices.getProducerById(producerId);
+  } catch (err) {
     // l'appel à getProducerById() a retournée l'erreur "Received producer.id is invalid!"
-    return new Error('Received producerId is invalid!');
+    throw new Error('Received producerId is invalid!');
   }
+  if (producer == null) {
+    throw new Error('Received producerId is not in the database!');
+  }
+
   if (producer.salespointId == null) {
-    return new Error('Impossible to update this salespoint because this producer doesn\'t have one.');
+    throw new Error('Impossible to update this salespoint because this producer doesn\'t have one.');
   }
 
   const updatedSalespoint = {};
@@ -76,7 +204,19 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
     updatedSalespoint.name = name;
   }
   if (address !== undefined) {
-    updatedSalespoint.address = address;
+    const { number, street, city, postalCode, state, country, longitude, latitude } = address;
+    updatedSalespoint.address = {
+      number,
+      street,
+      city,
+      postalCode,
+      state,
+      country,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude]
+      }
+    };
   }
   if (schedule !== undefined) {
     updatedSalespoint.schedule = schedule;
@@ -93,18 +233,8 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
  */
 async function deleteSalespoint(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received salespoint.id is invalid!');
+    throw new Error('Received salespoint.id is invalid!');
   }
 
   return SalespointsModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getSalespoints,
-  addSalespoint,
-  getSalespointById,
-  updateSalespoint,
-  deleteSalespoint
-};
-
-const producersServices = require('./producers.services');

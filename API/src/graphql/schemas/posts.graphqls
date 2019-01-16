@@ -1,0 +1,46 @@
+type Query {
+	# Retourne tous les posts du producteur correspondant à l'id 'producerId'
+	postsOfProducer(producerId: ID!): PostConnection! @connection
+}
+
+type Mutation {
+	# Ajoute un nouveau post à propos du producteur 'producerId' contenu dans le post reçu en paramètre
+	addPostOfProducer(post: PostInputAdd!): Post!
+
+	# Supprime le post correspondant à l'id 'newsId' créée par le producteur 'producerId'
+	deletePostOfProducer(producerId: ID!, postId: ID!): Post
+}
+
+scalar Date
+
+type Post {
+	id: ID!
+	# L'id du producteur qui a créé le post
+	producer: Producer!
+	# Le texte du post
+	text: String!
+	# La date de publication du post
+	publicationDate: Date!
+	# La localisation du producteur lorsqu'il a créé le post. N'existe que si le producteur a précisé sa position lors de la création du post.
+	address: Address
+}
+
+input PostInputAdd {
+	# L'id du producteur qui a créé le post
+	producerId: ID!
+	# Le texte du post
+	text: String!
+	# La localisation du producteur
+	address: AddressInput
+}
+
+type PostConnection {
+	pageInfo: PageInfo!
+	edges: [PostEdge!]!
+	totalCount: Int!
+}
+
+type PostEdge {
+	node: Post!
+	cursor: String!
+}

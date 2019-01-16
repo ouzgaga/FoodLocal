@@ -80,13 +80,19 @@ describe('tests productTypeCategory services', () => {
     });
 
     it('should fail getting one productTypeCategory because no id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryServices.getProductTypeCategoryById('');
-      productTypeCategoryGotInDB.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      try {
+        await productTypeCategoryServices.getProductTypeCategoryById('');
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
     it('should fail getting one productTypeCategory because invalid id received', async() => {
-      const productTypeCategoryGotInDB = await productTypeCategoryServices.getProductTypeCategoryById(fruits.id + fruits.id);
-      productTypeCategoryGotInDB.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      try {
+        await productTypeCategoryServices.getProductTypeCategoryById(fruits.id + fruits.id);
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
     it('should fail getting one productTypeCategory because unknown id received', async() => {
@@ -107,8 +113,6 @@ describe('tests productTypeCategory services', () => {
       addedProductTypeCategory.name.should.be.equal(fruits.name);
       addedProductTypeCategory.image.should.be.equal(fruits.image);
     });
-
-    // TODO: ajouter des tests d'échec d'ajout lorsqu'il manque des données obligatoires
   });
 
   describe('tests updateProductTypeCategory', () => {
@@ -132,25 +136,30 @@ describe('tests productTypeCategory services', () => {
     });
 
     it('should fail updating a productTypeCategory because no id received', async() => {
-      fruits.id = '';
-      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
-
-      updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      try {
+        fruits.id = '';
+        await productTypeCategoryServices.updateProductTypeCategory(fruits);
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
-    it('should fail updating a productTypeCategory because invalid id received', async() => {
+    it('should fail updating a productTypeCategory because invalid id received (too short)', async() => {
+      try {
       fruits.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
-      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
-
-      updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        await productTypeCategoryServices.updateProductTypeCategory(fruits);
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
-    it('should fail updating a productTypeCategory because invalid id received', async() => {
+    it('should fail updating a productTypeCategory because invalid id received (too long)', async() => {
+      try {
       fruits.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
-
-      const updatedProductTypeCategory = await productTypeCategoryServices.updateProductTypeCategory(fruits);
-
-      updatedProductTypeCategory.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        await productTypeCategoryServices.updateProductTypeCategory(fruits);
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
     it('should return null updating a productTypeCategory because unknown id received', async() => {
@@ -165,13 +174,16 @@ describe('tests productTypeCategory services', () => {
 
     it('should delete a productTypeCategory', async() => {
       // on supprime un productTypeCategory
-      let deleteProductTypeCategory = await productTypeCategoryServices.deleteProductTypeCategory(fruits.id);
+      const deleteProductTypeCategory = await productTypeCategoryServices.deleteProductTypeCategory(fruits.id);
       deleteProductTypeCategory.should.be.not.null;
       deleteProductTypeCategory.id.should.be.equal(fruits.id);
 
-      // on tente de re-supprimer le même productTypeCategory -> retourne null car le productTypeCategory est introuvable dans la DB
-      deleteProductTypeCategory = await productTypeCategoryServices.getProductTypeCategoryById(deleteProductTypeCategory);
-      expect(deleteProductTypeCategory).to.be.null;
+      try {
+        // on tente de re-supprimer le même productTypeCategory -> retourne null car le productTypeCategory est introuvable dans la DB
+        await productTypeCategoryServices.getProductTypeCategoryById(deleteProductTypeCategory.id);
+      } catch (err) {
+        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+      }
     });
 
     it('should fail deleting a productTypeCategory because given id not found in DB', async() => {

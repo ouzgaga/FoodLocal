@@ -9,8 +9,7 @@ function sendMail(to, from, subject, text, html) {
     to,
     from,
     subject,
-    text,
-    html
+    html,
   };
   // Sending mail
   sgMail

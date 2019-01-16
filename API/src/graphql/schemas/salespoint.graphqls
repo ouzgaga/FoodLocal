@@ -1,5 +1,5 @@
 type Query {
-	salespoints: [Salespoint!]!
+	salespoints: SalespointConnection! @connection
 
 	salespoint(salespointId: ID!) : Salespoint
 }
@@ -72,4 +72,15 @@ input AddressInput {
 	country: String!
 	longitude: Float!
 	latitude: Float!
+}
+
+type SalespointConnection {
+	pageInfo: PageInfo!
+	edges: [SalespointEdge!]!
+	totalCount: Int!
+}
+
+type SalespointEdge {
+	node: Salespoint!
+	cursor: String!
 }

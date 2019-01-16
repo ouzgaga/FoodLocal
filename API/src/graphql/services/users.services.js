@@ -1,3 +1,13 @@
+module.exports = {
+  getUsers,
+  countNbUsersInDB,
+  addUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAllUsersInReceivedIdList
+};
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
@@ -15,16 +25,10 @@ const tokenValidationEmailServices = require('./tokenValidationEmail.services');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
  */
-function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getUsers({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return UsersModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -34,14 +38,18 @@ function getUsers({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getUserById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
-  } else {
-    return UsersModel.findById(id);
+    throw new Error('Received user.id is invalid!');
   }
+
+  return UsersModel.findById(id);
 }
 
 function getAllUsersInReceivedIdList(listOfIdToGet) {
-  return UsersModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+  return getUsers({ tags: { _id: { $in: listOfIdToGet } } });
+}
+
+function countNbUsersInDB() {
+  return UsersModel.countDocuments();
 }
 
 /**
@@ -56,7 +64,6 @@ async function addUser({ firstname, lastname, email, password, image }) {
       firstname,
       lastname,
       email,
-      // fixme: Paul: 10 saltRound, c'est suffisant ?
       password: await bcrypt.hash(password, 10),
       image,
       emailValidated: false,
@@ -67,7 +74,7 @@ async function addUser({ firstname, lastname, email, password, image }) {
     tokenValidationEmailServices.addTokenValidationEmail(userAdded);
     return userAdded;
   } else {
-    return new Error('This email is already used.');
+    throw new Error('This email is already used.');
   }
 }
 
@@ -80,51 +87,50 @@ async function addUser({ firstname, lastname, email, password, image }) {
  */
 async function updateUser({ id, firstname, lastname, image }) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
+    throw new Error('Received user.id is invalid!');
   }
 
-  // FIXME: PAUL: on peut aussi récupérer que certains champs à l'aide de .select(...), qu'est-ce qui est le mieux...?
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
-  if (userValidation != null) {
-    // si usrValidation n'est pas nul -> l'utilisateur existe dans la DB
-    const { emailValidated, isAdmin } = userValidation;
-    const userToUpdate = {
-      firstname,
-      lastname,
-      emailValidated,
-      isAdmin
-    };
-
-    // si une image est donnée, on l'update, sinon, on ne la déclare même pas (pour ne pas remplacer l'image dans la DB par null sans le vouloir
-    if (image !== undefined) {
-      userToUpdate.image = image;
-    }
-
-    return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
-  } else {
-    return new Error('The received id is not in the database!');
+  if (userValidation == null) {
+    throw new Error('The received id is not in the database!');
   }
+
+  // si userValidation n'est pas nul -> l'utilisateur existe dans la DB
+  const { emailValidated, isAdmin } = userValidation;
+  const userToUpdate = {
+    emailValidated,
+    isAdmin
+  };
+
+  // si un élément est donnée, on l'update, sinon, on ne le déclare même pas (pour ne pas remplacer l'élément dans la DB par null sans le vouloir)
+  if (firstname !== undefined) {
+    userToUpdate.firstname = firstname;
+  }
+  if (lastname !== undefined) {
+    userToUpdate.lastname = lastname;
+  }
+  if (image !== undefined) {
+    userToUpdate.image = image;
+  }
+
+  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
 }
 
 /**
- * Supprime le producteur correspondant à l'id reçu.
+ * Supprime l'utilisateur correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du producteur à supprimer.
+ * @param {Integer} id, L'id de l'utilsiateur à supprimer.
  */
 function deleteUser(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received user.id is invalid!');
-  }
-
-  return UsersModel.findByIdAndRemove(id);
+  return UsersModel.findByIdAndUpdate(id, {
+    firstname: null,
+    lastname: null,
+    email: null,
+    password: null,
+    image: null,
+    // followingProducers: null,
+    emailValidated: null,
+    isAdmin: null
+  });
 }
-
-module.exports = {
-  getUsers,
-  addUser,
-  getUserById,
-  updateUser,
-  deleteUser,
-  getAllUsersInReceivedIdList
-};

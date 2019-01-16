@@ -1,7 +1,18 @@
+module.exports = {
+  getProducts,
+  getAllProductsInReceivedIdList,
+  addAllProductsInArray,
+  addProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct
+};
+
 const mongoose = require('mongoose');
 const ProductsModel = require('../models/products.modelgql');
 const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
+const notificationsServices = require('./notifications.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -14,16 +25,10 @@ const producersServices = require('./producers.services');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
  */
-function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
-  return ProductsModel.find({ tags })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+function getProducts({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
+  return ProductsModel.find(tags)
+    .sort({ _id: 1 });
 }
 
 /**
@@ -32,7 +37,7 @@ function getProducts({ tags = undefined, limit = 50, page = 0 } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return ProductsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
+  return getProducts({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
@@ -42,10 +47,10 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  */
 function getProductById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
-  } else {
-    return ProductsModel.findById(id);
+    throw new Error('Received product.id is invalid!');
   }
+
+  return ProductsModel.findById(id);
 }
 
 /**
@@ -56,28 +61,31 @@ function getProductById(id) {
  * @param producerId, L'id du producteur produisant le produit à ajouter.
  */
 async function addProduct(product, producerId) {
-  if (product.productTypeId != null && !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    const addedProduct = await new ProductsModel(product).save();
-
-    // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
-    await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
-
-    // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
-    await producersServices.addProductToProducer(addedProduct.id, producerId);
-
-    return addedProduct;
+  if (product.productTypeId == null || !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
+    throw new Error('Received productType.id is invalid!');
   }
+
+  const addedProduct = await new ProductsModel(product).save();
+
+  // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
+  const res = await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+
+  // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
+  await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+  // on ajoute une nouvelle notification signalant l'ajout d'un nouveau produit proposé par le producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_PRODUCTS_LIST', producerId);
+
+  return addedProduct;
 }
 
 async function addAllProductsInArray(productsArray, producerId) {
   if (productsArray != null && productsArray.length !== 0) {
     const promisesAddProducts = productsArray.map(product => addProduct(product, producerId));
     return Promise.all(promisesAddProducts);
-  } else {
-    return new Error('function addAllProductsInArray: received productsArray is null or empty!');
   }
+
+  throw new Error('function addAllProductsInArray: received productsArray is null or empty!');
 }
 
 /**
@@ -88,17 +96,24 @@ async function addAllProductsInArray(productsArray, producerId) {
  *
  * @param product, Les informations du produit à mettre à jour.
  */
-async function updateProduct(product) {
-  if (!mongoose.Types.ObjectId.isValid(product.id)) {
-    return new Error('Received product.id is invalid!');
+async function updateProduct({ id, description, productTypeId }) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error('Received product.id is invalid!');
   }
 
   const updatedProduct = {
-    ...product,
-    productTypeId: product.productTypeId
+    id
   };
+  // on ne déclare la description et le productTypeId que s'il est réellement donné, sinon, on ne les déclare même pas (pour
+  // ne pas remplacer les données dans la DB par null sans le vouloir
+  if (description !== undefined) {
+    updatedProduct.description = description;
+  }
+  if (productTypeId !== undefined) {
+    updatedProduct.productTypeId = productTypeId;
+  }
 
-  return ProductsModel.findByIdAndUpdate(product.id, updatedProduct, { new: true }); // retourne l'objet modifié
+  return ProductsModel.findByIdAndUpdate(id, updatedProduct, { new: true }); // retourne l'objet modifié
 }
 
 /**
@@ -106,20 +121,18 @@ async function updateProduct(product) {
  *
  * @param product, Les informations du produit à supprimer.
  */
-function deleteProduct(id) {
+async function deleteProduct(id, producerId) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received product.id is invalid!');
+    throw new Error('Received product.id is invalid!');
   }
 
-  return ProductsModel.findByIdAndRemove(id);
-}
+  const product = await ProductsModel.findByIdAndRemove(id);
 
-module.exports = {
-  getProducts,
-  getAllProductsInReceivedIdList,
-  addAllProductsInArray,
-  addProduct,
-  getProductById,
-  updateProduct,
-  deleteProduct
-};
+  // on supprime l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType du produit supprimé
+  const res = await productTypesServices.removeProducerProducingThisProductType(product.productTypeId, producerId);
+
+  // on supprime l'id du produit dans le tableau des produits proposés par ce producteur
+  await producersServices.removeProductFromProducer(product.id, producerId);
+
+  return product;
+}

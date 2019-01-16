@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const personsServices = require('../services/persons.services');
-const ProducersModel = require('../models/producers.modelgql');
 
 const options = {
   toObject: { virtuals: true }
@@ -59,13 +57,6 @@ personRatingProducer.pre('save', function(next) {
     next(err);
   }
 });
-personRatingProducer.pre('findOneAndUpdate', function(next) {
-  try {
-    return checkGivenPersonAndProducerExists(this, next);
-  } catch (err) {
-    next(err);
-  }
-});
 
 
 /**
@@ -78,7 +69,6 @@ async function updateProducerRating(doc) {
     return null;
   }
 
-  // TODO: tester si ça fonctionne de lui passer un objectId !
   let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(doc.producerId) } },
     { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
@@ -108,3 +98,5 @@ const PersonRatingProducersModel = mongoose.model('personRatingProducer', person
  * @typedef personRatingProducer
  */
 module.exports = PersonRatingProducersModel;
+const personsServices = require('../services/persons.services');
+const ProducersModel = require('../models/producers.modelgql');

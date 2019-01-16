@@ -1,6 +1,9 @@
 type Query {
 	# Retourne true si l'email reçu en paramètre peut être utilisé pour inscrire un nouveau membre. Retourne false si l'email re4u en paramètre est déjà utilisé.
 	checkIfEmailIsAvailable(email: String!): Boolean!
+
+	# Retourne la personne correspondant au token reçu.
+	me(token: String!): Person
 }
 
 type Mutation {
@@ -12,6 +15,12 @@ type Mutation {
 
 	# Permet de modifier le password du producteur correspondant à l'id reçu si l'ancien password entré correspond à celui enregistré dans la base de données. Retourne true si le password a été changé avec succès, false sinon.
 	changePassword(newPassword: String!, oldPassword: String!, personId: ID!): Boolean!
+
+	# Reset le mot de passe de l'utilisateur correspondant à l'email reçu en paramètre. Envoie le nouveau mot de passe par email.
+	resetPassword(email: String!): Boolean!
+
+	# Supprime le compte de l'utilisateur correspondant à l'id du token reçu en entête.
+	deletePersonAccount: Boolean!
 }
 
 interface Person {
@@ -22,8 +31,19 @@ interface Person {
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# tableau contenant tous les producteur que la personne suit
-	followingProducers:[Producer!]!
+	followingProducers: ProducerConnection!
 	# booléen valant true si l'email a été validé par le membre, false sinon
 	emailValidated: Boolean!
 	isAdmin: Boolean!
+}
+
+type PersonConnection {
+	pageInfo: PageInfo!
+	edges: [PersonEdge!]!
+	totalCount: Int!
+}
+
+type PersonEdge {
+	node: Person!
+	cursor: String!
 }
