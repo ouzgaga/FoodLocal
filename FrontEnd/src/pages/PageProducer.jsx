@@ -6,6 +6,9 @@ import { Query } from 'react-apollo';
 import ProducerHeader from '../components/producer/ProducerHeader';
 import ProducerUserInteraction from '../components/producer/ProducerUserInteraction';
 import ProducerContent from '../components/producer/ProducerContent';
+import ErrorLoading from '../components/ErrorLoading';
+import Loading from '../components/Loading';
+import PageError404 from './PageError404';
 
 const GET_PRODUCER_HEADER = gql`
 query($producer: ID!) {
@@ -57,8 +60,10 @@ class PageProducer extends React.Component {
           variables={{ producer: producerId }}
         >
           {({ data, loading, error }) => {
-            if (error) return 'Oups une erreur est survenue, veuillez rafraichir la page.';
-            if (loading) return 'Loading...';
+            if (error) return <ErrorLoading />;
+            if (loading) return <Loading />;
+
+            if (data.producer === null) return <PageError404 location={{ pathname: `/producer/${producerId}` }} />;
             const {
               firstname, lastname, description, image, rating
             } = data.producer;
@@ -70,18 +75,22 @@ class PageProducer extends React.Component {
               nbRatings = null;
             } else {
               ratingValue = rating.rating;
-              nbRatings = { rating };
+              nbRatings = rating.nbRatings;
             }
             return (
-              <ProducerHeader lastname={lastname} firstname={firstname} description={description} image={image} ratingValue={ratingValue} nbRating={nbRatings} />
+              <>
+                <ProducerHeader lastname={lastname} firstname={firstname} description={description} image={image} ratingValue={ratingValue} nbRating={nbRatings} />
+
+                <ProducerUserInteraction
+                  followersCount={100}
+                />
+                <ProducerContent producerId={producerId} />
+              </>
             );
           }}
         </Query>
 
-        <ProducerUserInteraction
-          followersCount={100}
-        />
-        <ProducerContent producerId={producerId}/>
+
       </div>
     );
   }

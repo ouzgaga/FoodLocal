@@ -55,8 +55,8 @@ class PagePersonalInformations extends React.Component {
     return (
       <Query query={query}>
         {({ data, loading, error }) => {
-          if (error) return 'Oups une erreur est survenue, veuillez rfraichir la page.';
-          if (loading) return 'Loading...';
+           if (error) return <ErrorLoading />;
+            if (loading) return <Loading />;
           return (
             <MainMap data={data} />
           );

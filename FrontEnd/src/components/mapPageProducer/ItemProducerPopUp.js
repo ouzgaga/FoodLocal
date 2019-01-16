@@ -8,9 +8,40 @@ import CardHeader from '@material-ui/core/CardHeader';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import Loading from '../Loading';
+import ErrorLoading from '../ErrorLoading';
+
+const GET_PRODUCER_DETAILS = gql`
+query($producerId : ID!) {
+  producer(producerId : $producerId) {
+    salespoint {
+      name
+      address {
+        city
+      }
+    }
+    products {
+      edges {
+        node {
+          productType {
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+
 const styles = theme => ({
   card: {
-    maxWidth: 400,
+    maxWidth: 300,
+    minWidth: 300,
     width: '100%',
     paddingTop: 0,
   },
@@ -36,7 +67,7 @@ const styles = theme => ({
     padding: 10,
   },
   gridListTile: {
-    maxHeight: 150,
+    maxHeight: 200,
     maxWidth: 100,
   },
   media: {
@@ -53,34 +84,51 @@ const styles = theme => ({
 });
 
 function ListItemProducer(props) {
-  const { classes } = props;
-  const { producer, handleHover, resetHover } = props;
-  //const link = `/producer/${salepoint.producers[0]}`; // TODO
+  const { classes, producerId } = props;
+  const link = `/producer/${producerId}`;
+
   return (
-    <Fragment>
 
-      {producer.salespoint !== null && (
-        <Card className={classes.card}>
-          <CardActionArea target="_blank">
-            <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
-            <div className={classes.root}>
-              <GridList className={classes.gridList}>
-                {producer.products.map(item => (
-                  <div className={classes.paper}>
-                    <GridListTile key={item.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
-                      <CardMedia className={classes.media} image={item.productType.image} title={item.productType.name} />
-                      <Typography className={classes.typo} variant="body1" gutterBottom> {item.productType.name} </Typography>
-                    </GridListTile>
+    <Query
+      query={GET_PRODUCER_DETAILS}
+      variables={{ producerId }}
+    >
+      {({ data, loading, error }) => {
+        if (error) return <ErrorLoading />;
+        if (loading) return <Loading />;
+
+        const { producer } = data;
+
+        return (
+          <Fragment>
+            {producer.salespoint !== null && (
+              <Card className={classes.card}>
+                <CardActionArea href={link} target="_blank">
+                  <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
+                  <div className={classes.root}>
+                    <GridList className={classes.gridList}>
+                      {producer.products.edges.map(({ node }) => (
+                        <div className={classes.paper} key={node.productType.id}>
+                          <GridListTile key={node.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
+                            <CardMedia className={classes.media} image={node.productType.image} title={node.productType.name} />
+                            <Typography className={classes.typo} variant="body1" gutterBottom>
+                              {node.productType.name}
+                            </Typography>
+                          </GridListTile>
+                        </div>
+                      ))}
+                    </GridList>
                   </div>
-                ))}
-              </GridList>
+                </CardActionArea>
 
-            </div>
-          </CardActionArea>
+              </Card>
+            )}
+          </Fragment>
+        );
+      }}
+    </Query>
 
-        </Card>
-      )}
-    </Fragment>
+
 
   );
 }

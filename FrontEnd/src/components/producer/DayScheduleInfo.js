@@ -33,11 +33,13 @@ function DayScheduleInfo(props) {
 
       <Grid item xs={4}>
 
-        {data.length === 0 ? (
-          <Typography>
-            {'Fermé'}
-          </Typography>
-        ) : (
+        {data.length === 0
+          ? (
+            <Typography>
+              {'Fermé'}
+            </Typography>
+          )
+          : (
             <Typography>
               {`${data[0].openingHour} - ${data[0].closingHour}`}
             </Typography>

@@ -11,6 +11,8 @@ import {
 import DayScheduleInfo from './DayScheduleInfo';
 
 import MarkerCarotte from '../../img/MarkerCarotte.png';
+import MapLocator from './MapLocator';
+import AddressInfo from './AddressInfo';
 
 const myIcon = L.icon({
   iconUrl: MarkerCarotte,
@@ -29,15 +31,17 @@ const styles = theme => ({
 function ProducerInformations(props) {
 
   const { classes, data } = props;
-  const { email, phoneNumber, salespoint } = data.producer;
+  const { email, website, phoneNumber, salespoint } = data.producer;
   const { name, address, schedule } = salespoint;
   const {
     monday, tuesday, wednesday, thursday, friday, saturday, sunday
   } = schedule;
 
   const {
-    number, street, city, postalCode, state, country, longitude, latitude
+    longitude, latitude
   } = address;
+
+
   return (
     <div className={classes.root}>
       <Grid container spacing={24}>
@@ -52,33 +56,15 @@ function ProducerInformations(props) {
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={15}>
-
-            <TileLayer
-              key="tileLayer"
-              attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-              url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
-            />
-            <Marker position={[latitude, longitude]} icon={myIcon} />
-          </Map>
+          <MapLocator latitude={latitude} longitude={longitude} height={400} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography>
-            {'Adresse'}
-          </Typography>
-          <Typography>
-            {`${street} ${number}`}
-          </Typography>
-          <Typography>
-            {`${postalCode} ${city}`}
-          </Typography>
-          <Typography>
-            {`${state} ${country}`}
-          </Typography>
-          <Typography>
+          <AddressInfo address={address} />
+          <br />
+
+          <Typography color="primary">
             {'Horaires'}
           </Typography>
-
           <DayScheduleInfo dayName="Lundi" data={monday} />
           <DayScheduleInfo dayName="Mardi" data={tuesday} />
           <DayScheduleInfo dayName="Mercredi" data={wednesday} />

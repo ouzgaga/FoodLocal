@@ -57,7 +57,7 @@ function ProducerHeader(props) {
 
           <RatingItem
             readOnly
-            defaultValue={ratingValue}
+            defaultValue={Math.round(ratingValue)}
           />
           <Typography wrap="nowrap">
             {`pour ${nbRating || 0} votes.`}
