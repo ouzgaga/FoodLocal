@@ -30,8 +30,8 @@ input UserInputAdd {
 
 input UserInputUpdate {
 	id: ID!
-	firstname: String!
-	lastname: String!
+	firstname: String
+	lastname: String
 	image: String
 }
 

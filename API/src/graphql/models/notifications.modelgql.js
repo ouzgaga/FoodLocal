@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const personsServices = require('../services/persons.services');
 
 const options = {
   toObject: { virtuals: true }
@@ -56,3 +55,4 @@ const NotificationsModel = mongoose.model('notifications', notificationsSchema);
  * @typedef notificationsSchema
  */
 module.exports = NotificationsModel;
+const personsServices = require('../services/persons.services');

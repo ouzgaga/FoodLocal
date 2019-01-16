@@ -1,7 +1,29 @@
+module.exports = {
+  isEmailAvailable,
+  checkIfPersonIdExistInDB,
+  getPersonById,
+  getPersonByLogin,
+  getPersonByToken,
+  getAllPersonsInReceivedIdList,
+  countNbPersonsInDB,
+  addProducerToPersonsFollowingList,
+  removeProducerToPersonsFollowingList,
+  changePassword,
+  resetPassword,
+  checkIfPasswordIsValid,
+  validateEmailUserByToken,
+  deletePersonAccount
+};
+
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const PersonsModel = require('../models/persons.modelgql');
+const tokenValidationEmailServices = require('./tokenValidationEmail.services');
+const producersServices = require('./producers.services');
+const usersServices = require('./users.services');
+const connectionTokenServices = require('./connectionToken.services');
 const config = require('../../config/config');
 
 async function isEmailAvailable(emailUser) {
@@ -154,26 +176,3 @@ function deletePersonAccount(personId, kind) {
     return usersServices.deleteUser(personId);
   }
 }
-
-module.exports = {
-  isEmailAvailable,
-  checkIfPersonIdExistInDB,
-  getPersonById,
-  getPersonByLogin,
-  getPersonByToken,
-  getAllPersonsInReceivedIdList,
-  countNbPersonsInDB,
-  addProducerToPersonsFollowingList,
-  removeProducerToPersonsFollowingList,
-  changePassword,
-  resetPassword,
-  checkIfPasswordIsValid,
-  validateEmailUserByToken,
-  deletePersonAccount
-};
-
-const PersonsModel = require('../models/persons.modelgql');
-const tokenValidationEmailServices = require('./tokenValidationEmail.services');
-const producersServices = require('./producers.services');
-const usersServices = require('./users.services');
-const connectionTokenServices = require('./connectionToken.services');

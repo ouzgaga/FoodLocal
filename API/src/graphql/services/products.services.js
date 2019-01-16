@@ -1,7 +1,18 @@
+module.exports = {
+  getProducts,
+  getAllProductsInReceivedIdList,
+  addAllProductsInArray,
+  addProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct
+};
+
 const mongoose = require('mongoose');
 const ProductsModel = require('../models/products.modelgql');
 const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
+const notificationsServices = require('./notifications.services');
 
 /**
  * Retourne "limit" produits de la base de données, fitlrés
@@ -16,7 +27,7 @@ const producersServices = require('./producers.services');
  */
 function getProducts({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return ProductsModel.find({ tags })
+  return ProductsModel.find(tags)
     .sort({ _id: 1 });
 }
 
@@ -26,7 +37,7 @@ function getProducts({ tags = undefined } = {}) {
  * @returns {*}
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
-  return getProducts({ _id: { $in: listOfIdToGet } });
+  return getProducts({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
@@ -61,6 +72,9 @@ async function addProduct(product, producerId) {
 
   // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
   await producersServices.addProductToProducer(addedProduct.id, producerId);
+
+  // on ajoute une nouvelle notification signalant l'ajout d'un nouveau produit proposé par le producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_PRODUCTS_LIST', producerId);
 
   return addedProduct;
 }
@@ -122,13 +136,3 @@ async function deleteProduct(id, producerId) {
 
   return product;
 }
-
-module.exports = {
-  getProducts,
-  getAllProductsInReceivedIdList,
-  addAllProductsInArray,
-  addProduct,
-  getProductById,
-  updateProduct,
-  deleteProduct
-};

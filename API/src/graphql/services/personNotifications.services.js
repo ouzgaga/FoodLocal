@@ -1,3 +1,10 @@
+module.exports = {
+  getAllNotificationsOfPerson,
+  countNbNotificationsOfPerson,
+  addNotificationOfPersonForAllPersonIdInArray,
+  setPersonNotificationAsSeen
+};
+
 const mongoose = require('mongoose');
 const PersonsNotificationsModel = require('../models/personNotifications.modelgql');
 
@@ -38,11 +45,3 @@ function setPersonNotificationAsSeen(id) {
 
   return PersonsNotificationsModel.findByIdAndUpdate(id, { seen: true }, { new: true });
 }
-
-
-module.exports = {
-  getAllNotificationsOfPerson,
-  countNbNotificationsOfPerson,
-  addNotificationOfPersonForAllPersonIdInArray,
-  setPersonNotificationAsSeen
-};

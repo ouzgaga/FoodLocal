@@ -15,9 +15,9 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    filterProducers: (parent, args, context) => producersServices.filterProducers(args.byProductTypeIds),
-
-    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
+    geoFilterProducers: (parent, args, context) => {
+      return producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds);
+    }
   },
 
   Mutation: {
@@ -33,6 +33,8 @@ const producerResolvers = {
   },
 
   Producer: {
+    id: (parent, args, context) => parent._id.toString(),
+
     followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),

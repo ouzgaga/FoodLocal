@@ -1,5 +1,28 @@
+module.exports = {
+  getProducers,
+  getProducerById,
+  getAllProducerWaitingForValidation,
+  getAllProducersInReceivedIdList,
+  countProducersIndBD,
+  filterProducers,
+  geoFilterProducers,
+  addProducer,
+  addProductToProducer,
+  addSalespointToProducer,
+  removeSalespointToProducer,
+  removeProductFromProducer,
+  updateProducer,
+  updateProducerRating,
+  validateAProducer,
+  deleteProducer,
+  addFollowerToProducer,
+  removeFollowerToProducer
+};
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const salespointsServices = require('./salespoints.services');
+const notificationsServices = require('./notifications.services');
 const ProducersModel = require('../models/producers.modelgql');
 const personsServices = require('../services/persons.services');
 const tokenValidationEmailServices = require('./tokenValidationEmail.services');
@@ -42,7 +65,7 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return getProducers({ _id: { $in: listOfIdToGet } });
+  return getProducers({ tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
@@ -50,7 +73,7 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
  * @returns {*}
  */
 function getAllProducerWaitingForValidation() {
-  return getProducers({ isValidated: false });
+  return getProducers({ tags: { isValidated: false } });
 }
 
 function countProducersIndBD() {
@@ -66,20 +89,21 @@ function countProducersIndBD() {
  * @returns {Promise<*>}
  */
 function filterProducers(byProductTypeIds) {
-  if (byProductTypeIds != null && byProductTypeIds.length !== 0) {
-    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+  if (byProductTypeIds == null) {
+    throw new Error('Received parameter "byProductTypeIds" cannot be null!');
   }
 
-  // pas de filtre --> on retourne tous les producteurs
-  return getProducers();
+  if (byProductTypeIds.length !== 0) {
+    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
+    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
+  } else {
+    // pas de filtre --> on retourne tous les producteurs
+    return getProducers();
+  }
 }
 
-async function geoFilterProducers({ longitude, latitude, maxDistance }, byProductTypeIds) {
-  const salespoints = await salespointsServices.geoFilterSalespoints({ longitude, latitude, maxDistance });
-
-  // fixme: à retapper pour retourner le champ distance (entre le user et le salespoint) et ajouter le filtre par productId!!
-  return getProducers({ salespointId: { $in: salespoints } });
+function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+  return salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, productTypeIdsTab);
 }
 
 /**
@@ -140,24 +164,26 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
 
   const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
+  // si producerValidation est nul -> l'utilisateur n'existe pas dans la DB
   if (producerValidation == null) {
     throw new Error('The received id is not in the database!');
   }
 
-  // si producerValidation n'est pas nul -> l'utilisateur existe dans la DB
   const { emailValidated, isValidated, isAdmin } = producerValidation;
 
   const producerToUpdate = {
-    id,
-    firstname,
-    lastname,
     emailValidated,
     isAdmin,
     isValidated
   };
 
-  // on ne déclare l'image, le phoneNumber, la description ou le website que s'il est réellement donné, sinon, on ne les déclare même pas (pour
-  // ne pas remplacer l'image dans la DB par null sans le vouloir
+  // si un élément est donnée, on l'update, sinon, on ne le déclare même pas (pour ne pas remplacer l'élément dans la DB par null sans le vouloir)
+  if (firstname !== undefined) {
+    producerToUpdate.firstname = firstname;
+  }
+  if (lastname !== undefined) {
+    producerToUpdate.lastname = lastname;
+  }
   if (image !== undefined) {
     producerToUpdate.image = image;
   }
@@ -170,6 +196,9 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
   if (website !== undefined) {
     producerToUpdate.website = website;
   }
+
+  // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_INFO', id);
 
   return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
 }
@@ -246,8 +275,8 @@ async function validateAProducer(producerId, validationState) {
  *
  * @param {Integer} id, L'id du producteur à supprimer.
  */
-function deleteProducer(id) {
-  return ProducersModel.findByIdAndUpdate(id, {
+async function deleteProducer(id) {
+  const producer = await ProducersModel.findByIdAndUpdate(id, {
     firstname: null,
     lastname: null,
     email: null,
@@ -265,6 +294,10 @@ function deleteProducer(id) {
     // products: null,
     rating: null
   });
+
+  const salespoint = salespointsServices.deleteSalespoint(producer.salespointId);
+
+  return producer;
 }
 
 async function addFollowerToProducer(producerId, followerId) {
@@ -320,27 +353,3 @@ async function removeFollowerToProducer(producerId, followerId) {
   // on ajoute le producerId au tableaux d'ids des producteurs suivi par la personne et on met à jour la personne dans la base de données
   return personsServices.removeProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
-
-
-module.exports = {
-  getProducers,
-  getProducerById,
-  getAllProducerWaitingForValidation,
-  getAllProducersInReceivedIdList,
-  countProducersIndBD,
-  filterProducers,
-  geoFilterProducers,
-  addProducer,
-  addProductToProducer,
-  addSalespointToProducer,
-  removeSalespointToProducer,
-  removeProductFromProducer,
-  updateProducer,
-  updateProducerRating,
-  validateAProducer,
-  deleteProducer,
-  addFollowerToProducer,
-  removeFollowerToProducer
-};
-
-const salespointsServices = require('./salespoints.services');

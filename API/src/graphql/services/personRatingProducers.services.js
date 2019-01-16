@@ -1,3 +1,14 @@
+module.exports = {
+  getAllRatingsAboutProducerWithId,
+  getRatingAboutProducerIdMadeByPersonId,
+  getAllRatingsMadeByPersonWithId,
+  countNbRatingsMadeByPersonWithId,
+  countNbRatingsAboutProducerWithId,
+  addPersonRatingProducer,
+  updatePersonRatingProducer,
+  deletePersonRatingProducer
+};
+
 const mongoose = require('mongoose');
 const PersonRatingProducersModel = require('../models/personRatingProducers.modelgql');
 const producersServices = require('./producers.services');
@@ -134,14 +145,3 @@ function deletePersonRatingProducer(id) {
 
   return PersonRatingProducersModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getAllRatingsAboutProducerWithId,
-  getRatingAboutProducerIdMadeByPersonId,
-  getAllRatingsMadeByPersonWithId,
-  countNbRatingsMadeByPersonWithId,
-  countNbRatingsAboutProducerWithId,
-  addPersonRatingProducer,
-  updatePersonRatingProducer,
-  deletePersonRatingProducer
-};

@@ -1,3 +1,10 @@
+module.exports = {
+  getAllPostsOfProducer,
+  countNbPostsOfProducerInDB,
+  addPostOfProducer,
+  deletePostOfProducer
+};
+
 const mongoose = require('mongoose');
 const PostsModel = require('../models/posts.modelgql');
 const notificationsServices = require('./notifications.services');
@@ -51,10 +58,3 @@ function deletePostOfProducer(id) {
   // FIXME: il faut supprimer les notifications ou les rediriger sur un message type "ce post a été supprimé par son auteur"!
   return PostsModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getAllPostsOfProducer,
-  countNbPostsOfProducerInDB,
-  addPostOfProducer,
-  deletePostOfProducer
-};
