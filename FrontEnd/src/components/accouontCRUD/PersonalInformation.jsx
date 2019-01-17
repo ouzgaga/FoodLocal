@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import DoneOutline from '@material-ui/icons/DoneOutline';
 
 import BorderedTextField from '../items/fields/BorderedTextField';
 import BoxLeftRight from './BoxLeftRight';
@@ -58,56 +59,44 @@ const styles = theme => ({
   },
 });
 
+
+/**
+ * Permet à l'utilisateur de modifier ses informations personnels
+ * -> nom + prénom
+ */
 class PersonalInformation extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      lastName: '',
-      firstName: '',
-    };
-  }
-
-  handleChange = prop => (event) => {
-    console.log(prop);
-    this.setState({
-      [prop]: event.target.value,
-    });
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-  }
-
-
   render() {
     const { classes, userId, status, token } = this.props;
-    const { lastName, firstName } = this.state;
-
     return (
       <>
-
-        <Query query={queryMe} variables={{ token: token }}>
+        {console.info(status)}
+        <Query
+          query={queryMe}
+          variables={{ token: token }}
+        >
           {({ loading, error, data }) => {
-            if (loading) return <p>Loading...</p>;
-            if (error) return <p>Error :(</p>;
+            if (loading) return <p>Chargement...</p>;
+            if (error) return <p>Erreur serveur</p>;
+            let datas = data;
             return (
               <>
-
-                <Mutation mutation={status === 'producers' ? mutUpdateProd : mutUpdateUser}>
-                  {(updateTodo, { datas, loading, error }) => (
+                <Mutation
+                  mutation={status === 'producers' ? mutUpdateProd : mutUpdateUser}
+                >
+                  {(updateTodo, { data, loading, error }) => (
                     <form
                       id="form-name-firstname"
-                      onSubmit={e => {
+                      onSubmit={ (e) => {
                         e.preventDefault();
-                        console.info(userId);
-                        let user = {
-                          id: "5c392564f1b07a281d57d1e3",
-                          firstname: data.me.firstname,
-                          lastname: data.me.lastname
+                        const user = {
+                          id: userId,
+                          firstname: document.getElementById('BorderedTextField-personal-information-name').value,
+                          lastname: document.getElementById('BorderedTextField-personal-information-lastName').value
                         };
-                        updateTodo({ variables: { user: user}});
+                        console.info( "user");
+                        updateTodo({
+                          variables: { user: user }
+                        })
                       }}
                     >
                       <BoxLeftRight
@@ -116,10 +105,10 @@ class PersonalInformation extends Component {
                         <BorderedTextField
                           id="personal-information-name"
                           className={classes.textField}
-                          onChange={this.handleChange('firstName')}
-                          defaultValue={data.me.firstname}
+                          defaultValue={datas.me.firstname}
                           fullWidth
                           required
+             
                         />
                       </BoxLeftRight>
                       <BoxLeftRight
@@ -128,8 +117,8 @@ class PersonalInformation extends Component {
                         <BorderedTextField
                           id="personal-information-lastName"
                           className={classes.textField}
-                          onChange={this.handleChange('lastName')}
-                          defaultValue={data.me.lastname}
+                          
+                          defaultValue={datas.me.lastname}
                           fullWidth
                           required
                         />
@@ -137,7 +126,7 @@ class PersonalInformation extends Component {
                       <BoxLeftRight
                         title=""
                       >
-                       <>
+                        <>
                           <Button
                             variant="contained"
                             className={classes.button}
@@ -148,19 +137,19 @@ class PersonalInformation extends Component {
                             {`Valider`}
                           </Button>
                           {loading && <p>Chargement...</p>}
-                        {error && (
-                          <>
-                          {console.info(error)}
-                          <Typography color="error">
-                            Un probème est survenu, veuillez essayer plus tard.
-                          </Typography>
-                          </>
-                        )}
-                        {datas && <p>Changement fait</p>}
+                          {error && (
+                            <>
+                              {console.info(error)}
+                              <Typography color="error">
+                                Un probème est survenu, veuillez essayer plus tard.
+                              </Typography>
+                            </>
+                          )}
+                          {data && <DoneOutline color="secondary" />}
                         </>
                       </BoxLeftRight>
 
-                      
+
                     </form>
 
                   )}
@@ -169,7 +158,6 @@ class PersonalInformation extends Component {
             );
           }}
         </Query>
-
       </>
     );
   }

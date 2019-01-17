@@ -23,11 +23,7 @@ import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
 import PersonalDescription from '../src/components/accouontCRUD/PersonalDescription';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
 import BorderedCountField from '../src/components/items/fields/BorderedCountField';
-
-
-function onChange(event) {
-
-}
+import DropZone from '../src/components/items/DropZone';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -238,13 +234,12 @@ storiesOf('PersonalInformation', module)
     <PersonalInformation />
   ));
 
-
-
-
-
-
 storiesOf('TableProducerItem', module)
-
   .add('producer item', () => (
     <TableProducerItem id={1234} name="La Ferme Du Bois" />
+  ));
+
+storiesOf('DropZone', module)
+  .add('Dropzone', () => (
+    <DropZone />
   ));

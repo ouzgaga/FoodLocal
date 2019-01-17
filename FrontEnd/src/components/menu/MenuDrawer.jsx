@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
+
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
 
-import ListItem from '@material-ui/core/ListItem';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,7 +27,7 @@ import { AuthContext } from '../providers/AuthProvider';
 const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 const styles = {
-  list: {
+  MenuList: {
     width: 250,
   },
   fullList: {
@@ -59,39 +60,40 @@ class MenuDrawer extends React.Component {
     const { isOpen } = this.state;
 
     const staticMenu = (
-      <List>
+      
+      <MenuList>
         <Link to="/" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               <HomeIcone color="primary" />
             </ListItemIcon>
             <ListItemText primary="Acceuil" />
-          </ListItem>
+          </MenuItem>
         </Link>
         <Link to="/map" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               <MapIcone color="primary" />
             </ListItemIcon>
             <ListItemText primary="Carte" />
-          </ListItem>
+          </MenuItem>
         </Link>
 
         <Link to="/about" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               <DescriptionIcone color="primary" />
             </ListItemIcon>
             <ListItemText primary="A propos de nous" />
-          </ListItem>
+          </MenuItem>
         </Link>
 
-      </List>
+      </MenuList>
     );
 
     const notLogMenu = (
-      <List>
-        <ListItem
+      <MenuList>
+        <MenuItem
           button
           onClick={onClick('newAccountOpen')}
         >
@@ -99,8 +101,8 @@ class MenuDrawer extends React.Component {
             <RegisterIcone color="primary" />
           </ListItemIcon>
           <ListItemText primary="S'inscrire" />
-        </ListItem>
-        <ListItem
+        </MenuItem>
+        <MenuItem
           button
           onClick={onClick('open')}
         >
@@ -108,33 +110,33 @@ class MenuDrawer extends React.Component {
             <AccountIcone color="primary" />
           </ListItemIcon>
           <ListItemText primary="Se connecter" />
-        </ListItem>
-      </List>
+        </MenuItem>
+      </MenuList>
     );
 
     const loggedMenu = (userStatus, isAdmin, signOut) => (
-      <List>
+      <MenuList>
         <Link to="/myWall" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               {/* TODO: icone */}
             </ListItemIcon>
             <ListItemText primary="Mon mur" />
-          </ListItem>
+          </MenuItem>
         </Link>
         <Link to="/myProducers" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               {/* TODO: icone */}
             </ListItemIcon>
             <ListItemText primary="Mes producteurs" />
-          </ListItem>
+          </MenuItem>
         </Link>
 
         {userStatus &&
           (
             <Link to="/producerRegistration" className={classes.LinkButton}>
-              <ListItem button>
+              <MenuItem button>
                 { /* TODO: addicone
                 <ListItemIcon>
                   <BuildIcone color="primary" />
@@ -142,34 +144,34 @@ class MenuDrawer extends React.Component {
                 */
                 }
                 <ListItemText primary="Mon point de vente" />
-              </ListItem>
+              </MenuItem>
             </Link>
           )
         }
 
         <Link to="/settings" className={classes.LinkButton}>
-          <ListItem button>
+          <MenuItem button>
             <ListItemIcon>
               <SettingsIcone color="primary" />
             </ListItemIcon>
             <ListItemText primary="Paramètres" />
-          </ListItem>
+          </MenuItem>
         </Link>
 
         {isAdmin &&
           (
             <Link to="/adminSection" className={classes.LinkButton}>
-              <ListItem button>
+              <MenuItem button>
                 <ListItemIcon>
                   <BuildIcone color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="Section administrateur" />
-              </ListItem>
+              </MenuItem>
             </Link>
           )
         }
 
-        <ListItem
+        <MenuItem
           button
           onClick={
             () => {
@@ -182,15 +184,17 @@ class MenuDrawer extends React.Component {
             <RegisterIcone color="primary" />
           </ListItemIcon>
           <ListItemText primary="Se déconnecter" />
-        </ListItem>
-      </List>
+        </MenuItem>
+      </MenuList>
     );
 
     const personalMenu = (
+      
       <AuthContext>
         {({ userStatus, isAdmin, signOut }) => (
           userStatus ? (
             <>
+            
               {loggedMenu(userStatus, isAdmin, signOut)}
             </>
           ) : (
@@ -200,6 +204,7 @@ class MenuDrawer extends React.Component {
           )
         )}
       </AuthContext>
+      
     );
 
     /**
@@ -207,7 +212,7 @@ class MenuDrawer extends React.Component {
      * l'utilisateur est connecté ou pas.
      */
     const mySideList = (
-      <div className={classes.list}>
+      <div className={classes.MenuList}>
         {staticMenu}
         <Divider />
         {personalMenu}
@@ -236,9 +241,7 @@ class MenuDrawer extends React.Component {
             role="button"
             onClick={this.toggleDrawer(false)}
           >
-
             {mySideList}
-
           </div>
         </SwipeableDrawer>
       </div>

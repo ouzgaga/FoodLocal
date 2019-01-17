@@ -5,7 +5,10 @@ import PersonalInformation from '../components/accouontCRUD/PersonalInformation'
 import PersonalDescription from '../components/accouontCRUD/PersonalDescription';
 import ChangePassword from '../components/accouontCRUD/ChangePassword';
 import BoxWithHeader from '../components/items/BoxWithHeader';
-import { AuthContext } from '../components/providers/AuthProvider'
+import DeleteAccount from '../components/accouontCRUD/DeleteAccount';
+import DropZone from '../components/items/DropZone'
+import { AuthContext } from '../components/providers/AuthProvider';
+
 
 const styles = theme => ({
   root: {
@@ -18,10 +21,14 @@ const styles = theme => ({
     justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
+    marginBottom: 70,
   },
 
 });
 
+/**
+ * Page contenant les paramètres utilisateur.
+ */
 class PagePersonalInformations extends React.Component {
 
   constructor(props) {
@@ -29,7 +36,7 @@ class PagePersonalInformations extends React.Component {
     document.title = 'Détails Producteur';
 
     this.state = {
-      //userId: props.match.params.producerId,
+      // userId: props.match.params.producerId,
     };
   }
 
@@ -37,6 +44,12 @@ class PagePersonalInformations extends React.Component {
     const { classes } = this.props;
     const userSettings = (userId, status, token) => (
       <>
+        <BoxWithHeader
+          header="Image de profil"
+        >
+          <DropZone />
+        </BoxWithHeader>
+      
         <BoxWithHeader
           header="Informations personnels"
         >
@@ -47,11 +60,23 @@ class PagePersonalInformations extends React.Component {
         >
           <ChangePassword userId={userId} status={status} token={token} />
         </BoxWithHeader>
+        
+        <BoxWithHeader
+          header="Supprimer votre compte"
+        >
+          <DeleteAccount />
+        </BoxWithHeader>
       </>
     );
 
     const producerSettings = (userId, status, token) => (
       <>
+      {/*}
+        <BoxWithHeader
+          header="Image de profil"
+        >
+          <DropZone />
+        </BoxWithHeader>
         <BoxWithHeader
           header="Informations personnels"
         >
@@ -67,6 +92,12 @@ class PagePersonalInformations extends React.Component {
         >
           <PersonalDescription userId={userId} status={status} token={token} />
         </BoxWithHeader>
+    */}
+        <BoxWithHeader
+          header="Supprimer votre compte"
+        >
+          <DeleteAccount />
+        </BoxWithHeader>
       </>
     );
 
@@ -75,11 +106,9 @@ class PagePersonalInformations extends React.Component {
       <div className={classes.root}>
         <AuthContext>
           {({ userId, userStatus, userToken }) => {
-            console.info(userId, userStatus, userToken)
-            return(userStatus === 'producers' ?
-              producerSettings(userId, userStatus, userToken)
-            :
-              userSettings(userId, userStatus, userToken));
+            return (userStatus === 'producers' 
+              ? producerSettings(userId, userStatus, userToken)
+              : userSettings(userId, userStatus, userToken));
           }
           }
         </AuthContext>

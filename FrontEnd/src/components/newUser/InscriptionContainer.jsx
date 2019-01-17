@@ -189,7 +189,7 @@ class InscriptionContainer extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { activeStep, email, lastName, firstName, password, passwordConf, status, GC } = this.state;
+    const { activeStep, email, password, passwordConf, GC } = this.state;
     const errors = [];
     switch (activeStep) {
       case 0:

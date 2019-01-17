@@ -35,7 +35,7 @@ class AuthProvider extends React.Component {
     super(props);
 
     this.state = {
-      userID: null,
+      userId: null,
       userMail: null,
       userStatus: null,
       isAdmin: false,
@@ -60,21 +60,8 @@ class AuthProvider extends React.Component {
       const { client } = this.props;
       client.mutate({ mutation: mutRelog })
         .then(
-          (data) => {
-            //this.addState(data.data.renewToken.token);
-            const decoded = jwtDecode(token);
-            this.setState({
-              userID: decoded.id,
-              userMail: decoded.email,
-              userStatus: decoded.kind,
-              isAdmin: decoded.isAdmin,
-              userEmailValidated: decoded.emailValidated,
-              userToken: token,
-        
-              error: null,
-            });
-            console.info(this.state.userID)
-            console.info(this.state.userToken);
+          (data) => { 
+            this.addState(data.data.renewToken.token);
             window.localStorage.setItem('token', data.data.renewToken.token);
           }
         ).catch(
@@ -86,7 +73,7 @@ class AuthProvider extends React.Component {
     }
   }
 
-  // permet de mettre à jour le token
+  // Permet de mettre à jour le token
   renewToken = (token) => {
     window.localStorage.setItem('token', token);
     this.addState(token);
@@ -97,7 +84,7 @@ class AuthProvider extends React.Component {
     const decoded = jwtDecode(token);
     console.info("token", token);
     this.setState({
-      userID: decoded.id,
+      userId: decoded.id,
       userMail: decoded.email,
       userStatus: decoded.kind,
       isAdmin: decoded.isAdmin,
@@ -106,8 +93,6 @@ class AuthProvider extends React.Component {
 
       error: null,
     });
-    console.info(this.state.userID)
-    console.info(this.state.userToken);
   }
 
   signIn = async ({ userMail, password }) => {

@@ -9,11 +9,11 @@ import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import compose from 'recompose/compose';
 
 import logo from '../img/LogoCarrote.png';
-import UserContext from './UserContext';
 import MenuDrawer from './menu/MenuDrawer';
 import LoginDialog from './LoginDialog';
 import SimpleDialog from './items/SimpleDialog';
 import InscriptionContainer from './newUser/InscriptionContainer';
+import MenuEpantion from './menu/MenuEpantion';
 
 import { AuthContext } from './providers/AuthProvider';
 
@@ -74,10 +74,9 @@ class MenuAppBar extends React.Component {
         <AuthContext>
           {({ userStatus }) => (
             userStatus ? (
-              <>
-                {/* TODO: Menu logged */}
-                hello
-              </>
+              
+              <MenuEpantion readOnly tabIndex="-1" color="inherit" id="MenuEpantion" onClick={this.handleClickDrawer}/>
+              
 
             ) : (
               <>

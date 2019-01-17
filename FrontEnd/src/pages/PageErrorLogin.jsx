@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import {
+  Route,
+  Redirect,
+} from 'react-router-dom';
+
+import { AuthContext } from '../components/providers/AuthProvider';
+
 import CenteredPaper from '../components/items/CenteredPaper';
 
 const styles = {
@@ -16,6 +23,23 @@ class PageErrorLogin extends Component {
     super(props);
     document.title = 'EmailConfirmation';
   }
+
+  
+ RedirectIfLog = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
+            ? <Redirect to="/error/email" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
 
   render() {
     const { classes } = this.props;

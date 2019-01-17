@@ -6,12 +6,16 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import Button from '@material-ui/core/Button';
+
+import { SnackbarProvider } from 'notistack';
 
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';
 
 import Theme from './components/Theme';
+
 import AuthProvider from './components/providers/AuthProvider';
 
 import './index.css';
@@ -46,9 +50,17 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <MuiThemeProvider theme={Theme}>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          action={[
+            <Button size="small">Close</Button>
+          ]}
+          onClickAction={() => alert('Clicked on my action button.')}
+        >
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </SnackbarProvider>
       </MuiThemeProvider>
     </Router>
   </ApolloProvider>,

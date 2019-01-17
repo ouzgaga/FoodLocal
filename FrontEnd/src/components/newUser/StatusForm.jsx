@@ -80,7 +80,7 @@ function StatusForm(props) {
 StatusForm.propTypes = {
   classes: PropTypes.object.isRequired,
   onChange: PropTypes.func,
-  value: PropTypes.oneOfType(['user', 'producer']),
+  value: PropTypes.oneOf(['user', 'producer']),
 };
 
 StatusForm.defaultProps = {

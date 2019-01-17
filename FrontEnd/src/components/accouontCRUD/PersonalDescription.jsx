@@ -6,9 +6,36 @@ import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import Typography from '@material-ui/core/Typography';
+import DoneOutline from '@material-ui/icons/DoneOutline';
+
 import BorderedCountField from '../items/fields/BorderedCountField';
 import BoxLeftRight from './BoxLeftRight';
 
+// récupère les informations personnels de l'utilisateur
+const queryMe = gql`
+  query($token: String!) {
+    me(token: $token) {
+      firstname,
+      lastname,
+      ... on Producer {
+        description
+      }
+    }
+  }
+  `;
+
+// mutation permettant la mise à jour de la description de l'utilisateur (nom, prénom sont des champs obligatoirs)
+const mutUpdateProd = gql`
+  mutation ($user: ProducerInputUpdate!){
+    updateProducer(producer: $user){
+      id,
+      firstname,
+      lastname,
+      description
+    }
+  }
+  `;
 
 const styles = theme => ({
   root: {
@@ -28,57 +55,85 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Permet aux producteurs de mettre à jour leur description
+ */
 class PersonalDescription extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      description: '',
-    };
-  }
-
-  handleChange = prop => (event) => {
-    this.setState({
-      [prop]: event.target.value,
-    });
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-  }
-
-
   render() {
-    const { classes, userId, status, token } = this.props;
-    const { description } = this.state;
+    const { classes, userId, token } = this.props;
 
     return (
       <>
-        <form id="personal-description" onSubmit={this.handleSubmit}>
-          <BorderedCountField
-            id="personal-description"
-            maxLenght={1024}
-            fullWidth
-            defaultValue={description}
-            onChange={this.handleChange('description')}
-          />
-          <BoxLeftRight
-            title=""
-          >
-            <Button
-              variant="contained"
-              className={classes.button}
-              color="primary"
-              type="submit"
-              id="change-description-button"
-            >
-              { 'Valider' }
-            </Button>
-          </BoxLeftRight>
-        </form>
-      </>
+        <Query
+          query={queryMe}
+          variables={{ token: token }}
+        >
+          {({ loading, error, data }) => {
+            if (loading) return <p>Chargement...</p>;
+            if (error) return <p>Error :(</p>;
+            // Le retour d'une mutation s'appelle aussi data
+            let datas = data;
+            return (
+              <>
+                <Mutation
+                  mutation={mutUpdateProd}
+                >
+                  {(updateTodo, { data, loading, error }) => (
+                    <form
+                      id="form-description"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const user = {
+                          id: userId,
+                          firstname: datas.me.firstname,
+                          lastname: datas.me.lastname,
+                          description: document.getElementById('BorderedTextField-personal-description').value,
+                        };
+                        updateTodo({
+                          variables: { user: user }
+                        });
+                      }}
+                    >
+                      <BorderedCountField
+                        id="personal-description"
+                        maxLenght={1024}
+                        fullWidth
+                        defaultValue={(!datas.me.description && '')}
+                        onChange={e => (e)}
+                      />
+                      <BoxLeftRight
+                        title=""
+                      >
+                        <>
+                          <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            id="change-description-button"
+                          >
+                            {`Valider`}
+                          </Button>
+                          {loading && <p>Chargement...</p>}
+                          {error && (
+                            <>
+                              {console.info(error)}
+                              <Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography>
+                            </>
+                          )}
+                          {data && <DoneOutline color="secondary" />}
+                        </>
+                      </BoxLeftRight>
+                    </form>
 
+                  )}
+                </Mutation>
+              </>
+            );
+          }}
+        </Query>
+      </>
     );
   }
 }
@@ -86,7 +141,6 @@ class PersonalDescription extends Component {
 PersonalDescription.propTypes = {
   classes: PropTypes.object.isRequired,
   userId: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
 };
 

@@ -14,22 +14,15 @@ const styles = {
   }
 };
 
+// mutation permettant la validation d'email d'un utilisateur
 const mutation = gql`
-    mutation($token: String!){
-      validateAnEmailToken(token: $token)
-    }
+mutation ($emailToken: String!){
+  validateAnEmailToken(emailValidationToken: $emailToken){
+    token
+  }
+}
 `;
 
-/*
-TODO, renew token
-const mutation = gql`
-    mutation($token: String!){
-      validateAnEmailToken(token: $token){
-        token
-      }
-    }
-`;
-*/
 
 class DoMutation extends React.Component {
   componentDidMount() {
@@ -46,28 +39,45 @@ class PageEmailValidation extends Component {
   render() {
     const { classes } = this.props;
     const { token } = this.props.match.params;
+    console.info("tok", token);
     return (
       <div>
         <CenteredPaper className={classes.paper}>
           <Typography variant="h3" color="secondary">
             Validation d'email
           </Typography>
-          <Mutation mutation={mutation} variables={{ token }}>
+          <Mutation mutation={mutation} variables={{ emailToken: token }}>
             {(validate, { data, loading, error }) => (
               <div>
                 <DoMutation mutate={validate} />
                 {error && (
                   <>
-                    <br/>
-                    <Typography  color="error">Le lien de validation n'est plus valide</Typography>
-                    <br/>
-                    <NewValidationEmail />
+                  {
+                    error[7]==="E"
+                    ? <Typography >Email déjà confirmé, vous pouvez vous connecter</Typography>
+                    : (
+                      
+                      <>
+                      {console.info(error.error)}
+                      <br/>
+                      <Typography  color="error">Le lien de validation n'est plus valide</Typography>
+                      <br/>
+                      <NewValidationEmail />
+                      </>
+                    )
+                  }
+                  
+                    
                   </>
+                  
+                
+                  
                 )}
                 {loading && <Typography  color="secondary">Loading</Typography>}
                 {data && (
                   <>
-                    <Typography color="secondary">Email confirmé, vous pouvez vous connecter</Typography>
+
+                    <Typography >Email confirmé, vous pouvez vous connecter.</Typography>
 
                   </>
                 )}

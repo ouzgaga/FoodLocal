@@ -2,19 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import { withSnackbar } from 'notistack';
 
 import './App.css';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import {
-  BrowserRouter as Router,
   Route,
   Switch,
   Redirect,
 } from 'react-router-dom';
 
 import Header from './components/Header';
-import Theme from './components/Theme';
 import ProducerVue from './components/ProducerVue';
 
 import { AuthContext } from './components/providers/AuthProvider';
@@ -68,27 +66,6 @@ const styles = theme => ({
 });
 
 
-const ProtectedUserRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userEmailValidated, userToken }) => {
-            console.info("123", userEmailValidated);
-            console.info("wowow", userToken);
-            if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
-              return (<Redirect to="/error/email" />);
-            } else if (userToken && userEmailValidated) { // Connecté et email validé
-              return <Component {...params} />;
-            }
-            // pas connecté
-            return (<Redirect to="/error/notConnected" />);
-          }}
-        </AuthContext>
-      )}
-  />
-)
 /*
 
 const ProtectedUserRoute = ({ component: Component, ...rest }) => (
@@ -172,13 +149,38 @@ class App extends React.Component {
   render() {
     const { classes } = this.props;
 
+    
+ const ProtectedUserRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userEmailValidated, userToken }) => {
+            console.info("123", userEmailValidated);
+            console.info("wowow", userToken);
+            if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
+            
+              return (<Redirect to="/error/email" />);
+            } else if (userToken && userEmailValidated) { // Connecté et email validé
+              return <Component {...params} />;
+            }
+            // pas connecté
+            this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
+            return (<Redirect to="/error/notConnected" />);
+          }}
+        </AuthContext>
+      )}
+  />
+)
+
     return (
       <div className={classes.root}>
         <Header />
         <div className={classes.page} center="xs">
           <Switch>
             <Route path="/" exact component={PageAcceuil} classes={classes} />
-            <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
+            <Route default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <Route path="/admin" exct component={PageAdmin} classes={classes} />
@@ -186,7 +188,7 @@ class App extends React.Component {
             <Route path="/producer/:producerId" component={ProducerVue} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />
-            <Route path="/settings" component={PagePersonalInformations} classes={classes} />
+            <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
             <Route path="/error/email" component={PageErrorEmail} />
             <Route path="/error/notConnected" component={PageErrorLogin} />
             <Route path="/error/page404" component={PageError404} classes={classes} />
@@ -203,7 +205,7 @@ App.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(App);
+export default withStyles(styles, { withTheme: true })(withSnackbar(App));
 
 
 /*

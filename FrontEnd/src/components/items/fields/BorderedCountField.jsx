@@ -62,7 +62,7 @@ class BorderedCountField extends Component {
           
           <OutlinedInput
             labelWidth={0}
-            id={`BorderedTextFiel-${id}`}
+            id={`BorderedTextField-${id}`}
             onChange={this.handleChangeText}
             value={data}
             fullWidth={fullWidth}

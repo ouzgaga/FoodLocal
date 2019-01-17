@@ -41,7 +41,7 @@ class BorderedPasswordField extends Component {
         <OutlinedInput
           labelWidth={0}
           required={required}
-          id={`BorderedTextFiel-${id}`}
+          id={`BorderedPasswordField-${id}`}
           className={classes.textField}
           defaultValue={defaultValue}
           onChange={onChange}
