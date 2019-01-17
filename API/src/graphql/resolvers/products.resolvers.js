@@ -28,20 +28,20 @@ const productResolvers = {
   Mutation: {
     // --------------------------------------------------------- Products ---------------------------------------------------------
     addMultipleProducts: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
       return productsServices.addAllProductsInArray(args.products, args.producerId);
     },
     addProduct: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
       return productsServices.addProduct(args.product, args.producerId);
     },
     updateProduct: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
       return productsServices.updateProduct(args.product);
     },
     deleteProduct: async(parent, args, context) => {
-      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producer.id, context.kind);
-      return productsServices.deleteProduct(args.productId);
+      await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
+      return productsServices.deleteProduct(args.productId, context.id);
     },
 
     // --------------------------------------------------------- ProductTypes ---------------------------------------------------------
@@ -74,12 +74,27 @@ const productResolvers = {
   },
 
   Product: {
+    id: (parent, args, context) => parent._id.toString(),
+
     productType: (parent, args, context) => productTypesServices.getProductTypeById(parent.productTypeId)
   },
 
   ProductType: {
     category: (parent, args, context) => productTypeCategoriesServices.getProductTypeCategoryById(parent.categoryId),
+
     producers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.producersIds)
+  },
+
+  ProductTypeConnection: {
+    totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB()
+  },
+
+  ProductTypeOfCategoryConnection: {
+    totalCount: (parent, args, context) => productTypesServices.countNbProductTypesInDB({ categoryId: parent.edges[0].node.categoryId })
+  },
+
+  ProductTypeCategoryConnection: {
+    totalCount: (parent, args, context) => productTypeCategoriesServices.countNbProductTypeCategoriesInDB()
   }
 };
 module.exports = productResolvers;

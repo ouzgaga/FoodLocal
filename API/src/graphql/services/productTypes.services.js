@@ -1,5 +1,19 @@
+module.exports = {
+  getProductTypes,
+  getProductTypeByCategory,
+  getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
+  countNbProductTypesInDB,
+  addProductType,
+  addProducerProducingThisProductType,
+  removeProducerProducingThisProductType,
+  getProductTypeById,
+  updateProductType,
+  deleteProductType
+};
+
 const mongoose = require('mongoose');
 const ProductTypesModel = require('../models/productTypes.modelgql');
+const ProducerModel = require('../models/producers.modelgql');
 
 /**
  * Retourne "limit" types de produits de la base de données, fitlrés
@@ -12,16 +26,10 @@ const ProductTypesModel = require('../models/productTypes.modelgql');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" types de produits. Par exemple, si
  *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 types de produits, soit les types de produits 41 à 60.
  */
-function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
+function getProductTypes({ tags = undefined } = {}) {
+  // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return ProductTypesModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+    .sort({ _id: 1 });
 }
 
 /**
@@ -31,41 +39,50 @@ function getProductTypes({ tags = undefined, limit = 50, page = 0 } = {}) {
  */
 function getProductTypeById(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productType.id is invalid!');
-  } else {
-    return ProductTypesModel.findById(id);
+    throw new Error('Received productType.id is invalid!');
   }
+
+  return ProductTypesModel.findById(id);
 }
 
 function getProductTypeByCategory(productTypeCategoryId) {
-  if (!mongoose.Types.ObjectId.isValid(productTypeCategoryId)) {
-    return new Error('Received productTypeCategory.id is invalid!');
-  } else {
-    return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
-  }
+  return getProductTypes({ tags: { categoryId: productTypeCategoryId } });
 }
 
-async function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
-  // on récupère tous les productTypes à partir des ids contenus dans le tableau reçu en paramètre
-  const productTypes = await getProductTypes({ tags: { _id: { $in: productTypeIdsTab } } });
+function getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(productTypeIdsTab) {
+  return ProducerModel.aggregate(
+    [
+      { $match: { kind: 'producers' } },
+      {
+        $lookup: { from: 'products', localField: 'productsIds', foreignField: '_id', as: 'products' }
+      },
+      {
+        $project: {
+          products: { productTypeId: true }
+        }
+      },
+      {
+        $group: {
+          _id: { producer: '$_id' },
+          productTypeIds: { $addToSet: '$products.productTypeId' }
+        }
+      },
+      {
+        $unwind: { path: '$productTypeIds' }
+      },
+      {
+        $match: {
+          productTypeIds: {
+            $all: productTypeIdsTab
+          }
+        }
+      }
+    ]
+  );
+}
 
-  const producersIds = [];
-
-  // TODO: PAUL ou Miguel: Bien bien moche mais fonctionnel... À améliorer..!^^
-  const producersIdsAsString = productTypes[0].producersIds.map(elem => elem.toString());
-  // on parcours le taleau de producerIds du premier productType
-  await producersIdsAsString.forEach(async(id) => {
-    const productTypeContainsProducer = await productTypes.map((elem) => {
-      const prodIds = elem.producersIds.map(e => e.toString());
-      return prodIds.includes(id);
-    });
-
-    if (productTypeContainsProducer.reduce((a, b) => a && b, true)) {
-      producersIds.push(id);
-    }
-  });
-
-  return producersIds;
+function countNbProductTypesInDB(filtersObject) {
+  return ProductTypesModel.countDocuments(filtersObject);
 }
 
 /**
@@ -100,7 +117,7 @@ async function removeProducerProducingThisProductType(productTypeId, producerId)
  */
 function updateProductType(productType) {
   if (!mongoose.Types.ObjectId.isValid(productType.id)) {
-    return new Error('Received productType.id is invalid!');
+    throw new Error('Received productType.id is invalid!');
   }
 
   const updatedProductType = {
@@ -121,20 +138,8 @@ function updateProductType(productType) {
  */
 function deleteProductType(id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received productType.id is invalid!');
+    throw new Error('Received productType.id is invalid!');
   }
 
   return ProductTypesModel.findByIdAndRemove(id);
 }
-
-module.exports = {
-  getProductTypes,
-  getProductTypeByCategory,
-  getProducersIdsProposingProductsOfAllReceivedProductsTypeIds,
-  addProductType,
-  addProducerProducingThisProductType,
-  removeProducerProducingThisProductType,
-  getProductTypeById,
-  updateProductType,
-  deleteProductType
-};

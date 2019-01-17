@@ -1,81 +1,27 @@
-const mongoose = require('mongoose');
-const TokenGenerator = require('uuid-token-generator');
-const TokenValidationEmailModel = require('../models/tokenValidationEmail.modelgql');
+module.exports = {
+  askNewEmailToken,
+  addTokenValidationEmail,
+  validateToken
+};
+
+const jwt = require('jsonwebtoken');
+const personsServices = require('./persons.services');
+const config = require('../../config/config');
 const mail = require('../utils/sendEmailFoodlocal');
 
-/**
- * get all tokens
- * @param tags
- * @param limit
- * @param page
- * @returns {*}
- */
-function getTokenValidationEmails({ tags = undefined, limit = 50, page = 0 } = {}) {
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
+async function askNewEmailToken(email, password) {
+  const person = await personsServices.getPersonByLogin(email, password);
 
-  return TokenValidationEmailModel.find(tags)
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
+  return addTokenValidationEmail(person);
 }
 
-/**
- * Get token by his value (token)
- * @param token - value of the token
- * @returns {*} - return the token found
- */
-function getTokenValidationEmailByValue(value) {
-  return TokenValidationEmailModel.findOne({ value });
-}
-
-/**
- * Generation d'un token de confirmation d'email. Envoie le token à l'utilisateur
- * @param id
- * @returns {Promise<*>}
- */
-async function addTokenValidationEmail (user) {
-  // check user exist
-  // TODO: euh... faut faire un check là du coup...?!^^
-  if (user == null) {
-    return false;
-  }
-
-  // Generate token
-  const tokenGen = new TokenGenerator(256, TokenGenerator.BASE62);
-  const token = {
-    value: tokenGen.generate(),
-    idPerson: user.id
-  };
-  // insert in the database
-  const tokenValidationEmail = await new TokenValidationEmailModel(token).save();
-  const name = `${user.firstname} ${user.lastname}`;
+async function addTokenValidationEmail({ id, email, firstname, lastname }) {
+  const token = await jwt.sign({ id, email }, config.jwtSecret, { expiresIn: '7d', subject: 'emailValidationToken' });
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
-  // mail.sendMailConfirmation(user.email, name, tokenValidationEmail.value);
-  return tokenValidationEmail != null;
-}
-
-/**
- * Supprime le producteur correspondant à l'id reçu.
- *
- * @param {Integer} id, L'id du producteur à supprimer.
- */
-function deleteTokenValidationEmail(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return new Error('Received TokenValidationEmail.id is invalid!');
-  }
-
-  return TokenValidationEmailModel.findByIdAndRemove(id);
-}
-
-function tokenToOld(dateCreation) {
-  /* const daysAgo = 7;
-  const date = new Date() - (daysAgo * 24 * 60 * 60 * 1000);
-  return date.getDate() >= dateCreation.getDate(); */
-  return false;
+  // console.log(`token evoyé : ${token}`);
+  // mail.sendMailConfirmation(email, firstname, lastname, token);
+  return token;
 }
 
 /**
@@ -83,23 +29,24 @@ function tokenToOld(dateCreation) {
  * @param token - token to check
  * @returns {boolean} - result
  */
-async function validateToken(value) {
-  const token = await getTokenValidationEmailByValue(value); // try to get Token with the token string pass in parameter
-  // if token not found return that the token is not valide
-  if (token == null) {
-    return null;
-  } else if (tokenToOld(token.dateCreation)) {
-    return null;
-  } else { // is a valide token
-    await deleteTokenValidationEmail(token.id); // delete token
-    return token;
+async function validateToken(token) {
+  try {
+    const tokenContent = await jwt.verify(token, config.jwtSecret, { maxAge: '7d', subject: 'emailValidationToken' });
+
+    const person = await personsServices.getPersonById(tokenContent.id);
+    if (person == null) {
+      throw new Error('The id found in the token doesn\'t exist in the database!');
+    }
+    if (person.emailValidated) {
+      // l'email de la personne est déjà validé
+      throw new Error('Email already validated!');
+    }
+    return tokenContent;
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      throw new Error('Your token is expired. Please ask for a new one.');
+    }
+
+    throw err;
   }
 }
-
-
-module.exports = {
-  getTokenValidationEmailByValue,
-  getTokenValidationEmails,
-  addTokenValidationEmail,
-  validateToken
-};

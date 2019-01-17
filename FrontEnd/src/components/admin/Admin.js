@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import TableIssues from './TableIssues';
+import Loading from '../Loading';
+import ErrorLoading from '../ErrorLoading';
 
 const query = gql`
 {
@@ -37,8 +39,8 @@ class Admin extends Component {
         </Typography>
         <Query query={query}>
           {({ data, loading, error }) => {
-            if (error) return 'Oups an error occured. Please check the console';
-            if (loading) return 'Loading...';
+            if (error) return <ErrorLoading />;
+            if (loading) return <Loading />;
             const { producersWaitingForValidation } = data;
             return (
               <TableIssues datas={producersWaitingForValidation} />

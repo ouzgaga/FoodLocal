@@ -1,7 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabProducers, getTabSalespoints } = require('../../populateDatabase');
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -10,17 +9,14 @@ let tabProducers;
 let tabSalespoints;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------------------------- on supprime tout le contenu de la DB ----------------------------------------------------------
-  await clearDB();
-
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
 
-  tabProducers = getTabProducers();
-  tabSalespoints = getTabSalespoints();
+  tabProducers = await getTabProducers();
+  tabSalespoints = await getTabSalespoints();
 };
 
-describe('Testing graphql request salespints', () => {
+describe('Testing graphql request salespoints', () => {
   describe('QUERY salespoint', () => {
     beforeEach(() => clearAndPopulateDB());
 
@@ -740,7 +736,7 @@ describe('Testing graphql request salespints', () => {
     });
 
     // --------------------updateSalespoint(producerId: ID!, salespoint: SalespointInput!)------------------------------------------ //
-    describe.only('Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!)', () => {
+    describe('Testing updateSalespoint(producerId: ID!, salespoint: SalespointInput!)', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();

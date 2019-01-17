@@ -44,9 +44,19 @@ const post = 'Nullam sed felis sapien. Sed vitae purus vehicula tortor fringilla
 storiesOf('ProducerPost', module)
   .add('Default', () => (
     <ProducerPost
-      name="Nom tres tres tres long dss  dsdsd sdsdssdsds dsdsdsds"
-      date="12.12.2014 8h40"
+      firstname="Antoine"
+      lastname="Rochat"
+      date="1997-07-16T19:20:30.45+01:00"
       post={post}
+    />
+  ))
+  .add('With location', () => (
+    <ProducerPost
+      firstname="Antoine"
+      lastname="Rochat"
+      date="1997-07-16T19:20:30.45+01:00"
+      post={post}
+      location={{ latitude: 46.7833, longitude: 6.65 }}
     />
   ));
 
@@ -178,8 +188,8 @@ storiesOf('BoxWithHeader', module)
       <PersonalDescription />
     </BoxWithHeader>
   ));
-  
- 
+
+
 storiesOf('BorderedTextField', module)
   .add('no data', () => (
     <BorderedTextField />
@@ -211,8 +221,8 @@ storiesOf('BorderedPasswordField', module)
       fullWidth
     />
   ));
-  
-  storiesOf('BorderedCountField', module)
+
+storiesOf('BorderedCountField', module)
   .add('BorderedCountField', () => (
     <BorderedCountField
       value="test"

@@ -1,7 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
-const clearDB = require('../clearDB');
 const { populateDB, getTabUsers } = require('../../populateDatabase');
 
 // Making schema graphql
@@ -10,13 +9,10 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 let tabUsers;
 
 const clearAndPopulateDB = async() => {
-  // ---------------------------------------- on supprime tout le contenu de la DB ----------------------------------------
-  await clearDB();
-
   // ------------------------------------------- on ajoute le contenu de départ -------------------------------------------
   await populateDB();
 
-  tabUsers = getTabUsers();
+  tabUsers = await getTabUsers();
 };
 
 describe('Testing graphql resquest user', () => {
@@ -151,7 +147,6 @@ describe('Testing graphql resquest user', () => {
         done();
       });
 
-
       it('should fail getting a user by id because unknown id received', async(done) => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = { id: context.id };
@@ -186,7 +181,9 @@ describe('Testing graphql resquest user', () => {
         done();
       });
     });
+  });
 
+  describe('MUTATION user', () => {
     // ----------------------updateUser(user: UserInputUpdate!)-------------------------------------- //
     describe('Testing updateUser(user: UserInputUpdate!)', () => {
       let context;

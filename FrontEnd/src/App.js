@@ -213,7 +213,7 @@ class App extends React.Component {
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <Route path="/admin" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
-            <Route path="/producer/:producerId" component={ProducerVue} />
+            <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />
             <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />

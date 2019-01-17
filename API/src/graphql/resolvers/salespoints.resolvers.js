@@ -24,6 +24,18 @@ const salespointsResolvers = {
       await isAuthenticatedAsProducerAndIsYourself(context.id, args.producerId, context.kind);
       return producersServices.removeSalespointToProducer(args.producerId);
     }
+  },
+
+  Address: {
+    distance: (parent, args, context) => parent.distance,
+
+    longitude: (parent, args, context) => parent.location.coordinates[0],
+
+    latitude: (parent, args, context) => parent.location.coordinates[1]
+  },
+
+  SalespointConnection: {
+    totalCount: (parent, args, context) => salespointsServices.countNbSalespointInDB()
   }
 };
 module.exports = salespointsResolvers;

@@ -1,0 +1,401 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1547734355045,925,ConnectToHomePage,200,OK,virutal users 1-1,text,true,,11002,1125,19,19,https://api.foodlocal.ch/graphql,905,0,149
+1547734355090,1204,ConnectToHomePage,200,OK,virutal users 1-2,text,true,,11002,1125,26,26,https://api.foodlocal.ch/graphql,1182,0,134
+1547734355184,1189,ConnectToHomePage,200,OK,virutal users 1-4,text,true,,11002,1125,28,28,https://api.foodlocal.ch/graphql,1168,0,71
+1547734355144,1235,ConnectToHomePage,200,OK,virutal users 1-3,text,true,,11002,1125,28,28,https://api.foodlocal.ch/graphql,1213,0,108
+1547734355300,1567,ConnectToHomePage,200,OK,virutal users 1-6,text,true,,11002,1125,37,37,https://api.foodlocal.ch/graphql,1546,0,65
+1547734355241,1695,ConnectToHomePage,200,OK,virutal users 1-5,text,true,,11002,1125,39,39,https://api.foodlocal.ch/graphql,1675,0,70
+1547734355407,2146,ConnectToHomePage,200,OK,virutal users 1-8,text,true,,11002,1125,51,51,https://api.foodlocal.ch/graphql,2127,0,70
+1547734355497,2086,ConnectToHomePage,200,OK,virutal users 1-10,text,true,,11002,1125,52,52,https://api.foodlocal.ch/graphql,2066,0,73
+1547734355364,2754,ConnectToHomePage,200,OK,virutal users 1-7,text,true,,11006,1125,62,62,https://api.foodlocal.ch/graphql,2734,0,66
+1547734355450,2678,ConnectToHomePage,200,OK,virutal users 1-9,text,true,,11002,1125,63,63,https://api.foodlocal.ch/graphql,2659,0,76
+1547734355590,2777,ConnectToHomePage,200,OK,virutal users 1-12,text,true,,11012,1125,67,67,https://api.foodlocal.ch/graphql,2742,0,76
+1547734355692,2709,ConnectToHomePage,200,OK,virutal users 1-14,text,true,,11012,1125,68,68,https://api.foodlocal.ch/graphql,2688,0,76
+1547734355795,3183,ConnectToHomePage,200,OK,virutal users 1-16,text,true,,11002,1125,80,80,https://api.foodlocal.ch/graphql,3163,0,75
+1547734355558,3426,ConnectToHomePage,200,OK,virutal users 1-11,text,true,,11001,1125,80,80,https://api.foodlocal.ch/graphql,3407,0,74
+1547734355651,3339,ConnectToHomePage,200,OK,virutal users 1-13,text,true,,11002,1125,80,80,https://api.foodlocal.ch/graphql,3320,0,77
+1547734355743,3255,ConnectToHomePage,200,OK,virutal users 1-15,text,true,,11002,1125,80,80,https://api.foodlocal.ch/graphql,3235,0,77
+1547734355907,3826,ConnectToHomePage,200,OK,virutal users 1-18,text,true,,11012,1125,95,95,https://api.foodlocal.ch/graphql,3806,0,82
+1547734355989,4245,ConnectToHomePage,200,OK,virutal users 1-1,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,4225,0,73
+1547734356002,4251,ConnectToHomePage,200,OK,virutal users 1-20,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4231,0,72
+1547734355863,4394,ConnectToHomePage,200,OK,virutal users 1-17,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4374,0,82
+1547734356168,4299,ConnectToHomePage,200,OK,virutal users 1-23,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4279,0,81
+1547734356045,4623,ConnectToHomePage,200,OK,virutal users 1-21,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4603,0,67
+1547734356101,5273,ConnectToHomePage,200,OK,virutal users 1-22,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5255,0,82
+1547734355966,5409,ConnectToHomePage,200,OK,virutal users 1-19,text,true,,11006,1125,100,100,https://api.foodlocal.ch/graphql,5389,0,84
+1547734356192,5183,ConnectToHomePage,200,OK,virutal users 1-24,text,true,,11001,1125,100,100,https://api.foodlocal.ch/graphql,5164,0,81
+1547734356268,5480,ConnectToHomePage,200,OK,virutal users 1-25,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5460,0,87
+1547734356323,5995,ConnectToHomePage,200,OK,virutal users 1-2,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5976,0,81
+1547734356393,6344,ConnectToHomePage,200,OK,virutal users 1-3,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6325,0,77
+1547734356494,6759,ConnectToHomePage,200,OK,virutal users 1-30,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,6740,0,76
+1547734356402,6858,ConnectToHomePage,200,OK,virutal users 1-28,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,6838,0,79
+1547734356407,7128,ConnectToHomePage,200,OK,virutal users 1-4,text,true,,11001,1125,100,100,https://api.foodlocal.ch/graphql,7107,0,75
+1547734356298,7237,ConnectToHomePage,200,OK,virutal users 1-26,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,7217,0,82
+1547734356612,7272,ConnectToHomePage,200,OK,virutal users 1-32,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,7253,0,82
+1547734356562,8122,ConnectToHomePage,200,OK,virutal users 1-31,text,true,,11001,1125,100,100,https://api.foodlocal.ch/graphql,8103,0,88
+1547734356713,8220,ConnectToHomePage,200,OK,virutal users 1-34,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,8198,0,90
+1547734356798,8362,ConnectToHomePage,200,OK,virutal users 1-36,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8342,0,84
+1547734356934,8462,ConnectToHomePage,200,OK,virutal users 1-39,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,8442,0,77
+1547734356894,8869,ConnectToHomePage,200,OK,virutal users 1-6,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8851,0,79
+1547734356352,9936,ConnectToHomePage,200,OK,virutal users 1-27,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9918,0,77
+1547734356453,9835,ConnectToHomePage,200,OK,virutal users 1-29,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9817,0,68
+1547734356990,9512,ConnectToHomePage,200,OK,virutal users 1-40,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,9492,0,71
+1547734356860,9913,ConnectToHomePage,200,OK,virutal users 1-37,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9894,0,79
+1547734357090,10883,ConnectToHomePage,200,OK,virutal users 1-42,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10433,0,80
+1547734357195,10873,ConnectToHomePage,200,OK,virutal users 1-44,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10328,0,87
+1547734357509,10675,ConnectToHomePage,200,OK,virutal users 1-50,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10657,0,72
+1547734357572,10619,ConnectToHomePage,200,OK,virutal users 1-8,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10597,0,80
+1547734357604,10591,ConnectToHomePage,200,OK,virutal users 1-52,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10570,0,76
+1547734357392,10808,ConnectToHomePage,200,OK,virutal users 1-48,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10785,0,92
+1547734357292,10913,ConnectToHomePage,200,OK,virutal users 1-46,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10889,0,88
+1547734357908,11279,ConnectToHomePage,200,OK,virutal users 1-58,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10944,0,89
+1547734358001,11187,ConnectToHomePage,200,OK,virutal users 1-60,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10853,0,70
+1547734358112,11080,ConnectToHomePage,200,OK,virutal users 1-62,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10745,0,84
+1547734358213,10979,ConnectToHomePage,200,OK,virutal users 1-64,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10646,0,70
+1547734358308,10933,ConnectToHomePage,200,OK,virutal users 1-66,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10914,0,84
+1547734358391,10860,ConnectToHomePage,200,OK,virutal users 1-12,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10840,0,90
+1547734358163,11117,ConnectToHomePage,200,OK,virutal users 1-7,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11055,0,74
+1547734357802,11479,ConnectToHomePage,200,OK,virutal users 1-56,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11424,0,70
+1547734357699,11583,ConnectToHomePage,200,OK,virutal users 1-54,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11529,0,85
+1547734358435,10907,ConnectToHomePage,200,OK,virutal users 1-14,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10878,0,80
+1547734358612,10734,ConnectToHomePage,200,OK,virutal users 1-72,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10706,0,84
+1547734358516,11749,ConnectToHomePage,200,OK,virutal users 1-70,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11408,0,66
+1547734358704,11665,ConnectToHomePage,200,OK,virutal users 1-74,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11644,0,93
+1547734358804,11567,ConnectToHomePage,200,OK,virutal users 1-76,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11548,0,67
+1547734358898,11478,ConnectToHomePage,200,OK,virutal users 1-78,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11458,0,82
+1547734359019,11360,ConnectToHomePage,200,OK,virutal users 1-15,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11341,0,71
+1547734359000,11382,ConnectToHomePage,200,OK,virutal users 1-16,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11363,0,76
+1547734359030,11358,ConnectToHomePage,200,OK,virutal users 1-13,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11339,0,72
+1547734359187,11202,ConnectToHomePage,200,OK,virutal users 1-84,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11151,0,78
+1547734359402,10988,ConnectToHomePage,200,OK,virutal users 1-88,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,10937,0,83
+1547734359305,11086,ConnectToHomePage,200,OK,virutal users 1-86,text,true,,11012,1125,100,100,https://api.foodlocal.ch/graphql,11036,0,81
+1547734359115,11277,ConnectToHomePage,200,OK,virutal users 1-82,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11257,0,86
+1547734359496,10899,ConnectToHomePage,200,OK,virutal users 1-90,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10880,0,79
+1547734359600,10799,ConnectToHomePage,200,OK,virutal users 1-92,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10780,0,75
+1547734359697,10708,ConnectToHomePage,200,OK,virutal users 1-94,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10689,0,76
+1547734359826,10590,ConnectToHomePage,200,OK,virutal users 1-96,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10570,0,80
+1547734359772,10647,ConnectToHomePage,200,OK,virutal users 1-95,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10627,0,80
+1547734365786,5407,ConnectToHomePage,200,OK,virutal users 1-6,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5386,0,83
+1547734359905,11289,ConnectToHomePage,200,OK,virutal users 1-98,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11270,0,88
+1547734359996,11198,ConnectToHomePage,200,OK,virutal users 1-100,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11179,0,77
+1547734362758,8438,ConnectToHomePage,200,OK,virutal users 1-3,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8418,0,78
+1547734360697,10499,ConnectToHomePage,200,OK,virutal users 1-21,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10485,0,89
+1547734360286,10911,ConnectToHomePage,200,OK,virutal users 1-20,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10893,0,81
+1547734366791,4407,ConnectToHomePage,200,OK,virutal users 1-37,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4390,0,69
+1547734361412,9786,ConnectToHomePage,200,OK,virutal users 1-24,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9770,0,77
+1547734361783,9415,ConnectToHomePage,200,OK,virutal users 1-25,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9396,0,84
+1547734364716,6484,ConnectToHomePage,200,OK,virutal users 1-31,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6464,0,82
+1547734368088,3117,ConnectToHomePage,200,OK,virutal users 1-44,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,3098,0,64
+1547734356645,15069,ConnectToHomePage,200,OK,virutal users 1-33,text,true,,11006,1125,100,100,https://api.foodlocal.ch/graphql,15051,0,86
+1547734356753,14964,ConnectToHomePage,200,OK,virutal users 1-35,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14943,0,76
+1547734356904,14813,ConnectToHomePage,200,OK,virutal users 1-38,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14792,0,81
+1547734365197,6755,ConnectToHomePage,200,OK,virutal users 1-36,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6736,0,81
+1547734359052,13296,ConnectToHomePage,200,OK,virutal users 1-81,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13275,0,72
+1547734356957,15391,ConnectToHomePage,200,OK,virutal users 1-5,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15368,0,78
+1547734357139,15210,ConnectToHomePage,200,OK,virutal users 1-43,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15190,0,78
+1547734357055,15294,ConnectToHomePage,200,OK,virutal users 1-41,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15272,0,76
+1547734357370,14980,ConnectToHomePage,200,OK,virutal users 1-47,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14960,0,94
+1547734357594,14757,ConnectToHomePage,200,OK,virutal users 1-10,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14737,0,77
+1547734357250,15104,ConnectToHomePage,200,OK,virutal users 1-45,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15083,0,91
+1547734359556,12801,ConnectToHomePage,200,OK,virutal users 1-91,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12782,0,73
+1547734357554,14807,ConnectToHomePage,200,OK,virutal users 1-51,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14788,0,74
+1547734357949,14416,ConnectToHomePage,200,OK,virutal users 1-59,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14396,0,82
+1547734357648,14721,ConnectToHomePage,200,OK,virutal users 1-53,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14702,0,75
+1547734357457,14915,ConnectToHomePage,200,OK,virutal users 1-49,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14895,0,84
+1547734360255,12123,ConnectToHomePage,200,OK,virutal users 1-1,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12103,0,85
+1547734357853,14528,ConnectToHomePage,200,OK,virutal users 1-57,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14508,0,81
+1547734358144,14241,ConnectToHomePage,200,OK,virutal users 1-63,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14222,0,80
+1547734358357,14032,ConnectToHomePage,200,OK,virutal users 1-67,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14012,0,88
+1547734357744,14649,ConnectToHomePage,200,OK,virutal users 1-55,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14629,0,72
+1547734358060,14578,ConnectToHomePage,200,OK,virutal users 1-61,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14558,0,80
+1547734358248,14395,ConnectToHomePage,200,OK,virutal users 1-65,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14375,0,69
+1547734362339,10308,ConnectToHomePage,200,OK,virutal users 1-2,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10288,0,82
+1547734358848,13804,ConnectToHomePage,200,OK,virutal users 1-77,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13784,0,66
+1547734358407,14249,ConnectToHomePage,200,OK,virutal users 1-68,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14228,0,80
+1547734358170,14489,ConnectToHomePage,200,OK,virutal users 1-9,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14469,0,72
+1547734358560,14106,ConnectToHomePage,200,OK,virutal users 1-71,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14086,0,77
+1547734359372,13298,ConnectToHomePage,200,OK,virutal users 1-87,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13278,0,86
+1547734363564,9110,ConnectToHomePage,200,OK,virutal users 1-26,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9090,0,81
+1547734358960,13719,ConnectToHomePage,200,OK,virutal users 1-79,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13697,0,83
+1547734358465,14217,ConnectToHomePage,200,OK,virutal users 1-69,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14196,0,77
+1547734358745,13940,ConnectToHomePage,200,OK,virutal users 1-75,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13920,0,74
+1547734359841,12848,ConnectToHomePage,200,OK,virutal users 1-97,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12827,0,77
+1547734364962,7731,ConnectToHomePage,200,OK,virutal users 1-34,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,7711,0,82
+1547734359439,13258,ConnectToHomePage,200,OK,virutal users 1-89,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13238,0,81
+1547734369270,3801,ConnectToHomePage,200,OK,virutal users 1-66,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,3781,0,76
+1547734363568,9503,ConnectToHomePage,200,OK,virutal users 1-4,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9484,0,79
+1547734363308,9764,ConnectToHomePage,200,OK,virutal users 1-28,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9744,0,82
+1547734368209,4864,ConnectToHomePage,200,OK,virutal users 1-52,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4845,0,67
+1547734368229,4886,ConnectToHomePage,200,OK,virutal users 1-8,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4865,0,67
+1547734359022,14781,ConnectToHomePage,200,OK,virutal users 1-11,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14762,0,74
+1547734358670,15136,ConnectToHomePage,200,OK,virutal users 1-73,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15118,0,89
+1547734361394,12415,ConnectToHomePage,200,OK,virutal users 1-19,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12396,0,82
+1547734359973,13836,ConnectToHomePage,200,OK,virutal users 1-99,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13818,0,88
+1547734359014,14797,ConnectToHomePage,200,OK,virutal users 1-80,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14780,0,70
+1547734365442,8370,ConnectToHomePage,200,OK,virutal users 1-39,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8351,0,84
+1547734363912,9900,ConnectToHomePage,200,OK,virutal users 1-32,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9880,0,73
+1547734359262,14550,ConnectToHomePage,200,OK,virutal users 1-85,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14533,0,85
+1547734361411,13012,ConnectToHomePage,200,OK,virutal users 1-22,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12990,0,81
+1547734359764,14659,ConnectToHomePage,200,OK,virutal users 1-18,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14640,0,79
+1547734359154,15270,ConnectToHomePage,200,OK,virutal users 1-83,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15248,0,82
+1547734360500,14346,ConnectToHomePage,200,OK,virutal users 1-23,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14327,0,86
+1547734359652,15250,ConnectToHomePage,200,OK,virutal users 1-93,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15231,0,80
+1547734360287,14619,ConnectToHomePage,200,OK,virutal users 1-17,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14599,0,82
+1547734366538,8373,ConnectToHomePage,200,OK,virutal users 1-40,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8354,0,83
+1547734368001,6914,ConnectToHomePage,200,OK,virutal users 1-42,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6895,0,70
+1547734369317,5950,ConnectToHomePage,200,OK,virutal users 1-56,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5930,0,77
+1547734369206,6062,ConnectToHomePage,200,OK,virutal users 1-62,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6042,0,68
+1547734366323,8946,ConnectToHomePage,200,OK,virutal users 1-27,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8926,0,69
+1547734369316,5978,ConnectToHomePage,200,OK,virutal users 1-54,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5958,0,85
+1547734370393,5508,ConnectToHomePage,200,OK,virutal users 1-74,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5489,0,70
+1547734370423,5481,ConnectToHomePage,200,OK,virutal users 1-92,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5462,0,78
+1547734370406,5503,ConnectToHomePage,200,OK,virutal users 1-15,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,5484,0,87
+1547734369218,6699,ConnectToHomePage,200,OK,virutal users 1-58,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6678,0,68
+1547734371209,4750,ConnectToHomePage,200,OK,virutal users 1-24,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,4731,0,87
+1547734368237,9437,ConnectToHomePage,200,OK,virutal users 1-46,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9417,0,63
+1547734363279,14395,ConnectToHomePage,200,OK,virutal users 1-30,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14376,0,81
+1547734368224,9451,ConnectToHomePage,200,OK,virutal users 1-50,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9432,0,66
+1547734370425,7377,ConnectToHomePage,200,OK,virutal users 1-88,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,7358,0,85
+1547734370452,7366,ConnectToHomePage,200,OK,virutal users 1-95,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,7347,0,82
+1547734369374,10807,ConnectToHomePage,200,OK,virutal users 1-14,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10788,0,68
+1547734370426,9755,ConnectToHomePage,200,OK,virutal users 1-13,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9736,0,89
+1547734371242,8940,ConnectToHomePage,200,OK,virutal users 1-21,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8920,0,82
+1547734371233,8949,ConnectToHomePage,200,OK,virutal users 1-100,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8933,0,81
+1547734371230,8953,ConnectToHomePage,200,OK,virutal users 1-25,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8935,0,80
+1547734371226,10813,ConnectToHomePage,200,OK,virutal users 1-98,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10503,0,76
+1547734370441,11599,ConnectToHomePage,200,OK,virutal users 1-82,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11295,0,83
+1547734371742,10298,ConnectToHomePage,200,OK,virutal users 1-35,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9993,0,91
+1547734372370,9670,ConnectToHomePage,200,OK,virutal users 1-43,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9363,0,93
+1547734372373,9668,ConnectToHomePage,200,OK,virutal users 1-51,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9360,0,112
+1547734370407,11633,ConnectToHomePage,200,OK,virutal users 1-16,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11323,0,87
+1547734372380,9662,ConnectToHomePage,200,OK,virutal users 1-5,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9352,0,109
+1547734372418,10002,ConnectToHomePage,200,OK,virutal users 1-63,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9984,0,93
+1547734372698,9725,ConnectToHomePage,200,OK,virutal users 1-71,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9707,0,77
+1547734372412,10011,ConnectToHomePage,200,OK,virutal users 1-91,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9990,0,88
+1547734372387,10036,ConnectToHomePage,200,OK,virutal users 1-45,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10017,0,104
+1547734372412,10011,ConnectToHomePage,200,OK,virutal users 1-53,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9990,0,91
+1547734371226,11198,ConnectToHomePage,200,OK,virutal users 1-3,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11180,0,79
+1547734372689,11254,ConnectToHomePage,200,OK,virutal users 1-68,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11233,0,77
+1547734372669,11276,ConnectToHomePage,200,OK,virutal users 1-61,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11256,0,89
+1547734372427,11519,ConnectToHomePage,200,OK,virutal users 1-67,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11498,0,93
+1547734373108,10839,ConnectToHomePage,200,OK,virutal users 1-28,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10820,0,67
+1547734371981,11966,ConnectToHomePage,200,OK,virutal users 1-36,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11945,0,85
+1547734372703,11245,ConnectToHomePage,200,OK,virutal users 1-79,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11224,0,77
+1547734373096,10852,ConnectToHomePage,200,OK,virutal users 1-66,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10831,0,66
+1547734372403,11545,ConnectToHomePage,200,OK,virutal users 1-57,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11527,0,97
+1547734372719,11230,ConnectToHomePage,200,OK,virutal users 1-69,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11208,0,77
+1547734373858,10092,ConnectToHomePage,200,OK,virutal users 1-80,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10072,0,72
+1547734373841,13548,ConnectToHomePage,200,OK,virutal users 1-73,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13528,0,85
+1547734373838,13552,ConnectToHomePage,200,OK,virutal users 1-19,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13532,0,90
+1547734373136,14254,ConnectToHomePage,200,OK,virutal users 1-8,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14234,0,77
+1547734372674,14718,ConnectToHomePage,200,OK,virutal users 1-65,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14699,0,82
+1547734375310,12090,ConnectToHomePage,200,OK,virutal users 1-62,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12070,0,81
+1547734374945,12462,ConnectToHomePage,200,OK,virutal users 1-17,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12442,0,81
+1547734374942,12469,ConnectToHomePage,200,OK,virutal users 1-40,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12449,0,80
+1547734372711,14701,ConnectToHomePage,200,OK,virutal users 1-34,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14681,0,76
+1547734377710,9707,ConnectToHomePage,200,OK,virutal users 1-46,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9687,0,96
+1547734374459,12958,ConnectToHomePage,200,OK,virutal users 1-83,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12937,0,87
+1547734373833,13588,ConnectToHomePage,200,OK,virutal users 1-11,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13568,0,91
+1547734375319,12104,ConnectToHomePage,200,OK,virutal users 1-27,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12084,0,78
+1547734374875,12550,ConnectToHomePage,200,OK,virutal users 1-23,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12530,0,78
+1547734377716,11233,ConnectToHomePage,200,OK,virutal users 1-30,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11214,0,80
+1547734375936,13013,ConnectToHomePage,200,OK,virutal users 1-15,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12993,0,75
+1547734375938,13011,ConnectToHomePage,200,OK,virutal users 1-92,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12992,0,85
+1547734366325,22807,ConnectToHomePage,200,OK,virutal users 1-29,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22787,0,66
+1547734369311,19835,ConnectToHomePage,200,OK,virutal users 1-7,text,true,,11001,1125,100,100,https://api.foodlocal.ch/graphql,19814,0,88
+1547734369219,19930,ConnectToHomePage,200,OK,virutal users 1-60,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,19903,0,71
+1547734369217,19944,ConnectToHomePage,200,OK,virutal users 1-64,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,19926,0,68
+1547734369274,19890,ConnectToHomePage,200,OK,virutal users 1-12,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,19871,0,87
+1547734368204,20962,ConnectToHomePage,200,OK,virutal users 1-48,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,20943,0,69
+1547734380201,9189,ConnectToHomePage,200,OK,virutal users 1-14,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9169,0,196
+1547734382458,8140,ConnectToHomePage,200,OK,virutal users 1-3,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8037,0,207
+1547734383973,6625,ConnectToHomePage,200,OK,virutal users 1-69,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,6523,0,183
+1547734382089,8510,ConnectToHomePage,200,OK,virutal users 1-98,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8405,0,91
+1547734382068,8531,ConnectToHomePage,200,OK,virutal users 1-51,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,8429,0,101
+1547734380222,11435,ConnectToHomePage,200,OK,virutal users 1-25,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11416,0,181
+1547734377858,13803,ConnectToHomePage,200,OK,virutal users 1-88,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13783,0,78
+1547734370308,22541,ConnectToHomePage,200,OK,virutal users 1-70,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22488,0,119
+1547734369367,23483,ConnectToHomePage,200,OK,virutal users 1-72,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,23426,0,69
+1547734370403,22447,ConnectToHomePage,200,OK,virutal users 1-78,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22396,0,84
+1547734370424,22427,ConnectToHomePage,200,OK,virutal users 1-86,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22373,0,85
+1547734370422,22429,ConnectToHomePage,200,OK,virutal users 1-84,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22374,0,79
+1547734370428,22888,ConnectToHomePage,200,OK,virutal users 1-90,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22370,0,86
+1547734371234,22115,ConnectToHomePage,200,OK,virutal users 1-31,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22083,0,84
+1547734370430,22940,ConnectToHomePage,200,OK,virutal users 1-96,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22921,0,91
+1547734370417,22957,ConnectToHomePage,200,OK,virutal users 1-76,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22938,0,77
+1547734371220,22157,ConnectToHomePage,200,OK,virutal users 1-20,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22137,0,80
+1547734371219,22160,ConnectToHomePage,200,OK,virutal users 1-37,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22140,0,84
+1547734371230,22153,ConnectToHomePage,200,OK,virutal users 1-6,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22133,0,76
+1547734370447,22946,ConnectToHomePage,200,OK,virutal users 1-94,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,22918,0,84
+1547734382081,12828,ConnectToHomePage,200,OK,virutal users 1-5,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12807,0,98
+1547734382439,12472,ConnectToHomePage,200,OK,virutal users 1-71,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12453,0,211
+1547734387414,7511,ConnectToHomePage,200,OK,virutal users 1-8,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,7491,0,191
+1547734383982,10946,ConnectToHomePage,200,OK,virutal users 1-57,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10926,0,185
+1547734383978,10951,ConnectToHomePage,200,OK,virutal users 1-80,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10932,0,194
+1547734382435,12498,ConnectToHomePage,200,OK,virutal users 1-53,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12478,0,208
+1547734383980,11967,ConnectToHomePage,200,OK,virutal users 1-67,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,11947,0,176
+1547734387427,10504,ConnectToHomePage,200,OK,virutal users 1-19,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10485,0,248
+1547734387414,10518,ConnectToHomePage,200,OK,virutal users 1-65,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10497,0,190
+1547734371745,27105,ConnectToHomePage,200,OK,virutal users 1-38,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,27004,0,88
+1547734371234,27617,ConnectToHomePage,200,OK,virutal users 1-44,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,27516,0,78
+1547734372375,26476,ConnectToHomePage,200,OK,virutal users 1-81,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26371,0,113
+1547734371752,27100,ConnectToHomePage,200,OK,virutal users 1-33,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26996,0,81
+1547734372417,26748,ConnectToHomePage,200,OK,virutal users 1-1,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26333,0,89
+1547734372385,26801,ConnectToHomePage,200,OK,virutal users 1-10,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26780,0,105
+1547734372400,26788,ConnectToHomePage,200,OK,virutal users 1-41,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26766,0,97
+1547734372410,26778,ConnectToHomePage,200,OK,virutal users 1-59,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26757,0,90
+1547734372695,26494,ConnectToHomePage,200,OK,virutal users 1-87,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26475,0,79
+1547734372377,26813,ConnectToHomePage,200,OK,virutal users 1-47,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26793,0,90
+1547734372426,26767,ConnectToHomePage,200,OK,virutal users 1-55,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26746,0,90
+1547734372662,26532,ConnectToHomePage,200,OK,virutal users 1-2,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26513,0,85
+1547734397970,1226,ConnectToHomePage,502,Bad Gateway,virutal users 1-19,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,1226,0,188
+1547734372679,26519,ConnectToHomePage,200,OK,virutal users 1-77,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26500,0,78
+1547734373103,26098,ConnectToHomePage,200,OK,virutal users 1-4,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26077,0,66
+1547734372408,26796,ConnectToHomePage,200,OK,virutal users 1-49,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26776,0,94
+1547734372703,26506,ConnectToHomePage,200,OK,virutal users 1-26,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26485,0,72
+1547734372711,26502,ConnectToHomePage,200,OK,virutal users 1-97,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26480,0,71
+1547734372720,26494,ConnectToHomePage,200,OK,virutal users 1-89,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26473,0,70
+1547734383980,15484,ConnectToHomePage,200,OK,virutal users 1-36,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15464,0,180
+1547734387444,12026,ConnectToHomePage,200,OK,virutal users 1-17,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12006,0,219
+1547734373114,26592,ConnectToHomePage,200,OK,virutal users 1-52,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26573,0,72
+1547734375286,24422,ConnectToHomePage,200,OK,virutal users 1-56,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,24401,0,87
+1547734373831,25880,ConnectToHomePage,200,OK,virutal users 1-39,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,25859,0,95
+1547734374465,25250,ConnectToHomePage,200,OK,virutal users 1-18,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,25228,0,83
+1547734372686,27034,ConnectToHomePage,200,OK,virutal users 1-9,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,27010,0,78
+1547734372726,27000,ConnectToHomePage,200,OK,virutal users 1-75,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,26973,0,77
+1547734373831,25897,ConnectToHomePage,200,OK,virutal users 1-85,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,25871,0,89
+1547734374451,25278,ConnectToHomePage,200,OK,virutal users 1-22,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,25253,0,85
+1547734387445,12994,ConnectToHomePage,200,OK,virutal users 1-11,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12973,0,230
+1547734387445,12996,ConnectToHomePage,200,OK,virutal users 1-46,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,12974,0,209
+1547734389205,14993,ConnectToHomePage,200,OK,virutal users 1-12,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14975,0,208
+1547734389437,14762,ConnectToHomePage,200,OK,virutal users 1-14,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14743,0,255
+1547734387462,16737,ConnectToHomePage,200,OK,virutal users 1-34,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,16719,0,219
+1547734404232,2033,ConnectToHomePage,502,Bad Gateway,virutal users 1-14,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,2033,0,191
+1547734404235,2030,ConnectToHomePage,502,Bad Gateway,virutal users 1-34,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,2030,0,184
+1547734389187,19013,ConnectToHomePage,200,OK,virutal users 1-64,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,18574,0,214
+1547734389150,19056,ConnectToHomePage,200,OK,virutal users 1-29,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,19035,0,71
+1547734388972,19240,ConnectToHomePage,200,OK,virutal users 1-30,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,19220,0,203
+1547734392881,15337,ConnectToHomePage,200,OK,virutal users 1-70,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15317,0,534
+1547734392882,15358,ConnectToHomePage,200,OK,virutal users 1-78,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15332,0,537
+1547734390632,17608,ConnectToHomePage,200,OK,virutal users 1-98,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,17585,0,84
+1547734393354,14999,ConnectToHomePage,200,OK,virutal users 1-90,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,14878,0,80
+1547734394951,13513,ConnectToHomePage,200,OK,virutal users 1-80,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13494,0,192
+1547734395977,12626,ConnectToHomePage,200,OK,virutal users 1-67,text,true,,11036,1125,100,100,https://api.foodlocal.ch/graphql,12500,0,223
+1547734393412,15214,ConnectToHomePage,200,OK,virutal users 1-94,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15194,0,189
+1547734394939,13720,ConnectToHomePage,200,OK,virutal users 1-5,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,13701,0,211
+1547734398899,9784,ConnectToHomePage,200,OK,virutal users 1-38,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9763,0,458
+1547734397933,10934,ConnectToHomePage,200,OK,virutal users 1-65,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,10916,0,212
+1547734399206,9670,ConnectToHomePage,200,OK,virutal users 1-10,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9649,0,246
+1547734398883,9999,ConnectToHomePage,200,OK,virutal users 1-33,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9980,0,480
+1547734393391,15504,ConnectToHomePage,200,OK,virutal users 1-37,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,15485,0,72
+1547734399222,9738,ConnectToHomePage,200,OK,virutal users 1-2,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,9719,0,225
+1547734383965,27964,ConnectToHomePage,200,OK,virutal users 1-68,text,true,,11006,1125,100,100,https://api.foodlocal.ch/graphql,27944,0,207
+1547734375988,35943,ConnectToHomePage,200,OK,virutal users 1-24,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,35926,0,66
+1547734380198,31734,ConnectToHomePage,200,OK,virutal users 1-13,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,31714,0,201
+1547734377717,34216,ConnectToHomePage,200,OK,virutal users 1-50,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,34197,0,85
+1547734375316,36619,ConnectToHomePage,200,OK,virutal users 1-54,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,36600,0,80
+1547734377845,34091,ConnectToHomePage,200,OK,virutal users 1-95,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,34072,0,77
+1547734373832,38104,ConnectToHomePage,200,OK,virutal users 1-99,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,38086,0,98
+1547734374948,36989,ConnectToHomePage,200,OK,virutal users 1-42,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,36973,0,78
+1547734383968,27968,ConnectToHomePage,200,OK,virutal users 1-66,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,27950,0,189
+1547734373831,38108,ConnectToHomePage,200,OK,virutal users 1-32,text,true,,11004,1125,100,100,https://api.foodlocal.ch/graphql,38090,0,97
+1547734374936,37004,ConnectToHomePage,200,OK,virutal users 1-93,text,true,,11002,1125,100,100,https://api.foodlocal.ch/graphql,36984,0,79
+1547734390622,21341,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-69,text,false,,2897,0,99,99,https://api.foodlocal.ch/graphql,0,0,87
+1547734400461,11502,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-46,text,false,,2897,0,98,98,https://api.foodlocal.ch/graphql,0,0,205
+1547734404250,7714,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-12,text,false,,2897,0,97,97,https://api.foodlocal.ch/graphql,0,0,171
+1547734389188,22777,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-60,text,false,,2897,0,96,96,https://api.foodlocal.ch/graphql,0,0,224
+1547734411962,4,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-68,text,false,,2466,0,95,95,https://api.foodlocal.ch/graphql,0,0,4
+1547734382466,29500,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-91,text,false,,2897,0,94,94,https://api.foodlocal.ch/graphql,0,0,197
+1547734408663,3304,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-94,text,false,,2897,0,93,93,https://api.foodlocal.ch/graphql,0,0,185
+1547734383976,27991,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-28,text,false,,2897,0,92,92,https://api.foodlocal.ch/graphql,0,0,187
+1547734408728,3240,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-38,text,false,,2897,0,91,91,https://api.foodlocal.ch/graphql,0,0,203
+1547734399244,12723,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-4,text,false,,2897,0,90,90,https://api.foodlocal.ch/graphql,0,0,212
+1547734399762,12205,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-9,text,false,,2897,0,89,89,https://api.foodlocal.ch/graphql,0,0,202
+1547734399762,12206,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-39,text,false,,2897,0,88,88,https://api.foodlocal.ch/graphql,0,0,191
+1547734399223,12745,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-49,text,false,,2897,0,87,87,https://api.foodlocal.ch/graphql,0,0,204
+1547734380232,31737,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-100,text,false,,2897,0,86,86,https://api.foodlocal.ch/graphql,0,0,173
+1547734399737,12232,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-75,text,false,,2897,0,85,85,https://api.foodlocal.ch/graphql,0,0,203
+1547734387445,24525,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-83,text,false,,2897,0,84,84,https://api.foodlocal.ch/graphql,0,0,218
+1547734375936,36034,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-58,text,false,,2897,0,83,83,https://api.foodlocal.ch/graphql,0,0,79
+1547734399767,12202,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-22,text,false,,2897,0,82,82,https://api.foodlocal.ch/graphql,0,0,193
+1547734411962,9,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-32,text,false,,2466,0,81,81,https://api.foodlocal.ch/graphql,0,0,9
+1547734391687,20284,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-88,text,false,,2897,0,80,80,https://api.foodlocal.ch/graphql,0,0,203
+1547734393413,18559,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-96,text,false,,2897,0,79,79,https://api.foodlocal.ch/graphql,0,0,188
+1547734387419,24554,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-73,text,false,,2897,0,78,78,https://api.foodlocal.ch/graphql,0,0,185
+1547734393402,18573,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-20,text,false,,2897,0,77,77,https://api.foodlocal.ch/graphql,0,0,69
+1547734398877,13098,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-81,text,false,,2897,0,76,76,https://api.foodlocal.ch/graphql,0,0,482
+1547734392878,19098,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-86,text,false,,2897,0,75,75,https://api.foodlocal.ch/graphql,0,0,537
+1547734388975,23003,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-15,text,false,,2897,0,74,74,https://api.foodlocal.ch/graphql,0,0,205
+1547734399188,12790,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-1,text,false,,2897,0,73,73,https://api.foodlocal.ch/graphql,0,0,218
+1547734411979,1,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-66,text,false,,2466,0,72,72,https://api.foodlocal.ch/graphql,0,0,1
+1547734382077,29902,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-43,text,false,,2897,0,71,71,https://api.foodlocal.ch/graphql,0,0,102
+1547734408892,3089,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-65,text,false,,2897,0,70,70,https://api.foodlocal.ch/graphql,0,0,73
+1547734399220,12760,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-55,text,false,,2897,0,69,69,https://api.foodlocal.ch/graphql,0,0,235
+1547734406292,5690,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-14,text,false,,2897,0,68,68,https://api.foodlocal.ch/graphql,0,0,124
+1547734411964,18,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-95,text,false,,2466,0,68,68,https://api.foodlocal.ch/graphql,0,0,18
+1547734392881,19102,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-72,text,false,,2897,0,66,66,https://api.foodlocal.ch/graphql,0,0,534
+1547734399253,12729,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-89,text,false,,2897,0,65,65,https://api.foodlocal.ch/graphql,0,0,202
+1547734382464,29518,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-45,text,false,,2897,0,64,64,https://api.foodlocal.ch/graphql,0,0,203
+1547734411971,13,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-93,text,false,,2466,0,63,63,https://api.foodlocal.ch/graphql,0,0,13
+1547734408404,3580,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-90,text,false,,2897,0,62,62,https://api.foodlocal.ch/graphql,0,0,74
+1547734380193,31792,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-21,text,false,,2897,0,61,61,https://api.foodlocal.ch/graphql,0,0,204
+1547734393385,18600,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-31,text,false,,2897,0,60,60,https://api.foodlocal.ch/graphql,0,0,69
+1547734408909,3076,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-10,text,false,,2897,0,59,59,https://api.foodlocal.ch/graphql,0,0,68
+1547734387427,24559,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-27,text,false,,2897,0,58,58,https://api.foodlocal.ch/graphql,0,0,222
+1547734382076,29909,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-35,text,false,,2897,0,57,57,https://api.foodlocal.ch/graphql,0,0,92
+1547734382433,29552,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-63,text,false,,2897,0,56,56,https://api.foodlocal.ch/graphql,0,0,216
+1547734390622,21365,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-3,text,false,,2897,0,55,55,https://api.foodlocal.ch/graphql,0,0,83
+1547734399513,12473,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-17,text,false,,2897,0,54,54,https://api.foodlocal.ch/graphql,0,0,160
+1547734399244,12742,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-77,text,false,,2897,0,53,53,https://api.foodlocal.ch/graphql,0,0,186
+1547734411978,10,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-42,text,false,,2466,0,52,52,https://api.foodlocal.ch/graphql,0,0,10
+1547734399749,12238,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-18,text,false,,2897,0,51,51,https://api.foodlocal.ch/graphql,0,0,212
+1547734399210,12777,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-41,text,false,,2897,0,50,50,https://api.foodlocal.ch/graphql,0,0,242
+1547734399746,12241,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-56,text,false,,2897,0,49,49,https://api.foodlocal.ch/graphql,0,0,208
+1547734408224,3764,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-64,text,false,,2897,0,48,48,https://api.foodlocal.ch/graphql,0,0,204
+1547734408255,3734,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-78,text,false,,2897,0,47,47,https://api.foodlocal.ch/graphql,0,0,175
+1547734399223,12765,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-26,text,false,,2897,0,46,46,https://api.foodlocal.ch/graphql,0,0,231
+1547734375924,36065,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-74,text,false,,2897,0,45,45,https://api.foodlocal.ch/graphql,0,0,82
+1547734382076,29913,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-16,text,false,,2897,0,44,44,https://api.foodlocal.ch/graphql,0,0,98
+1547734411964,26,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-24,text,false,,2466,0,43,43,https://api.foodlocal.ch/graphql,0,0,26
+1547734408499,3492,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-80,text,false,,2897,0,42,42,https://api.foodlocal.ch/graphql,0,0,162
+1547734383975,28015,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-79,text,false,,2897,0,41,41,https://api.foodlocal.ch/graphql,0,0,196
+1547734399243,12747,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-19,text,false,,2897,0,40,40,https://api.foodlocal.ch/graphql,0,0,211
+1547734387445,24546,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-40,text,false,,2897,0,40,40,https://api.foodlocal.ch/graphql,0,0,235
+1547734393408,18583,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-76,text,false,,2897,0,38,38,https://api.foodlocal.ch/graphql,0,0,192
+1547734411975,17,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-99,text,false,,2466,0,37,37,https://api.foodlocal.ch/graphql,0,0,17
+1547734399222,12769,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-47,text,false,,2897,0,36,36,https://api.foodlocal.ch/graphql,0,0,230
+1547734406306,5686,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-34,text,false,,2897,0,35,35,https://api.foodlocal.ch/graphql,0,0,108
+1547734400462,11530,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-11,text,false,,2897,0,34,34,https://api.foodlocal.ch/graphql,0,0,201
+1547734389220,22773,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-48,text,false,,2897,0,33,33,https://api.foodlocal.ch/graphql,0,0,193
+1547734391685,20308,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-25,text,false,,2897,0,32,32,https://api.foodlocal.ch/graphql,0,0,205
+1547734399491,12502,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-36,text,false,,2897,0,31,31,https://api.foodlocal.ch/graphql,0,0,189
+1547734408704,3290,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-5,text,false,,2897,0,30,30,https://api.foodlocal.ch/graphql,0,0,211
+1547734394964,17030,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-57,text,false,,2897,0,29,29,https://api.foodlocal.ch/graphql,0,0,195
+1547734408237,3758,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-30,text,false,,2897,0,28,28,https://api.foodlocal.ch/graphql,0,0,185
+1547734390633,21362,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-51,text,false,,2897,0,27,27,https://api.foodlocal.ch/graphql,0,0,82
+1547734398874,13120,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-44,text,false,,2897,0,26,26,https://api.foodlocal.ch/graphql,0,0,495
+1547734408990,3006,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-2,text,false,,2897,0,25,25,https://api.foodlocal.ch/graphql,0,0,170
+1547734394973,17023,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-53,text,false,,2897,0,24,24,https://api.foodlocal.ch/graphql,0,0,186
+1547734408244,3752,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-29,text,false,,2897,0,23,23,https://api.foodlocal.ch/graphql,0,0,182
+1547734394939,17057,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-71,text,false,,2897,0,22,22,https://api.foodlocal.ch/graphql,0,0,211
+1547734382068,29928,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-82,text,false,,2897,0,21,21,https://api.foodlocal.ch/graphql,0,0,117
+1547734389162,22835,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-7,text,false,,2897,0,20,20,https://api.foodlocal.ch/graphql,0,0,194
+1547734408269,3728,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-98,text,false,,2897,0,19,19,https://api.foodlocal.ch/graphql,0,0,157
+1547734408915,3082,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-37,text,false,,2897,0,18,18,https://api.foodlocal.ch/graphql,0,0,185
+1547734399736,12261,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-85,text,false,,2897,0,17,17,https://api.foodlocal.ch/graphql,0,0,227
+1547734399206,12791,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-59,text,false,,2897,0,16,16,https://api.foodlocal.ch/graphql,0,0,213
+1547734408250,3748,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-70,text,false,,2897,0,15,15,https://api.foodlocal.ch/graphql,0,0,168
+1547734408623,3376,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-67,text,false,,2897,0,14,14,https://api.foodlocal.ch/graphql,0,0,80
+1547734411971,28,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-54,text,false,,2466,0,13,13,https://api.foodlocal.ch/graphql,0,0,28
+1547734387448,24551,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-23,text,false,,2897,0,12,12,https://api.foodlocal.ch/graphql,0,0,227
+1547734399243,12755,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-97,text,false,,2897,0,11,11,https://api.foodlocal.ch/graphql,0,0,212
+1547734383975,28023,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-61,text,false,,2897,0,10,10,https://api.foodlocal.ch/graphql,0,0,185
+1547734399222,12777,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-87,text,false,,2897,0,9,9,https://api.foodlocal.ch/graphql,0,0,233
+1547734399715,12284,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-52,text,false,,2897,0,8,8,https://api.foodlocal.ch/graphql,0,0,232
+1547734408914,3086,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-33,text,false,,2897,0,7,7,https://api.foodlocal.ch/graphql,0,0,184
+1547734411942,58,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-13,text,false,,2850,0,6,6,https://api.foodlocal.ch/graphql,0,0,58
+1547734392887,19114,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-84,text,false,,2897,0,5,5,https://api.foodlocal.ch/graphql,0,0,532
+1547734388994,23007,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-92,text,false,,2897,0,5,5,https://api.foodlocal.ch/graphql,0,0,178
+1547734394956,17047,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-8,text,false,,2897,0,3,3,https://api.foodlocal.ch/graphql,0,0,199
+1547734387427,24576,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-62,text,false,,2897,0,2,2,https://api.foodlocal.ch/graphql,0,0,246
+1547734393421,18582,ConnectToHomePage,Non HTTP response code: java.net.SocketException,Non HTTP response message: Socket closed,virutal users 1-6,text,false,,2897,0,1,1,https://api.foodlocal.ch/graphql,0,0,181

@@ -1,12 +1,12 @@
 type Query {
 	# Retourne tous les ratings concernant le producteur correspondant à l'id 'producerId'
-	ratingsAboutProducer(producerId: ID!): [PersonRatingProducer!]!
+	ratingsAboutProducer(producerId: ID!): PersonRatingProducerConnectionProducer! @connection
 
 	# Retourne le rating concernant le producteur correspondant à l'id 'producerId' fait par la personne (user ou producer) correspondant à l'id 'personId'
 	ratingAboutProducerMadeByPerson(personId: ID!, producerId: ID!): PersonRatingProducer!
 
 	# Retourne tous les ratings fait par la personne correspondant à l'id 'personId'
-	ratingsMadeByPerson(personId: ID!): [PersonRatingProducer!]!
+	ratingsMadeByPerson(personId: ID!): PersonRatingProducerConnectionPerson! @connection
 }
 
 type Mutation {
@@ -39,4 +39,21 @@ input PersonRatingProducerInputAdd {
 input PersonRatingProducerInputUpdate {
 	id: ID!
 	rating: Int!
+}
+
+type PersonRatingProducerConnectionProducer {
+	pageInfo: PageInfo!
+	edges: [PersonRatingProducerEdge!]!
+	totalCount: Int!
+}
+
+type PersonRatingProducerConnectionPerson {
+	pageInfo: PageInfo!
+	edges: [PersonRatingProducerEdge!]!
+	totalCount: Int!
+}
+
+type PersonRatingProducerEdge {
+	node: PersonRatingProducer!
+	cursor: String!
 }
