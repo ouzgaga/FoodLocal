@@ -47,7 +47,18 @@ function verifyToken(token, mendatoryToken) {
   }
 
   try {
-    return jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' });
+    /*
+    const p = new Promise((resolve, reject) => {
+      jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' }, (err, decoded) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(decoded);
+        }
+      });
+    });
+    */
+    return jwt.verify(token, config.jwtSecret); // , { subject: 'connectionToken' });
   } catch (e) {
     throw new AuthenticationError(e.message);
   }
