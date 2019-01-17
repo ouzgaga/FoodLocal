@@ -19,14 +19,9 @@ const personRatingProducersResolvers = {
   },
 
   Mutation: {
-    addProducerRating: async(parent, args, context) => {
-      await isAuthenticatedAndIsYourself(context.id, args.personId);
-      return personRatingProducersServices.addPersonRatingProducer(args.rating);
-    },
-
-    updateProducerRating: async(parent, args, context) => {
-      await isAuthenticatedAndIsYourself(context.id, args.personId);
-      return personRatingProducersServices.updatePersonRatingProducer(args.rating);
+    addOrUpdateProducerRating: async(parent, args, context) => {
+      await isAuthenticatedAndIsYourself(context.id, args.rating.personId);
+      return personRatingProducersServices.addOrUpdatePersonRatingProducer(args.rating);
     },
 
     deleteProducerRating: async(parent, args, context) => {
