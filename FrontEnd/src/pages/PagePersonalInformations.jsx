@@ -71,7 +71,7 @@ class PagePersonalInformations extends React.Component {
 
     const producerSettings = (userId, status, token) => (
       <>
-      {/*}
+      
         <BoxWithHeader
           header="Image de profil"
         >
@@ -92,7 +92,7 @@ class PagePersonalInformations extends React.Component {
         >
           <PersonalDescription userId={userId} status={status} token={token} />
         </BoxWithHeader>
-    */}
+    
         <BoxWithHeader
           header="Supprimer votre compte"
         >
