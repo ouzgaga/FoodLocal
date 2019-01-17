@@ -22,7 +22,7 @@ const addressSchema = new mongoose.Schema(
       required: true
     },
     postalCode: {
-      type: mongoose.Schema.Types.Number,
+      type: mongoose.Schema.Types.String,
       required: true
     },
     state: {
