@@ -7,8 +7,10 @@ const productsServices = require('../src/graphql/services/products.services');
 const productTypesServices = require('../src/graphql/services/productTypes.services');
 const productTypeCategoriesServices = require('../src/graphql/services/productTypeCategories.services');
 const postsServices = require('../src/graphql/services/posts.services');
+const ProducersModel = require('../src/graphql/models/producers.modelgql');
+const UsersModel = require('../src/graphql/models/users.modelgql');
 
-const NB_PRODUCERS_TO_GENERATE = 300;
+const NB_PRODUCERS_TO_GENERATE = 50;
 const NB_USERS_TO_GENERATE = 50;
 const NB_MIN_PRODUCTS_BY_PRODUCER = 0;
 const NB_MAX_PRODUCTS_BY_PRODUCER = 20;
@@ -21,6 +23,7 @@ const tabProducersIds = [];
 const tabUsersIds = [];
 
 const generateRandomNumber = (max, min) => Math.floor(Math.random() * (max - min)) + min;
+const generateRandomFloat = (max, min) => Math.random() * (max - min) + min;
 
 const populateDB = async() => {
   await clearDB();
@@ -306,8 +309,8 @@ const populateDB = async() => {
       state: faker.address.state(),
       country: faker.address.country(),
 
-      longitude: faker.address.longitude(),
-      latitude: faker.address.latitude()
+      longitude: generateRandomFloat(7, 6),
+      latitude: generateRandomFloat(47, 46)
     };
 
     // on ajoute un point de vente au producteur
@@ -411,6 +414,9 @@ const populateDB = async() => {
     console.log(`nombre d'utilisateurs ajoutés : ${i + 1}/${NB_USERS_TO_GENERATE}`);
   }
   // ################################################################### fin ajout des users ###################################################################
+
+  await ProducersModel.updateMany({ isAdmin: false }, { isAdmin: true }, { new: true }).limit(10);
+  await UsersModel.updateMany({ isAdmin: false }, { isAdmin: true }, { new: true }).limit(10);
 };
 
 it('should populate the database!', populateDB);
