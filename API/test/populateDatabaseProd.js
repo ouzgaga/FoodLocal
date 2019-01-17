@@ -1,4 +1,5 @@
 const faker = require('faker');
+const lodash = require('lodash');
 const clearDB = require('./graphql/clearDB');
 const personRatingProducersServices = require('../src/graphql/services/personRatingProducers.services');
 const usersServices = require('../src/graphql/services/users.services');
@@ -10,14 +11,20 @@ const postsServices = require('../src/graphql/services/posts.services');
 const ProducersModel = require('../src/graphql/models/producers.modelgql');
 const UsersModel = require('../src/graphql/models/users.modelgql');
 
-const NB_PRODUCERS_TO_GENERATE = 50;
+const NB_PRODUCERS_TO_GENERATE = 500;
 const NB_USERS_TO_GENERATE = 50;
+
 const NB_MIN_PRODUCTS_BY_PRODUCER = 0;
 const NB_MAX_PRODUCTS_BY_PRODUCER = 20;
+
 const NB_MIN_POSTS_BY_PRODUCER = 0;
 const NB_MAX_POSTS_BY_PRODUCER = 20;
+
 const NB_MIN_FOLLOWING_PRODUCERS = 0;
 const NB_MAX_FOLLOWING_PRODUCERS = NB_PRODUCERS_TO_GENERATE - 1;
+
+const NB_PRODUCERS_ADMIN = 10;
+const NB_USERS_ADMIN = 10;
 
 const tabProducersIds = [];
 const tabUsersIds = [];
@@ -405,7 +412,8 @@ const populateDB = async() => {
       const producerId = generateRandomNumber(tabProducersIds.length - 1, 0);
       if (!alreadyFollower.includes(producerId)) {
         tabPromises.push(personRatingProducersServices.addPersonRatingProducer(
-          { personId: user.id, producerId: tabProducersIds[producerId], rating: generateRandomNumber(5, 1) }));
+          { personId: user.id, producerId: tabProducersIds[producerId], rating: generateRandomNumber(5, 1) }
+        ));
         alreadyFollower.push(producerId);
       }
     }
@@ -415,8 +423,18 @@ const populateDB = async() => {
   }
   // ################################################################### fin ajout des users ###################################################################
 
-  await ProducersModel.updateMany({ isAdmin: false }, { isAdmin: true }, { new: true }).limit(10);
-  await UsersModel.updateMany({ isAdmin: false }, { isAdmin: true }, { new: true }).limit(10);
+  // on donne les droits d'amin aux NB_PRODUCERS_ADMIN producteurs et aux NB_USERS_ADMIN utilisateurs
+  const tabPromises = [];
+  lodash.range(0, NB_PRODUCERS_ADMIN).map((index) => {
+    tabPromises.push(ProducersModel.findByIdAndUpdate(tabProducersIds[index], { isAdmin: true }, { new: true }));
+  });
+
+
+  for (let i = 0; i < NB_USERS_ADMIN; i++) {
+    tabPromises.push(UsersModel.findByIdAndUpdate(tabUsersIds[i], { isAdmin: true }, { new: true }));
+  }
+
+  await Promise.all(tabPromises);
 };
 
 it('should populate the database!', populateDB);

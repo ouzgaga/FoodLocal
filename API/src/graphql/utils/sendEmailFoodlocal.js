@@ -6,7 +6,7 @@ function sendMailConfirmation(emailTo, firstname, lastname, token) {
     name: 'foodlocal',
     email: 'noreply@foodlocal.ch'
   };
-  const subject = 'Confirmation de votre addresse email';
+  const subject = 'Confirmation de votre adresse email';
   const text = `Bonjour ${firstname} ${lastname},\n
   Merci pour votre inscription sur foodlocal.ch. \n
   Pour la finaliser, veuillez cliquer sur le lien suivant afin de confirmer votre adresse email : ${confirmationLink}
@@ -25,16 +25,16 @@ function sendMailResetPassword(emailTo, firstname, lastname, newPassword) {
     name: 'foodlocal',
     email: 'noreply@foodlocal.ch'
   };
-  const subject = 'Nouveau mot de passe';
+  const subject = 'Votre mot de passe sur foodlocal.ch a été modifié';
   const text = `Bonjour ${firstname} ${lastname},\n
-  Votre mot de passe a été réinitialisé.\n
+  Vous avez demandé de réinitialiser votre mot de passe.\n
   Voici votre nouveau mot de passe : ${newPassword}\n
   Merci de le changer au plus vite!\n\n
   
   Votre équipe foodlocal`;
 
   const html = `<h2>Bonjour ${firstname} ${lastname},</h2>`
-               + '<h4>Votre mot de passe a été réinitialisé'
+               + '<h4>Vous avez demandé de réinitialiser votre mot de passe.'
                + `<br/>Voici votre nouveau mot de passe : ${newPassword}<br/>`
                + 'Merci de le changer au plus vite!'
 
