@@ -1,0 +1,7 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1547731852134,253,ConnectToHomePage,502,Bad Gateway,virutal users 1-20,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,252,0,83
+1547731852124,263,ConnectToHomePage,502,Bad Gateway,virutal users 1-19,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,263,0,78
+1547731859767,662,ConnectToHomePage,502,Bad Gateway,virutal users 1-61,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,662,0,70
+1547731859742,687,ConnectToHomePage,502,Bad Gateway,virutal users 1-1,text,false,,378,1125,100,100,https://api.foodlocal.ch/graphql,687,0,85
+1547731881512,406,ConnectToHomePage,502,Bad Gateway,virutal users 1-41,text,false,,378,1125,91,91,https://api.foodlocal.ch/graphql,406,0,136
+1547731881466,455,ConnectToHomePage,502,Bad Gateway,virutal users 1-32,text,false,,378,1125,91,91,https://api.foodlocal.ch/graphql,455,0,124
