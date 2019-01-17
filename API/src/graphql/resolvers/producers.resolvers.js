@@ -34,13 +34,23 @@ const producerResolvers = {
   Producer: {
     id: (parent, args, context) => parent._id.toString(),
 
-    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds,),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
-    salespoint: (parent, args, context) => (parent.salespointId != null ? salespointsServices.getSalespointById(parent.salespointId) : null),
+    salespoint: (parent, args, context) => {
+      if (parent.salespoint != null) {
+        return parent.salespoint;
+      }
+      return (parent.salespointId != null ? salespointsServices.getSalespointById(parent.salespointId) : null);
+    },
 
-    products: (parent, args, context) => productsServices.getAllProductsInReceivedIdList(parent.productsIds),
+    products: (parent, args, context) => {
+      if (parent.products != null) {
+        return parent.products;
+      }
+      return productsServices.getAllProductsInReceivedIdList(parent.productsIds);
+    }
   },
 
   ProducerConnection: {

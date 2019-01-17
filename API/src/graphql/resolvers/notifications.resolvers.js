@@ -1,8 +1,10 @@
+const { withFilter } = require('graphql-subscriptions');
 const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const notificationsServices = require('../services/notifications.services');
 const personNotificationsServices = require('../services/personNotifications.services');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
+const pubSub = require('../utils/pubSub');
 
 const notificationsResolvers = {
   Query: {
@@ -16,6 +18,15 @@ const notificationsResolvers = {
     setNotificationAsSeen: async(parent, args, context) => {
       await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personNotificationsServices.setPersonNotificationAsSeen(args.personNotificationId);
+    }
+  },
+
+  Subscription: {
+    newNotificationReceived: {
+      subscribe: withFilter(
+        () => pubSub.asyncIterator('NEW_NOTIFICATION'),
+        (payload, variables, context) => payload.notification.personId === context.id
+      )
     }
   },
 

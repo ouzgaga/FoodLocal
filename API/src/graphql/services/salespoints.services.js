@@ -47,22 +47,55 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }) {
   return SalespointsModel.aggregate(
     [
       {
-        $geoNear: {
-          near: {
-            type: 'Point',
-            coordinates: [
+        $geoNear : {
+          near : {
+            type : 'Point',
+            coordinates : [
               longitude,
               latitude
             ]
           },
-          spherical: true,
-          distanceField: 'distance',
+          spherical : true,
+          distanceField : 'address.distance',
           maxDistance
         }
       },
       {
-        $project: {
-          _id: true, id: true
+        $replaceRoot : {
+          newRoot : {
+            salespoint : '$$ROOT'
+          }
+        }
+      },
+      {
+        $lookup : {
+          from : 'persons',
+          localField : 'salespoint._id',
+          foreignField : 'salespointId',
+          as : 'producer'
+        }
+      },
+      {
+        $replaceRoot : {
+          newRoot : {
+            $mergeObjects : [
+              {
+                $arrayElemAt : [
+                  '$producer',
+                  0.0
+                ]
+              },
+              '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $lookup : {
+          from : 'products',
+          localField : 'productsIds',
+          foreignField : '_id',
+          as : 'products'
         }
       }
     ]
@@ -85,7 +118,7 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
             ]
           },
           spherical: true,
-          distanceField: 'distance',
+          distanceField: 'address.distance',
           maxDistance
         }
       },
@@ -146,7 +179,9 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
           isValidated: { $first: '$isValidated' },
           productsIds: { $first: '$productsIds' },
           rating: { $first: '$rating' },
-          productTypeIds: { $addToSet: '$products.productTypeId' }
+          productTypeIds: { $addToSet: '$products.productTypeId' },
+          salespoint: { $first: '$salespoint' },
+          products: { $first: '$products' }
         }
       },
       {

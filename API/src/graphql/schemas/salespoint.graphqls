@@ -61,6 +61,9 @@ type Address {
 	country: String!
 	longitude: Float!
 	latitude: Float!
+
+	# Distance entre le point de vente et la position de l'utilisateur reçue lors de l'appel à geoFilterProducer().
+	distance: Float
 }
 
 input AddressInput {

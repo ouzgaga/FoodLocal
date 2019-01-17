@@ -39,10 +39,14 @@ const productTypesServices = require('./productTypes.services');
  * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
  * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
  */
-function getProducers({ tags = undefined } = {}) {
+function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return ProducersModel.find(tags)
-    .sort({ _id: 1 });
+  if (sortById) {
+    return ProducersModel.find(tags)
+      .sort({ _id: 1 });
+  } else {
+    return ProducersModel.find(tags);
+  }
 }
 
 /**
@@ -65,11 +69,11 @@ function getProducerById(id) {
  * @returns {*}
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
-  return getProducers({ tags: { _id: { $in: listOfIdToGet } } });
+  return getProducers(true, { tags: { _id: { $in: listOfIdToGet } } });
 }
 
 function getAllProducersWithSalespointInReceivedIdList(listOfSalespointsIdToGet) {
-  return getProducers({ tags: { salespointId: { $in: listOfSalespointsIdToGet } } });
+  return getProducers(false, { tags: { salespointId: { $in: listOfSalespointsIdToGet } } });
 }
 
 /**
@@ -77,7 +81,7 @@ function getAllProducersWithSalespointInReceivedIdList(listOfSalespointsIdToGet)
  * @returns {*}
  */
 function getAllProducerWaitingForValidation() {
-  return getProducers({ tags: { isValidated: false } });
+  return getProducers(true, { tags: { isValidated: false } });
 }
 
 function countProducersIndBD() {
@@ -102,17 +106,16 @@ function filterProducers(byProductTypeIds) {
     return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
   } else {
     // pas de filtre --> on retourne tous les producteurs
-    return getProducers();
+    return getProducers(true);
   }
 }
 
-async function geoFilterProducers({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+function geoFilterProducers(locationClient, productTypeIdsTab) {
   if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
-    const salespointsIds = await salespointsServices.geoFilterProducersSalespoints({ longitude, latitude, maxDistance });
-    return getAllProducersWithSalespointInReceivedIdList(salespointsIds);
+    return salespointsServices.geoFilterProducersSalespoints(locationClient);
   }
 
-  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab);
+  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds(locationClient, productTypeIdsTab);
 }
 
 /**
