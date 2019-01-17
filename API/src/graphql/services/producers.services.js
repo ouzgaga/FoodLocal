@@ -72,10 +72,6 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return getProducers(true, { tags: { _id: { $in: listOfIdToGet } } });
 }
 
-function getAllProducersWithSalespointInReceivedIdList(listOfSalespointsIdToGet) {
-  return getProducers(false, { tags: { salespointId: { $in: listOfSalespointsIdToGet } } });
-}
-
 /**
  * Retourne tous les producteurs qui n'ont pas encore été validés (isValidated = false)
  * @returns {*}
@@ -85,7 +81,7 @@ function getAllProducerWaitingForValidation() {
 }
 
 function countProducersIndBD() {
-  return ProducersModel.countDocuments();
+  return ProducersModel.countDocuments({ isValidated: true });
 }
 
 /**

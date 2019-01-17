@@ -1,5 +1,5 @@
 const faker = require('faker');
-const lodash = require('lodash');
+const range = require('lodash/range');
 const clearDB = require('./graphql/clearDB');
 const personRatingProducersServices = require('../src/graphql/services/personRatingProducers.services');
 const usersServices = require('../src/graphql/services/users.services');
@@ -271,13 +271,13 @@ const populateDB = async() => {
 
   // ################################################################### ajout des producers ###################################################################
 
-  for (let i = 0; i < NB_PRODUCERS_TO_GENERATE; i++) {
+  const producers = range(0, NB_PRODUCERS_TO_GENERATE).map(async(index) => {
     const tabPromises = [];
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
     const email = faker.internet.email(firstname, lastname);
     const password = 'abcd1234';
-    const image = Buffer.from(faker.image.avatar(), 'utf8').toString('base64');
+    const image = `data:image/jpeg;base64,${Buffer.from(faker.image.avatar(), 'utf8').toString('base64')}`;
     const phoneNumber = faker.phone.phoneNumber();
     const description = faker.lorem.text();
     const website = faker.internet.url();
@@ -296,6 +296,8 @@ const populateDB = async() => {
       }
     );
 
+    tabProducersIds.push(producer.id);
+
     // on valide ce producteur
     if (faker.random.boolean()) {
       tabPromises.push(producersServices.validateAProducer(producer.id, true));
@@ -304,9 +306,9 @@ const populateDB = async() => {
     const NB_PRODUCTS = generateRandomNumber(NB_MAX_PRODUCTS_BY_PRODUCER, NB_MIN_PRODUCTS_BY_PRODUCER);
     const tabProductLength = tabProducts.length;
     // on ajoute des produits au producteur
-    for (let j = 0; j < NB_PRODUCTS; j++) {
-      tabPromises.push(productsServices.addProduct(tabProducts[j % tabProductLength], producer.id));
-    }
+    range(0, NB_PRODUCTS).forEach((index1) => {
+      tabPromises.push(productsServices.addProduct(tabProducts[index1 % tabProductLength], producer.id));
+    });
 
     const address = {
       number: generateRandomNumber(1000, 1),
@@ -356,7 +358,7 @@ const populateDB = async() => {
 
     // -------------------------------------------------------------------- ajout de posts -------------------------------------------------------------------
     const NB_POST = generateRandomNumber(NB_MAX_POSTS_BY_PRODUCER, NB_MIN_POSTS_BY_PRODUCER);
-    for (let k = 0; k < NB_POST; k++) {
+    range(0, NB_POST).forEach(() => {
       const post = {
         producerId: producer.id,
         text: faker.lorem.text()
@@ -365,17 +367,16 @@ const populateDB = async() => {
         post.address = address;
       }
       tabPromises.push(postsServices.addPostOfProducer(post));
-    }
+    });
 
-    tabProducersIds.push(producer.id);
     await Promise.all(tabPromises);
-    console.log(`nombre de producteurs ajoutés : ${i + 1}/${NB_PRODUCERS_TO_GENERATE}`);
-  }
+    console.log(`nombre de producteurs ajoutés : ${index + 1}/${NB_PRODUCERS_TO_GENERATE}`);
+  });
   // ################################################################# fin ajout des producers #################################################################
 
   // #################################################################### ajout de 2 users ####################################################################
   // on ajoute un utilisateur
-  for (let i = 0; i < NB_USERS_TO_GENERATE; i++) {
+  const users = range(0, NB_USERS_TO_GENERATE).map(async(index) => {
     const tabPromises = [];
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
@@ -398,17 +399,17 @@ const populateDB = async() => {
     // ------------------------------------------------------------------- ajout de followers ------------------------------------------------------------------
     const NB_FOLLOWING_PRODUCERS = generateRandomNumber(NB_MAX_FOLLOWING_PRODUCERS, NB_MIN_FOLLOWING_PRODUCERS);
     const alreadyFollower = [];
-    for (let j = 0; j < NB_FOLLOWING_PRODUCERS; j++) {
+    range(0, NB_FOLLOWING_PRODUCERS).forEach(() => {
       const producerId = generateRandomNumber(tabProducersIds.length - 1, 0);
       if (!alreadyFollower.includes(producerId)) {
         tabPromises.push(producersServices.addFollowerToProducer(tabProducersIds[producerId], user.id));
         alreadyFollower.push(producerId);
       }
-    }
+    });
 
     // ------------------------------------------------------------------ ajout de ratings ---------------------------------------------------------------------
     const NB_RATINGS = generateRandomNumber(10, 0);
-    for (let k = 0; k < NB_RATINGS; k++) {
+    range(0, NB_RATINGS).forEach(() => {
       const producerId = generateRandomNumber(tabProducersIds.length - 1, 0);
       if (!alreadyFollower.includes(producerId)) {
         tabPromises.push(personRatingProducersServices.addPersonRatingProducer(
@@ -416,23 +417,25 @@ const populateDB = async() => {
         ));
         alreadyFollower.push(producerId);
       }
-    }
+    });
 
     await Promise.all(tabPromises);
-    console.log(`nombre d'utilisateurs ajoutés : ${i + 1}/${NB_USERS_TO_GENERATE}`);
-  }
+    console.log(`nombre d'utilisateurs ajoutés : ${index + 1}/${NB_USERS_TO_GENERATE}`);
+  });
   // ################################################################### fin ajout des users ###################################################################
+
+  const a = await Promise.all([producers, users]);
 
   // on donne les droits d'amin aux NB_PRODUCERS_ADMIN producteurs et aux NB_USERS_ADMIN utilisateurs
   const tabPromises = [];
-  lodash.range(0, NB_PRODUCERS_ADMIN).map((index) => {
+  range(0, NB_PRODUCERS_ADMIN).forEach((index) => {
     tabPromises.push(ProducersModel.findByIdAndUpdate(tabProducersIds[index], { isAdmin: true }, { new: true }));
   });
 
 
-  for (let i = 0; i < NB_USERS_ADMIN; i++) {
-    tabPromises.push(UsersModel.findByIdAndUpdate(tabUsersIds[i], { isAdmin: true }, { new: true }));
-  }
+  range(0, NB_USERS_ADMIN).forEach((index) => {
+    tabPromises.push(UsersModel.findByIdAndUpdate(tabUsersIds[index], { isAdmin: true }, { new: true }));
+  });
 
   await Promise.all(tabPromises);
 };
