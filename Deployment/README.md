@@ -219,6 +219,14 @@ The order to deploy is:
       - Best way to do so is to pass by the gitlab-ci or using docker login
         - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image` 
 
+### Auto-scale of deployments
+
+To auto-scale a deployment you can do:
+
+```sh
+kubectl autoscale deployment frontend-deploy --max <max> --min <min> --cpu-percent <cpu-percent>
+```
+
 ## Other Scripts
 
 ### Remove deployments
