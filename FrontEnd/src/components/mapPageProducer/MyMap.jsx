@@ -67,7 +67,9 @@ class MyMap extends React.Component {
 
 
   render() {
-    const { classes, producers, products, addProduct, removeProduct, location, maxDistance, changeMaxDistance } = this.props;
+    const { 
+      classes, producers, location, changeMapLocation, onLoadMore
+     } = this.props;
     const { latitude, longitude } = location;
 
 
@@ -75,7 +77,14 @@ class MyMap extends React.Component {
 
       <div className={classes.map}>
 
-        <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={12} maxZoom={20}>
+        <Map
+          key="map"
+          className={classes.map}
+          center={[latitude, longitude]}
+          zoom={12}
+          maxZoom={20}
+          onViewportChanged={(e) => { console.log(e); onLoadMore(e.center[0], e.center[1]); }}
+        >
 
           <TileLayer
             key="tileLayer"
@@ -96,14 +105,14 @@ class MyMap extends React.Component {
                     ? (
                       <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon2}>
                         <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
-                          <ItemProducerPopUp producer={node}/>
+                          <ItemProducerPopUp producer={node} />
                         </Popup>
                       </Marker>
                     )
                     : (
                       <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon}>
                         <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
-                          <ItemProducerPopUp producer={node}/>
+                          <ItemProducerPopUp producer={node} />
                         </Popup>
                       </Marker>
                     )

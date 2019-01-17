@@ -22,7 +22,7 @@ import Loading from '../Loading';
 
 const GET_PRODUCTS_CATEGORIES = gql`
 query {
-  productTypeCategories {
+  productTypeCategories(first:6) {
     edges {
       node {
         id
@@ -265,7 +265,7 @@ class FilerProducts extends React.Component {
                             </Card>
                             <div className={classes.paper}>
                               <Typography className={classes.typo} variant="body1" gutterBottom>
-                                {node.name}
+                                {node.id}
                               </Typography>
                             </div>
                           </Grid>

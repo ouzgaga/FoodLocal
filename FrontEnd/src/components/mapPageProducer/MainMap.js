@@ -93,11 +93,11 @@ class MainMap extends React.Component {
 
   render() {
     const {
-      classes, theme, products, addProduct, removeProduct, location, maxDistance, changeMaxDistance, entries, onLoadMore, loading
+      classes, theme, products, addProduct, removeProduct, userLocation, maxDistance, changeMaxDistance, entries, onLoadMore, loading, changeMapLocation
     } = this.props;
 
+    /*
     const drawer = (
-
 
       entries.edges.length
         ? (
@@ -132,6 +132,8 @@ class MainMap extends React.Component {
 
     );
 
+    */
+
     return (
       <div className={classes.root}>
         <main className={classes.content}>
@@ -154,46 +156,13 @@ class MainMap extends React.Component {
 
           <MyMap
             producers={entries.edges}
-            location={location}
+            location={userLocation}
             iconDrag={this.state.iconDrag}
-            products={products}
-            addProduct={addProduct}
-            removeProduct={removeProduct}
-            maxDistance={maxDistance}
-            changeMaxDistance={changeMaxDistance}
+            changeMapLocation={changeMapLocation}
+            onLoadMore={onLoadMore}
           />
 
         </main>
-
-        <div className={classes.drawer}>
-          <Hidden mdUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction = 'right'}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper2,
-              }}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden smDown>
-            <Drawer
-              variant="permanent"
-              open
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-        </div>
       </div>
     );
   }

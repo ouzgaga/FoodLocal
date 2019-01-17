@@ -30,31 +30,24 @@ const styles = ({
 
 const GET_PRODUCERS_BY_LOCATION = gql`
 query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: String) {
-  geoFilterProducers(locationClient: $locationClient, byProductTypeIds: $byProductTypeIds, first:10, after: $cursor ) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
+  geoFilterProducers(locationClient: $locationClient, byProductTypeIds: $byProductTypeIds, first:100, after: $cursor ) {
     edges{
       cursor
       node {
         id
         image
         salespoint {
-          name
           address {
             city
             latitude
             longitude
-            distance
           }
         }
         products {
           edges {
             node {
               productType {
+                id
                 name
                 image
               }
@@ -67,17 +60,31 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
 }
 `;
 
+function arrayUnique(array) {
+  console.log(array)
+  var a = array.concat();
+  for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+          if(a[i].node.id === a[j].node.id)
+              a.splice(j--, 1);
+      }
+  }
+
+  return a;
+}
+
 class MapFetchContainer extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       products: [],
-      location: {
+      userLocation: {
         // par défaut, position de Lausanne
         latitude: 46.5333,
         longitude: 6.6667,
       },
+      mapLocation: {},
       maxDistance: 100,
     };
   }
@@ -85,7 +92,11 @@ class MapFetchContainer extends React.Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
-        location: {
+        userLocation: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        },
+        mapLocation: {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         },
@@ -116,16 +127,25 @@ class MapFetchContainer extends React.Component {
     });
   };
 
+  changeMapLocation = (newLocation) => {
+    console.log(newLocation)
+    this.setState({
+      mapLocation: {
+        latitude: newLocation.center[0],
+        longitude: newLocation.center[1],
+      }
+    });
+  }
+
   render() {
     const { classes } = this.props;
-    const { products, location, maxDistance } = this.state;
-    const { latitude, longitude } = location;
+    const { products, userLocation, mapLocation, maxDistance } = this.state;
     return (
       <div className={classes.root}>
 
         <Query
           query={GET_PRODUCERS_BY_LOCATION}
-          variables={{ locationClient: { latitude, longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) }, byProductTypeIds: products }} // TODO
+          variables={{ locationClient: { latitude: userLocation.latitude, longitude: userLocation.longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) }, byProductTypeIds: products }} // TODO
         >
           {({
             data, loading, error, fetchMore
@@ -137,27 +157,28 @@ class MapFetchContainer extends React.Component {
             return (
               <MainMap
                 products={products}
-                location={location}
+                userLocation={userLocation}
                 maxDistance={maxDistance}
                 addProduct={this.addProduct}
                 removeProduct={this.removeProduct}
                 changeMaxDistance={this.changeMaxDistance}
+                changeMapLocation={this.changeMapLocation}
                 loading={loading}
                 entries={geoFilterProducers}
-                onLoadMore={() => fetchMore({
+                onLoadMore={(latitude, longitude) => fetchMore({
                   variables: {
-                    locationClient: { latitude, longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) },
+                    locationClient: { latitude:latitude, longitude:longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) },
                     byProductTypeIds: products,
-                    cursor: geoFilterProducers.pageInfo.endCursor
                   },
                   updateQuery: (prevResult, { fetchMoreResult }) => {
                     const newEdges = fetchMoreResult.geoFilterProducers.edges;
                     const pageInfo = fetchMoreResult.geoFilterProducers.pageInfo;
+                    console.log(newEdges)
                     return newEdges.length
                       ? {
                         geoFilterProducers: {
                           __typename: prevResult.geoFilterProducers.__typename,
-                          edges: [...prevResult.geoFilterProducers.edges, ...newEdges],
+                          edges: arrayUnique(prevResult.geoFilterProducers.edges.concat(newEdges)),
                           pageInfo
                         }
                       }

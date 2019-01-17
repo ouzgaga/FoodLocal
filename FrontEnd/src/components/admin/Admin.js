@@ -18,8 +18,8 @@ const GET_PRODUCERS_NUMBER = gql`
  `;
 
 const GET_ALL_PRODUCERS = gql`
-  query($first : Int) {
-  producers(first : $first) {
+  query($after : String) {
+  producers(first : 20, after : $after) {
     totalCount
     pageInfo{
       hasNextPage
@@ -60,30 +60,45 @@ class Admin extends Component {
         <Typography variant="h3">
           {'Administrateur'}
         </Typography>
+
         <Query
-          query={GET_PRODUCERS_NUMBER}
+          query={GET_ALL_PRODUCERS}
         >
-          {({ data : dataNumber, loading : loading2, error : error2 }) => {
-            if (error2) return <ErrorLoading />;
-            if (loading2) return <Loading />;
+          {({
+            data, loading, error, fetchMore
+          }) => {
+            if (error) return <ErrorLoading />;
+            const producers = data.producers;
+
             return (
-              <Query
-                query={GET_ALL_PRODUCERS}
-                variables={{ first: dataNumber.producers.totalCount }} // TODO
-              >
-                {({ data, loading, error }) => {
-                  if (error) return <ErrorLoading />;
-                  if (loading) return <Loading />;
-                  const { producers } = data;
-                  console.log(producers)
-                  return (
-                    <TableProducers entries={producers} />
-                  );
-                }}
-              </Query>
+              <TableProducers
+                loading={loading}
+                entries={producers}
+                onLoadMore={() => fetchMore({
+                  variables: {
+                    after: producers.pageInfo.endCursor
+                  },
+                  updateQuery: (prevResult, { fetchMoreResult }) => {
+                    const newEdges = fetchMoreResult.producers.edges;
+                    const pageInfo = fetchMoreResult.producers.pageInfo;
+                    return newEdges.length
+                      ? {
+                        producers: {
+                          __typename: prevResult.producers.__typename,
+                          edges: [...prevResult.producers.edges, ...newEdges],
+                          pageInfo
+                        }
+                      }
+                      : prevResult;
+                  }
+                })
+                }
+              />
             );
           }}
         </Query>
+
+
       </div>
     );
   }
