@@ -23,11 +23,8 @@ import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
 import PersonalDescription from '../src/components/accouontCRUD/PersonalDescription';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
 import BorderedCountField from '../src/components/items/fields/BorderedCountField';
-
-
-function onChange(event) {
-
-}
+import DropZone from '../src/components/items/DropZone';
+import BadgeMax from '../src/components/items/BadgeMax';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -248,13 +245,23 @@ storiesOf('PersonalInformation', module)
     <PersonalInformation />
   ));
 
-
-
-
-
-
 storiesOf('TableProducerItem', module)
-
   .add('producer item', () => (
     <TableProducerItem id={1234} name="La Ferme Du Bois" />
   ));
+
+storiesOf('DropZone', module)
+  .add('Dropzone', () => (
+    <DropZone />
+  ));
+
+storiesOf('NotificationBagde', module)
+.add('No notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('10 notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('> max value (99)', () => (
+  <BadgeMax value={100} />
+));

@@ -27,6 +27,8 @@ const salespointsResolvers = {
   },
 
   Address: {
+    distance: (parent, args, context) => parent.distance,
+
     longitude: (parent, args, context) => parent.location.coordinates[0],
 
     latitude: (parent, args, context) => parent.location.coordinates[1]

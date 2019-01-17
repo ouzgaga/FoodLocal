@@ -3,12 +3,11 @@ module.exports = {
   signUpAsUser,
   signUpAsProducer,
   createConnectionToken,
-  upgradeUserToProducer
+  verifyToken
 };
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const PersonsModel = require('../models/persons.modelgql');
+const { AuthenticationError } = require('apollo-server-express');
 const personsServices = require('./persons.services');
 const usersServices = require('./users.services');
 const producersServices = require('./producers.services');
@@ -40,22 +39,16 @@ function createConnectionToken(id, email, isAdmin, kind, emailValidated) {
   return jwt.sign({ id, email, isAdmin, kind, emailValidated }, config.jwtSecret, { subject: 'connectionToken' });
 }
 
-async function upgradeUserToProducer(idUserToUpgrade, password) {
-  const user = await usersServices.getUserById(idUserToUpgrade);
-
-  if (user == null) {
-    throw new Error('The received idUserToUpgrade is not in the database!');
+function verifyToken(token, mendatoryToken) {
+  if (token == null && mendatoryToken) {
+    throw new AuthenticationError('You need to be authenticated to be able to subscribe to real-time notifications.');
+  } else if (token == null) {
+    return null;
   }
 
-  // on compare le password reçu en paramètre avec le mdp enregistré dans la DB
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    throw new Error('Received password is not correct!');
+  try {
+    return jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' });
+  } catch (e) {
+    throw new AuthenticationError(e.message);
   }
-
-  const producer = await PersonsModel.findByIdAndUpdate(user.id, { kind: 'producers', followersIds: [], productsIds: [], isValidated: false },
-    { new: true, strict: false });
-
-  const token = await createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind, producer.emailValidated);
-  return { producer, newLoginToken: token };
 }

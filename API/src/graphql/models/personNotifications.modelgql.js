@@ -38,6 +38,7 @@ personNotificationsSchema.pre('save', async function(next) {
     if (!personExist) {
       throw new Error(`The given personId (${this.personId}) doesn’t exist in the database!`);
     }
+    pubSub.publish('NEW_NOTIFICATION', { notification: this });
     next();
   } catch (err) {
     next(err);
@@ -51,3 +52,4 @@ const PersonsNotificationsModel = mongoose.model('personNotifications', personNo
  */
 module.exports = PersonsNotificationsModel;
 const personsServices = require('../services/persons.services');
+const pubSub = require('../utils/pubSub');

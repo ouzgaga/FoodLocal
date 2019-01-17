@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { ApolloServer, AuthenticationError } = require('apollo-server-express');
+const { createServer } = require('http');
+const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const connectionTokenServices = require('./graphql/services/connectionToken.services');
 const { resolvers, schema: typeDefs, connectionDirective } = require('./graphql/graphqlConfig');
 
 const config = require('./config/config');
@@ -18,18 +19,6 @@ const app = express();
 // Active CORS pour le client
 app.use(cors());
 
-const getToken = async(req) => {
-  const token = req.headers['x-token'];
-
-  if (token) {
-    try {
-      return await jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' });
-    } catch (e) {
-      throw new AuthenticationError(e.message);
-    }
-  }
-};
-
 // Integrate apollo as a middleware
 const server = new ApolloServer(
   {
@@ -40,9 +29,29 @@ const server = new ApolloServer(
     },
     introspection: true,
     playground: true,
-    context: ({ req }) => getToken(req)
+    context: ({ req }) => {
+      const token = req != null ? req.headers.token : null;
+      const res = connectionTokenServices.verifyToken(token, false);
+      return res;
+    },
+    subscriptions: {
+      path: '/subscriptions',
+      onConnect: (connectionParams) => {
+        const res = connectionTokenServices.verifyToken(connectionParams.token, true);
+        console.log('Subscription client connected using Apollo server\'s built-in SubscriptionServer.');
+        return res;
+      }
+    }
   }
 );
 server.applyMiddleware({ app });
+
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+httpServer.listen({ port: config.port }, () => {
+  console.log(`🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`);
+  console.log(`🚀 WS ready at ws://localhost:${config.port}${server.subscriptionsPath}`);
+});
 
 module.exports = require('./config/express')(app, config);

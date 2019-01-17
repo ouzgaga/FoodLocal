@@ -1,5 +1,4 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 
@@ -31,9 +30,7 @@ class SimpleInfoDialog extends React.Component {
   }
 
   render() {
-    const { classes, open, handleClose, title, text } = this.props;
-
-    
+    const { open, handleClose, title, text } = this.props;
 
     return (
       <div>

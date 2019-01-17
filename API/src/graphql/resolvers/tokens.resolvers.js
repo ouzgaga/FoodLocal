@@ -22,7 +22,7 @@ const producerResolvers = {
 
     upgradeUserToProducer: async(parent, args, context) => {
       await isAuthenticatedAsUserAndIsYourself(context.id, args.idUserToUpgrade, context.kind);
-      return connectionTokenServices.upgradeUserToProducer(args.idUserToUpgrade, args.password);
+      return personsServices.upgradeUserToProducer(args.idUserToUpgrade, args.password);
     }
   },
 

@@ -8,7 +8,9 @@ type Mutation {
 	setNotificationAsSeen(personId: ID!, personNotificationId: ID!): PersonNotification!
 }
 
-scalar Date
+type Subscription {
+	newNotificationReceived: PersonNotification!
+}
 
 type PersonNotification {
 	id: ID!
