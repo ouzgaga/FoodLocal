@@ -48,6 +48,7 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
             city
             latitude
             longitude
+            distance
           }
         }
         products {

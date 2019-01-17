@@ -96,14 +96,14 @@ class MyMap extends React.Component {
                     ? (
                       <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon2}>
                         <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
-                          <ItemProducerPopUp producerId={node.id} />
+                          <ItemProducerPopUp producer={node}/>
                         </Popup>
                       </Marker>
                     )
                     : (
                       <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon}>
                         <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
-                          <ItemProducerPopUp producerId={node.id} />
+                          <ItemProducerPopUp producer={node}/>
                         </Popup>
                       </Marker>
                     )

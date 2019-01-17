@@ -16,7 +16,7 @@ import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
 import Search from './Search';
 import FilterProducts from './FilterProducts';
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, Typography } from '@material-ui/core';
 import ListItemProducer from './ListItemProducer';
 
 const drawerWidth = 400;
@@ -97,31 +97,39 @@ class MainMap extends React.Component {
     } = this.props;
 
     const drawer = (
-      <>
-        <List className={classes.list}>
 
-          <InfiniteScroll
-          pageStart={0}
-            loadMore={() => onLoadMore()}
-            hasMore={entries.pageInfo.hasNextPage}
-            loader={<p>Loading...</p>}
-          >
 
-            {entries.edges.map(({ node }) => (
+      entries.edges.length
+        ? (
+          <>
+            <List className={classes.list}>
 
-              <ListItem key={node.id} className={classes.listItem}>
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={() => onLoadMore()}
+                hasMore={entries.pageInfo.hasNextPage}
+              >
 
-                <ListItemProducer producer={node} handleHover={this.handleHover} resetHover={this.resetHover} />
+                {entries.edges.map(({ node }) => (
 
-              </ListItem>
-            ))
-            }
-          </InfiniteScroll>
+                  <ListItem key={node.id} className={classes.listItem}>
 
-        </List>
+                    <ListItemProducer producer={node} handleHover={this.handleHover} resetHover={this.resetHover} />
 
-        <Button onClick={onLoadMore} variant="contained">Voir plus de producteurs</Button>
-      </>
+                  </ListItem>
+                ))
+                }
+              </InfiniteScroll>
+
+            </List>
+
+            <Button onClick={onLoadMore} variant="contained">Voir plus de producteurs</Button>
+          </>
+        )
+        : (
+          <Typography>Aucun producteur ne correspond à votre recherche</Typography>
+        )
+
     );
 
     return (

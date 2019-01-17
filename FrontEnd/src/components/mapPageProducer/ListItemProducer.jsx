@@ -62,7 +62,7 @@ function ListItemProducer(props) {
       {producer.salespoint !== null && (
         <Card className={classes.card} onMouseEnter={(e) => { e.preventDefault(); handleHover(producer.id); }} onMouseLeave={(e) => { e.preventDefault(); resetHover(); }}>
           <CardActionArea href={link} target="_blank">
-            <CardHeader title={producer.salespoint.name} subheader={producer.salespoint.address.city} className={classes.titleItem} />
+            <CardHeader title={producer.salespoint.name} subheader={`${producer.salespoint.address.city} - ${(producer.salespoint.address.distance / 1000).toFixed(1)} km`} className={classes.titleItem} />
             <div className={classes.root}>
               <GridList className={classes.gridList}>
                 {producer.products.edges.map(({ node }) => (
