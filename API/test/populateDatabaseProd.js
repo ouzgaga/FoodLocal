@@ -8,7 +8,7 @@ const productTypesServices = require('../src/graphql/services/productTypes.servi
 const productTypeCategoriesServices = require('../src/graphql/services/productTypeCategories.services');
 const postsServices = require('../src/graphql/services/posts.services');
 
-const NB_PRODUCERS_TO_GENERATE = 200;
+const NB_PRODUCERS_TO_GENERATE = 300;
 const NB_USERS_TO_GENERATE = 50;
 const NB_MIN_PRODUCTS_BY_PRODUCER = 0;
 const NB_MAX_PRODUCTS_BY_PRODUCER = 20;
@@ -23,7 +23,7 @@ const tabUsersIds = [];
 const generateRandomNumber = (max, min) => Math.floor(Math.random() * (max - min)) + min;
 
 const populateDB = async() => {
-  // await clearDB();
+  await clearDB();
 
   // ------------------------------------------------------------- ajout des productTypeCategory --------------------------------------------------------------
   const categoriesAutres = await productTypeCategoriesServices.addProductTypeCategory(
@@ -411,7 +411,6 @@ const populateDB = async() => {
     console.log(`nombre d'utilisateurs ajoutés : ${i + 1}/${NB_USERS_TO_GENERATE}`);
   }
   // ################################################################### fin ajout des users ###################################################################
-
 };
 
 it('should populate the database!', populateDB);

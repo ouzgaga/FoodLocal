@@ -37,7 +37,7 @@ The procedure to redeploy the application on a same infrastructure is to:
       - If you create it, choose the role: owner of the project
       - They will ask you if you want to generate a key -> click on the button to do so. Select json format.
       - You will need to put it in to place:
-        - in the [Deployment/DB/script](./DB/script) (Not necessary but usefull script to deploy a db)
+        - in the [Deployment/DB/script](./DB/script) folder (Not necessary but usefull script to deploy a db)
         - you will need to add a env var into gitlab: `GC_KEY` with the content of the json file
         - if you use the Google Cloud sdk in local, you will need this file to connect in a more easier way
         - everytime you will create a docker container, insert this file inside of the docker image. 
@@ -52,15 +52,15 @@ The procedure to redeploy the application on a same infrastructure is to:
         - And add the var env into gitlab to use the CI
       - *Tips*: If you click on `login` (`se connecter`in french) you will see the line to connect by the terminal.
 - Connect to the Kluster with kubectl
-- Install [Helm/Tiller](#install-helmtiller)
+- Install [Helm/Tiller](#helmtiller)
 - Install the [nginx-ingress loadbalancer](#install-nginx-ingress)
 - Install the [cert-manager](#install-cert-manager)
 - Install the [database](#install-mongodb-database)
-- Deploy the different services and deployment
+- Deploy the different [services and deployment](#install-services-and-deployment)
 
 ## Install
 
-### Kubectl and Gcloud SDK
+### Kubectl and Google Cloud SDK
 
 You have to choices: Install the Google Cloud sdk and kubectl in local or using a docker container.
 
@@ -219,13 +219,57 @@ The order to deploy is:
       - Best way to do so is to pass by the gitlab-ci or using docker login
         - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image` 
 
+### Auto-scale of deployments
+
+To auto-scale a deployment you can do:
+
+```sh
+kubectl autoscale deployment frontend-deploy --max <max> --min <min> --cpu-percent <cpu-percent>
+```
+
 ## Other Scripts
 
-// To Do
+### Remove deployments
+
+To remove all deployments use the script: [deleteAllServicesAndDeployment.sh](./deleteAllServicesAndDeployment.sh)
+
+## Tips
+
+### Connect to a pod
+
+```sh
+kubect exec -it <pod-name> sh
+```
+
+### Get logs from a pod
+
+```sh
+kubectl logs <pod-name>
+```
+
+### Get resource names and small info
+
+```sh
+kubectl get <resource>
+```
+
+Resources can be:
+
+- pods
+- deployment
+- services
+- etc...
+
+### Get info from a pod
+
+```sh
+kubectl describe <ressource> <ressource-name>
+```
 
 ## Source
-Authorization: https://cloud.google.com/sdk/docs/authorizing
-Create Project: https://cloud.google.com/sdk/gcloud/reference/projects/create
-Getting google cloud account key: https://cloud.google.com/iam/docs/creating-managing-service-account-keys
-MongoDB replica set: https://github.com/helm/charts/tree/master/stable/mongodb-replicaset
+
+- Authorization: https://cloud.google.com/sdk/docs/authorizing
+- Create Project: https://cloud.google.com/sdk/gcloud/reference/projects/create
+- Getting google cloud account key: https://cloud.google.com/iam/docs/creating-managing-service-account-keys
+- MongoDB replica set: https://github.com/helm/charts/tree/master/stable/mongodb-replicaset
 

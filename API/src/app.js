@@ -29,17 +29,17 @@ const server = new ApolloServer(
     },
     introspection: true,
     playground: true,
-    context: ({ req }) => {
-      const token = req != null ? req.headers.token : null;
+    context: ({ req, connection }) => {
+      const token = req != null ? req.headers.token : connection.context.token;
       const res = connectionTokenServices.verifyToken(token, false);
+      // console.log(token);
       return res;
     },
     subscriptions: {
       path: '/subscriptions',
       onConnect: (connectionParams) => {
-        const res = connectionTokenServices.verifyToken(connectionParams.token, true);
         console.log('Subscription client connected using Apollo server\'s built-in SubscriptionServer.');
-        return res;
+        return connectionParams;
       }
     }
   }
