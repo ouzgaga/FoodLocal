@@ -11,6 +11,7 @@ module.exports = {
   changePassword,
   resetPassword,
   checkIfPasswordIsValid,
+  upgradeUserToProducer,
   validateEmailUserByToken,
   deletePersonAccount
 };
@@ -160,6 +161,26 @@ function checkIfPasswordIsValid(password) {
   }
   // si on arrive jusqu'ici -> le mdp est valide
   return true;
+}
+
+async function upgradeUserToProducer(idUserToUpgrade, password) {
+  const user = await usersServices.getUserById(idUserToUpgrade);
+
+  if (user == null) {
+    throw new Error('The received idUserToUpgrade is not in the database!');
+  }
+
+  // on compare le password reçu en paramètre avec le mdp enregistré dans la DB
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    throw new Error('Received password is not correct!');
+  }
+
+  const producer = await PersonsModel.findByIdAndUpdate(user.id, { kind: 'producers', followersIds: [], productsIds: [], isValidated: false },
+    { new: true, strict: false });
+
+  const token = await connectionTokenServices.createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind, producer.emailValidated);
+  return { producer, newLoginToken: token };
 }
 
 async function validateEmailUserByToken(emailValidationToken) {

@@ -53,6 +53,6 @@ Reste à faire:
 
 - Prendre en charge les images! Récupérer un file ou qqch du genre et le stoquer...!
 
-- Ajouter la pagination entre la DB et le serveur!!!
+- **Ajouter la pagination entre la DB et le serveur!!!**
 
 - **rajouter l'envoi du mail lorsqu'on génère un nouveau password**
