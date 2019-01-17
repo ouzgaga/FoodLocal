@@ -17,8 +17,11 @@ class ConnectionDirective extends SchemaDirectiveVisitor {
     field.resolve = async function(...args) {
       const results = await resolve.apply(this, args);
 
-      if (args[1] == null || (args[1].first == null && args[1].last == null)) {
-        args[1].first = 5;
+      if (args[1] == null || args[1].first == null || args[1].first > 100) {
+        args[1].first = 100;
+      }
+      if (args[1].last == null || args[1].last > 100) {
+        args[1].last = 100;
       }
 
       return connectionFromArray(results, args[1]);

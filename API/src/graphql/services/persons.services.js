@@ -26,6 +26,7 @@ const producersServices = require('./producers.services');
 const usersServices = require('./users.services');
 const connectionTokenServices = require('./connectionToken.services');
 const config = require('../../config/config');
+const mail = require('../utils/sendEmailFoodlocal');
 
 async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
@@ -143,7 +144,11 @@ async function resetPassword(email) {
   const password = crypto.randomBytes(20).toString('hex');
   person.password = await bcrypt.hash(password, 10);
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
-  return updatedPerson != null;
+  if (updatedPerson != null) {
+    // FIXME: À décommenter pour réellement envoyer les emails!!!!!
+    mail.sendMailResetPassword(email, updatedPerson.firstname, updatedPerson.lastname, password);
+  }
+  return false;
 }
 
 function checkIfPasswordIsValid(password) {

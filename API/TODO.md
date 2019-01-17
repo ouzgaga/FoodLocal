@@ -50,8 +50,6 @@ Reste à faire:
 
 - **Ajouter la pagination entre la DB et le serveur!!!**
 
-- **rajouter l'envoi du mail lorsqu'on génère un nouveau password**
-
 - Ajouter les stats "produits de la semaine" et un endpoint pour les récupérer
 
 - Ajouter des n° d'erreurs aux erreurs retournées
