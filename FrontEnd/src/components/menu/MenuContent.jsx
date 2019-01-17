@@ -17,6 +17,7 @@ import AccountIcone from '@material-ui/icons/AccountBox';
 import RegisterIcone from '@material-ui/icons/HowToReg';
 import SettingsIcone from '@material-ui/icons/Settings';
 import BuildIcone from '@material-ui/icons/Build';
+import BadgeMax from '../items/BadgeMax';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -107,6 +108,7 @@ function MenuContent(props) {
       <Link to="/myWall" className={classes.LinkButton}>
         <MenuItem button>
           <ListItemIcon>
+            <BadgeMax value={10} />
             {/* TODO: icone */}
           </ListItemIcon>
           <ListItemText primary="Mon mur" />

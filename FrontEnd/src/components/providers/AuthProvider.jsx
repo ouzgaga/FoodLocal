@@ -53,9 +53,10 @@ class AuthProvider extends React.Component {
   }
 
 
-  componentDidMount() {
+  componentWillMount() {
     const token = window.localStorage.getItem('token');
     console.log(token);
+    if(token) this.addState(token);
     if (token) {
       const { client } = this.props;
       client.mutate({ mutation: mutRelog })
@@ -63,6 +64,7 @@ class AuthProvider extends React.Component {
           (data) => { 
             this.addState(data.data.renewToken.token);
             window.localStorage.setItem('token', data.data.renewToken.token);
+            //this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
           }
         ).catch(
           (error) => {

@@ -136,6 +136,36 @@ const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
   />
 )
 
+const ProtectedErrorConected = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userToken }) => userToken
+            ? <Redirect to="/map" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
+const ProtectedErrorEmail = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userEmailValidated }) => !userEmailValidated
+            ? <Redirect to="/map" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
 
 class App extends React.Component {
   state = {
@@ -157,8 +187,6 @@ class App extends React.Component {
       (
         <AuthContext>
           {({ userEmailValidated, userToken }) => {
-            console.info("123", userEmailValidated);
-            console.info("wowow", userToken);
             if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
             
               return (<Redirect to="/error/email" />);
@@ -180,7 +208,7 @@ class App extends React.Component {
         <div className={classes.page} center="xs">
           <Switch>
             <Route path="/" exact component={PageAcceuil} classes={classes} />
-            <Route default path="/about" exact component={PageAbout} classes={classes} />
+            <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <Route path="/admin" exct component={PageAdmin} classes={classes} />
@@ -189,8 +217,8 @@ class App extends React.Component {
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />
             <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
-            <Route path="/error/email" component={PageErrorEmail} />
-            <Route path="/error/notConnected" component={PageErrorLogin} />
+            <ProtectedErrorEmail path="/error/email" component={PageErrorEmail} />
+            <ProtectedErrorConected path="/error/notConnected" component={PageErrorLogin} />
             <Route path="/error/page404" component={PageError404} classes={classes} />
             <Route path="*" component={PageError404} classes={classes} />
           </Switch>

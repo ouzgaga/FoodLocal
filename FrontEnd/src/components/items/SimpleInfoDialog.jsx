@@ -32,8 +32,6 @@ class SimpleInfoDialog extends React.Component {
   render() {
     const { open, handleClose, title, text } = this.props;
 
-    
-
     return (
       <div>
         <Dialog

@@ -24,6 +24,7 @@ import PersonalDescription from '../src/components/accouontCRUD/PersonalDescript
 import TableProducerItem from '../src/components/admin/TableProducerItem';
 import BorderedCountField from '../src/components/items/fields/BorderedCountField';
 import DropZone from '../src/components/items/DropZone';
+import BadgeMax from '../src/components/items/BadgeMax';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -243,3 +244,14 @@ storiesOf('DropZone', module)
   .add('Dropzone', () => (
     <DropZone />
   ));
+
+storiesOf('NotificationBagde', module)
+.add('No notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('10 notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('> max value (99)', () => (
+  <BadgeMax value={100} />
+));

@@ -66,7 +66,7 @@ class MyLogin extends React.Component {
   }
 
   componentDidMount(){
-    // TODO
+    
   } 
 
   handleChange = prop => (event) => {

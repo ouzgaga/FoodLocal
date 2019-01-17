@@ -52,12 +52,8 @@ ReactDOM.render(
       <MuiThemeProvider theme={Theme}>
         <SnackbarProvider
           maxSnack={3}
-          action={[
-            <Button size="small">Close</Button>
-          ]}
-          onClickAction={() => alert('Clicked on my action button.')}
         >
-          <AuthProvider>
+          <AuthProvider >
             <App />
           </AuthProvider>
         </SnackbarProvider>

@@ -76,8 +76,6 @@ class MenuAppBar extends React.Component {
             userStatus ? (
               
               <MenuEpantion readOnly tabIndex="-1" color="inherit" id="MenuEpantion" onClick={this.handleClickDrawer}/>
-              
-
             ) : (
               <>
                 <Button color="inherit" id="registerButton" onClick={this.handleClickDrawer('newAccountOpen')}>
