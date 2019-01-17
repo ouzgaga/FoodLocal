@@ -31,7 +31,7 @@ function getAllRatingsAboutProducerWithId(producerId) {
  * @param producerId, l'id du producteur concerné par le rating qu'on souhaite récupérer.
  * @returns {*}
  */
-async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { limit = 30, page = 0 } = {}) {
+function getRatingAboutProducerIdMadeByPersonId(producerId, personId) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     throw new Error('Received personRatingProducer.producerId is invalid!');
   }
@@ -39,16 +39,8 @@ async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { li
     throw new Error('Received personRatingProducer.personId is invalid!');
   }
 
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
-  const res = await PersonRatingProducersModel.findOne({ producerId, personId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
-  return res;
+  return PersonRatingProducersModel.findOne({ producerId, personId })
+    .sort({ _id: 1 });
 }
 
 /**
