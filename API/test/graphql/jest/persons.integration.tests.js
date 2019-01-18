@@ -54,42 +54,58 @@ describe('Testing graphql request persons', () => {
       const { mutation } = {
         mutation: `
     mutation($producerId: ID!, $followerId: ID!) {
-  addFollowerToProducer(producerId: $producerId, followerId: $followerId) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      firstname
-      lastname
-      email
-    }
-    emailValidated
-    isAdmin
-    __typename
-  }
-}`
+      addFollowerToProducer(producerId: $producerId, followerId: $followerId) {
+        firstname
+        lastname
+        email
+        image
+        followingProducers {
+          edges{
+            node{
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+        emailValidated
+        isAdmin
+        __typename
+      }
+    }`
       };
 
       const { queryGetProducerById } = {
         queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
+    query($id: ID!){
+      producer(producerId: $id){
         firstname
         lastname
         email
         image
         followingProducers{
-          firstname
-          lastname
-          email
+          edges {
+            node {
+              id
+              firstname
+              lastname
+              email
+              image
+            }
+          }
         }
         emailValidated
         isAdmin
         followers{
-          firstname
-          lastname
-          email
+          edges{
+            node{
+              id
+              firstname
+              lastname
+              email
+              image
+            }
+          }
         }
         phoneNumber
         description
@@ -139,18 +155,15 @@ describe('Testing graphql request persons', () => {
         }
         isValidated
         products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
+          edges{
+            node{
+              id
+              description
+              productType{
+                id
+                name
+                image
+              }
             }
           }
         }
@@ -261,16 +274,20 @@ describe('Testing graphql request persons', () => {
 
       const { mutation } = {
         mutation: `
-    mutation($producerId: ID!, $followerId: ID!) {
+mutation($producerId: ID!, $followerId: ID!) {
   removeFollowerToProducer(producerId: $producerId, followerId: $followerId) {
     firstname
     lastname
     email
     image
     followingProducers {
-      firstname
-      lastname
-      email
+      edges{
+        node{
+          firstname
+          lastname
+          email
+        }
+      }
     }
     emailValidated
     isAdmin
@@ -281,93 +298,109 @@ describe('Testing graphql request persons', () => {
 
       const { queryGetProducerById } = {
         queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($producerId: ID!) {
+  producer(producerId: $producerId) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        emailValidated
-        isAdmin
-        followers{
+      }
+    }
+    emailValidated
+    isAdmin
+    followers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      edges {
+        node {
           description
-          productType{
+          productType {
             name
             image
-            category{
+            category {
               name
               image
             }
-            producers{
-              firstname
-              lastname
-              email
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
           }
         }
-        rating{
-          nbRatings
-          rating
-        }
       }
-    }`
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}`
       };
 
       it('should remove a follower from a producer', async(done) => {

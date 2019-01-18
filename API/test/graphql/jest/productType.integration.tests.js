@@ -26,21 +26,37 @@ describe('Testing graphql request productType', () => {
     describe('Testing productTypes()', () => {
       it('should get all productTypes', async(done) => {
         const { query } = {
-          query: `query{
-  productTypes{
-    name
-    image
-    category{
-      name
-      image
+          query: `query {
+  productTypes {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
     }
-    producers{
-      firstname
-      lastname
-      email
+    edges {
+      node {
+        name
+        image
+        category {
+          name
+          image
+        }
+        producers {
+         edges{
+          node{
+            firstname
+            lastname
+            email
+          }
+         }
+        }
+      }
+      cursor
     }
   }
-}`
+}
+`
         };
         const result = await graphql(schema, query, null, null, null);
         expect.assertions(1);
@@ -52,21 +68,26 @@ describe('Testing graphql request productType', () => {
     // ----------------------productType(productTypeId: ID!)-------------------------------------- //
     describe('Testing productType(productTypeId: ID!)', () => {
       const { query } = {
-        query: `query ($productTypeId: ID!){
-  productType(productTypeId: $productTypeId){
+        query: `query($productTypeId: ID!) {
+  productType(productTypeId: $productTypeId) {
     name
     image
-    category{
+    category {
       name
       image
     }
-    producers{
-      firstname
-      lastname
-      email
+    producers {
+      edges {
+        node {
+          firstname
+          lastname
+          email
+        }
+      }
     }
   }
-}`
+}
+`
       };
 
       it('should get a productType by id', async(done) => {
@@ -110,7 +131,8 @@ describe('Testing graphql request productType', () => {
     // ----------------------productTypesOfCategory(productTypeCategoryId: ID!)-------------------------------------- //
     describe('Testing productTypesOfCategory(productTypeCategoryId: ID!)', () => {
       const { query } = {
-        query: `query ($productTypeCategoryId: ID!){
+        query:
+`query ($productTypeCategoryId: ID!){
   productTypesOfCategory(productTypeCategoryId: $productTypeCategoryId) {'
     name
     image
@@ -155,12 +177,13 @@ describe('Testing graphql request productType', () => {
       beforeEach(() => clearAndPopulateDB());
 
       const { mutation } = {
-        mutation: `mutation($productType: ProductTypeInputAdd!) {
-                     addProductType(productType: $productType) {
-                       name
-                       image
-                     }
-                   }`
+        mutation:
+`mutation($productType: ProductTypeInputAdd!) {
+   addProductType(productType: $productType) {
+     name
+     image
+   }
+ }`
       };
 
       it('should add a new productType', async(done) => {
@@ -268,12 +291,13 @@ describe('Testing graphql request productType', () => {
       beforeEach(() => clearAndPopulateDB());
 
       const { mutation } = {
-        mutation: `mutation($productType: ProductTypeInputUpdate!) {
-     updateProductType(productType: $productType) {
-       name
-       image
-     }
-   }`
+        mutation:
+`mutation($productType: ProductTypeInputUpdate!) {
+   updateProductType(productType: $productType) {
+     name
+     image
+   }
+ }`
       };
 
       it('should update a productType', async(done) => {
@@ -400,12 +424,13 @@ describe('Testing graphql request productType', () => {
       beforeEach(() => clearAndPopulateDB());
 
       const { mutation } = {
-        mutation: `mutation($productTypeId: ID!) {
-     deleteProductType(productTypeId: $productTypeId) {
-       name
-       image
-     }
-   }`
+        mutation:
+`mutation($productTypeId: ID!) {
+   deleteProductType(productTypeId: $productTypeId) {
+     name
+     image
+   }
+ }`
       };
 
       it('should delete a productType', async(done) => {
