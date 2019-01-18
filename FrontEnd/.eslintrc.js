@@ -21,6 +21,7 @@ module.exports = {
     'no-return-assign'               : 'off',
     'no-undef'                       : 'off',
     'react/no-multi-comp'                  : 'off',
+    'no-confusing-arrow': 'off',
   }
 
 };

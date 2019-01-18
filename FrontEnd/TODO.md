@@ -30,4 +30,4 @@ PAUL
 
 Traintement d'erreur (token confirmation page)
 Clear l'erreur de consumer state Authentification
-get le props depuis ...rest
+get le props depuis ...rest  => rest.nom

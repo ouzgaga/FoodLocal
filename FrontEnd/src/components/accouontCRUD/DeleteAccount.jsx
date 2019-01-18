@@ -121,7 +121,7 @@ class DeleteAccount extends Component {
                         annuler
                       </Button>
                       <Button
-                        type="submit" 
+                        type="button" 
                         color="primary"
                         autoFocus
                         id="delete-account-button-dialog" 

@@ -33,12 +33,16 @@ const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('token');
   // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      "x-token": token ? token : "",
-    }
-  };
+  return (token ? {
+      headers: {
+        ...headers,
+        "token": token,
+      }
+    }:{
+      headers: {
+        ...headers,
+      }
+    });
 });
 
 const client = new ApolloClient({
@@ -53,7 +57,7 @@ ReactDOM.render(
         <SnackbarProvider
           maxSnack={3}
         >
-          <AuthProvider >
+          <AuthProvider>
             <App />
           </AuthProvider>
         </SnackbarProvider>

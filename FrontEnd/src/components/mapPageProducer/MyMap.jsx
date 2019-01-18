@@ -36,6 +36,7 @@ const styles = {
     backgroundColor: '#66CCCC',
   },
 };
+
 const myIcon = L.icon({
   iconUrl: MarkerCarotte,
   iconSize: [40, 40],

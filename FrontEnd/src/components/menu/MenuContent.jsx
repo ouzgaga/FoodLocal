@@ -108,7 +108,7 @@ function MenuContent(props) {
       <Link to="/myWall" className={classes.LinkButton}>
         <MenuItem button>
           <ListItemIcon>
-            <BadgeMax value={10} />
+            <BadgeMax value={0} />
             {/* TODO: icone */}
           </ListItemIcon>
           <ListItemText primary="Mon mur" />

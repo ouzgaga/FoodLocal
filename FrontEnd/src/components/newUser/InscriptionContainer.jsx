@@ -30,7 +30,7 @@ class MutExec extends React.Component {
       <div>
         {loading && <p>Chargement...</p>}
         {error && <p>Une erreur est survenur, veuillez essayer plus tard</p>}
-        {data && (<>{children}</>) }
+        {data && (<>{children}</>)}
       </div>
     );
   }
@@ -156,7 +156,7 @@ class InscriptionContainer extends React.Component {
 
   queryEmailExist = (email) => {
     const { client } = this.props;
-    return client.query({ query: queryCheckEmail, variables: { email }, option: { fetchPolicy: 'network-only' }}).then(
+    return client.query({ query: queryCheckEmail, variables: { email }, option: { fetchPolicy: 'network-only' } }).then(
       (data) => {
         if (data) {
           return data.data.checkIfEmailIsAvailable;
@@ -276,17 +276,17 @@ class InscriptionContainer extends React.Component {
                         </MutExec>
                       )}
                     </Mutation>
-  
-                      <Button
-                        onClick={onValidate}
-                        variant="contained"
-                        className={classes.button}
-                        color="primary"
-                      >
-                        {'fermer'}
-                      </Button>
+
+                    <Button
+                      onClick={onValidate}
+                      variant="contained"
+                      className={classes.button}
+                      color="primary"
+                    >
+                      {'fermer'}
+                    </Button>
                   </>
-                    ) : (
+                ) : (
                     <React.Fragment>
                       {this.getStepContent(activeStep)}
 
@@ -335,21 +335,21 @@ class InscriptionContainer extends React.Component {
                         </Button>
                       </div>
                     </React.Fragment>
-                    )}
+                  )}
               </React.Fragment>
             </form>
           </div>
         </main>
       </React.Fragment >
-          );
-        }
-      }
-      
+    );
+  }
+}
+
 InscriptionContainer.propTypes = {
-            classes: PropTypes.object.isRequired,
-        };
-        
-        export default compose(
-          withApollo,
-          withStyles(styles)
-        )(InscriptionContainer);
+  classes: PropTypes.object.isRequired,
+};
+
+export default compose(
+  withApollo,
+  withStyles(styles)
+)(InscriptionContainer);

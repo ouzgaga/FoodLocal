@@ -91,78 +91,74 @@ const ProtectedUserRoute = ({ component: Component, ...rest }) => (
 const ProtectedProducerRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userStatus, userToken }) => {
-            console.info("daym", userToken);
-            if (userStatus === 'producers') { // Connecté mais pas d'email validé
-              return <Component {...params} />;
-            } 
-            // pas connecté
-            return (<Redirect to="/error/page404" />);
-          }}
-        </AuthContext>
-      )}
+    render={params => (
+      <AuthContext>
+        {({ userStatus, userToken }) => {
+          console.info("daym", userToken);
+          if (userStatus === 'producers') { // Connecté mais pas d'email validé
+            return <Component {...params} />;
+          }
+          // pas connecté
+          return (<Redirect to="/error/page404" />);
+        }}
+      </AuthContext>
+    )}
   />
 )
 
 const ProtectedAdminRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ isAdmin }) => isAdmin
-            ? <Component {...params} />
-            : <Redirect to="/" />}
-        </AuthContext>
-      )}
+    render={params => (
+      <AuthContext>
+        {({ isAdmin }) => isAdmin
+          ? <Component {...params} />
+          : <Redirect to="/" />}
+      </AuthContext>
+    )}
   />
 )
 
 const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
-            ? <Redirect to="/error/email" />
-            : <Component {...params} />
-          }
-        </AuthContext>
-      )}
+    render={params => (
+      <AuthContext>
+        {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
+          ? <Redirect to="/error/email" />
+          : <Component {...params} />
+        }
+      </AuthContext>
+    )}
   />
 )
 
 const ProtectedErrorConected = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userToken }) => userToken
-            ? <Redirect to="/map" />
-            : <Component {...params} />
-          }
-        </AuthContext>
-      )}
+    render={params => (
+      <AuthContext>
+        {({ userToken }) => userToken
+          ? <Redirect to="/map" />
+          : <Component {...params} />
+        }
+      </AuthContext>
+    )}
   />
 )
 
 const ProtectedErrorEmail = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userEmailValidated }) => !userEmailValidated
-            ? <Redirect to="/map" />
-            : <Component {...params} />
-          }
-        </AuthContext>
-      )}
+    render={params => (
+      <AuthContext>
+        {({ userEmailValidated }) => !userEmailValidated
+          ? <Redirect to="/map" />
+          : <Component {...params} />
+        }
+      </AuthContext>
+    )
+    }
   />
 )
 
@@ -179,28 +175,25 @@ class App extends React.Component {
   render() {
     const { classes } = this.props;
 
-    
- const ProtectedUserRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userEmailValidated, userToken }) => {
-            if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
-            
-              return (<Redirect to="/error/email" />);
-            } else if (userToken && userEmailValidated) { // Connecté et email validé
-              return <Component {...params} />;
-            }
-            // pas connecté
-            this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
-            return (<Redirect to="/error/notConnected" />);
-          }}
-        </AuthContext>
-      )}
-  />
-)
+
+    const ProtectedUserRoute = ({ component: Component, ...rest }) => (
+      <Route
+        {...rest}
+        render={params => (
+          <AuthContext>
+            {({ userEmailValidated, userToken }) => {
+              if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
+                return (<Redirect to="/error/email" />);
+              }
+              if (userToken && userEmailValidated) { // Connecté et email validé
+                return <Component {...params} />;
+              }
+              return (<Redirect to="/error/notConnected" />);
+            }}
+          </AuthContext>
+        )}
+      />
+    )
 
     return (
       <div className={classes.root}>
@@ -217,7 +210,7 @@ class App extends React.Component {
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />
             <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
-            <ProtectedErrorEmail path="/error/email" component={PageErrorEmail} />
+            <Route path="/error/email" component={PageErrorEmail} />
             <ProtectedErrorConected path="/error/notConnected" component={PageErrorLogin} />
             <Route path="/error/page404" component={PageError404} classes={classes} />
             <Route path="*" component={PageError404} classes={classes} />
@@ -234,28 +227,3 @@ App.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(App));
-
-
-/*
-class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider theme={Theme}>
-        <div className="App" >
-          <Header theme={Theme} />
-          <div className="container">
-            <div className="map">
-              <MyMap listProducers={tileData} />
-            </div>
-            <div className="listProducer">
-              <Search />
-            </div>
-          </div>
-        <Footer/>
-        </div>
-      </MuiThemeProvider>
-    );
-  }
-}
-export default App;
-*/

@@ -106,7 +106,7 @@ class PagePersonalInformations extends React.Component {
       <div className={classes.root}>
         <AuthContext>
           {({ userId, userStatus, userToken }) => {
-            return (userStatus === 'producers' 
+            return (userStatus === 'producers'
               ? producerSettings(userId, userStatus, userToken)
               : userSettings(userId, userStatus, userToken));
           }

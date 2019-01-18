@@ -48,12 +48,16 @@ class AuthProvider extends React.Component {
       signIn: this.signIn,
       signOut: this.signOut,
       //renewToken: this.renewToken,
-      resetError: this.setState({error: null}),
+      clearError: this.clearError,
     };
   }
 
+  clearError = () => {
+    this.setState({error: null});
+  }
 
-  componentWillMount() {
+
+  componentDidMount() {
     const token = window.localStorage.getItem('token');
     console.log(token);
     if(token) this.addState(token);
@@ -99,7 +103,7 @@ class AuthProvider extends React.Component {
 
   signIn = async ({ userMail, password }) => {
     const { client } = this.props;
-
+    console.log({ userMail, password });
     return client.mutate({ mutation: mutLogin, variables: { email: userMail, password: password } }).then(
       (data) => {
         console.log(data);
