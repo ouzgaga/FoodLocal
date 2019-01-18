@@ -66,7 +66,3 @@ Reste à faire:
       }
   }
   ```
-
-  
-
-- Merge le addProducerRating et le updateProducerRating en un seul addOrUpdateProducerRating qui met a jour un rating s'il existe déjà et le crée sinon (avec insert dans le findAndUpdate...?)
