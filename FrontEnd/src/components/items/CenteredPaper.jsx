@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 
 const styles = {
   paper: {
-    maxWidth: 600,
+    maxWidth: 900,
     width: '100%',
     margin: 'auto',
     marginTop: 100,

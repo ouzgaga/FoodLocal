@@ -3,6 +3,18 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
   },
   palette: {
     primary: {
@@ -11,6 +23,7 @@ const theme = createMuiTheme({
     secondary: {
       main: '#66cc99',
     },
+    validate: '#64dd17',
   },
   overrides: {
     MuiOutlinedInput: {

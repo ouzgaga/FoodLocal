@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import logo from '../img/LogoCarrote.png';
+import { Dialog, DialogContent } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    height: '100vh -64'
-
+    height: 100,
+    width: 100
   },
   wrapper: {
     margin: theme.spacing.unit,
@@ -39,12 +40,20 @@ const styles = theme => ({
 function CircularIndeterminate(props) {
   const { classes } = props;
   return (
-    <div className={classes.root}>
-      <div className={classes.wrapper}>
-        <img src={logo} className={classes.imgLogo} alt="logo" readOnly tabIndex="-1" />
-        <CircularProgress size={100} className={classes.fabProgress} />
-      </div>
-    </div>
+    <Dialog open>
+      <DialogContent>
+        <div className={classes.root}>
+          <div className={classes.wrapper}>
+            <img src={logo} className={classes.imgLogo} alt="logo" readOnly tabIndex="-1" />
+            <CircularProgress size={100} className={classes.fabProgress} />
+          </div>
+        </div>
+      </DialogContent>
+
+    </Dialog>
+
+
+
   );
 }
 

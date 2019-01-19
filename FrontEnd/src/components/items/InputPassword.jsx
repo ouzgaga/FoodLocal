@@ -37,7 +37,7 @@ class InputPassword extends React.Component {
     const { classes, label, required, onChange, id, value } = this.props;
     const { showPassword } = this.state;
     return (
-      <React.Fragment> 
+      <React.Fragment>
         <FormControl margin="normal" required={required} fullWidth>
           <InputLabel htmlFor="password">{label}</InputLabel>
           <Input
@@ -47,6 +47,7 @@ class InputPassword extends React.Component {
             type={showPassword ? 'text' : 'password'}
             id={id}
             autoComplete="current-password"
+            fullWidth
             endAdornment={(
               <InputAdornment position="end">
                 <IconButton
@@ -76,6 +77,7 @@ InputPassword.propTypes = {
   required: PropTypes.bool,
   id: PropTypes.string,
   value: PropTypes.string,
+  fullWidth: PropTypes.bool,
 };
 
 InputPassword.defaultProps = {
@@ -83,7 +85,7 @@ InputPassword.defaultProps = {
   required: false,
   id: 'password',
   value: '',
-
+  fullWidth: false,
 };
 
 export default withStyles(styles)(InputPassword);

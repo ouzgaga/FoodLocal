@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
@@ -10,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { IncriptionProducerContext } from './InscriptionProducer';
 
-const styles = theme => ({
+const styles = ({
   root: {
     width: 600,
   },
@@ -90,4 +91,8 @@ class ProductsDescriptionForm extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(ProductsDescriptionForm);
+ProductsDescriptionForm.propTypes = {
+  classes: PropTypes.shape().isRequired,
+};
+
+export default withStyles(styles)(ProductsDescriptionForm);

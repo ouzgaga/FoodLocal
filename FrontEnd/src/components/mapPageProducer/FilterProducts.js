@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -22,7 +23,7 @@ import Loading from '../Loading';
 
 const GET_PRODUCTS_CATEGORIES = gql`
 query {
-  productTypeCategories {
+  productTypeCategories(first:10) {
     edges {
       node {
         id
@@ -33,15 +34,6 @@ query {
   }
 }
 `;
-
-const GET_NUMBER_OF_PRODUCTS_TYPE = gql`
-query($productTypeCategoryId: ID!) {
-  productTypesOfCategory(productTypeCategoryId: $productTypeCategoryId, first:3) {
-    totalCount
-  }
-}
-`;
-
 
 const GET_PRODUCTS_TYPES_OF_CATEGORY = gql`
   query ($productTypeCategoryId: ID!, $first:Int) {
@@ -58,19 +50,11 @@ const GET_PRODUCTS_TYPES_OF_CATEGORY = gql`
 `;
 
 const styles = {
-  map: {
-    backgroundColor: '#CCCCCC',
-    position: 'sticky',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 'calc(100vh - 114px)',
-  },
   filterBar: {
-    backgroundColor: '#FFFFFF',
-    height: 50,
-    width: '100%',
-    borderBottom: '1px solid grey',
+    zIndex: 3000,
+    top: 10,
+    left: 50,
+    position: 'absolute',
   },
   filters: {
     paddingTop: 8,
@@ -91,8 +75,9 @@ const styles = {
     padding: '30px 0px',
     overflowX: 'hidden',
   },
-  margin: {
+  button: {
     marginLeft: 10,
+    backgroundColor: '#FFFFFF',
   }
 };
 
@@ -136,13 +121,15 @@ class FilerProducts extends React.Component {
   };
 
   // ferme le pop-up des filtres de distance
-  handleCloseFiltersProductsDistance = (event) => {
+  handleCloseFiltersProductsDistance = () => {
     this.setState({ openFiltresDistance: false });
   };
 
   handleCloseFiltersProductsDistanceWithValue = (event) => {
+    const { changeMaxDistance } = this.props;
+    const { distance } = this.state;
     event.preventDefault();
-    this.props.changeMaxDistance(this.state.distance);
+    changeMaxDistance(distance);
     this.handleClickOpenFiltersDistance();
   };
 
@@ -158,12 +145,14 @@ class FilerProducts extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { fullScreen } = this.props;
-    const { value, distance } = this.state;
     const {
-      products, addProduct, removeProduct, maxDistance, changeMaxDistance
+      classes, fullScreen, products, addProduct, removeProduct, maxDistance, changeMaxDistance
     } = this.props;
+
+    const {
+      value, distance, openFiltresDistance, openFiltresProducts
+    } = this.state;
+
     return (
 
       <div className={classes.filterBar}>
@@ -171,17 +160,17 @@ class FilerProducts extends React.Component {
         <div className={classes.filters}>
           {products.length === 0
             ? (
-              <Button onClick={this.handleClickOpenFiltersProducts} variant="outlined" size="small" className={classes.margin}>
+              <Button onClick={this.handleClickOpenFiltersProducts} variant="outlined" size="large" className={classes.button}>
                 {'Produits'}
               </Button>
             )
             : (
-              <Button onClick={this.handleClickOpenFiltersProducts} variant="contained" size="small" className={classes.margin} color="primary">
+              <Button onClick={this.handleClickOpenFiltersProducts} variant="contained" size="large" className={classes.button} color="primary">
                 {`Produits : ${products.length}`}
               </Button>
             )}
 
-          <Button onClick={this.handleClickOpenFiltersDistance} variant="outlined" size="small" className={classes.margin}>
+          <Button onClick={this.handleClickOpenFiltersDistance} variant="outlined" size="large" className={classes.button}>
             {`Distance : ${maxDistance === 100 ? 'Max' : `${maxDistance}km`} `}
           </Button>
 
@@ -191,7 +180,7 @@ class FilerProducts extends React.Component {
           fullScreen={fullScreen}
           fullWidth
           maxWidth={false}
-          open={this.state.openFiltresProducts}
+          open={openFiltresProducts}
           onClose={this.handleCloseFiltersProducts}
           aria-labelledby="responsive-dialog-title"
         >
@@ -265,7 +254,7 @@ class FilerProducts extends React.Component {
                             </Card>
                             <div className={classes.paper}>
                               <Typography className={classes.typo} variant="body1" gutterBottom>
-                                {node.name}
+                                {node.id}
                               </Typography>
                             </div>
                           </Grid>
@@ -287,7 +276,7 @@ class FilerProducts extends React.Component {
 
         <Dialog
           fullScreen={fullScreen}
-          open={this.state.openFiltresDistance}
+          open={openFiltresDistance}
           onClose={this.handleCloseFiltersProductsDistance}
         >
           <DialogTitle>Distance de recherche</DialogTitle>
@@ -314,5 +303,15 @@ class FilerProducts extends React.Component {
     );
   }
 }
+
+FilerProducts.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  fullScreen: PropTypes.shape().isRequired,
+  products: PropTypes.shape().isRequired,
+  maxDistance: PropTypes.number.isRequired,
+  addProduct: PropTypes.func.isRequired,
+  removeProduct: PropTypes.func.isRequired,
+  changeMaxDistance: PropTypes.func.isRequired,
+};
 
 export default withStyles(styles)(withMobileDialog()(FilerProducts));
