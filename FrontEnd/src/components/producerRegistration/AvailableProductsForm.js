@@ -133,13 +133,15 @@ class AvailableProductsForm extends Component {
 
                             <Card className={classes.media} style={{ margin: '0 auto' }}>
 
-                              {has(values.items, product) ? (
-                                <CardActionArea onClick={removeItem(product)}>
+                              {has(values.items, product)
+                                ? (
+                                  <CardActionArea onClick={removeItem(product)}>
 
-                                  <CardMedia className={classes.media2} image={product.image} title={product.name} />
-                                </CardActionArea>
+                                    <CardMedia className={classes.media2} image={product.image} title={product.name} />
+                                  </CardActionArea>
 
-                              ) : (
+                                )
+                                : (
                                   <CardActionArea onClick={addItem(product)}>
                                     <CardMedia className={classes.media} image={product.image} title={product.name} />
                                   </CardActionArea>
@@ -175,7 +177,7 @@ class AvailableProductsForm extends Component {
                 </Grid>
               </Grid>
             </div>
-          )}
+        )}
       </IncriptionProducerContext>
     );
   }

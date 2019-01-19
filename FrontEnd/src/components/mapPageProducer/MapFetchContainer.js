@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import MyMap from './MyMap';
-
 import './PageMap.css';
 import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
-import Search from './Search';
 import MainMap from './MainMap';
 
 const styles = ({
@@ -28,6 +20,7 @@ const styles = ({
   },
 });
 
+// Retourne les producteurs selon les filtres donnés
 const GET_PRODUCERS_BY_LOCATION = gql`
 query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: String) {
   geoFilterProducers(locationClient: $locationClient, byProductTypeIds: $byProductTypeIds, first:100, after: $cursor ) {
@@ -38,20 +31,8 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
         image
         salespoint {
           address {
-            city
             latitude
             longitude
-          }
-        }
-        products {
-          edges {
-            node {
-              productType {
-                id
-                name
-                image
-              }
-            }
           }
         }
       }
@@ -60,21 +41,20 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
 }
 `;
 
+// fonction pour concaténer 2 arrays en éliminant les doublons
 function arrayUnique(array) {
-  console.log(array)
-  var a = array.concat();
-  for(var i=0; i<a.length; ++i) {
-      for(var j=i+1; j<a.length; ++j) {
-          if(a[i].node.id === a[j].node.id)
-              a.splice(j--, 1);
+  const a = array.concat();
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
+      if (a[i].node.id === a[j].node.id) {
+        a.splice(j--, 1);
       }
+    }
   }
-
   return a;
 }
 
 class MapFetchContainer extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -84,7 +64,6 @@ class MapFetchContainer extends React.Component {
         latitude: 46.5333,
         longitude: 6.6667,
       },
-      mapLocation: {},
       maxDistance: 100,
     };
   }
@@ -93,10 +72,6 @@ class MapFetchContainer extends React.Component {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
         userLocation: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        },
-        mapLocation: {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         },
@@ -127,19 +102,9 @@ class MapFetchContainer extends React.Component {
     });
   };
 
-  changeMapLocation = (newLocation) => {
-    console.log(newLocation)
-    this.setState({
-      mapLocation: {
-        latitude: newLocation.center[0],
-        longitude: newLocation.center[1],
-      }
-    });
-  }
-
   render() {
     const { classes } = this.props;
-    const { products, userLocation, mapLocation, maxDistance } = this.state;
+    const { products, userLocation, maxDistance } = this.state;
     return (
       <div className={classes.root}>
 
@@ -151,7 +116,7 @@ class MapFetchContainer extends React.Component {
             data, loading, error, fetchMore
           }) => {
             if (error) return <ErrorLoading />;
-            if (loading && !data.geoFilterProducers) return <Loading />;
+            if (loading) return <Loading />;
 
             const { geoFilterProducers } = data;
             return (
@@ -167,13 +132,12 @@ class MapFetchContainer extends React.Component {
                 entries={geoFilterProducers}
                 onLoadMore={(latitude, longitude) => fetchMore({
                   variables: {
-                    locationClient: { latitude:latitude, longitude:longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) },
+                    locationClient: { latitude, longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) },
                     byProductTypeIds: products,
                   },
                   updateQuery: (prevResult, { fetchMoreResult }) => {
                     const newEdges = fetchMoreResult.geoFilterProducers.edges;
-                    const pageInfo = fetchMoreResult.geoFilterProducers.pageInfo;
-                    console.log(newEdges)
+                    const { pageInfo } = fetchMoreResult.geoFilterProducers;
                     return newEdges.length
                       ? {
                         geoFilterProducers: {
@@ -197,7 +161,6 @@ class MapFetchContainer extends React.Component {
 
 MapFetchContainer.propTypes = {
   classes: PropTypes.shape().isRequired,
-  theme: PropTypes.shape().isRequired,
 };
 
 export default withStyles(styles)(MapFetchContainer);

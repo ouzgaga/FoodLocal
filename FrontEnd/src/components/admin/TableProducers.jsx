@@ -1,63 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroller';
-import { List, ListItem, Card, CardActionArea } from '@material-ui/core';
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-  },
-  table: {
-    minWidth: 500,
-  },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
-});
+import { List, LinearProgress } from '@material-ui/core';
+import TableProducerItem from './TableProducerItem';
+import Loading from '../Loading';
 
 /**
- * Classe pour la table contenant les différente issues
+ * Classe pour la table contenant les différents producteurs
  */
-class TableProducers extends React.Component {
-  render() {
-    if (!this.props.entries && this.props.loading) return <p>Loading....</p>;
-    const producers = this.props.entries.edges || [];
-    console.log(this.props);
-    return (
-      <List>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={() => this.props.onLoadMore()}
-          hasMore={this.props.entries.pageInfo.hasNextPage}
-        >
-          {producers.map(({ node }) => (
-            node.salespoint && (
-              <Card>
-                <CardActionArea>
-                  <ListItem key={node.id}>
-                    <div>{node.isValidated ? 'salut' : 'non'}</div>
-                  </ListItem>
-                </CardActionArea>
-              </Card>
-            )
-          ))
-          }
+function TableProducers(props) {
+  const {
+    entries, loading, onLoadMore
+  } = props;
 
-        </InfiniteScroll>
+  if (!entries && loading) return <Loading />;
+  const producers = entries.edges || [];
+  return (
+    <List>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={() => onLoadMore()}
+        hasMore={entries.pageInfo.hasNextPage}
+      >
+        {producers.map(({ node }) => (
+          node.salespoint && (
+            <TableProducerItem producer={node} />
+          )
+        ))
+        }
 
-        {this.props.loading && <h2>Loading...</h2>}
-      </List>
-    );
-  }
+      </InfiniteScroll>
+
+      {loading && <LinearProgress color="primary" />
+      }
+    </List>
+  );
 }
 
 TableProducers.propTypes = {
-  classes: PropTypes.shape().isRequired,
-  username: PropTypes.string.isRequired,
-  repo: PropTypes.string.isRequired,
-  state: PropTypes.string.isRequired,
+  entries: PropTypes.shape().isRequired,
+  loading: PropTypes.shape().isRequired,
+  onLoadMore: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(TableProducers);
+export default TableProducers;

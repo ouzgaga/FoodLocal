@@ -1,37 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
-import L from 'leaflet';
-import {
-  Map, TileLayer, Marker,
-} from 'react-leaflet';
 import DayScheduleInfo from './DayScheduleInfo';
-
-import MarkerCarotte from '../../img/MarkerCarotte.png';
 import MapLocator from './MapLocator';
 import AddressInfo from './AddressInfo';
 
-const myIcon = L.icon({
-  iconUrl: MarkerCarotte,
-  iconSize: [40, 40],
-  iconAnchor: [20, 37],
-  PopupAnchor: [-20, -20],
-});
-
-
-const styles = theme => ({
-  map: {
-    height: 400,
-  },
-});
-
 function ProducerInformations(props) {
-
   const { classes, data } = props;
-  const { email, website, phoneNumber, salespoint } = data.producer;
+  const {
+    email, website, phoneNumber, salespoint
+  } = data.producer;
   const { name, address, schedule } = salespoint;
   const {
     monday, tuesday, wednesday, thursday, friday, saturday, sunday
@@ -41,9 +20,8 @@ function ProducerInformations(props) {
     longitude, latitude
   } = address;
 
-
   return (
-    <div className={classes.root}>
+    <div>
       <Grid container spacing={24}>
         <Grid item xs={12}>
           <Typography>
@@ -62,6 +40,7 @@ function ProducerInformations(props) {
           <AddressInfo address={address} />
           <br />
 
+          {/* Affichage de l'horaire d'un producter */}
           <Typography color="primary">
             {'Horaires'}
           </Typography>
@@ -74,11 +53,14 @@ function ProducerInformations(props) {
           <DayScheduleInfo dayName="Dimanche" data={sunday} />
 
         </Grid>
-
       </Grid>
     </div>
   );
 }
 
+ProducerInformations.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  data: PropTypes.shape().isRequired,
+};
 
-export default withStyles(styles)(ProducerInformations);
+export default ProducerInformations;

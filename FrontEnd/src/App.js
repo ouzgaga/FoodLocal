@@ -21,7 +21,7 @@ import {
   PageAbout,
   PageMap,
   PageNewAccount,
-  PageAcceuil,
+  PageAccueil,
   PageProducer,
   PageEmailValidation,
   PageError404,
@@ -207,7 +207,7 @@ class App extends React.Component {
         <Header />
         <div className={classes.page} center="xs">
           <Switch>
-            <Route path="/" exact component={PageAcceuil} classes={classes} />
+            <Route path="/" exact component={PageAccueil} classes={classes} />
             <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
@@ -234,28 +234,3 @@ App.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(App));
-
-
-/*
-class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider theme={Theme}>
-        <div className="App" >
-          <Header theme={Theme} />
-          <div className="container">
-            <div className="map">
-              <MyMap listProducers={tileData} />
-            </div>
-            <div className="listProducer">
-              <Search />
-            </div>
-          </div>
-        <Footer/>
-        </div>
-      </MuiThemeProvider>
-    );
-  }
-}
-export default App;
-*/

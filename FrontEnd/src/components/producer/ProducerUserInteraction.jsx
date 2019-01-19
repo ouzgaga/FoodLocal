@@ -1,16 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
+import { Hidden } from '@material-ui/core';
 import UserContext from '../UserContext';
-
 import RatingItem from '../items/RatingItem';
 import SimpleInfoDialog from '../items/SimpleInfoDialog';
-import { Hidden } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -130,7 +127,7 @@ class ProducerUserInteraction extends React.Component {
 
     return (
       <div className={classes.root}>
-        { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté*/}
+        { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté */}
         <SimpleInfoDialog
           open={infoDialogOpen}
           handleClose={this.handleClose.bind(this)}
@@ -140,7 +137,7 @@ class ProducerUserInteraction extends React.Component {
         <Grid container spacing={16} justify="center">
           <Grid container alignItems="center" className={classes.centerBox}>
             <Grid item sm={6} xs={12}>
-            <Grid container alignItems="center" className={classes.centerBox}>
+              <Grid container alignItems="center" className={classes.centerBox}>
 
                 <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
                   {this.displayIfUserFollow()}
@@ -161,10 +158,10 @@ class ProducerUserInteraction extends React.Component {
 
               <Grid container alignItems="center" className={classes.centerBox}>
 
-              <RatingItem
-                onChange={this.handleChangeUserRating}
-                defaultValue={userRating}
-              />
+                <RatingItem
+                  onChange={this.handleChangeUserRating}
+                  defaultValue={userRating}
+                />
               </Grid>
 
               <Grid container alignItems="center" className={classes.centerBox}>
@@ -173,7 +170,6 @@ class ProducerUserInteraction extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-
         </Grid>
       </div>
     );
