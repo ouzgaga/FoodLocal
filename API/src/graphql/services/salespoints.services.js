@@ -98,6 +98,11 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }) {
           foreignField : '_id',
           as : 'products'
         }
+      },
+      {
+        $match: {
+          isValidated: true
+        }
       }
     ]
   );
@@ -194,7 +199,8 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
         $match: {
           productTypeIds: {
             $all: productTypeIdsTab
-          }
+          },
+          isValidated: true
         }
       }
     ]

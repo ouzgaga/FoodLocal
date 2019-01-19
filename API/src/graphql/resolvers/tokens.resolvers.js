@@ -13,7 +13,7 @@ const producerResolvers = {
 
     renewToken: async(parent, args, context) => {
       await isAuthenticated(context.id);
-      return connectionTokenServices.createConnectionToken(context.id, context.email, context.isAdmin, context.kind);
+      return connectionTokenServices.createConnectionToken(context.id, context.email, context.isAdmin, context.kind, context.emailValidated);
     },
 
     signUpAsUser: (parent, args, context) => connectionTokenServices.signUpAsUser(args.newUser),
