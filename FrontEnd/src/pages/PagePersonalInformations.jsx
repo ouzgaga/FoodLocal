@@ -5,24 +5,10 @@ import PersonalInformation from '../components/accouontCRUD/PersonalInformation'
 import PersonalDescription from '../components/accouontCRUD/PersonalDescription';
 import ChangePassword from '../components/accouontCRUD/ChangePassword';
 import BoxWithHeader from '../components/items/BoxWithHeader';
+import DeleteAccount from '../components/accouontCRUD/DeleteAccount';
+import DropZone from '../components/items/DropZone'
+import { AuthContext } from '../components/providers/AuthProvider';
 
-/*
-const GET_REPOSITORY = gql`
-query ($producer:ProducerInputGetAndDelete!) {
-  producer(producer:$producer){
-    firstname
-    lastname
-    email
-    image
-    description
-    rating 
-    totalCountRating
-    subscribedUsers {
-      totalCount
-    }
-  }
-}`;
-*/
 
 const styles = theme => ({
   root: {
@@ -35,10 +21,14 @@ const styles = theme => ({
     justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
+    marginBottom: 70,
   },
 
 });
 
+/**
+ * Page contenant les paramètres utilisateur.
+ */
 class PagePersonalInformations extends React.Component {
 
   constructor(props) {
@@ -46,46 +36,84 @@ class PagePersonalInformations extends React.Component {
     document.title = 'Détails Producteur';
 
     this.state = {
-      //userId: props.match.params.producerId,
+      // userId: props.match.params.producerId,
     };
   }
 
-  /*
-  query = () => {
-    return (
-      <Query query={query}>
-        {({ data, loading, error }) => {
-           if (error) return <ErrorLoading />;
-            if (loading) return <Loading />;
-          return (
-            <MainMap data={data} />
-          );
-        }}
-      </Query>
-    );
-  }
-  */
-
   render() {
     const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
+    const userSettings = (userId, status, token) => (
+      <>
+        <BoxWithHeader
+          header="Image de profil"
+        >
+          <DropZone />
+        </BoxWithHeader>
+      
         <BoxWithHeader
           header="Informations personnels"
         >
-          <PersonalInformation />
+          <PersonalInformation userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Changer de mot de passe"
         >
-          <ChangePassword />
+          <ChangePassword userId={userId} status={status} token={token} />
+        </BoxWithHeader>
+        
+        <BoxWithHeader
+          header="Supprimer votre compte"
+        >
+          <DeleteAccount />
+        </BoxWithHeader>
+      </>
+    );
+
+    const producerSettings = (userId, status, token) => (
+      <>
+      
+        <BoxWithHeader
+          header="Image de profil"
+        >
+          <DropZone />
+        </BoxWithHeader>
+        <BoxWithHeader
+          header="Informations personnels"
+        >
+          <PersonalInformation userId={userId} status={status} token={token} />
+        </BoxWithHeader>
+        <BoxWithHeader
+          header="Changer de mot de passe"
+        >
+          <ChangePassword userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Changer votre description"
         >
-          <PersonalDescription />
+          <PersonalDescription userId={userId} status={status} token={token} />
         </BoxWithHeader>
+    
+        <BoxWithHeader
+          header="Supprimer votre compte"
+        >
+          <DeleteAccount />
+        </BoxWithHeader>
+      </>
+    );
+
+
+    return (
+      <div className={classes.root}>
+        <AuthContext>
+          {({ userId, userStatus, userToken }) => {
+            return (userStatus === 'producers' 
+              ? producerSettings(userId, userStatus, userToken)
+              : userSettings(userId, userStatus, userToken));
+          }
+          }
+        </AuthContext>
+
+
       </div>
     );
   }

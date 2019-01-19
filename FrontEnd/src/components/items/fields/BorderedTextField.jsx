@@ -23,7 +23,7 @@ class BorderedTextField extends Component {
     return (
       <>
         <TextField
-          id={`BorderedTextFiel-${id}`}
+          id={`BorderedTextField-${id}`}
           className={classes.textField}
           defaultValue={defaultValue}
           variant="outlined"

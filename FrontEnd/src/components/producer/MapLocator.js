@@ -1,11 +1,9 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-
+import PropTypes from 'prop-types';
 import L from 'leaflet';
 import {
-  Map, TileLayer, Marker,
+  Map, TileLayer, Marker, CircleMarker
 } from 'react-leaflet';
-import DayScheduleInfo from './DayScheduleInfo';
 
 import MarkerCarotte from '../../img/MarkerCarotte.png';
 
@@ -18,13 +16,16 @@ const myIcon = L.icon({
 
 function MapLocator(props) {
   const {
-    longitude, latitude, height
+    longitude, latitude, height, userLocation
   } = props;
 
   return (
-    <Map key="map" style={{ height }} center={[latitude, longitude]} zoom={15}>
+    <Map key="map" style={{ height }} center={[latitude, longitude]} zoom={13}>
 
-      <Typography>{height}</Typography>
+      {userLocation
+        && <CircleMarker center={[userLocation.latitude, userLocation.longitude]} />
+      }
+
       <TileLayer
         key="tileLayer"
         attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -35,5 +36,11 @@ function MapLocator(props) {
   );
 }
 
+MapLocator.propTypes = {
+  longitude: PropTypes.number.isRequired,
+  latitude: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  userLocation: PropTypes.shape().isRequired,
+};
 
 export default (MapLocator);

@@ -1,20 +1,45 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 import PropTypes from 'prop-types';
+
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
+
+// Pour décoder le token
+let jwtDecode = require('jwt-decode');
+
 
 const {
   Provider: AuthContextProvider,
   Consumer: AuthContext,
 } = React.createContext();
 
-class AuthProvider extends Component {  
+
+const mutLogin = gql`
+  mutation ($email: String!, $password: String!){
+    login(email:$email, password:$password){
+      token
+    }
+  }
+  `;
+
+const mutRelog = gql`
+  mutation{
+    renewToken{
+      token
+    }
+  }
+  `;
+
+class AuthProvider extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      userId: null,
       userMail: null,
       userStatus: null,
       isAdmin: false,
+      userEmailValidated: false,
       userToken: null,
 
 
@@ -22,49 +47,81 @@ class AuthProvider extends Component {
 
       signIn: this.signIn,
       signOut: this.signOut,
+      //renewToken: this.renewToken,
+      resetError: this.setState({error: null}),
     };
   }
 
-  componentDidMount(){
+
+  componentWillMount() {
     const token = window.localStorage.getItem('token');
-    if(token){
-      // Récupéréer client.query()
+    console.log(token);
+    if(token) this.addState(token);
+    if (token) {
+      const { client } = this.props;
+      client.mutate({ mutation: mutRelog })
+        .then(
+          (data) => { 
+            this.addState(data.data.renewToken.token);
+            window.localStorage.setItem('token', data.data.renewToken.token);
+            //this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
+          }
+        ).catch(
+          (error) => {
+            console.log("Error relog", error);
+            this.signOut();
+          }
+        );
     }
   }
 
-  signIn = ({ userMail, password }) => {
-    //const { client } = this.props;
-    // TODO: requête user password
+  // Permet de mettre à jour le token
+  renewToken = (token) => {
+    window.localStorage.setItem('token', token);
+    this.addState(token);
+  }
 
-    console.info({ userMail, password });
+  // Décode le token et l'insère dans le state
+  addState = (token) => {
+    const decoded = jwtDecode(token);
+    console.info("token", token);
+    this.setState({
+      userId: decoded.id,
+      userMail: decoded.email,
+      userStatus: decoded.kind,
+      isAdmin: decoded.isAdmin,
+      userEmailValidated: decoded.emailValidated,
+      userToken: token,
 
-    if (password === '1234') {
-      this.setState({
-        error: 'Email ou mot de passe invalide.',
-      });
-    } else {
+      error: null,
+    });
+  }
 
+  signIn = async ({ userMail, password }) => {
+    const { client } = this.props;
 
-      const token = '1234567890';
-      this.setState({
-        userMail: userMail,
-        userStatus: 'admin',
-        userToken: token,
-        error: ''
-      });
-
-      window.localStorage.setItem('token', token);
-    }
+    return client.mutate({ mutation: mutLogin, variables: { email: userMail, password: password } }).then(
+      (data) => {
+        console.log(data);
+        this.addState(data.data.login.token);
+        window.localStorage.setItem('token', data.data.login.token);
+        return true;
+      }
+    ).catch((error) => {
+      console.info(error);
+      this.setState({ error: 'Email ou mot de passe faux' });
+      return false;
+    });
   }
 
   signOut = () => {
-    
+    localStorage.removeItem('token');
+    window.location.reload();
   }
 
 
   render() {
     const { children } = this.props;
-
     return (
       <>
         <AuthContextProvider value={this.state}>
@@ -83,5 +140,6 @@ AuthProvider.defaultProps = {
   children: null,
 };
 
+
 export { AuthContext };
-export default AuthProvider;
+export default withApollo(AuthProvider);

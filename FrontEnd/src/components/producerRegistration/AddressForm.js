@@ -30,6 +30,7 @@ const provider = new OpenStreetMapProvider({
   params: {
     addressdetails: 1,
     countrycodes: 'CH',
+
   },
 });
 
@@ -113,14 +114,14 @@ class AddressForm extends Component {
 
   render() {
     const { classes } = this.props;
+    const { open, results } = this.state;
 
     return (
       <IncriptionProducerContext>
         {({
           values, handleChangeProperty
         }) => (
-
-            <Fragment>
+            <>
               {values.showCompleteAddress
                 ? (
                   <Fragment>
@@ -219,7 +220,8 @@ class AddressForm extends Component {
 
 
                   </Fragment>
-                ) : (
+                )
+                : (
                   <Fragment>
                     <Grid item xs={12}>
                       <Typography className={classes.typo} variant="body1" gutterBottom>
@@ -236,7 +238,7 @@ class AddressForm extends Component {
                         onChange={this.load}
                       />
 
-                      <Popper open={this.state.open} className={classes.popper} transition disablePortal>
+                      <Popper open={open} className={classes.popper} transition disablePortal>
                         {({ TransitionProps, placement }) => (
                           <Grow
                             {...TransitionProps}
@@ -246,7 +248,7 @@ class AddressForm extends Component {
                             <Paper>
                               <ClickAwayListener onClickAway={this.handleClose}>
                                 <MenuList>
-                                  {this.state.results.map(item => (
+                                  {results.map(item => (
                                     <MenuItem key={item.label} onClick={this.chooseItem(item, handleChangeProperty)}>{item.label}</MenuItem>
                                   ))}
                                 </MenuList>
@@ -260,9 +262,8 @@ class AddressForm extends Component {
                   </Fragment>
                 )
               }
-            </Fragment>
-          )
-        }
+            </>
+        )}
       </IncriptionProducerContext>
     );
   }

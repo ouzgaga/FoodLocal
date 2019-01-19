@@ -28,18 +28,25 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Peremt un affichage résponsive dans une tableau à horisontales 2 cases.
+ * Le "title va dans la case de cauche et les enfants dans la case de droite".
+ *    *********
+ *    *  *    *
+ *    *********
+ */
 function BoxLeftRight(props) {
   const { classes, title, children } = props;
 
   return (
     <>
       <Grid container spacing={16}>
-        <Grid item xs={2} container alignItems="center" className={classes.leftBox}>
+        <Grid item xs={3} container alignItems="center" className={classes.leftBox}>
           <Typography>
             {title}
           </Typography>
         </Grid>
-        <Grid item xs={10} container alignItems="center" className={classes.rightBox}>
+        <Grid item xs={9} container alignItems="center" className={classes.rightBox}>
           {children}
         </Grid>
       </Grid>

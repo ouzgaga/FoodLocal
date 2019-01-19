@@ -48,7 +48,7 @@ function InformationsForm(props) {
           />
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="email">Nom de famille</InputLabel>
+          <InputLabel htmlFor="text">Nom de famille</InputLabel>
           <Input
             type="text"
             id="lastNameInput"
@@ -59,7 +59,7 @@ function InformationsForm(props) {
           />
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="email">Prénom</InputLabel>
+          <InputLabel htmlFor="text">Prénom</InputLabel>
           <Input
             type="text"
             id="firstNameInput"
