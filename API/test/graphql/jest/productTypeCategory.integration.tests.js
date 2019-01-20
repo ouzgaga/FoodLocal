@@ -23,7 +23,7 @@ describe('Testing graphql request productTypeCategory', () => {
     // -------------------------productTypeCategories()------------------------------------- //
     describe('Testing productTypeCategories()', () => {
       it('should get all productTypeCategory', async(done) => {
-        const { query } = { query: 'query{ productTypeCategories{ name image } }' };
+        const { query } = { query: 'query{ productTypeCategories{ pageInfo{hasNextPage hasPreviousPage startCursor endCursor}edges {node{id name image }}}}' };
         const result = await graphql(schema, query, null, null, null);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
@@ -83,12 +83,13 @@ describe('Testing graphql request productTypeCategory', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($productTypeCategory: ProductTypeCategoryInputAdd!) {
-                    addProductTypeCategory(productTypeCategory: $productTypeCategory) {
-                      name
-                      image
-                    }
-                  }`
+        mutation:
+`mutation($productTypeCategory: ProductTypeCategoryInputAdd!) {
+  addProductTypeCategory(productTypeCategory: $productTypeCategory) {
+    name
+    image
+  }
+}`
       };
 
       it('should add a new productTypeCategory', async(done) => {
@@ -176,12 +177,13 @@ describe('Testing graphql request productTypeCategory', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($productTypeCategory: ProductTypeCategoryInputUpdate!) {
-                      updateProductTypeCategory(productTypeCategory: $productTypeCategory) {
-                        name
-                        image
-                      }
-                    }`
+        mutation:
+`mutation($productTypeCategory: ProductTypeCategoryInputUpdate!) {
+  updateProductTypeCategory(productTypeCategory: $productTypeCategory) {
+    name
+    image
+  }
+}`
       };
 
       it('should update a productTypeCategory', async(done) => {
@@ -284,12 +286,13 @@ describe('Testing graphql request productTypeCategory', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($id: ID!) {
-                    deleteProductTypeCategory(productTypeCategoryId: $id) {
-                      name
-                      image
-                    }
-                  }`
+        mutation:
+`mutation($id: ID!) {
+  deleteProductTypeCategory(productTypeCategoryId: $id) {
+    name
+    image
+  }
+}`
       };
 
       it('should delete a productTypeCategory', async(done) => {
