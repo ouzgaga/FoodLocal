@@ -33,10 +33,6 @@ function getProductTypeCategories({ tags = undefined } = {}) {
  * @param id, un objet contenant l'id de la catégorie de produits à récupérer dans un champ nommé 'id'.
  */
 function getProductTypeCategoryById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received productTypeCategory.id is invalid!');
-  }
-
   return ProductTypeCategoriesModel.findById(id);
 }
 
@@ -62,11 +58,8 @@ function addProductTypeCategory(productTypeCategory) {
  * @param {Integer} productTypeCategory, Les informations de la catégorie de produits à mettre à jour.
  */
 function updateProductTypeCategory(productTypeCategory) {
-  if (!mongoose.Types.ObjectId.isValid(productTypeCategory.id)) {
-    throw new Error('Received productTypeCategory.id is invalid!');
-  }
-
-  return ProductTypeCategoriesModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true }); // retourne l'objet modifié
+  return ProductTypeCategoriesModel.findByIdAndUpdate(productTypeCategory.id, productTypeCategory, { new: true, runValidators: true });
+  // retourne l'objet modifié
 }
 
 /**
@@ -75,9 +68,5 @@ function updateProductTypeCategory(productTypeCategory) {
  * @param {Integer} id, L'id de la catégorie de produits à supprimer.
  */
 function deleteProductTypeCategory(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received productTypeCategory.id is invalid!');
-  }
-
   return ProductTypeCategoriesModel.findByIdAndRemove(id);
 }

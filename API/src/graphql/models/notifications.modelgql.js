@@ -22,7 +22,6 @@ const notificationsSchema = new mongoose.Schema(
     },
     date: {
       type: mongoose.Schema.Types.Date,
-      // FIXME: PAUL: pourquoi le default n'est jamais appelé?!
       default: Date.now,
     },
     producerId: {

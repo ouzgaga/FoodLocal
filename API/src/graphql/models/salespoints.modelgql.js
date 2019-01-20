@@ -68,13 +68,15 @@ addressSchema.index({ location: '2dsphere' });
  */
 const dayScheduleSchema = new mongoose.Schema(
   {
-    // fixme: il faudrait checker que les heures sont valides...
+    // FIXME: il faudrait checker la cohérence des horaires (heure d'ouverture < heure de fermeture, horaire 1 < horaire 2, ....)
     openingHour: {
       type: mongoose.Schema.Types.String,
+      match: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
       required: true
     },
     closingHour: {
       type: mongoose.Schema.Types.String,
+      match: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
       required: true
     }
   }, options

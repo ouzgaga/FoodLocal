@@ -71,21 +71,17 @@ async function updateProducerRating(doc) {
 
   let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(doc.producerId) } },
-    { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
+    { $group: { _id: null, nbRatings: { $sum: 1 }, grade: { $avg: '$rating' } } },
     { $project: { _id: false } }
   ]);
 
   if (rating.length === 0) {
-    rating = rating[0];
-    rating = {
-      rating: null,
-      nbRatings: null
-    };
+    rating = null;
   } else {
     rating = rating[0];
   }
 
-  return ProducersModel.findByIdAndUpdate(doc.producerId, { rating }, { new: true });
+  return ProducersModel.findByIdAndUpdate(doc.producerId, { rating }, { new: true, runValidators: true });
 }
 
 personRatingProducer.post('save', doc => updateProducerRating(doc));

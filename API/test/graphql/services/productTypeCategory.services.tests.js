@@ -83,7 +83,8 @@ describe('tests productTypeCategory services', () => {
       try {
         await productTypeCategoryServices.getProductTypeCategoryById('');
       } catch (err) {
-        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -91,7 +92,8 @@ describe('tests productTypeCategory services', () => {
       try {
         await productTypeCategoryServices.getProductTypeCategoryById(fruits.id + fruits.id);
       } catch (err) {
-        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -140,7 +142,8 @@ describe('tests productTypeCategory services', () => {
         fruits.id = '';
         await productTypeCategoryServices.updateProductTypeCategory(fruits);
       } catch (err) {
-        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -149,7 +152,8 @@ describe('tests productTypeCategory services', () => {
       fruits.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
         await productTypeCategoryServices.updateProductTypeCategory(fruits);
       } catch (err) {
-        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -158,7 +162,8 @@ describe('tests productTypeCategory services', () => {
       fruits.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
         await productTypeCategoryServices.updateProductTypeCategory(fruits);
       } catch (err) {
-        err.message.should.be.equal('Received productTypeCategory.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

@@ -5,7 +5,6 @@ module.exports = {
   deletePostOfProducer
 };
 
-const mongoose = require('mongoose');
 const PostsModel = require('../models/posts.modelgql');
 const notificationsServices = require('./notifications.services');
 
@@ -51,10 +50,6 @@ async function addPostOfProducer(post) {
 }
 
 function deletePostOfProducer(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received personRatingProducer.id is invalid!');
-  }
-
   // FIXME: il faut supprimer les notifications ou les rediriger sur un message type "ce post a été supprimé par son auteur"!
   return PostsModel.findByIdAndRemove(id);
 }

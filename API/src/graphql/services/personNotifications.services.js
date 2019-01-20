@@ -1,12 +1,17 @@
 module.exports = {
+  countUnSeenNotificationsOfPerson,
   getAllNotificationsOfPerson,
   countNbNotificationsOfPerson,
   addNotificationOfPersonForAllPersonIdInArray,
+  setAllPersonNotificationAsSeen,
   setPersonNotificationAsSeen
 };
 
-const mongoose = require('mongoose');
 const PersonsNotificationsModel = require('../models/personNotifications.modelgql');
+
+function countUnSeenNotificationsOfPerson(personId) {
+  return PersonsNotificationsModel.countDocuments({ personId, seen: false });
+}
 
 function getAllNotificationsOfPerson(personId) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
@@ -19,10 +24,6 @@ function countNbNotificationsOfPerson(personId) {
 }
 
 function addNotificationOfPerson(personId, notificationId) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    throw new Error('Received personId is invalid!');
-  }
-
   const personNotificationToAdd = {
     personId,
     notificationId,
@@ -38,10 +39,10 @@ function addNotificationOfPersonForAllPersonIdInArray(personIdArray, notificatio
   return Promise.all(promises);
 }
 
-function setPersonNotificationAsSeen(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received personNotification.id is invalid!');
-  }
+function setAllPersonNotificationAsSeen(personId) {
+  return PersonsNotificationsModel.updateMany({ personId, seen: false }, { seen: true });
+}
 
-  return PersonsNotificationsModel.findByIdAndUpdate(id, { seen: true }, { new: true });
+function setPersonNotificationAsSeen(id) {
+  return PersonsNotificationsModel.findByIdAndUpdate(id, { seen: true }, { new: true, runValidators: true });
 }

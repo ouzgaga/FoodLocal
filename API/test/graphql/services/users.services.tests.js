@@ -89,7 +89,8 @@ describe('tests users services', () => {
       try {
         await usersServices.getUserById('');
       } catch (err) {
-        err.message.should.be.equal('Received user.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -97,7 +98,8 @@ describe('tests users services', () => {
       try {
         await usersServices.getUserById(benoit.id + benoit.id);
       } catch (err) {
-        err.message.should.be.equal('Received user.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -284,7 +286,8 @@ describe('tests users services', () => {
         benoit.id = '';
         await usersServices.updateUser(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received user.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -293,7 +296,8 @@ describe('tests users services', () => {
         benoit.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
         await usersServices.updateUser(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received user.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -302,7 +306,8 @@ describe('tests users services', () => {
         benoit.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
         await usersServices.updateUser(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received user.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

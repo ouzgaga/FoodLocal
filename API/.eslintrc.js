@@ -13,7 +13,8 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'object-curly-newline': 'off',
     'func-names': 'off',
-    'no-param-reassign': 'off'
+    'no-param-reassign': 'off',
+    'no-await-in-loop': 'off'
   },
   'env': {
     'mocha': true

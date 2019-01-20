@@ -17,7 +17,6 @@ module.exports = {
 };
 
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const PersonsModel = require('../models/persons.modelgql');
@@ -34,10 +33,6 @@ async function isEmailAvailable(emailUser) {
 }
 
 async function checkIfPersonIdExistInDB(personId, isProducer = false) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    throw new Error('Received personId is invalid!');
-  }
-
   const person = await PersonsModel.findById(personId);
   if (isProducer) {
     return person != null && person.kind === 'producers';
@@ -47,10 +42,6 @@ async function checkIfPersonIdExistInDB(personId, isProducer = false) {
 }
 
 function getPersonById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received person.id is invalid!');
-  }
-
   return PersonsModel.findById(id);
 }
 
@@ -93,7 +84,7 @@ function addProducerToPersonsFollowingList(personId, producerId) {
     throw new Error('You can\'t follow yourself!');
   }
 
-  return PersonsModel.findByIdAndUpdate(personId, { $addToSet: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return PersonsModel.findByIdAndUpdate(personId, { $addToSet: { followingProducersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 function removeProducerToPersonsFollowingList(personId, producerId) {
@@ -101,7 +92,7 @@ function removeProducerToPersonsFollowingList(personId, producerId) {
     throw new Error('You can\'t follow yourself!');
   }
 
-  return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 async function changePassword(newPassword, oldPassword, personId) {
@@ -131,7 +122,7 @@ async function changePassword(newPassword, oldPassword, personId) {
 
   // si on arrive ici, alors le nouveau mot de passe est un mot de passe valide.
   person.password = await bcrypt.hash(newPassword, 10);
-  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
+  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true, runValidators: true });
   return updatedPerson != null;
 }
 
@@ -143,7 +134,7 @@ async function resetPassword(email) {
   }
   const password = crypto.randomBytes(20).toString('hex');
   person.password = await bcrypt.hash(password, 10);
-  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true });
+  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true, runValidators: true });
   if (updatedPerson != null) {
     // FIXME: À décommenter pour réellement envoyer les emails!!!!!
     mail.sendMailResetPassword(email, updatedPerson.firstname, updatedPerson.lastname, password);
@@ -182,7 +173,7 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
   }
 
   const producer = await PersonsModel.findByIdAndUpdate(user.id, { kind: 'producers', followersIds: [], productsIds: [], isValidated: false },
-    { new: true, strict: false });
+    { new: true, runValidators: true, strict: false });
 
   const token = await connectionTokenServices.createConnectionToken(producer.id, producer.email, producer.isAdmin, producer.kind, producer.emailValidated);
   return { producer, newLoginToken: token };
@@ -191,7 +182,7 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
 async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
-  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { emailValidated: true }, { new: true }); // retourne l'objet modifié
+  const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { emailValidated: true }, { new: true, runValidators: true }); // retourne l'objet modifié
   return connectionTokenServices.createConnectionToken(updatedPerson.id, updatedPerson.email, updatedPerson.isAdmin, updatedPerson.kind, updatedPerson.emailValidated);
 }
 

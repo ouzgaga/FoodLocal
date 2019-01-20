@@ -127,7 +127,8 @@ describe('tests productType services', () => {
       try {
         await productTypeServices.getProductTypeById('');
       } catch (err) {
-        err.message.should.be.equal('Received productType.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -135,7 +136,8 @@ describe('tests productType services', () => {
       try {
         await productTypeServices.getProductTypeById(productTypePomme.id + productTypePomme.id);
       } catch (err) {
-        err.message.should.be.equal('Received productType.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -469,7 +471,8 @@ describe('tests productType services', () => {
         productTypePomme.id = '';
         await productTypeServices.updateProductType(productTypePomme);
       } catch (err) {
-        err.message.should.be.equal('Received productType.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -478,7 +481,8 @@ describe('tests productType services', () => {
         productTypePomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
         await productTypeServices.updateProductType(productTypePomme);
       } catch (err) {
-        err.message.should.be.equal('Received productType.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -487,7 +491,8 @@ describe('tests productType services', () => {
         productTypePomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
         await productTypeServices.updateProductType(productTypePomme);
       } catch (err) {
-        err.message.should.be.equal('Received productType.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

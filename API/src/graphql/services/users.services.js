@@ -8,7 +8,6 @@ module.exports = {
   getAllUsersInReceivedIdList
 };
 
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users.modelgql');
 const personsServices = require('../services/persons.services');
@@ -37,10 +36,6 @@ function getUsers({ tags = undefined } = {}) {
  * @param {Integer} id, L'id du producteur à récupérer.
  */
 function getUserById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received user.id is invalid!');
-  }
-
   return UsersModel.findById(id);
 }
 
@@ -86,9 +81,6 @@ async function addUser({ firstname, lastname, email, password, image }) {
  * @param {Integer} user, Les informations du producteur à mettre à jour.
  */
 async function updateUser({ id, firstname, lastname, image }) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received user.id is invalid!');
-  }
 
   const userValidation = await UsersModel.findById(id, 'emailValidated isAdmin');
 
@@ -115,7 +107,7 @@ async function updateUser({ id, firstname, lastname, image }) {
     userToUpdate.image = image;
   }
 
-  return UsersModel.findByIdAndUpdate(userToUpdate.id, userToUpdate, { new: true }); // retourne l'objet modifié
+  return UsersModel.findByIdAndUpdate(userToUpdate.id, userToUpdate, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**

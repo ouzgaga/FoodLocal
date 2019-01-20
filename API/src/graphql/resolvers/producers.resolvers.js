@@ -15,7 +15,6 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    // FIXME: PAUL: Comment faire en sorte de bypasser les resolvers ?
     geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
   },
 

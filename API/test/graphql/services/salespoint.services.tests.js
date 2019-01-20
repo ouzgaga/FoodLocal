@@ -260,7 +260,8 @@ describe('tests salespoints services', () => {
       try {
         await salespointsServices.getSalespointById('');
       } catch (err) {
-        err.message.should.be.equal('Received salespoint.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -268,7 +269,8 @@ describe('tests salespoints services', () => {
       try {
         await salespointsServices.getSalespointById(salespointWithoutSchedule.id + salespointWithoutSchedule.id);
       } catch (err) {
-        err.message.should.be.equal('Received salespoint.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
