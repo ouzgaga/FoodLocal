@@ -31,7 +31,7 @@ interface Person {
 	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# tableau contenant tous les producteur que la personne suit
-	followingProducers: ProducerConnection!
+	followingProducers: ProducerConnection! @connection
 	# booléen valant true si l'email a été validé par le membre, false sinon
 	emailValidated: Boolean!
 	isAdmin: Boolean!

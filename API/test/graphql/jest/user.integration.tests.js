@@ -1,10 +1,16 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabUsers } = require('../../populateDatabase');
 
 // Making schema graphql
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    connection: connectionDirective
+  }
+});
 
 let tabUsers;
 

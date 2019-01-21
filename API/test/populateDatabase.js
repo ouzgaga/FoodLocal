@@ -396,6 +396,9 @@ const populateDB = async() => {
       website: 'foodlocal.ch',
     }
   );
+
+  producer3 = await producersServices.validateAProducer(producer3.id, true);
+
   // on ajoute des produits au producteur
   await productsServices.addProduct(tomme, producer3.id);
   await productsServices.addProduct(jusPomme, producer3.id);
@@ -444,7 +447,7 @@ const populateDB = async() => {
   });
 
   // on ajoute un producteur
-  const producer4 = await producersServices.addProducer(
+  let producer4 = await producersServices.addProducer(
     {
       firstname: 'Jérémie',
       lastname: 'Chaton',
@@ -452,6 +455,7 @@ const populateDB = async() => {
       password: '1234abcd'
     }
   );
+  producer4 = await producersServices.validateAProducer(producer4.id, true);
 
   // ------------------------------------------------------------------- ajout de 2 users ----------------------------------------------------------------------
   // on ajoute un utilisateur

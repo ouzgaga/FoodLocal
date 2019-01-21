@@ -1,10 +1,16 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const producersServices = require('../../../src/graphql/services/producers.services');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    connection: connectionDirective
+  }
+});
 
 let tabProducers;
 let tabProductTypes;
@@ -1643,7 +1649,7 @@ query($producerId: ID!) {
       });
 
       const { mutation } = {
-        mutation: ` 
+        mutation: `
         mutation($producerId: ID!) {
   deleteProducer(producerId: $producerId) {
     firstname

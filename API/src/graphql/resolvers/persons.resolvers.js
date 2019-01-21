@@ -49,7 +49,8 @@ const personsResolvers = {
   },
 
   PersonConnection: {
-    totalCount: (parent, args, context) => personsServices.countNbPersonsInDB()
+    // ne fonctionne que parce qu'il n'y a pas de pagination entre la DB et le serveur...!
+    totalCount: (parent, args, context) => parent.edges.length // FIXME: mieux mais pas toujours correct... -> personsServices.countNbPersonsInDB()
   }
 };
 

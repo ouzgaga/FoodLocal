@@ -19,7 +19,6 @@ module.exports = {
   removeFollowerToProducer
 };
 
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const salespointsServices = require('./salespoints.services');
 const notificationsServices = require('./notifications.services');
@@ -42,10 +41,10 @@ const productTypesServices = require('./productTypes.services');
 function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   if (sortById) {
-    return ProducersModel.find(tags)
+    return ProducersModel.find({ ...tags, isValidated: true })
       .sort({ _id: 1 });
   } else {
-    return ProducersModel.find(tags);
+    return ProducersModel.find({ ...tags, isValidated: true });
   }
 }
 
@@ -56,10 +55,6 @@ function getProducers(sortById, { tags = undefined } = {}) {
  * @returns {*}
  */
 function getProducerById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received producer.id is invalid!');
-  }
-
   return ProducersModel.findById(id);
 }
 
@@ -152,8 +147,8 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
 }
 
 function addProductToProducer(productId, producerId) {
-  return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true, runValidators: true }); // retourne l'objet
-                                                                                                                                      // modifié
+  // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true, runValidators: true });
 }
 
 function removeProductFromProducer(productId, producerId) {
@@ -217,10 +212,6 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
  * @param salespoint, Les informations du salespoint que l'on souhaite ajouter au producteur.
  */
 async function addSalespointToProducer(producerId, salespoint) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producerId is invalid!');
-  }
-
   const producer = await getProducerById(producerId);
   if (producer == null) {
     throw new Error('The received producerId is not in the database!');
@@ -242,10 +233,6 @@ async function addSalespointToProducer(producerId, salespoint) {
  * @param {Integer} producerId, L'id du producteur dont on souhaite supprimer le salespoint.
  */
 async function removeSalespointToProducer(producerId) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producerId is invalid!');
-  }
-
   // on supprime le salespointId contenu dans les informations du producteur
   const producer = await ProducersModel.findByIdAndUpdate(producerId, { salespointId: null }, { new: false }); // retourne l'objet avant sa modification
 

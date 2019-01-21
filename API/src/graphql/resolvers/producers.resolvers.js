@@ -33,7 +33,7 @@ const producerResolvers = {
   Producer: {
     id: (parent, args, context) => parent._id.toString(),
 
-    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds,),
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
@@ -53,7 +53,8 @@ const producerResolvers = {
   },
 
   ProducerConnection: {
-    totalCount: (parent, args, context) => producersServices.countProducersIndBD()
+    // ne fonctionne que parce qu'il n'y a pas de pagination entre la DB et le serveur...!
+    totalCount: (parent, args, context) => parent.edges.length // FIXME: mieux mais pas toujours correct... -> producersServices.countProducersIndBD()
   }
 };
 
