@@ -1,16 +1,3 @@
-// Stages that have been excluded from the aggregation pipeline query
-__3tsoftwarelabs_disabled_aggregation_stages = [
-
-	{
-		// Stage 9 - excluded
-		stage: 9,  source: {
-			$match: {
-				res: {$gte: ['rating.grade', 3]}
-			}
-		}
-	},
-]
-
 db.getCollection("salespoints").aggregate(
 
 	// Pipeline
@@ -90,9 +77,17 @@ db.getCollection("salespoints").aggregate(
 		{
 			$match: {
 			  productTypeIds: {
-			    $all: [ObjectId('5c44ca41d0ab4e0d5e025a1b')]
+			    $all: [ObjectId('5c46205a391f990320dd54a3')]
 			  },
-			  isValidated: true
+			  isValidated: true,
+			  'rating.grade': {$gte: 4}
+			}
+		},
+
+		// Stage 9
+		{
+			$project: {
+			rating: true
 			}
 		},
 

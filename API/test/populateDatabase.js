@@ -457,6 +457,16 @@ const populateDB = async() => {
   );
   producer4 = await producersServices.validateAProducer(producer4.id, true);
 
+  // on ajoute un producteur
+  let producer5 = await producersServices.addProducer(
+    {
+      firstname: 'Monsieur',
+      lastname: 'UnValidated',
+      email: 'lintrus@paysan.ch',
+      password: '1234abcd'
+    }
+  );
+
   // ------------------------------------------------------------------- ajout de 2 users ----------------------------------------------------------------------
   // on ajoute un utilisateur
   const user1 = await usersServices.addUser(
@@ -486,14 +496,14 @@ const populateDB = async() => {
   const rating3p1 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer2.id, producerId: producer1.id, rating: 2 });
 
   // ajout de ratings pour le producer2
-  const rating1p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer2.id, rating: 3 });
-  const rating2p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer2.id, rating: 4 });
+  const rating1p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer2.id, rating: 2 });
+  const rating2p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer2.id, rating: 3 });
 
   // ajout de ratings pour le producer3
   const rating1p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer3.id, rating: 5 });
-  const rating2p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer3.id, rating: 3 });
+  const rating2p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer3.id, rating: 4 });
   const rating3p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer1.id, producerId: producer3.id, rating: 4 });
-  const rating4p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer2.id, producerId: producer3.id, rating: 2 });
+  const rating4p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer2.id, producerId: producer3.id, rating: 4 });
 
   // -------------------------------------------------------------------- ajout de followers -------------------------------------------------------------------
   // ajout de 3 followers de producer1

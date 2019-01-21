@@ -18,9 +18,11 @@ async function askNewEmailToken(email, password) {
 async function addTokenValidationEmail({ id, email, firstname, lastname }) {
   const token = await jwt.sign({ id, email }, config.jwtSecret, { expiresIn: '7d', subject: 'emailValidationToken' });
 
-  // FIXME: À décommenter pour réellement envoyer les emails!!!!!
   // console.log(`token evoyé : ${token}`);
-  mail.sendMailConfirmation(email, firstname, lastname, token);
+  if (process.env.NODE_ENV === 'production') {
+    // les mails ne sont réellement envoyés que si l'API tourne en production
+    mail.sendMailConfirmation(email, firstname, lastname, token);
+  }
   return token;
 }
 

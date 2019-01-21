@@ -76,7 +76,7 @@ test-api-full:
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
   #- apk del builds-deps
-  - node ./node_modules/run-rs/ -v 4.0.0
+  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1
   - npm test
   #- npm test-jest
   only:
