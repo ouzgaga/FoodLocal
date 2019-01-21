@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import CenteredPaper from '../components/items/CenteredPaper';
-import Button from '@material-ui/core/Button';
+import NewValidationEmail from '../components/NewValidationEmail';  
+
+//import { AuthContext } from '../components/providers/AuthProvider';
 
 const styles = {
   paper: {
@@ -13,11 +14,15 @@ const styles = {
   }
 };
 
+// mutation permettant la validation d'email d'un utilisateur
 const mutation = gql`
-    mutation($token: String!){
-        validateToken(token: $token)
-    }
+mutation ($emailToken: String!){
+  validateAnEmailToken(emailValidationToken: $emailToken){
+    token
+  }
+}
 `;
+
 
 class DoMutation extends React.Component {
   componentDidMount() {
@@ -34,24 +39,48 @@ class PageEmailValidation extends Component {
   render() {
     const { classes } = this.props;
     const { token } = this.props.match.params;
+    console.info("tok", token);
     return (
       <div>
         <CenteredPaper className={classes.paper}>
           <Typography variant="h3" color="secondary">
             Validation d'email
           </Typography>
-          <Mutation mutation={mutation} variables={{ token }}>
+          <Mutation mutation={mutation} variables={{ emailToken: token }}>
             {(validate, { data, loading, error }) => (
               <div>
                 <DoMutation mutate={validate} />
                 {error && (
-                  <div>
-                    <Typography variant="h3" color="secondary">Error - Token not valide</Typography>
-                    <Button>Send new email confimation</Button> {/* TODO */}
-                  </div>
+                  <>
+                  {
+                    error[7]==="E"
+                    ? <Typography >Email déjà confirmé, vous pouvez vous connecter</Typography>
+                    : (
+                      
+                      <>
+                      {console.info(error.error)}
+                      <br/>
+                      <Typography  color="error">Le lien de validation n'est plus valide</Typography>
+                      <br/>
+                      <NewValidationEmail />
+                      </>
+                    )
+                  }
+                  
+                    
+                  </>
+                  
+                
+                  
                 )}
-                {loading && <Typography variant="h3" color="secondary">Loading</Typography>}
-                {data && <Typography variant="h3" color="secondary">Email confirmé</Typography>}
+                {loading && <Typography  color="secondary">Loading</Typography>}
+                {data && (
+                  <>
+
+                    <Typography >Email confirmé, vous pouvez vous connecter.</Typography>
+
+                  </>
+                )}
               </div>
             )}
           </Mutation>

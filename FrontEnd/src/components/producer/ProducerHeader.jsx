@@ -5,11 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
-
-
 import DefaultUserLogo from '../../img/DefaultUserLogo.jpg';
-
-
 import RatingItem from '../items/RatingItem';
 import SimpleImageDialog from '../items/SimpleImageDialog';
 
@@ -41,8 +37,10 @@ const styles = theme => ({
 });
 
 function ProducerHeader(props) {
-  const { classes, name, description, image, ratingValue, nbRating } = props;
-  
+  const {
+    classes, lastname, firstname, description, image, ratingValue, nbRating
+  } = props;
+
   return (
     <div className={classes.root}>
       <Grid container spacing={16}>
@@ -52,23 +50,22 @@ function ProducerHeader(props) {
               image={image}
             />
           </ButtonBase>
-          
+
           <RatingItem
-            readOnly={true}
-            defaultValue={ratingValue}
+            readOnly
+            defaultValue={Math.round(ratingValue)}
           />
           <Typography wrap="nowrap">
-            pour { nbRating || 0 } votes.
+            {`pour ${nbRating || 0} votes.`}
           </Typography>
-            
+
         </Grid>
 
-        <Grid item xs={10} sm container  alignItems="justify">
+        <Grid item xs={10} sm container alignItems="justify">
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-              
               <Typography variant="h6" wrap="nowrap">
-                {name || 'Pas de noms'}
+                {`${lastname} ${firstname}` || 'Pas de noms'}
               </Typography>
               <Paper elevation={1}>
                 <Typography gutterBottom variant="body1">
@@ -84,9 +81,14 @@ function ProducerHeader(props) {
 }
 
 ProducerHeader.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape().isRequired,
+  lastname: PropTypes.string.isRequired,
+  firstname: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  ratingValue: PropTypes.number.isRequired,
+  nbRating: PropTypes.number.isRequired,
 };
-
 
 ProducerHeader.defaultProps = {
   image: DefaultUserLogo,

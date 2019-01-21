@@ -91,6 +91,17 @@ class DetailsInscriptionProducerForm extends Component {
                   />
                 </Grid>
 
+                <Grid item xs={12}>
+                  <InputForm
+                    handleChangeProperty={handleChangeProperty}
+                    inputTitle="Site Web (facultatif)"
+                    fieldNameToChange="website"
+                    placeholder=""
+                    value={values.website}
+                    multiline={false}
+                  />
+                </Grid>
+
                 <Grid item sm={5} xs={12} align="space-between">
                   <InputForm
                     handleChangeProperty={handleChangeProperty}

@@ -55,7 +55,7 @@ function StatusForm(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <form className={classes.form}>
+      <div className={classes.form}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Voulez-vous être:</FormLabel>
           <RadioGroup
@@ -72,7 +72,7 @@ function StatusForm(props) {
         <Typography align="justify">
           {chooseInformation(value)}
         </Typography>
-      </form>
+      </div>
     </React.Fragment>
   );
 }
@@ -80,7 +80,7 @@ function StatusForm(props) {
 StatusForm.propTypes = {
   classes: PropTypes.object.isRequired,
   onChange: PropTypes.func,
-  value: PropTypes.oneOfType('user' || 'producer'),
+  value: PropTypes.oneOf(['user', 'producer']),
 };
 
 StatusForm.defaultProps = {

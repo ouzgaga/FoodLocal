@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Search from './Search';
 import MyMap from './MyMap';
 import './PageMap.css';
+import FilterProducts from './FilterProducts';
 
-const drawerWidth = 400;
-
-const styles = theme => ({
+const styles = ({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 64px)',
@@ -21,130 +15,49 @@ const styles = theme => ({
     position: 'relative',
     display: 'flex',
   },
-  navIconHide: {
-    position: 'absolute',
-    top: 60,
-    right: 16,
-    zIndex: 2000,
-    rotate: 90,
-    backgroundColor: '#66CCCC',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-  expandMoreIcon: {
-    transform: 'rotate(90deg)',
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-    [theme.breakpoints.up('md')]: {
-      position: 'relative',
-    },
-  },
-  drawerPaper2: {
-    width: 300,
-    [theme.breakpoints.up('md')]: {
-      position: 'relative',
-    },
-  },
   content: {
     flexGrow: 1,
-    backgroundColor: '#66CCCC',
     height: '400',
-  },
-  drawer: {
-    overflowY: 'scroll',
-    backgroundColor: '#FFFFFF',
   },
 });
 
-class MainMap extends React.Component {
+function MainMap(props) {
+  const {
+    classes, products, addProduct, removeProduct, userLocation, maxDistance, changeMaxDistance, entries, onLoadMore,
+  } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      mobileOpen: false,
-      iconDrag: '',
-    };
-  }
+  return (
+    <div className={classes.root}>
+      <main className={classes.content}>
 
-  handleDrawerToggle = () => {
-    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
-  };
+        <FilterProducts
+          products={products}
+          addProduct={addProduct}
+          removeProduct={removeProduct}
+          maxDistance={maxDistance}
+          changeMaxDistance={changeMaxDistance}
+        />
 
-  handleHover = (hover) => {
-    this.setState({ iconDrag: hover });
-  }
-
-  resetHover = () => {
-    this.setState({ iconDrag: '' });
-  }
-
-  render() {
-    const {
-      classes, theme, data, items, addItem, removeItem
-    } = this.props;
-
-    const drawer = (
-      <div>
-        <Search data={data} handleHover={this.handleHover} resetHover={this.resetHover} />
-      </div>
-    );
-
-    return (
-      <div className={classes.root}>
-        <main className={classes.content}>
-          <Button
-            color="inherit"
-            aria-label="Add"
-            className={classes.navIconHide}
-            onClick={this.handleDrawerToggle}
-          >
-            <ExpandMoreIcon className={classes.expandMoreIcon} />
-          </Button>
-
-          <MyMap data={data} iconDrag={this.state.iconDrag} items={items} addItem={addItem} removeItem={removeItem} />
-
-        </main>
-
-        <div className={classes.drawer}>
-          <Hidden mdUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction = 'right'}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper2,
-              }}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden smDown>
-            <Drawer
-              variant="permanent"
-              open
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-        </div>
-      </div>
-    );
-  }
+        <MyMap
+          producers={entries.edges}
+          location={userLocation}
+          onLoadMore={onLoadMore}
+        />
+      </main>
+    </div>
+  );
 }
 
 MainMap.propTypes = {
   classes: PropTypes.shape().isRequired,
-  theme: PropTypes.shape().isRequired,
+  products: PropTypes.shape().isRequired,
+  addProduct: PropTypes.func.isRequired,
+  removeProduct: PropTypes.func.isRequired,
+  userLocation: PropTypes.shape().isRequired,
+  maxDistance: PropTypes.number.isRequired,
+  changeMaxDistance: PropTypes.func.isRequired,
+  entries: PropTypes.shape().isRequired,
+  onLoadMore: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MainMap);
+export default withStyles(styles)(MainMap);

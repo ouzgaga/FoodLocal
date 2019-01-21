@@ -1,13 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import L from 'leaflet';
 import {
   Map, TileLayer, Marker, Popup, CircleMarker,
 } from 'react-leaflet';
 import { withStyles } from '@material-ui/core/styles';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import MarkerCarotte from '../../img/MarkerCarotte.png';
-import FilterProducts from './FilterProducts';
 import ItemProducerPopUp from './ItemProducerPopUp';
 
 const styles = {
@@ -17,13 +17,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: 'calc(100vh - 114px)',
-  },
-  filterBar: {
-    backgroundColor: '#FFFFFF',
-    height: 50,
-    width: '100%',
-    borderBottom: '1px solid grey',
+    height: 'calc(100vh - 64px)',
   },
   media: {
     height: 80,
@@ -35,6 +29,8 @@ const styles = {
     backgroundColor: '#66CCCC',
   },
 };
+
+// Marker pour la carte
 const myIcon = L.icon({
   iconUrl: MarkerCarotte,
   iconSize: [40, 40],
@@ -42,129 +38,58 @@ const myIcon = L.icon({
   PopupAnchor: [-20, -20],
 });
 
-const myIcon2 = L.icon({
-  iconUrl: MarkerCarotte,
-  iconSize: [100, 100],
-  iconAnchor: [50, 95],
-  PopupAnchor: [-20, -20],
-});
+function MyMap(props) {
+  const {
+    classes, producers, location, onLoadMore
+  } = props;
+  const { latitude, longitude } = location;
 
-class MyMap extends React.Component {
-  constructor(props) {
-    super(props);
+  return (
 
-    this.state = {
-      items: [],
+    <div className={classes.map}>
 
-      location: {
-        // par défaut, position de Lausanne
-        latitude: 46.5333,
-        longitude: 6.6667,
-      },
-      zoom: 8, // on zoom sur la location de l'utilisateur
-      salespoints: [],
-      userHasALocation: false, // indique si l'utilisateur a accepté de donner sa position
-    };
-  }
+      <Map
+        key="map"
+        className={classes.map}
+        center={[latitude, longitude]}
+        zoom={12}
+        maxZoom={20}
+        onViewportChanged={(e) => { onLoadMore(e.center[0], e.center[1]); }}
+      >
 
-  componentDidMount() {
-    this.setState({
-      location: {
-        // par défaut, position de Lausanne
-        latitude: 46.533,
-        longitude: 6.667,
-      },
-      zoom: 10, // on zoom sur la location de l'utilisateur
-    });
+        {/* Layer utilisé pour afficher la carte */}
+        <TileLayer
+          key="tileLayer"
+          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
+        />
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({
-        location: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        },
-        zoom: 12, // on zoom sur la location de l'utilisateur
-        userHasALocation: true,
-      });
-    });
-  }
+        {/* Indique la position de l'utilisateur sur la carte */}
+        <CircleMarker key="userPosition" center={[latitude, longitude]} />
 
-
-  // ouvre le pop-up pour les filtres
-  handleClickOpenFilters = () => {
-    this.setState({ openFiltres: true });
-  };
-
-  // ferme le pop-up des filtres
-  handleClose = () => {
-    this.setState({ openFiltres: false });
-  };
-
-  addItem = newItem => () => {
-    const { items } = this.state;
-    this.setState({
-      items: [...items, newItem]
-    });
-  }
-
-  // supprime un produit du tableau des produits
-  removeItem = itemToDelete => () => {
-    const { items } = this.state;
-    const newItems = items.filter(item => item !== itemToDelete);
-
-    this.setState({
-      items: [...newItems]
-    });
-  }
-
-  render() {
-    const { location, zoom, userHasALocation } = this.state;
-    const { latitude, longitude } = location;
-    const { classes, data, items, addItem, removeItem } = this.props;
-
-
-    return (
-
-      <div className={classes.map}>
-
-        <FilterProducts items={items} addItem={addItem} removeItem={removeItem} />
-        <Map key="map" className={classes.map} center={[latitude, longitude]} zoom={zoom} ref={(c) => { this.map = c; }}>
-
-          <TileLayer
-            key="tileLayer"
-            attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            url="https://maps.tilehosting.com/styles/streets/{z}/{x}/{y}.png?key=YrAASUxwnBPU963DZEig"
-          />
-
+        {/* Groupe les markers sur en cluster sur la carte */}
+        <MarkerClusterGroup>
           {
-            // si l'utilisateur a accepté de donner sa location, l'affiche sur la carte
-            userHasALocation
-            && (
-              <CircleMarker key="userPosition" center={[this.state.location.latitude, longitude]} />
-            )
-          }
-
-          {
-            data.producers.map(tile => (
-              tile.salespoint !== null && (
-                this.props.iconDrag === tile.id ? (
-                  <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon2}>
-                    <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
-                      <ItemProducerPopUp producer={tile} />
-                    </Popup>
-                  </Marker>
-                ) : (
-                    <Marker key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} icon={myIcon}>
-                      <Popup key={tile.id} position={[tile.salespoint.address.latitude, tile.salespoint.address.longitude]} closeButton={false}>
-                        <ItemProducerPopUp producer={tile} />
-                      </Popup>
-                    </Marker>
-                  )
-              )))}
-        </Map>
-      </div>
-    );
-  }
+            producers.map(({ node }) => (
+              node.salespoint !== null && (
+                <Marker key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} icon={myIcon}>
+                  <Popup key={node.id} position={[node.salespoint.address.latitude, node.salespoint.address.longitude]} closeButton={false}>
+                    <ItemProducerPopUp producer={node} />
+                  </Popup>
+                </Marker>
+              )
+            ))}
+        </MarkerClusterGroup>
+      </Map>
+    </div>
+  );
 }
+
+MyMap.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  producers: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+  onLoadMore: PropTypes.func.isRequired,
+};
 
 export default withStyles(styles)(withMobileDialog()(MyMap));

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +10,8 @@ const styles = theme => ({
     borderRadius: 2,
     borderWidth: 1,
     flexGrow: 1,
+    backgroundColor: 'rgba(255, 255, 240, 1)',
+    marginTop: 10,
   },
   header: {
     padding: theme.spacing.unit * 2,
@@ -25,7 +27,7 @@ function BoxWithHeader(props) {
   const { classes, header, children } = props;
 
   return (
-    <Grid className={classes.root} container spacing={12}>
+    <Grid className={classes.root} container spacing={16}>
       { header ?
         (
           <Grid item xs={12} className={classes.header}>

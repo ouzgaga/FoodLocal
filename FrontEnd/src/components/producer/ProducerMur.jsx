@@ -1,62 +1,52 @@
+
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
-const styles = {
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    height: '100%',
-  },
-};
-
-function fillaray(){
-  var array=[];
-  for(let i = 0; i < 60; i++){
-    array[i] = <div>{i} <br/></div>;
-  }
-  return array;
-}
-
-class ProducerMur extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-  
+import InfiniteScroll from 'react-infinite-scroller';
+import { List, ListItem } from '@material-ui/core';
+import ProducerPost from './ProducerPost';
+import Loading from '../Loading';
 
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+function ProducerMur(props) {
+  const { entries, loading, onLoadMore } = props;
 
-  render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+  if (!entries && loading) return <Loading />;
+  const repos = entries.edges || [];
+  return (
+    <>
+      <List>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={onLoadMore}
+          hasMore={entries.pageInfo.hasNextPage}
+        >
+          {repos.map(({ node }) => (
+            <ListItem key={node.id}>
+              <ProducerPost
+                firstname={node.producer.firstname}
+                lastname={node.producer.lastname}
+                date={node.publicationDate}
+                image={node.producer.image}
+                address={node.address}
+                post={node.text}
+              />
+            </ListItem>
+          ))
+          }
 
-    
+        </InfiniteScroll>
+      </List>
 
-    return (
-      <Paper className={classes.root}>
-        
-        <Typography onClick>
-          charger plus de contenu
-        </Typography>
-      </Paper>
-    );
-  }
+      {loading && <Loading />}
+    </>
+
+  );
 }
 
 ProducerMur.propTypes = {
-  classes: PropTypes.object.isRequired,
+  entries: PropTypes.shape().isRequired,
+  loading: PropTypes.shape().isRequired,
+  onLoadMore: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ProducerMur);
+export default ProducerMur;
