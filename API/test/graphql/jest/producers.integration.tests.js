@@ -158,130 +158,112 @@ describe('Testing graphql request producers', () => {
     describe('Testing producer(producerId: ID!)', () => {
       const { query } = {
         query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-        edges {
-          node {
-            firstname
-            lastname
-            email
-            image
-            followingProducers {
-              totalCount
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
+          query($id: ID!) {
+            producer(producerId: $id) {
+              firstname
+              lastname
+              email
+              image
+              followingProducers {
+                totalCount
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                  }
                 }
               }
-            }
-            emailValidated
-            isAdmin
-            followers {
-              totalCount
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
+              emailValidated
+              isAdmin
+              followers {
+                totalCount
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                  }
                 }
               }
-            }
-            phoneNumber
-            description
-            website
-            salespoint {
-              name
-              address {
-                number
-                street
-                city
-                postalCode
-                state
-                country
-                longitude
-                latitude
+              phoneNumber
+              description
+              website
+              salespoint {
+                name
+                address {
+                  number
+                  street
+                  city
+                  postalCode
+                  state
+                  country
+                  longitude
+                  latitude
+                }
+                schedule {
+                  monday {
+                    openingHour
+                    closingHour
+                  }
+                  tuesday {
+                    openingHour
+                    closingHour
+                  }
+                  wednesday {
+                    openingHour
+                    closingHour
+                  }
+                  thursday {
+                    openingHour
+                    closingHour
+                  }
+                  friday {
+                    openingHour
+                    closingHour
+                  }
+                  saturday {
+                    openingHour
+                    closingHour
+                  }
+                  sunday {
+                    openingHour
+                    closingHour
+                  }
+                }
               }
-              schedule {
-                monday {
-                  openingHour
-                  closingHour
-                }
-                tuesday {
-                  openingHour
-                  closingHour
-                }
-                wednesday {
-                  openingHour
-                  closingHour
-                }
-                thursday {
-                  openingHour
-                  closingHour
-                }
-                friday {
-                  openingHour
-                  closingHour
-                }
-                saturday {
-                  openingHour
-                  closingHour
-                }
-                sunday {
-                  openingHour
-                  closingHour
-                }
-              }
-            }
-            isValidated
-            products {
-              edges {
-                node {
-                  description
-                  productType {
-                    name
-                    image
-                    category {
+              isValidated
+              products {
+                edges {
+                  node {
+                    description
+                    productType {
                       name
                       image
-                    }
-                    producers {
-                      totalCount
-                      edges {
-                        node {
-                          firstname
-                          lastname
-                          email
+                      category {
+                        name
+                        image
+                      }
+                      producers {
+                        totalCount
+                        edges {
+                          node {
+                            firstname
+                            lastname
+                            email
+                          }
                         }
                       }
                     }
                   }
                 }
               }
+              rating {
+                nbRatings
+                grade
+              }
             }
-            rating {
-              nbRatings
-              grade
-            }
-          }
-        }
-      }
-    }
-    rating{
-      nbRatings
-      rating
-    }
-  }
-}`
-      };
+          }` };
 
       it('should get a producer by id (without salespoint)', async(done) => {
         tabProducers = await getTabProducers();
@@ -295,6 +277,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should get a producer by id (with salespoint)', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = { id: tabProducers[0].id };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -340,131 +324,130 @@ describe('Testing graphql request producers', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+        tabProducers = await getTabProducers();
+
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: true, kind: tabProducers[0].kind };
       });
 
       const { query } = {
         query: `
-    query{
-      producersWaitingForValidation{
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-        edges {
-          node {
-            firstname
-            lastname
-            email
-            image
-            followingProducers {
+          query {
+            producersWaitingForValidation {
               totalCount
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
               edges {
                 node {
                   firstname
                   lastname
                   email
-                }
-              }
-            }
-            emailValidated
-            isAdmin
-            followers {
-              totalCount
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
-                }
-              }
-            }
-            phoneNumber
-            description
-            website
-            salespoint {
-              name
-              address {
-                number
-                street
-                city
-                postalCode
-                state
-                country
-                longitude
-                latitude
-              }
-              schedule {
-                monday {
-                  openingHour
-                  closingHour
-                }
-                tuesday {
-                  openingHour
-                  closingHour
-                }
-                wednesday {
-                  openingHour
-                  closingHour
-                }
-                thursday {
-                  openingHour
-                  closingHour
-                }
-                friday {
-                  openingHour
-                  closingHour
-                }
-                saturday {
-                  openingHour
-                  closingHour
-                }
-                sunday {
-                  openingHour
-                  closingHour
-                }
-              }
-            }
-            isValidated
-            products {
-              edges {
-                node {
-                  description
-                  productType {
-                    name
-                    image
-                    category {
-                      name
-                      image
+                  image
+                  followingProducers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
                     }
-                    producers {
-                      totalCount
-                      edges {
-                        node {
-                          firstname
-                          lastname
-                          email
+                  }
+                  emailValidated
+                  isAdmin
+                  followers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  phoneNumber
+                  description
+                  website
+                  salespoint {
+                    name
+                    address {
+                      number
+                      street
+                      city
+                      postalCode
+                      state
+                      country
+                      longitude
+                      latitude
+                    }
+                    schedule {
+                      monday {
+                        openingHour
+                        closingHour
+                      }
+                      tuesday {
+                        openingHour
+                        closingHour
+                      }
+                      wednesday {
+                        openingHour
+                        closingHour
+                      }
+                      thursday {
+                        openingHour
+                        closingHour
+                      }
+                      friday {
+                        openingHour
+                        closingHour
+                      }
+                      saturday {
+                        openingHour
+                        closingHour
+                      }
+                      sunday {
+                        openingHour
+                        closingHour
+                      }
+                    }
+                  }
+                  isValidated
+                  products {
+                    edges {
+                      node {
+                        description
+                        productType {
+                          name
+                          image
+                          category {
+                            name
+                            image
+                          }
+                          producers {
+                            totalCount
+                            edges {
+                              node {
+                                firstname
+                                lastname
+                                email
+                              }
+                            }
+                          }
                         }
                       }
                     }
                   }
+                  rating {
+                    nbRatings
+                    grade
+                  }
                 }
               }
             }
-            rating {
-              nbRatings
-              grade
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`,
+          }`,
         variables: {},
         context: {}
       };
@@ -479,6 +462,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should get all producers (1) waiting for validation', async(done) => {
+        tabProducers = await getTabProducers();
+
         await producersServices.validateAProducer(tabProducers[2].id, true);
         // on check qu'il ne reste plus qu'un producteur en attente de validation
         const result = await graphql(schema, query, null, context, null);
@@ -490,6 +475,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not get all producers waiting for validation because you need to be logged in', async(done) => {
+        tabProducers = await getTabProducers();
+
         await producersServices.validateAProducer(tabProducers[2].id, true);
         // on check qu'il ne reste plus qu'un producteur en attente de validation
         const result = await graphql(schema, query, null, {}, null);
@@ -501,6 +488,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not get all producers waiting for validation because you need to be logged in as an administrator', async(done) => {
+        tabProducers = await getTabProducers();
+
         context.isAdmin = false;
         await producersServices.validateAProducer(tabProducers[2].id, true);
         // on check qu'il ne reste plus qu'un producteur en attente de validation
@@ -514,7 +503,6 @@ describe('Testing graphql request producers', () => {
     });
 
     // --------------------filterProducers(byProductTypeIds: [ID!]!)------------------------------------------ //
-    // TODO: geoFilterProducer
     describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
       const { query } = {
         query: `
@@ -638,6 +626,8 @@ describe('Testing graphql request producers', () => {
       };
 
       it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
         const variables = { id: [tabProductTypes[1]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -649,6 +639,8 @@ describe('Testing graphql request producers', () => {
 
       it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
          + ' productTypeCategory "Jus de fruits"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
         const variables = { id: [tabProductTypes[10]._id, tabProductTypes[1]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -662,6 +654,8 @@ describe('Testing graphql request producers', () => {
 
       it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
          + ' productTypeCategory "Jus de fruits" AND one or more products of productTypeCategory "Pâtes"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
         const variables = { id: [tabProductTypes[1]._id, tabProductTypes[10]._id, tabProductTypes[17]._id] };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -682,6 +676,8 @@ describe('Testing graphql request producers', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+        tabProducers = await getTabProducers();
+
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: true, kind: tabProducers[0].kind };
       });
 
@@ -807,6 +803,8 @@ describe('Testing graphql request producers', () => {
       };
 
       it('should change the validation state of a producer to true', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = { producerId: tabProducers[2].id, state: true };
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(2);
@@ -816,6 +814,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should change the validation state of a producer to false', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = { producerId: tabProducers[0].id, state: false };
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(2);
@@ -825,6 +825,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not change the validation state of a producer because you need to be logged in', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = { producerId: tabProducers[0].id, state: false };
         const result = await graphql(schema, mutation, null, {}, variables);
         expect(result.errors).not.toBeNull();
@@ -834,6 +836,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not change the validation state of a producer because you need to be logged in as an administrator', async(done) => {
+        tabProducers = await getTabProducers();
+
         context.isAdmin = false;
         const variables = { producerId: tabProducers[0].id, state: false };
         const result = await graphql(schema, mutation, null, context, variables);
@@ -849,6 +853,8 @@ describe('Testing graphql request producers', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+        tabProducers = await getTabProducers();
+
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: tabProducers[0].isAdmin, kind: tabProducers[0].kind };
       });
 
@@ -974,6 +980,8 @@ describe('Testing graphql request producers', () => {
       };
 
       it('should update a producer', async(done) => {
+        tabProducers = await getTabProducers();
+
         const producerToAdd = {
           producer: {
             id: tabProducers[0].id,
@@ -1129,6 +1137,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail updating a producer because of missing mendatory information (firstname)', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = {
           producer: {
             id: tabProducers[0].id,
@@ -1147,6 +1157,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail updating a producer because of missing mendatory information (lastname)', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = {
           producer: {
             id: tabProducers[0].id,
@@ -1232,6 +1244,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should delete information of a producer that became null', async(done) => {
+        tabProducers = await getTabProducers();
+
         const producerToAdd = {
           producer: {
             id: tabProducers[0].id,
@@ -1389,6 +1403,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not delete information of a producer that are undefined', async(done) => {
+        tabProducers = await getTabProducers();
+
         const producerToAdd = {
           producer: {
             id: tabProducers[0].id,
@@ -1543,6 +1559,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail updating a producer because you can\'t modify someone else than yourself', async(done) => {
+        tabProducers = await getTabProducers();
+
         const producerToAdd = {
           producer: {
             id: tabProducers[1].id,
@@ -1563,6 +1581,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should fail updating a producer because not authenticated', async(done) => {
+        tabProducers = await getTabProducers();
+
         const producerToAdd = {
           producer: {
             id: tabProducers[0].id,
@@ -1588,6 +1608,8 @@ describe('Testing graphql request producers', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+        tabProducers = await getTabProducers();
+
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: tabProducers[0].isAdmin, kind: tabProducers[0].kind };
       });
 
@@ -1713,6 +1735,8 @@ describe('Testing graphql request producers', () => {
       };
 
       it('should delete an existing producer', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variable = {
           producerId: tabProducers[0].id
         };
@@ -1851,6 +1875,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not delete an existing producer because it\'s not yourself', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variable = {
           producerId: tabProducers[1].id
         };
@@ -1989,6 +2015,8 @@ describe('Testing graphql request producers', () => {
       });
 
       it('should not delete an existing producer because not authenticated', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variable = {
           producerId: tabProducers[1].id
         };

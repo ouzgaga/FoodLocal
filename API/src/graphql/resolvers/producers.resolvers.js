@@ -15,7 +15,7 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
+    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds, args.ratingMin)
   },
 
   Mutation: {

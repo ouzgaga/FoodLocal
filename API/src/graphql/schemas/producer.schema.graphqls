@@ -10,8 +10,10 @@ type Query {
 	# Retourne tous les producteurs attendant d'être validés par un administrateur (isValidated = false).
 	producersWaitingForValidation: ProducerConnection! @connection
 
-	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre. Retourne les producteurs du plus proche au plus éloigné par rapport à la position 'locationClient' reçue en paramètre. Ignore les producteurs situés à plus de 'maxDistance' du client.
-	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!]): ProducerConnection! @connection
+	# Retourne tous les producteurs du plus proche au plus éloigné par rapport à la position 'locationClient' reçue en paramètre. Ignore les producteurs situés à plus de 'maxDistance' du client.
+	# Si un paramètre byProductTypeIds est donné, retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
+	# Si un paramètre ratingMin est donné, retourne uniquement les producteurs dont le rating est égal ou plus grand que 'ratingMin'.
+	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!], ratingMin: Int): ProducerConnection! @connection
 }
 
 type Mutation {

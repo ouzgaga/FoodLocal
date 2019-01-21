@@ -100,12 +100,12 @@ function filterProducers(byProductTypeIds) {
   }
 }
 
-function geoFilterProducers(locationClient, productTypeIdsTab) {
+function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin) {
   if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
-    return salespointsServices.geoFilterProducersSalespoints(locationClient);
+    return salespointsServices.geoFilterProducersSalespoints(locationClient, ratingMin);
   }
 
-  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds(locationClient, productTypeIdsTab);
+  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds(locationClient, productTypeIdsTab, ratingMin);
 }
 
 /**

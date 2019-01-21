@@ -20,7 +20,7 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
 
   // FIXME: À décommenter pour réellement envoyer les emails!!!!!
   // console.log(`token evoyé : ${token}`);
-  mail.sendMailConfirmation(email, firstname, lastname, token);
+  // mail.sendMailConfirmation(email, firstname, lastname, token);
   return token;
 }
 
