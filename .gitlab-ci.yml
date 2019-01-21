@@ -49,25 +49,23 @@ build-frontend:
 test-api:
   stage: test
   image: node:8.15.0-jessie
-  services:
-  - mongo:latest
   script:
   - cd ./API
-  - npm i npm@latest -g
-  - apk update
-  - apk --no-cache add --virtual builds-deps build-base python
-  - npm config set python /usr/bin/python
-  - npm install
-  - npm rebuild bcrypt --build-from-source
-  - apk del builds-deps
-  - npm test
+    - npm i npm@latest -g
+    #- apk update
+    #- apk --no-cache add --virtual builds-deps build-base python
+    - npm config set python /usr/bin/python
+    - npm install
+    - npm install run-rs
+    - npm rebuild bcrypt --build-from-source
+    #- apk del builds-deps
+    - node ./node_modules/run-rs/ -v 4.0.0
+    - npm test
   only:
   - API
 test-api-full:
   stage: test
   image: node:8.15.0-jessie
-  services:
-  - mongo:latest
   script:
   - cd ./API
   - npm i npm@latest -g
