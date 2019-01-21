@@ -2,30 +2,34 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import { withSnackbar } from 'notistack';
 
 import './App.css';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import {
-  BrowserRouter as Router,
   Route,
   Switch,
+  Redirect,
 } from 'react-router-dom';
 
 import Header from './components/Header';
-import Theme from './components/Theme';
 import ProducerVue from './components/ProducerVue';
+
+import { AuthContext } from './components/providers/AuthProvider';
 
 import {
   PageAbout,
   PageMap,
   PageNewAccount,
-  PageAcceuil,
+  PageAccueil,
   PageProducer,
   PageEmailValidation,
   PageError404,
   PageProducerRegistration,
   PageAdmin,
+  PagePersonalInformations,
+  PageErrorLogin,
+  PageErrorEmail,
 } from './pages/Pages';
 
 
@@ -61,6 +65,108 @@ const styles = theme => ({
   },
 });
 
+
+/*
+
+const ProtectedUserRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userStatus, userToken }) => {
+            //console.info("123", userEmailValidated);
+            console.info("daym", userToken);
+            if (userStatus === 'producers') { // Connecté mais pas d'email validé
+              return <Component {...params} />;
+            } 
+            // pas connecté
+            return (<Redirect to="/error/page404" />);
+          }}
+        </AuthContext>
+      )}
+  />
+)
+*/
+const ProtectedProducerRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userStatus, userToken }) => {
+            console.info("daym", userToken);
+            if (userStatus === 'producers') { // Connecté mais pas d'email validé
+              return <Component {...params} />;
+            } 
+            // pas connecté
+            return (<Redirect to="/error/page404" />);
+          }}
+        </AuthContext>
+      )}
+  />
+)
+
+const ProtectedAdminRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ isAdmin }) => isAdmin
+            ? <Component {...params} />
+            : <Redirect to="/" />}
+        </AuthContext>
+      )}
+  />
+)
+
+const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
+            ? <Redirect to="/error/email" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
+const ProtectedErrorConected = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userToken }) => userToken
+            ? <Redirect to="/map" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
+const ProtectedErrorEmail = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userEmailValidated }) => !userEmailValidated
+            ? <Redirect to="/map" />
+            : <Component {...params} />
+          }
+        </AuthContext>
+      )}
+  />
+)
+
+
 class App extends React.Component {
   state = {
     mobileOpen: false,
@@ -71,30 +177,51 @@ class App extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
+
+    
+ const ProtectedUserRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(params) =>
+      (
+        <AuthContext>
+          {({ userEmailValidated, userToken }) => {
+            if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
+            
+              return (<Redirect to="/error/email" />);
+            } else if (userToken && userEmailValidated) { // Connecté et email validé
+              return <Component {...params} />;
+            }
+            // pas connecté
+            this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
+            return (<Redirect to="/error/notConnected" />);
+          }}
+        </AuthContext>
+      )}
+  />
+)
 
     return (
       <div className={classes.root}>
-        <div>
-          <Router>
-            <MuiThemeProvider theme={Theme}>
-              <Header />
-              <div className={classes.page} center="xs">
-                <Switch>
-                  <Route path="/" exact component={PageAcceuil} classes={classes} />
-                  <Route default path="/about" exact component={PageAbout} classes={classes} />
-                  <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-                  <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
-                  <Route path="/admin" exct component={PageAdmin} classes={classes} />
-                  <Route path="/map" exact component={PageMap} classes={classes} />
-                  <Route path="/producer/:producerId" component={ProducerVue} />
-                  <Route path="/validationEmail/:token" component={PageEmailValidation} />
-                  <Route path="/pageproducer/" component={PageProducer} classes={classes} />
-                  <Route path="*" component={PageError404} classes={classes} />
-                </Switch>
-              </div>
-            </MuiThemeProvider>
-          </Router>
+        <Header />
+        <div className={classes.page} center="xs">
+          <Switch>
+            <Route path="/" exact component={PageAccueil} classes={classes} />
+            <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
+            <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
+            <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
+            <Route path="/admin" exct component={PageAdmin} classes={classes} />
+            <Route path="/map" exact component={PageMap} classes={classes} />
+            <Route path="/producer/:producerId" component={PageProducer} />
+            <Route path="/validationEmail/:token" component={PageEmailValidation} />
+            <Route path="/pageproducer" component={PageProducer} classes={classes} />
+            <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
+            <ProtectedErrorEmail path="/error/email" component={PageErrorEmail} />
+            <ProtectedErrorConected path="/error/notConnected" component={PageErrorLogin} />
+            <Route path="/error/page404" component={PageError404} classes={classes} />
+            <Route path="*" component={PageError404} classes={classes} />
+          </Switch>
         </div>
       </div>
     );
@@ -106,29 +233,4 @@ App.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(App);
-
-
-/*
-class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider theme={Theme}>
-        <div className="App" >
-          <Header theme={Theme} />
-          <div className="container">
-            <div className="map">
-              <MyMap listProducers={tileData} />
-            </div>
-            <div className="listProducer">
-              <Search />
-            </div>
-          </div>
-        <Footer/>
-        </div>
-      </MuiThemeProvider>
-    );
-  }
-}
-export default App;
-*/
+export default withStyles(styles, { withTheme: true })(withSnackbar(App));

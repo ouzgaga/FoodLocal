@@ -82,6 +82,14 @@ Redux en quelques lignes:
 
 **Reducer**: Il produisent, créée un état.
 
+### JWT
+
+Nous utilisons jwt-decode pour décoder le token et lire les informations qui s'y trouvent.
+
+```
+npm install jwt-decode
+```
+
 
 
 ## Mobile

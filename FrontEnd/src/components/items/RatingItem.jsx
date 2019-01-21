@@ -9,18 +9,16 @@ import MarkerCarotteFull from '../../img/MarkerCarotteFull.png';
 
 const styles = {
   root: {
-      maxWidth: '100%',
-      maxHeight: '100%',
-    },
-    image:{
-      maxWidth: 40,
-      maxHeight: 40,
-      height: '100%',
-      width: '100%',
-    }
-  };
-
-  
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  image: {
+    maxWidth: 40,
+    maxHeight: 40,
+    height: '100%',
+    width: '100%',
+  }
+};
 
 
 class RatingItem extends React.Component {
@@ -28,13 +26,13 @@ class RatingItem extends React.Component {
     super(props);
     const maxValue = 5;
     this.state = {
-        data: (props.defaultValue > maxValue ? maxValue : props.defaultValue),
+      data: (props.defaultValue > maxValue ? maxValue : props.defaultValue),
     };
   }
 
 
   handleChange = (value) => {
-    if(this.props.onChange) {
+    if (this.props.onChange) {
       this.props.onChange(value);
     }
     this.setState({ data: value });
@@ -46,15 +44,14 @@ class RatingItem extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Rating 
+        <Rating
           onChange={this.handleChange}
-          
-          initialRating = { this.state.data }
-          emptySymbol = {<img src={MarkerCarotteEmpty} className={classes.image}/>}
-          fullSymbol = {<img src={MarkerCarotteFull} className={classes.image}/>}
-          readonly = {readOnly}
+          initialRating={this.state.data}
+          emptySymbol={<img src={MarkerCarotteEmpty} className={classes.image} />}
+          fullSymbol={<img src={MarkerCarotteFull} className={classes.image} />}
+          readonly={readOnly}
         />
-    </div>
+      </div>
     );
   }
 }

@@ -140,7 +140,7 @@ class PageAbout extends Component {
               <img className={classes.img} alt="complex" src={logo} />
             </div>
             <div className={classes.text}>
-              <Typography variant="h3" color="Secondary" className={classes.tx}>Qu'est-ce FoodLocal?</Typography>
+              <Typography variant="h3" color="secondary" className={classes.tx}>Qu'est-ce FoodLocal?</Typography>
               <Typography variant="h6" color="none">
                 FoodLocal est une application web référençant de petits producteurs locaux. Son but est de permettre au consommateur de trouver facilement des
                 produits de la région afin de l’encourager à soutenir à l'économie locale.
@@ -152,7 +152,7 @@ class PageAbout extends Component {
         <Grid container="column" justify="center" alignItems="center">
           <Grid xl={1}>
             <Paper elevation={10} className={classes.paper}>
-              <Typography variant="h3" color="Secondary" className={classes.paperTitle}>Pourquoi local? </Typography>
+              <Typography variant="h3" color="secondary" className={classes.paperTitle}>Pourquoi local? </Typography>
               <Typography variant="h6" color="none">
                 Pourquoi acheter des produits venant de l’étranger alors que le fermier du coin peut vous proposer les mêmes, pour un prix tout aussi
                 raisonnable mais plus frais et d’une bien meilleure qualité?!
@@ -196,7 +196,7 @@ class PageAbout extends Component {
           <div className={classes.content}>
 
             <div className={classes.text}>
-              <Typography variant="h3" color="Secondary" className={classes.tx}>L'équipe</Typography>
+              <Typography variant="h3" color="secondary" className={classes.tx}>L'équipe</Typography>
               <Typography variant="h6" color="none">
                 FoodLocal, c’est 4 étudiants en Informatique Logicielle à la Haute École d’Ingénieur et de Gestion d’Yverdon-les-Bains, en Suisse, qui , pour
                 leur projet de semestre de dernière année, ont décidé de mettre la technologie et leurs connaissances au service des petits producteurs locaux.

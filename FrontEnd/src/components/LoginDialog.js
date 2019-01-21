@@ -18,7 +18,6 @@ class LoginDialog extends React.Component {
         open={open}
       >
         <MyLogin
-          classes={this.classes}
           onClick2={onClick2}
           onClose={onClose}
         />

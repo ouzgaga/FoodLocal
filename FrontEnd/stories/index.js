@@ -16,15 +16,15 @@ import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionFo
 import InputPassword from '../src/components/items/InputPassword';
 import BoxWithHeader from '../src/components/items/BoxWithHeader';
 import BorderedTextField from '../src/components/items/fields/BorderedTextField';
+import BorderedPasswordField from '../src/components/items/fields/BorderedPasswordField';
 import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
+import ChangePassword from '../src/components/accouontCRUD/ChangePassword';
 import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
+import PersonalDescription from '../src/components/accouontCRUD/PersonalDescription';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
-
-
-
-function onChange(event) {
-
-}
+import BorderedCountField from '../src/components/items/fields/BorderedCountField';
+import DropZone from '../src/components/items/DropZone';
+import BadgeMax from '../src/components/items/BadgeMax';
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -44,9 +44,19 @@ const post = 'Nullam sed felis sapien. Sed vitae purus vehicula tortor fringilla
 storiesOf('ProducerPost', module)
   .add('Default', () => (
     <ProducerPost
-      name="Nom tres tres tres long dss  dsdsd sdsdssdsds dsdsdsds"
-      date="12.12.2014 8h40"
+      firstname="Antoine"
+      lastname="Rochat"
+      date="1997-07-16T19:20:30.45+01:00"
       post={post}
+    />
+  ))
+  .add('With location', () => (
+    <ProducerPost
+      firstname="Antoine"
+      lastname="Rochat"
+      date="1997-07-16T19:20:30.45+01:00"
+      post={post}
+      location={{ latitude: 46.7833, longitude: 6.65 }}
     />
   ));
 
@@ -156,14 +166,29 @@ storiesOf('BoxWithHeader', module)
   )).add('no header', () => (
     <BoxWithHeader>
       hello word
-  </BoxWithHeader>
-  )).add('child + header', () => (
+    </BoxWithHeader>
+  )).add('PersonalInformation', () => (
     <BoxWithHeader
       header="Informations personnels"
     >
       <PersonalInformation />
     </BoxWithHeader>
+  ))
+  .add('ChangePassword', () => (
+    <BoxWithHeader
+      header="Changer de mot de passe"
+    >
+      <ChangePassword />
+    </BoxWithHeader>
+  ))
+  .add('PersonalDescription', () => (
+    <BoxWithHeader
+      header="Changer votre description"
+    >
+      <PersonalDescription />
+    </BoxWithHeader>
   ));
+
 
 storiesOf('BorderedTextField', module)
   .add('no data', () => (
@@ -181,6 +206,30 @@ storiesOf('BorderedTextField', module)
     />
   ));
 
+storiesOf('BorderedPasswordField', module)
+  .add('no data', () => (
+    <BorderedPasswordField />
+  ))
+  .add('Default value', () => (
+    <BorderedPasswordField
+      defaultValue="Hello word"
+    />
+  ))
+  .add('fullWidth', () => (
+    <BorderedPasswordField
+      defaultValue="Hello word"
+      fullWidth
+    />
+  ));
+
+storiesOf('BorderedCountField', module)
+  .add('BorderedCountField', () => (
+    <BorderedCountField
+      value="test"
+
+    />
+  ))
+
 storiesOf('BoxLeftRight', module)
   .add('BoxLeftRight', () => (
     <BoxLeftRight
@@ -196,13 +245,23 @@ storiesOf('PersonalInformation', module)
     <PersonalInformation />
   ));
 
-
-
-
-
-
 storiesOf('TableProducerItem', module)
-
   .add('producer item', () => (
     <TableProducerItem id={1234} name="La Ferme Du Bois" />
   ));
+
+storiesOf('DropZone', module)
+  .add('Dropzone', () => (
+    <DropZone />
+  ));
+
+storiesOf('NotificationBagde', module)
+.add('No notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('10 notifications', () => (
+  <BadgeMax value={0} />
+))
+.add('> max value (99)', () => (
+  <BadgeMax value={100} />
+));

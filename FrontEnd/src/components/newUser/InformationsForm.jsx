@@ -1,9 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { withStyles } from '@material-ui/core';
 import InputPassword from '../items/InputPassword';
@@ -15,6 +23,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
   },
 });
+
 
 function InformationsForm(props) {
   document.title = 'Nouveau Compte - Informations'; // changement du titre de la page
@@ -39,7 +48,7 @@ function InformationsForm(props) {
           />
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="email">Nom de famille</InputLabel>
+          <InputLabel htmlFor="text">Nom de famille</InputLabel>
           <Input
             type="text"
             id="lastNameInput"
@@ -50,7 +59,7 @@ function InformationsForm(props) {
           />
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="email">Prénom</InputLabel>
+          <InputLabel htmlFor="text">Prénom</InputLabel>
           <Input
             type="text"
             id="firstNameInput"
