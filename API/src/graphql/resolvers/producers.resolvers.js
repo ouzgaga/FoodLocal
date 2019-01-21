@@ -54,7 +54,7 @@ const producerResolvers = {
 
   ProducerConnection: {
     // ne fonctionne que parce qu'il n'y a pas de pagination entre la DB et le serveur...!
-    totalCount: (parent, args, context) => parent.edges.length // FIXME: mieux mais pas toujours correct... -> producersServices.countProducersIndBD()
+    totalCount: (parent, args, context) => parent.edges.length // FIXME: mieux mais pas toujours correct... -> producersServices.countProducersInDB()
   }
 };
 

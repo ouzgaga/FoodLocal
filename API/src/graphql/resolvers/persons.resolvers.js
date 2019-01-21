@@ -29,7 +29,8 @@ const personsResolvers = {
 
     deletePersonAccount: async(parent, args, context) => {
       await isAuthenticated(context.id);
-      return personsServices.deletePersonAccount(context.id, context.kind);
+      const deletedPerson = await personsServices.deletePersonAccount(context.id, context.kind);
+      return deletedPerson.email == null;
     }
   },
 

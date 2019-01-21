@@ -468,7 +468,7 @@ query {
 
     // --------------------filterProducers(byProductTypeIds: [ID!]!)------------------------------------------ //
     // TODO: geoFilterProducer
-    /*describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
+    describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
       const { query } = {
         query: `
     query($id: [ID!]){
@@ -594,7 +594,7 @@ query {
         expect(result).toMatchSnapshot();
         done();
       });
-    });*/
+    });
   });
 
   describe('MUTATION producers', () => {
@@ -753,226 +753,6 @@ mutation($producerId: ID!, $state: Boolean!) {
         done();
       });
     });
-
-    /*
-    // --------------------addProducer(producer: ProducerInputAdd!)------------------------------------------ //
-    describe('Testing addProducer(producer: ProducerInputAdd!)', () => {
-      beforeEach(() => clearAndPopulateDB());
-
-      const { mutation } = {
-        mutation: `mutation($producer: ProducerInputAdd!) {
-  addProducer(producer: $producer) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      firstname
-      lastname
-      email
-    }
-    emailValidated
-    isAdmin
-    followers {
-      firstname
-      lastname
-      email
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      description
-      productType {
-        name
-        image
-        category {
-          name
-          image
-        }
-        producers {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    rating {
-      nbRatings
-      rating
-    }
-  }
-}
-`
-      };
-
-      it('should add a new producer', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.data.addProducer).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because email already used', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        // on ajoute le producteur une 1ère fois
-        let result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.data.addProducer).not.toBeNull();
-
-        // on tente d'ajouter le producteur une 2ème fois -> plante car email déjà utilisé
-        result = await graphql(schema, mutation, null, null, variables);
-        expect(result.data).toBeNull();
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-    });
-    */
 
     // --------------------updateProducer(producer: ProducerInputUpdate!)------------------------------------------ //
     describe('Testing updateProducer(producer: ProducerInputUpdate!)', () => {
@@ -1641,7 +1421,7 @@ query($producerId: ID!) {
     });
 
     // --------------------deleteProducer(producerId: ID!)------------------------------------------ //
-    /*describe('Testing deleteProducer(producerId: ID!)', () => {
+    describe('Testing deleteProducer(producerId: ID!)', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
@@ -2063,6 +1843,6 @@ query($producerId: ID!) {
         expect(result.data.producer).not.toBeNull();
         done();
       });
-    });*/
+    });
   });
 });

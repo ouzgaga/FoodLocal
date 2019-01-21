@@ -3,7 +3,7 @@ module.exports = {
   getProducerById,
   getAllProducerWaitingForValidation,
   getAllProducersInReceivedIdList,
-  countProducersIndBD,
+  countProducersInDB,
   filterProducers,
   geoFilterProducers,
   addProducer,
@@ -12,7 +12,6 @@ module.exports = {
   removeSalespointToProducer,
   removeProductFromProducer,
   updateProducer,
-  updateProducerRating,
   validateAProducer,
   deleteProducer,
   addFollowerToProducer,
@@ -41,10 +40,10 @@ const productTypesServices = require('./productTypes.services');
 function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   if (sortById) {
-    return ProducersModel.find({ ...tags, isValidated: true })
+    return ProducersModel.find({ ...tags, isValidated: true, deleted: false })
       .sort({ _id: 1 });
   } else {
-    return ProducersModel.find({ ...tags, isValidated: true });
+    return ProducersModel.find({ ...tags, isValidated: true, deleted: false });
   }
 }
 
@@ -75,8 +74,8 @@ function getAllProducerWaitingForValidation() {
   return getProducers(true, { tags: { isValidated: false } });
 }
 
-function countProducersIndBD() {
-  return ProducersModel.countDocuments({ isValidated: true });
+function countProducersInDB() {
+  return ProducersModel.countDocuments({ isValidated: true, deleted: false });
 }
 
 /**
@@ -247,12 +246,6 @@ async function removeSalespointToProducer(producerId) {
   return producer;
 }
 
-// TODO: à ajouter dans les tests des services!!!
-function updateProducerRating(producerId, rating) {
-  // retourne l'objet modifié
-  return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true, runValidators: true });
-}
-
 async function validateAProducer(producerId, validationState) {
   // retourne l'objet modifié
   return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true, runValidators: true });
@@ -280,7 +273,8 @@ async function deleteProducer(id) {
     // salespoint: null,
     isValidated: null,
     // products: null,
-    rating: null
+    rating: null,
+    deleted: true
   });
 
   if (producer != null) {

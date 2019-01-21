@@ -124,6 +124,7 @@ function deleteUser(id) {
     image: null,
     // followingProducers: null,
     emailValidated: null,
-    isAdmin: null
+    isAdmin: null,
+    deleted: true
   });
 }
