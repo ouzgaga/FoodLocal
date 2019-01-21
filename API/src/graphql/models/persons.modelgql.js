@@ -49,6 +49,11 @@ const personSchema = new mongoose.Schema(
     isAdmin: {
       type: mongoose.Schema.Types.Boolean,
       required: true
+    },
+    deleted: {
+      type: mongoose.Schema.Types.Boolean,
+      required: true,
+      default: false
     }
   }, options
 );

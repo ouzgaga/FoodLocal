@@ -977,7 +977,8 @@ describe('tests producers services', () => {
       try {
         await producersServices.updateProducer(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received producer.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -986,7 +987,8 @@ describe('tests producers services', () => {
       try {
         await producersServices.updateProducer(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received producer.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -995,7 +997,8 @@ describe('tests producers services', () => {
       try {
         await producersServices.updateProducer(benoit);
       } catch (err) {
-        err.message.should.be.equal('Received producer.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

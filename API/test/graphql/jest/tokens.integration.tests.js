@@ -1,11 +1,17 @@
 const jwt = require('jsonwebtoken');
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabUsers, getTabProducers } = require('../../populateDatabase');
 
 // Making schema graphql
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    connection: connectionDirective
+  }
+});
 
 let tabUsers;
 let tabProducers;
@@ -28,9 +34,11 @@ describe('Testing graphql resquest user', () => {
 
       const { mutation } = {
         mutation: `
-        mutation($emailValidationToken: String!) {
-          validateAnEmailToken(emailValidationToken: $emailValidationToken)
-        }`
+mutation($emailValidationToken: String!) {
+  validateAnEmailToken(emailValidationToken: $emailValidationToken) {
+    token
+  }
+}`
       };
 
       it('should validate an email with received token', async(done) => {
@@ -38,93 +46,102 @@ describe('Testing graphql resquest user', () => {
         const variableQuery = { id: tabProducers[0].id };
         const { query } = {
           query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($id: ID!){
+  producer(producerId: $id){
+    firstname
+    lastname
+    email
+    image
+    followingProducers{
+      edges {
+        node {
+          id
           firstname
           lastname
           email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
+          image
         }
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+    followers{
+      edges{
+        node{
+          id
+          firstname
+          lastname
+          email
+          image
+        }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint{
+      name
+      address{
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule{
+        monday{
+          openingHour
+          closingHour
+        }
+        tuesday{
+          openingHour
+          closingHour
+        }
+        wednesday{
+          openingHour
+          closingHour
+        }
+        thursday{
+          openingHour
+          closingHour
+        }
+        friday{
+          openingHour
+          closingHour
+        }
+        saturday{
+          openingHour
+          closingHour
+        }
+        sunday{
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products{
+      edges{
+        node{
+          id
+          description
+          productType{
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+    rating{
+      nbRatings
+      rating
+    }
+  }
+}`
         };
         let result = await graphql(schema, query, null, null, variableQuery);
         expect.assertions(4);
@@ -133,11 +150,12 @@ describe('Testing graphql resquest user', () => {
         // on demande un nouveu token de validation d'email
         let variables = { email: result.data.producer.email, password: '1234abcd' };
         const { mutation1 } = {
-          mutation1: `mutation ($email: String!, $password: String!){
-                        askNewEmailToken(email: $email, password: $password){
-                          token
-                        }
-                      }`
+          mutation1:
+`mutation ($email: String!, $password: String!){
+  askNewEmailToken(email: $email, password: $password){
+    token
+  }
+}`
         };
         result = await graphql(schema, mutation1, null, {}, variables);
         const { token } = result.data.askNewEmailToken;
@@ -206,11 +224,12 @@ describe('Testing graphql resquest user', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation ($email: String!, $password: String!){
-                        askNewEmailToken(email: $email, password: $password){
-                          token
-                        }
-                      }`
+        mutation: `
+mutation ($email: String!, $password: String!){
+  askNewEmailToken(email: $email, password: $password){
+    token
+  }
+}`
       };
 
       it('should return a new token for validate an email', async(done) => {
@@ -236,93 +255,93 @@ describe('Testing graphql resquest user', () => {
         const variableQuery = { id: tabProducers[0].id };
         const { query } = {
           query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
+query($id: ID!){
+  producer(producerId: $id){
+    firstname
+    lastname
+    email
+    image
+    followingProducers{
+      firstname
+      lastname
+      email
+    }
+    emailValidated
+    isAdmin
+    followers{
+      firstname
+      lastname
+      email
+    }
+    phoneNumber
+    description
+    website
+    salespoint{
+      name
+      address{
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule{
+        monday{
+          openingHour
+          closingHour
         }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
+        tuesday{
+          openingHour
+          closingHour
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+        wednesday{
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
+        thursday{
+          openingHour
+          closingHour
         }
-        rating{
-          nbRatings
-          rating
+        friday{
+          openingHour
+          closingHour
+        }
+        saturday{
+          openingHour
+          closingHour
+        }
+        sunday{
+          openingHour
+          closingHour
         }
       }
-    }`
+    }
+    isValidated
+    products{
+      description
+      productType{
+        name
+        image
+        category{
+          name
+          image
+        }
+        producers{
+          firstname
+          lastname
+          email
+        }
+      }
+    }
+    rating{
+      nbRatings
+      rating
+    }
+  }
+}`
         };
         let result = await graphql(schema, query, null, null, variableQuery);
         expect.assertions(8);
@@ -335,9 +354,11 @@ describe('Testing graphql resquest user', () => {
 
         const { mutation1 } = {
           mutation1: `
-        mutation($emailValidationToken: String!) {
-          validateAnEmailToken(emailValidationToken: $emailValidationToken)
-        }`
+mutation($emailValidationToken: String!) {
+  validateAnEmailToken(emailValidationToken: $emailValidationToken){
+    token
+  }
+}`
         };
         // on valide l'email à l'aide de ce token
         variables = { emailValidationToken: token };
@@ -393,11 +414,12 @@ describe('Testing graphql resquest user', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation ($email: String!, $password: String!){
-                      login(email: $email, password: $password){
-                        token
-                      }
-                    }`
+        mutation:
+`mutation ($email: String!, $password: String!){
+  login(email: $email, password: $password){
+    token
+  }
+}`
       };
 
       it('should return a new token because login succeed', async(done) => {
@@ -443,11 +465,12 @@ describe('Testing graphql resquest user', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($user: UserInputAdd!){
-                     signUpAsUser(newUser:$user){
-                       token
-                     }
-                   }`
+        mutation:
+`mutation($user: UserInputAdd!){
+   signUpAsUser(newUser:$user){
+     token
+   }
+ }`
       };
 
       it('should create a new user and return a token', async(done) => {
@@ -467,13 +490,15 @@ describe('Testing graphql resquest user', () => {
         const context = { id: tabUsers[0].id, email: tabUsers[0].email, isAdmin: true, kind: tabUsers[0].kind };
         const { query } = {
           query: `
-    query ($id: ID!){
-      user(userId: $id) {
-        firstname
-        lastname
-        email
-        image
-        followingProducers {
+query($id: ID!) {
+  user(userId: $id) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
@@ -485,10 +510,12 @@ describe('Testing graphql resquest user', () => {
             rating
           }
         }
-        emailValidated
-        isAdmin
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+  }
+}`
         };
         const tokenContent = await jwt.decode(token);
         const variableQuery = { id: tokenContent.id };
@@ -570,11 +597,12 @@ describe('Testing graphql resquest user', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producer: ProducerInputAdd!) {
-                     signUpAsProducer(newProducer: $producer) {
-                       token
-                     }
-                   }`
+        mutation: `
+mutation($producer: ProducerInputAdd!) {
+   signUpAsProducer(newProducer: $producer) {
+     token
+   }
+ }`
       };
 
       it('should create a new producer and return a token', async(done) => {
@@ -593,93 +621,102 @@ describe('Testing graphql resquest user', () => {
 
         const { query } = {
           query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($id: ID!){
+  producer(producerId: $id){
+    firstname
+    lastname
+    email
+    image
+    followingProducers{
+      edges {
+        node {
+          id
           firstname
           lastname
           email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
+          image
         }
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+    followers{
+      edges{
+        node{
+          id
+          firstname
+          lastname
+          email
+          image
+        }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint{
+      name
+      address{
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule{
+        monday{
+          openingHour
+          closingHour
+        }
+        tuesday{
+          openingHour
+          closingHour
+        }
+        wednesday{
+          openingHour
+          closingHour
+        }
+        thursday{
+          openingHour
+          closingHour
+        }
+        friday{
+          openingHour
+          closingHour
+        }
+        saturday{
+          openingHour
+          closingHour
+        }
+        sunday{
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products{
+      edges{
+        node{
+          id
+          description
+          productType{
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+    rating{
+      nbRatings
+      rating
+    }
+  }
+}`
         };
         const tokenContent = await jwt.decode(token);
         const variableQuery = { id: tokenContent.id };
@@ -763,98 +800,116 @@ describe('Testing graphql resquest user', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($idUser: ID!, $password: String!) {
-                      upgradeUserToProducer(idUserToUpgrade: $idUser, password: $password) {
-                        producer {
-                          firstname
-                          lastname
-                          email
-                          image
-                          followingProducers {
-                            firstname
-                            lastname
-                            email
-                          }
-                          emailValidated
-                          isAdmin
-                          followers {
-                            firstname
-                            lastname
-                            email
-                          }
-                          phoneNumber
-                          description
-                          website
-                          salespoint {
-                            name
-                            address {
-                              number
-                              street
-                              city
-                              postalCode
-                              state
-                              country
-                              longitude
-                              latitude
-                            }
-                            schedule {
-                              monday {
-                                openingHour
-                                closingHour
-                              }
-                              tuesday {
-                                openingHour
-                                closingHour
-                              }
-                              wednesday {
-                                openingHour
-                                closingHour
-                              }
-                              thursday {
-                                openingHour
-                                closingHour
-                              }
-                              friday {
-                                openingHour
-                                closingHour
-                              }
-                              saturday {
-                                openingHour
-                                closingHour
-                              }
-                              sunday {
-                                openingHour
-                                closingHour
-                              }
-                            }
-                          }
-                          isValidated
-                          products {
-                            description
-                            productType {
-                              name
-                              image
-                              category {
-                                name
-                                image
-                              }
-                              producers {
-                                firstname
-                                lastname
-                                email
-                              }
-                            }
-                          }
-                          rating {
-                            nbRatings
-                            rating
-                          }
-                        }
-                        newLoginToken{
-                          token
-                        }
-                      }
-                    }`
+        mutation:
+`mutation($idUser: ID!, $password: String!) {
+  upgradeUserToProducer(idUserToUpgrade: $idUser, password: $password) {
+    producer {
+      firstname
+      lastname
+      email
+      image
+      followingProducers {
+        edges {
+          node {
+            firstname
+            lastname
+            email
+          }
+        }
+      }
+      emailValidated
+      isAdmin
+      followers {
+        edges {
+          node {
+            firstname
+            lastname
+            email
+          }
+        }
+      }
+      phoneNumber
+      description
+      website
+      salespoint {
+        name
+        address {
+          number
+          street
+          city
+          postalCode
+          state
+          country
+          longitude
+          latitude
+        }
+        schedule {
+          monday {
+            openingHour
+            closingHour
+          }
+          tuesday {
+            openingHour
+            closingHour
+          }
+          wednesday {
+            openingHour
+            closingHour
+          }
+          thursday {
+            openingHour
+            closingHour
+          }
+          friday {
+            openingHour
+            closingHour
+          }
+          saturday {
+            openingHour
+            closingHour
+          }
+          sunday {
+            openingHour
+            closingHour
+          }
+        }
+      }
+      isValidated
+      products {
+        edges {
+          node {
+            description
+            productType {
+              name
+              image
+              category {
+                name
+                image
+              }
+              producers {
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      rating {
+        nbRatings
+        rating
+      }
+    }
+    newLoginToken {
+      token
+    }
+  }
+}
+`
       };
 
       it('should create a new producer and return a new token', async(done) => {
@@ -872,93 +927,102 @@ describe('Testing graphql resquest user', () => {
 
         const { query: queryProducer } = {
           query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($id: ID!){
+  producer(producerId: $id){
+    firstname
+    lastname
+    email
+    image
+    followingProducers{
+      edges {
+        node {
+          id
           firstname
           lastname
           email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
+          image
         }
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+    followers{
+      edges{
+        node{
+          id
+          firstname
+          lastname
+          email
+          image
+        }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint{
+      name
+      address{
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule{
+        monday{
+          openingHour
+          closingHour
+        }
+        tuesday{
+          openingHour
+          closingHour
+        }
+        wednesday{
+          openingHour
+          closingHour
+        }
+        thursday{
+          openingHour
+          closingHour
+        }
+        friday{
+          openingHour
+          closingHour
+        }
+        saturday{
+          openingHour
+          closingHour
+        }
+        sunday{
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products{
+      edges{
+        node{
+          id
+          description
+          productType{
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+    rating{
+      nbRatings
+      rating
+    }
+  }
+}`
         };
         const tokenContent = await jwt.decode(result.data.upgradeUserToProducer.newLoginToken.token);
 
@@ -968,28 +1032,32 @@ describe('Testing graphql resquest user', () => {
 
         const { query: queryUser } = {
           query: `
-    query ($id: ID!){
-      user(userId: $id) {
-        firstname
-        lastname
-        email
-        image
-        followingProducers {
+query($id: ID!) {
+  user(userId: $id) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
+          id
           firstname
           lastname
           email
           image
-          emailValidated
           phoneNumber
           rating {
             nbRatings
             rating
           }
         }
-        emailValidated
-        isAdmin
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+  }
+}`
         };
         result = await graphql(schema, queryUser, null, context, variableQuery);
         expect(result.data.user).toBeNull();

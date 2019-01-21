@@ -1,9 +1,15 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    connection: connectionDirective
+  }
+});
 
 let tabProducers;
 let tabProductTypes;
@@ -24,26 +30,46 @@ describe('Testing graphql request products', () => {
     describe('Testing products()', () => {
       it('should get all products', async(done) => {
         const { query } = {
-          query: `query {
-                    products {
-                      description
-                      productType {
-                        name
-                        image
-                        category {
-                          name
-                          image
-                        }
-                        producers {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
-                    }
-                  }`
+          query:
+`query{
+  products{
+    pageInfo{
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges{
+      node{
+        id
+        description
+        productType{
+          id
+          name
+          image
+          category{
+            id
+            name
+            image
+          }
+          producers{
+            edges{
+              node{
+                firstname
+                lastname
+                email
+              }
+            }
+          }
+        }
+      }
+      cursor
+    }
+  }
+}`
         };
-        const result = await graphql(schema, query, null, null, null);
+        const result = await graphql(schema, query, null, {}, null);
+        console.log(result);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
@@ -53,29 +79,36 @@ describe('Testing graphql request products', () => {
     // ----------------------product(productId: ID!)-------------------------------------- //
     describe('Testing product(productId: ID!)', () => {
       const { query } = {
-        query: `query($productId: ID!) {
-                  product(productId: $productId) {
-                    description
-                    productType {
-                      name
-                      image
-                      category {
-                        name
-                        image
-                      }
-                      producers {
-                        firstname
-                        lastname
-                        email
-                      }
-                    }
-                  }
-                }`
+        query:
+`query($productId: ID!) {
+  product(productId: $productId) {
+    description
+    productType {
+      name
+      image
+      category {
+        name
+        image
+      }
+      producers {
+        edges {
+          node {
+            firstname
+            lastname
+            email
+          }
+        }
+      }
+    }
+  }
+}
+`
       };
 
       it('should get a product by id', async(done) => {
         const variables = { productId: tabProducers[2].productsIds[0].toString() };
-        const result = await graphql(schema, query, null, null, variables);
+        const result = await graphql(schema, query, null, {}, variables);
+        console.log(result);
         expect.assertions(2);
         expect(result.data.product).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -84,7 +117,7 @@ describe('Testing graphql request products', () => {
 
       it('should fail getting a product by id because invalid id received (too short)', async(done) => {
         const variables = { productId: 'abcdef' };
-        const result = await graphql(schema, query, null, null, variables);
+        const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -94,7 +127,7 @@ describe('Testing graphql request products', () => {
 
       it('should fail getting a product by id because invalid id received (too long)', async(done) => {
         const variables = { productId: 'abcdefabcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, null, variables);
+        const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
@@ -104,7 +137,7 @@ describe('Testing graphql request products', () => {
 
       it('should fail getting a product by id because unknown id received', async(done) => {
         const variables = { productId: 'abcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, null, variables);
+        const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(2);
         expect(result.errors).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -143,24 +176,43 @@ describe('Testing graphql request products', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
-                    addMultipleProducts(producerId: $producerId, products: $products) {
-                      description
-                      productType {
-                        name
-                        image
-                        category {
-                          name
-                          image
-                        }
-                        producers {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
-                    }
-                  }`
+        mutation: `
+mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
+  addMultipleProducts(producerId: $producerId, products: $products) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        description
+        productType {
+          id
+          name
+          image
+          category {
+            id
+            name
+            image
+          }
+          producers {
+            edges {
+              node {
+                firstname
+                lastname
+                email
+              }
+            }
+          }
+        }
+      }
+      cursor
+    }
+  }
+}`
       };
 
       it('should add multiple new products (with and without description)', async(done) => {
@@ -207,7 +259,7 @@ describe('Testing graphql request products', () => {
         const result = await graphql(schema, mutation, null, {}, variables);
         expect.assertions(4);
         expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
+        expect(result.errors.length).toBe(2);
         expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
         expect(result).toMatchSnapshot();
         done();
@@ -233,24 +285,29 @@ describe('Testing graphql request products', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producerId: ID!, $product: ProductInputAdd!) {
-                    addProduct(producerId: $producerId, product: $product) {
-                      description
-                      productType {
-                        name
-                        image
-                        category {
-                          name
-                          image
-                        }
-                        producers {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
-                    }
-                  }`
+        mutation: `
+mutation($producerId: ID!, $product: ProductInputAdd!) {
+  addProduct(producerId: $producerId, product: $product) {
+    description
+    productType {
+      name
+      image
+      category {
+        name
+        image
+      }
+      producers {
+        edges{
+          node{
+            firstname
+            lastname
+            email
+          }
+        }
+      }
+    }
+  }
+}`
       };
 
       it('should add a new product with a description', async(done) => {
@@ -351,22 +408,27 @@ describe('Testing graphql request products', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producerId: ID!, $product: ProductInputUpdate!) {
-                    updateProduct(producerId: $producerId, product: $product) {
-                      description
-                      productType {
-                        name
-                        category {
-                          name
-                        }
-                        producers {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
-                    }
-                  }`
+        mutation: `
+mutation($producerId: ID!, $product: ProductInputUpdate!) {
+  updateProduct(producerId: $producerId, product: $product) {
+    description
+    productType {
+      name
+      category {
+        name
+      }
+      producers {
+        edges{
+          node{
+            firstname
+            lastname
+            email
+          }
+        }
+      }
+    }
+  }
+}`
       };
 
       it('should update a product', async(done) => {
@@ -459,22 +521,27 @@ describe('Testing graphql request products', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producerId:ID!, $productId: ID!) {
-                    deleteProduct(producerId: $producerId, productId: $productId) {
-                      description
-                      productType {
-                        name
-                        category {
-                          name
-                        }
-                        producers {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
-                    }
-                  }`
+        mutation: `
+mutation($producerId: ID!, $productId: ID!) {
+    deleteProduct(producerId: $producerId, productId: $productId) {
+      description
+      productType {
+        name
+        category {
+          name
+        }
+        producers {
+          edges {
+            node {
+              firstname
+              lastname
+              email
+            }
+          }
+        }
+      }
+    }
+  }`
       };
 
       it('should delete a product', async(done) => {

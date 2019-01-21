@@ -60,7 +60,7 @@ type ProducerRating {
 	# Nombre total de notes qu'à reçu le producteur
 	nbRatings: Int!
 	# Moyenne des notes qu'à reçu le producteur
-	rating: Float!
+	grade: Float!
 }
 
 input ProducerInputAdd {

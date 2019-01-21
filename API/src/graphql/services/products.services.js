@@ -8,7 +8,6 @@ module.exports = {
   deleteProduct
 };
 
-const mongoose = require('mongoose');
 const ProductsModel = require('../models/products.modelgql');
 const productTypesServices = require('./productTypes.services');
 const producersServices = require('./producers.services');
@@ -46,10 +45,6 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
  * @param {Integer} id, L'id du produit à récupérer.
  */
 function getProductById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received product.id is invalid!');
-  }
-
   return ProductsModel.findById(id);
 }
 
@@ -61,14 +56,14 @@ function getProductById(id) {
  * @param producerId, L'id du producteur produisant le produit à ajouter.
  */
 async function addProduct(product, producerId) {
-  if (product.productTypeId == null || !mongoose.Types.ObjectId.isValid(product.productTypeId)) {
-    throw new Error('Received productType.id is invalid!');
+  if (product.productTypeId == null) {
+    throw new Error('Received product.productTypeId is invalid!');
   }
 
   const addedProduct = await new ProductsModel(product).save();
 
   // on ajoute l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType de ce nouveau produit
-  const res = await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
+  await productTypesServices.addProducerProducingThisProductType(product.productTypeId, producerId);
 
   // on ajoute l'id du produit dans le tableau des produits proposés par ce producteur
   await producersServices.addProductToProducer(addedProduct.id, producerId);
@@ -97,10 +92,6 @@ async function addAllProductsInArray(productsArray, producerId) {
  * @param product, Les informations du produit à mettre à jour.
  */
 async function updateProduct({ id, description, productTypeId }) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received product.id is invalid!');
-  }
-
   const updatedProduct = {
     id
   };
@@ -113,7 +104,7 @@ async function updateProduct({ id, description, productTypeId }) {
     updatedProduct.productTypeId = productTypeId;
   }
 
-  return ProductsModel.findByIdAndUpdate(id, updatedProduct, { new: true }); // retourne l'objet modifié
+  return ProductsModel.findByIdAndUpdate(id, updatedProduct, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -122,17 +113,14 @@ async function updateProduct({ id, description, productTypeId }) {
  * @param product, Les informations du produit à supprimer.
  */
 async function deleteProduct(id, producerId) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received product.id is invalid!');
-  }
-
   const product = await ProductsModel.findByIdAndRemove(id);
 
-  // on supprime l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType du produit supprimé
-  const res = await productTypesServices.removeProducerProducingThisProductType(product.productTypeId, producerId);
+  if (product != null) {
+    // on supprime l'id du producteur dans le tableau des producteurs produisant un ou plusieurs produits du productType du produit supprimé
+    await productTypesServices.removeProducerProducingThisProductType(product.productTypeId, producerId);
 
-  // on supprime l'id du produit dans le tableau des produits proposés par ce producteur
-  await producersServices.removeProductFromProducer(product.id, producerId);
-
+    // on supprime l'id du produit dans le tableau des produits proposés par ce producteur
+    await producersServices.removeProductFromProducer(product.id, producerId);
+  }
   return product;
 }

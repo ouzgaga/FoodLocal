@@ -37,10 +37,6 @@ function getSalespoints({ tags = undefined } = {}) {
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
 function getSalespointById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received salespoint.id is invalid!');
-  }
-
   return SalespointsModel.findById(id);
 }
 
@@ -291,7 +287,7 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
     updatedSalespoint.schedule = schedule;
   }
 
-  await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true }); // retourne l'objet modifié
+  await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true, runValidators: true }); // retourne l'objet modifié
 
   // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
   await notificationsServices.addNotification('PRODUCER_UPDATE_SALESPOINT_INFO', producer.id);
@@ -305,9 +301,5 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
 async function deleteSalespoint(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received salespoint.id is invalid!');
-  }
-
   return SalespointsModel.findByIdAndRemove(id);
 }

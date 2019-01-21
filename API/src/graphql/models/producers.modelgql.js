@@ -8,7 +8,7 @@ const options = {
 
 const RatingSchema = new mongoose.Schema(
   {
-    rating: {
+    grade: {
       type: mongoose.Schema.Types.Number,
       required: true
     },

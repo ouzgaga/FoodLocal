@@ -1,5 +1,4 @@
 const faker = require('faker');
-const range = require('lodash/range');
 const clearDB = require('./graphql/clearDB');
 const personRatingProducersServices = require('../src/graphql/services/personRatingProducers.services');
 const usersServices = require('../src/graphql/services/users.services');
@@ -11,14 +10,14 @@ const postsServices = require('../src/graphql/services/posts.services');
 const ProducersModel = require('../src/graphql/models/producers.modelgql');
 const UsersModel = require('../src/graphql/models/users.modelgql');
 
-const NB_PRODUCERS_TO_GENERATE = 500;
+const NB_PRODUCERS_TO_GENERATE = 100;
 const NB_USERS_TO_GENERATE = 50;
 
 const NB_MIN_PRODUCTS_BY_PRODUCER = 0;
 const NB_MAX_PRODUCTS_BY_PRODUCER = 20;
 
 const NB_MIN_POSTS_BY_PRODUCER = 0;
-const NB_MAX_POSTS_BY_PRODUCER = 20;
+const NB_MAX_POSTS_BY_PRODUCER = 10;
 
 const NB_MIN_FOLLOWING_PRODUCERS = 0;
 const NB_MAX_FOLLOWING_PRODUCERS = NB_PRODUCERS_TO_GENERATE - 1;
@@ -271,13 +270,13 @@ const populateDB = async() => {
 
   // ################################################################### ajout des producers ###################################################################
 
-  const producers = range(0, NB_PRODUCERS_TO_GENERATE).map(async(index) => {
+  for (let i = 0; i < NB_PRODUCERS_TO_GENERATE; i++) {
     const tabPromises = [];
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
     const email = faker.internet.email(firstname, lastname);
     const password = 'abcd1234';
-    const image = `data:image/jpeg;base64,${Buffer.from(faker.image.avatar(), 'utf8').toString('base64')}`;
+    const image = Buffer.from(faker.image.avatar(), 'utf8').toString('base64');
     const phoneNumber = faker.phone.phoneNumber();
     const description = faker.lorem.text();
     const website = faker.internet.url();
@@ -296,8 +295,6 @@ const populateDB = async() => {
       }
     );
 
-    tabProducersIds.push(producer.id);
-
     // on valide ce producteur
     if (faker.random.boolean()) {
       tabPromises.push(producersServices.validateAProducer(producer.id, true));
@@ -306,9 +303,9 @@ const populateDB = async() => {
     const NB_PRODUCTS = generateRandomNumber(NB_MAX_PRODUCTS_BY_PRODUCER, NB_MIN_PRODUCTS_BY_PRODUCER);
     const tabProductLength = tabProducts.length;
     // on ajoute des produits au producteur
-    range(0, NB_PRODUCTS).forEach((index1) => {
-      tabPromises.push(productsServices.addProduct(tabProducts[index1 % tabProductLength], producer.id));
-    });
+    for (let j = 0; j < NB_PRODUCTS; j++) {
+      tabPromises.push(productsServices.addProduct(tabProducts[j % tabProductLength], producer.id));
+    }
 
     const address = {
       number: generateRandomNumber(1000, 1),
@@ -356,27 +353,15 @@ const populateDB = async() => {
       }
     }));
 
-    // -------------------------------------------------------------------- ajout de posts -------------------------------------------------------------------
-    const NB_POST = generateRandomNumber(NB_MAX_POSTS_BY_PRODUCER, NB_MIN_POSTS_BY_PRODUCER);
-    range(0, NB_POST).forEach(() => {
-      const post = {
-        producerId: producer.id,
-        text: faker.lorem.text()
-      };
-      if (faker.random.boolean()) {
-        post.address = address;
-      }
-      tabPromises.push(postsServices.addPostOfProducer(post));
-    });
-
+    tabProducersIds.push(producer.id);
     await Promise.all(tabPromises);
-    console.log(`nombre de producteurs ajoutés : ${index + 1}/${NB_PRODUCERS_TO_GENERATE}`);
-  });
+    console.log(`nombre de producteurs ajoutés : ${i + 1}/${NB_PRODUCERS_TO_GENERATE}`);
+  }
   // ################################################################# fin ajout des producers #################################################################
 
   // #################################################################### ajout de 2 users ####################################################################
   // on ajoute un utilisateur
-  const users = range(0, NB_USERS_TO_GENERATE).map(async(index) => {
+  for (let i = 0; i < NB_USERS_TO_GENERATE; i++) {
     const tabPromises = [];
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
@@ -399,43 +384,67 @@ const populateDB = async() => {
     // ------------------------------------------------------------------- ajout de followers ------------------------------------------------------------------
     const NB_FOLLOWING_PRODUCERS = generateRandomNumber(NB_MAX_FOLLOWING_PRODUCERS, NB_MIN_FOLLOWING_PRODUCERS);
     const alreadyFollower = [];
-    range(0, NB_FOLLOWING_PRODUCERS).forEach(() => {
+    for (let j = 0; j < NB_FOLLOWING_PRODUCERS; j++) {
       const producerId = generateRandomNumber(tabProducersIds.length - 1, 0);
       if (!alreadyFollower.includes(producerId)) {
         tabPromises.push(producersServices.addFollowerToProducer(tabProducersIds[producerId], user.id));
         alreadyFollower.push(producerId);
       }
-    });
+    }
 
     // ------------------------------------------------------------------ ajout de ratings ---------------------------------------------------------------------
     const NB_RATINGS = generateRandomNumber(10, 0);
-    range(0, NB_RATINGS).forEach(() => {
+    for (let k = 0; k < NB_RATINGS; k++) {
       const producerId = generateRandomNumber(tabProducersIds.length - 1, 0);
       if (!alreadyFollower.includes(producerId)) {
-        tabPromises.push(personRatingProducersServices.addPersonRatingProducer(
+        tabPromises.push(personRatingProducersServices.addOrUpdatePersonRatingProducer(
           { personId: user.id, producerId: tabProducersIds[producerId], rating: generateRandomNumber(5, 1) }
         ));
         alreadyFollower.push(producerId);
       }
-    });
+    }
 
     await Promise.all(tabPromises);
-    console.log(`nombre d'utilisateurs ajoutés : ${index + 1}/${NB_USERS_TO_GENERATE}`);
-  });
+    console.log(`nombre d'utilisateurs ajoutés : ${i + 1}/${NB_USERS_TO_GENERATE}`);
+  }
   // ################################################################### fin ajout des users ###################################################################
 
-  const a = await Promise.all([producers, users]);
+  // ----------------------------------------------------------- ajout de posts des producteurs ----------------------------------------------------------------
+  const tabPromises = [];
+  tabProducersIds.forEach((producerId) => {
+    const address = {
+      number: generateRandomNumber(1000, 1),
+      street: faker.address.streetName(),
+      city: faker.address.city(),
+      postalCode: faker.address.zipCode(),
+      state: faker.address.state(),
+      country: faker.address.country(),
+
+      longitude: generateRandomFloat(7, 6),
+      latitude: generateRandomFloat(47, 46)
+    };
+
+    const NB_POST = generateRandomNumber(NB_MAX_POSTS_BY_PRODUCER, NB_MIN_POSTS_BY_PRODUCER);
+    for (let k = 0; k < NB_POST; k++) {
+      const post = {
+        producerId,
+        text: faker.lorem.text()
+      };
+      if (faker.random.boolean()) {
+        post.address = address;
+      }
+      tabPromises.push(postsServices.addPostOfProducer(post));
+    }
+  });
 
   // on donne les droits d'amin aux NB_PRODUCERS_ADMIN producteurs et aux NB_USERS_ADMIN utilisateurs
-  const tabPromises = [];
-  range(0, NB_PRODUCERS_ADMIN).forEach((index) => {
-    tabPromises.push(ProducersModel.findByIdAndUpdate(tabProducersIds[index], { isAdmin: true }, { new: true }));
-  });
+  for (let i = 0; i < NB_PRODUCERS_ADMIN; i++) {
+    tabPromises.push(ProducersModel.findByIdAndUpdate(tabProducersIds[i], { isAdmin: true }, { new: true, runValidators: true }));
+  }
 
-
-  range(0, NB_USERS_ADMIN).forEach((index) => {
-    tabPromises.push(UsersModel.findByIdAndUpdate(tabUsersIds[index], { isAdmin: true }, { new: true }));
-  });
+  for (let i = 0; i < NB_USERS_ADMIN; i++) {
+    tabPromises.push(UsersModel.findByIdAndUpdate(tabUsersIds[i], { isAdmin: true }, { new: true, runValidators: true }));
+  }
 
   await Promise.all(tabPromises);
 };

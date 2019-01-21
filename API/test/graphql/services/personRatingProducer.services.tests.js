@@ -87,13 +87,13 @@ const clearAndPopulateDB = async() => {
   };
 
   // on ajoute les ratings
-  ratingAntoine1 = (await personRatingProducerServices.addPersonRatingProducer(ratingAntoine1)).toObject();
-  ratingAntoine2 = (await personRatingProducerServices.addPersonRatingProducer(ratingAntoine2)).toObject();
+  ratingAntoine1 = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine1)).toObject();
+  ratingAntoine2 = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine2)).toObject();
 
-  ratingJames3 = (await personRatingProducerServices.addPersonRatingProducer(ratingJames3)).toObject();
-  ratingJames4 = (await personRatingProducerServices.addPersonRatingProducer(ratingJames4)).toObject();
+  ratingJames3 = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingJames3)).toObject();
+  ratingJames4 = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingJames4)).toObject();
 
-  ratingBenoit5 = (await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5)).toObject();
+  ratingBenoit5 = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingBenoit5)).toObject();
 
   tabRatingsAboutAntoine = [ratingAntoine1, ratingAntoine2];
   tabRatingsMadeByAntoine = [ratingJames4, ratingBenoit5];
@@ -140,7 +140,8 @@ describe('tests personRatingProducer services', () => {
       try {
         const ratings = await personRatingProducerServices.getAllRatingsAboutProducerWithId(benoit.id + benoit.id);
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -182,7 +183,8 @@ describe('tests personRatingProducer services', () => {
       try {
         await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id + benoit.id, antoine.id);
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.producerId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -208,7 +210,8 @@ describe('tests personRatingProducer services', () => {
       try {
         await personRatingProducerServices.getRatingAboutProducerIdMadeByPersonId(benoit.id, antoine.id + antoine.id);
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -255,7 +258,8 @@ describe('tests personRatingProducer services', () => {
       try {
         await personRatingProducerServices.getAllRatingsMadeByPersonWithId(benoit.id + benoit.id);
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -265,7 +269,7 @@ describe('tests personRatingProducer services', () => {
     });
   });
 
-  describe('tests addPersonRatingProducer', () => {
+  describe('tests addOrUpdatePersonRatingProducer', () => {
     beforeEach(() => clearAndPopulateDB());
 
     it('should add a new rating about a producer made by a person', async() => {
@@ -278,11 +282,11 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le nouveau rating
-      const addedRating = (await personRatingProducerServices.addPersonRatingProducer(newRating)).toObject();
+      const addedRating = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(newRating)).toObject();
       // on check que les données ajoutées soient bien celles souhaitées
       addedRating.should.be.not.null;
       addedRating.id.should.be.not.null;
@@ -293,26 +297,26 @@ describe('tests personRatingProducer services', () => {
       // on check les valeurs du rating enregistré dans le producteur après avoir ajouté le nouveau rating
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
       // on check que ces valeurs aient bien été mises à jour
-      benoitProducer.rating.rating.should.be.equal(4);
+      benoitProducer.rating.grade.should.be.equal(4);
       benoitProducer.rating.nbRatings.should.be.equal(2);
     });
 
     it('should fail adding a new rating about a producer made by a person because this person already rate this producer', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       try {
         // on ajoute le rating ratingBenoit5 alors qu'il a déjà été ajouté -> retournera une erreur
-        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingBenoit5);
       } catch (err) {
         err.message.should.be.equal('This person has already rated this producer! You can\'t rate twice the same producer.');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
@@ -322,12 +326,12 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       try {
         // on ajoute le rating ratingBenoit5 avec un producerId inconnu -> retournera une erreur
-        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
         e.message.should.be.equal(`The given producerId (${ratingBenoit5.producerId}) doesn’t exist in the database!`);
@@ -335,7 +339,7 @@ describe('tests personRatingProducer services', () => {
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
@@ -345,12 +349,12 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       try {
         // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
-        await personRatingProducerServices.addPersonRatingProducer(ratingBenoit5);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingBenoit5);
       } catch (e) {
         e.should.be.not.null;
         e.message.should.be.equal(`The given personId (${ratingBenoit5.personId}) doesn’t exist in the database!`);
@@ -358,7 +362,7 @@ describe('tests personRatingProducer services', () => {
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
@@ -372,20 +376,20 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
-      // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
+      // on ajoute le rating ratingBenoit5 avec un grade < 1 -> retournera une erreur
       try {
-        await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
-        error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
+        error.message.should.be.equal('Validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
@@ -399,20 +403,20 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
-        error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
+        error.message.should.be.equal('Validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
@@ -427,20 +431,20 @@ describe('tests personRatingProducer services', () => {
 
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
-        await personRatingProducerServices.addPersonRatingProducer(newRating);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(newRating);
       } catch (error) {
         error.name.should.be.equal('ValidationError');
-        error.message.should.be.equal('personRatingProducer validation failed: rating: 3.5 is not an integer value');
+        error.message.should.be.equal('Validation failed: rating: 3.5 is not an integer value');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
   });
@@ -450,7 +454,7 @@ describe('tests personRatingProducer services', () => {
 
     it('should update a personProducerRating', async() => {
       ratingAntoine1.rating = 4;
-      const rating = (await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1)).toObject();
+      const rating = (await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine1)).toObject();
       rating.should.be.not.null;
       rating.id.should.be.eql(ratingAntoine1.id);
       rating.producerId.should.be.eql(ratingAntoine1.producerId);
@@ -459,70 +463,70 @@ describe('tests personRatingProducer services', () => {
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       const AntoineProducer = (await producersServices.getProducerById(antoine.id)).toObject();
-      AntoineProducer.rating.rating.should.be.equal(3);
+      AntoineProducer.rating.grade.should.be.equal(3);
       AntoineProducer.rating.nbRatings.should.be.equal(2);
     });
 
     it('should fail updating a rating because new rating < 1', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         ratingAntoine1.rating = 0;
 
-        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
+        error.message.should.be.equal('Validation failed: rating: Path `rating` (0) is less than minimum allowed value (1).');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
     it('should fail updating a rating because rating > 5', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         ratingAntoine1.rating = 6;
 
-        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.message.should.be.equal('personRatingProducer validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
+        error.message.should.be.equal('Validation failed: rating: Path `rating` (6) is more than maximum allowed value (5).');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
 
     it('should fail updating a rating because rating is not an integer', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant d'ajouter un nouveau rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on ajoute le rating ratingBenoit5 avec un personId inconnu -> retournera une erreur
       try {
         ratingAntoine1.rating = 2.5;
 
-        await personRatingProducerServices.updatePersonRatingProducer(ratingAntoine1);
+        await personRatingProducerServices.addOrUpdatePersonRatingProducer(ratingAntoine1);
       } catch (error) {
-        error.message.should.be.equal('personRatingProducer validation failed: rating: 3.5 is not an integer value');
+        error.message.should.be.equal('Validation failed: rating: 2.5 is not an integer value');
       }
 
       // on check que les valeurs du rating enregistré dans le producteur n'ont pas été modifiées pusique le rating n'a pas été ajouté
       benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
     });
   });
@@ -533,7 +537,7 @@ describe('tests personRatingProducer services', () => {
     it('should delete a personRatingProducer', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant de supprimer un rating
       let antoineProducer = (await producersServices.getProducerById(antoine.id)).toObject();
-      antoineProducer.rating.rating.should.be.equal(1.5);
+      antoineProducer.rating.grade.should.be.equal(1.5);
       antoineProducer.rating.nbRatings.should.be.equal(2);
 
       // on supprime un rating
@@ -547,7 +551,7 @@ describe('tests personRatingProducer services', () => {
 
       // on check que les valeurs du rating enregistré dans le producteur ont bien été mises à jour
       antoineProducer = (await producersServices.getProducerById(antoine.id)).toObject();
-      antoineProducer.rating.rating.should.be.equal(2);
+      antoineProducer.rating.grade.should.be.equal(2);
       antoineProducer.rating.nbRatings.should.be.equal(1);
 
       deletedRating = await personRatingProducerServices.deletePersonRatingProducer(ratingAntoine1.id);
@@ -557,7 +561,7 @@ describe('tests personRatingProducer services', () => {
     it('should delete the last personRatingProducer about a producer', async() => {
       // on check les valeurs du rating enregistré dans le producteur avant de supprimer un rating
       let benoitProducer = (await producersServices.getProducerById(benoit.id)).toObject();
-      benoitProducer.rating.rating.should.be.equal(5);
+      benoitProducer.rating.grade.should.be.equal(5);
       benoitProducer.rating.nbRatings.should.be.equal(1);
 
       // on supprime un rating
@@ -581,7 +585,8 @@ describe('tests personRatingProducer services', () => {
       try {
         await personRatingProducerServices.deletePersonRatingProducer('');
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -589,7 +594,8 @@ describe('tests personRatingProducer services', () => {
       try {
         await personRatingProducerServices.deletePersonRatingProducer(benoit.id + benoit.id);
       } catch (err) {
-        err.message.should.be.equal('Received personRatingProducer.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

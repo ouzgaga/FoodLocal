@@ -1,10 +1,16 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const { resolvers, schema: typeDefs } = require('../../../src/graphql/graphqlConfig');
+const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const producersServices = require('../../../src/graphql/services/producers.services');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    connection: connectionDirective
+  }
+});
 
 let tabProducers;
 let tabProductTypes;
@@ -26,30 +32,41 @@ describe('Testing graphql request producers', () => {
     describe('Testing producers()', () => {
       const { query } = {
         query: `
-    query{
-      producers{
+query {
+  producers {
+    edges {
+      node {
+        id
         firstname
         lastname
         email
         image
-        followingProducers{
-          firstname
-          lastname
-          email
+        followingProducers {
+          edges {
+            node {
+              id
+              firstname
+              lastname
+            }
+          }
         }
         emailValidated
         isAdmin
-        followers{
-          firstname
-          lastname
-          email
+        followers {
+          edges {
+            node {
+              id
+              lastname
+              firstname
+            }
+          }
         }
         phoneNumber
         description
         website
-        salespoint{
+        salespoint {
           name
-          address{
+          address {
             number
             street
             city
@@ -59,60 +76,63 @@ describe('Testing graphql request producers', () => {
             longitude
             latitude
           }
-          schedule{
-            monday{
+          schedule {
+            monday {
               openingHour
               closingHour
             }
-            tuesday{
+            tuesday {
               openingHour
               closingHour
             }
-            wednesday{
+            wednesday {
               openingHour
               closingHour
             }
-            thursday{
+            thursday {
               openingHour
               closingHour
             }
-            friday{
+            friday {
               openingHour
               closingHour
             }
-            saturday{
+            saturday {
               openingHour
               closingHour
             }
-            sunday{
+            sunday {
               openingHour
               closingHour
             }
           }
         }
         isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
+        products {
+          edges {
+            node {
+              id
+              description
+              productType {
+                id
+                name
+                image
+                category {
+                  id
+                  name
+                }
+              }
             }
           }
         }
-        rating{
+        rating {
           nbRatings
           rating
         }
       }
-    }`
+    }
+  }
+}`
       };
       it('should get all producers', async(done) => {
         const result = await graphql(schema, query, null, {}, {});
@@ -126,93 +146,102 @@ describe('Testing graphql request producers', () => {
     describe('Testing producer(producerId: ID!)', () => {
       const { query } = {
         query: `
-    query($id: ID!){
-      producer(producerId: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($id: ID!){
+  producer(producerId: $id){
+    firstname
+    lastname
+    email
+    image
+    followingProducers{
+      edges {
+        node {
+          id
           firstname
           lastname
           email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
+          image
         }
       }
-    }`
+    }
+    emailValidated
+    isAdmin
+    followers{
+      edges{
+        node{
+          id
+          firstname
+          lastname
+          email
+          image
+        }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint{
+      name
+      address{
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule{
+        monday{
+          openingHour
+          closingHour
+        }
+        tuesday{
+          openingHour
+          closingHour
+        }
+        wednesday{
+          openingHour
+          closingHour
+        }
+        thursday{
+          openingHour
+          closingHour
+        }
+        friday{
+          openingHour
+          closingHour
+        }
+        saturday{
+          openingHour
+          closingHour
+        }
+        sunday{
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products{
+      edges{
+        node{
+          id
+          description
+          productType{
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+    rating{
+      nbRatings
+      rating
+    }
+  }
+}`
       };
 
       it('should get a producer by id (without salespoint)', async(done) => {
@@ -275,30 +304,51 @@ describe('Testing graphql request producers', () => {
 
       const { query } = {
         query: `
-    query{
-      producersWaitingForValidation{
+query {
+  producersWaitingForValidation {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
         firstname
         lastname
         email
         image
-        followingProducers{
-          firstname
-          lastname
-          email
+        followingProducers {
+          edges {
+            node {
+              id
+              firstname
+              lastname
+              email
+              image
+            }
+          }
         }
         emailValidated
         isAdmin
-        followers{
-          firstname
-          lastname
-          email
+        followers {
+          edges {
+            node {
+              id
+              firstname
+              lastname
+              email
+              image
+            }
+          }
         }
         phoneNumber
         description
         website
-        salespoint{
+        salespoint {
           name
-          address{
+          address {
             number
             street
             city
@@ -307,61 +357,67 @@ describe('Testing graphql request producers', () => {
             country
             longitude
             latitude
+            distance
           }
-          schedule{
-            monday{
+          schedule {
+            monday {
               openingHour
               closingHour
             }
-            tuesday{
+            tuesday {
               openingHour
               closingHour
             }
-            wednesday{
+            wednesday {
               openingHour
               closingHour
             }
-            thursday{
+            thursday {
               openingHour
               closingHour
             }
-            friday{
+            friday {
               openingHour
               closingHour
             }
-            saturday{
+            saturday {
               openingHour
               closingHour
             }
-            sunday{
+            sunday {
               openingHour
               closingHour
             }
           }
         }
         isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
+        products {
+          edges {
+            node {
+              id
+              description
+              productType {
+                id
+                name
+                image
+                category {
+                  id
+                  name
+                  image
+                }
+              }
             }
           }
         }
-        rating{
+        rating {
           nbRatings
           rating
         }
       }
-    }`,
+    }
+  }
+}
+`,
         variables: {},
         context: {}
       };
@@ -411,6 +467,7 @@ describe('Testing graphql request producers', () => {
     });
 
     // --------------------filterProducers(byProductTypeIds: [ID!]!)------------------------------------------ //
+    // TODO: geoFilterProducer
     describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
       const { query } = {
         query: `
@@ -553,93 +610,110 @@ describe('Testing graphql request producers', () => {
 
       const { mutation } = {
         mutation: `
-    mutation($producerId: ID!, $state: Boolean!){
-      validateAProducer(producerId: $producerId, validationState: $state){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+mutation($producerId: ID!, $state: Boolean!) {
+  validateAProducer(producerId: $producerId, validationState: $state) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        emailValidated
-        isAdmin
-        followers{
+      }
+    }
+    emailValidated
+    isAdmin
+    followers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      edges {
+        node {
           description
-          productType{
+          productType {
             name
             image
-            category{
+            category {
               name
               image
             }
-            producers{
-              firstname
-              lastname
-              email
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
           }
         }
-        rating{
-          nbRatings
-          rating
-        }
       }
-    }`
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}
+`
       };
 
       it('should change the validation state of a producer to true', async(done) => {
@@ -680,226 +754,6 @@ describe('Testing graphql request producers', () => {
       });
     });
 
-    /*
-    // --------------------addProducer(producer: ProducerInputAdd!)------------------------------------------ //
-    describe('Testing addProducer(producer: ProducerInputAdd!)', () => {
-      beforeEach(() => clearAndPopulateDB());
-
-      const { mutation } = {
-        mutation: `mutation($producer: ProducerInputAdd!) {
-  addProducer(producer: $producer) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      firstname
-      lastname
-      email
-    }
-    emailValidated
-    isAdmin
-    followers {
-      firstname
-      lastname
-      email
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      description
-      productType {
-        name
-        image
-        category {
-          name
-          image
-        }
-        producers {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    rating {
-      nbRatings
-      rating
-    }
-  }
-}
-`
-      };
-
-      it('should add a new producer', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.data.addProducer).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because of missing mendatory information', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should fail adding a new producer because email already used', async(done) => {
-        const variables = {
-          producer: {
-            firstname: 'benoit',
-            lastname: 'Schöpfli',
-            email: 'benoit@schöpfli.ch',
-            password: '1234abcd',
-            image: 'ceci est une image encodée en base 64',
-            phoneNumber: '0781234561212',
-            description: 'un chouette gaillard!',
-            website: 'benoitschöpfli.ch'
-          }
-        };
-        // on ajoute le producteur une 1ère fois
-        let result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.data.addProducer).not.toBeNull();
-
-        // on tente d'ajouter le producteur une 2ème fois -> plante car email déjà utilisé
-        result = await graphql(schema, mutation, null, null, variables);
-        expect(result.data).toBeNull();
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
-      });
-    });
-    */
-
     // --------------------updateProducer(producer: ProducerInputUpdate!)------------------------------------------ //
     describe('Testing updateProducer(producer: ProducerInputUpdate!)', () => {
       let context;
@@ -909,23 +763,32 @@ describe('Testing graphql request producers', () => {
       });
 
       const { mutation } = {
-        mutation: `mutation($producer: ProducerInputUpdate!) {
+        mutation: `
+mutation($producer: ProducerInputUpdate!) {
   updateProducer(producer: $producer) {
     firstname
     lastname
     email
     image
     followingProducers {
-      firstname
-      lastname
-      email
+      edges {
+        node {
+          firstname
+          lastname
+          email
+        }
+      }
     }
     emailValidated
     isAdmin
     followers {
-      firstname
-      lastname
-      email
+      edges {
+        node {
+          firstname
+          lastname
+          email
+        }
+      }
     }
     phoneNumber
     description
@@ -975,18 +838,26 @@ describe('Testing graphql request producers', () => {
     }
     isValidated
     products {
-      description
-      productType {
-        name
-        image
-        category {
-          name
-          image
-        }
-        producers {
-          firstname
-          lastname
-          email
+      edges {
+        node {
+          description
+          productType {
+            name
+            image
+            category {
+              name
+              image
+            }
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -1019,93 +890,111 @@ describe('Testing graphql request producers', () => {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($producerId: ID!) {
+  producer(producerId: $producerId) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        emailValidated
-        isAdmin
-        followers{
+      }
+    }
+    emailValidated
+    isAdmin
+    followers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      edges {
+        node {
           description
-          productType{
+          productType {
             name
             image
-            category{
+            category {
               name
               image
             }
-            producers{
-              firstname
-              lastname
-              email
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
           }
         }
-        rating{
-          nbRatings
-          rating
-        }
       }
-    }`
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}
+
+`
         };
         result = await graphql(schema, queryGetProducerById, null, null, variables);
         expect(result.data.producer).not.toBeNull();
@@ -1239,93 +1128,109 @@ describe('Testing graphql request producers', () => {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($producerId: ID!) {
+  producer(producerId: $producerId) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        emailValidated
-        isAdmin
-        followers{
+      }
+    }
+    emailValidated
+    isAdmin
+    followers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      edges {
+        node {
           description
-          productType{
+          productType {
             name
             image
-            category{
+            category {
               name
               image
             }
-            producers{
-              firstname
-              lastname
-              email
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
           }
         }
-        rating{
-          nbRatings
-          rating
-        }
       }
-    }`
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}`
         };
         result = await graphql(schema, queryGetProducerById, null, null, variables);
         expect(result.data.producer).not.toBeNull();
@@ -1356,93 +1261,110 @@ describe('Testing graphql request producers', () => {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
+query($producerId: ID!) {
+  producer(producerId: $producerId) {
+    firstname
+    lastname
+    email
+    image
+    followingProducers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        emailValidated
-        isAdmin
-        followers{
+      }
+    }
+    emailValidated
+    isAdmin
+    followers {
+      edges {
+        node {
           firstname
           lastname
           email
         }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
+      }
+    }
+    phoneNumber
+    description
+    website
+    salespoint {
+      name
+      address {
+        number
+        street
+        city
+        postalCode
+        state
+        country
+        longitude
+        latitude
+      }
+      schedule {
+        monday {
+          openingHour
+          closingHour
         }
-        isValidated
-        products{
+        tuesday {
+          openingHour
+          closingHour
+        }
+        wednesday {
+          openingHour
+          closingHour
+        }
+        thursday {
+          openingHour
+          closingHour
+        }
+        friday {
+          openingHour
+          closingHour
+        }
+        saturday {
+          openingHour
+          closingHour
+        }
+        sunday {
+          openingHour
+          closingHour
+        }
+      }
+    }
+    isValidated
+    products {
+      edges {
+        node {
           description
-          productType{
+          productType {
             name
             image
-            category{
+            category {
               name
               image
             }
-            producers{
-              firstname
-              lastname
-              email
+            producers {
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
           }
         }
-        rating{
-          nbRatings
-          rating
-        }
       }
-    }`
+    }
+    rating {
+      nbRatings
+      rating
+    }
+  }
+}
+`
         };
         result = await graphql(schema, queryGetProducerById, null, null, variables);
         expect(result.data.producer).not.toBeNull();
@@ -1507,7 +1429,8 @@ describe('Testing graphql request producers', () => {
       });
 
       const { mutation } = {
-        mutation: ` mutation($producerId: ID!) {
+        mutation: `
+        mutation($producerId: ID!) {
   deleteProducer(producerId: $producerId) {
     firstname
     lastname

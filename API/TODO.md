@@ -40,9 +40,7 @@ Reste à faire:
 
 - Refaire toute la java doc!
 
-- **Ajouter les transactions!**
-
-- **Filtrer les producteurs qui n'ont pas été validés par un admin!**
+- **Ajouter les transactions!!**
 
 - **TESTER les subscription pour les notifications**
 
@@ -67,6 +65,4 @@ Reste à faire:
   }
   ```
 
-  
-
-- Merge le addProducerRating et le updateProducerRating en un seul addOrUpdateProducerRating qui met a jour un rating s'il existe déjà et le crée sinon (avec insert dans le findAndUpdate...?)
+- **Ajouter tri par rapport au rating des producteurs (reçoit 4 étoiles -> rend prod de 4 étoiles et +)** 

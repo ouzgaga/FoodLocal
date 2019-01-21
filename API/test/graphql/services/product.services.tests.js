@@ -115,7 +115,8 @@ describe('tests product services', () => {
       try {
         await productsServices.getProductById({ id: '' });
       } catch (err) {
-        err.message.should.be.equal('Received product.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -226,7 +227,8 @@ describe('tests product services', () => {
         productPomme.id = '';
         await productsServices.updateProduct(productPomme);
       } catch (err) {
-        err.message.should.be.equal('Received product.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -235,7 +237,8 @@ describe('tests product services', () => {
         productPomme.id = '5c04561e7209e21e582750'; // id trop court (<24 caractères)
         await productsServices.updateProduct(productPomme);
       } catch (err) {
-        err.message.should.be.equal('Received product.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -244,7 +247,8 @@ describe('tests product services', () => {
         productPomme.id = '5c04561e7209e21e582750a35c04561e7209e21e582750a35c04561e7209e21e582750a3'; // id trop long (> 24 caractères)
         await productsServices.updateProduct(productPomme);
       } catch (err) {
-        err.message.should.be.equal('Received product.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -278,7 +282,8 @@ describe('tests product services', () => {
         // on supprime un product inexistant
         await productsServices.deleteProduct('abcdefabcdefabcdefabcdef');
       } catch (err) {
-        err.message.should.be.equal('Received product.id is invalid');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
   });

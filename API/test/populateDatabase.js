@@ -396,6 +396,9 @@ const populateDB = async() => {
       website: 'foodlocal.ch',
     }
   );
+
+  producer3 = await producersServices.validateAProducer(producer3.id, true);
+
   // on ajoute des produits au producteur
   await productsServices.addProduct(tomme, producer3.id);
   await productsServices.addProduct(jusPomme, producer3.id);
@@ -444,7 +447,7 @@ const populateDB = async() => {
   });
 
   // on ajoute un producteur
-  const producer4 = await producersServices.addProducer(
+  let producer4 = await producersServices.addProducer(
     {
       firstname: 'Jérémie',
       lastname: 'Chaton',
@@ -452,6 +455,7 @@ const populateDB = async() => {
       password: '1234abcd'
     }
   );
+  producer4 = await producersServices.validateAProducer(producer4.id, true);
 
   // ------------------------------------------------------------------- ajout de 2 users ----------------------------------------------------------------------
   // on ajoute un utilisateur
@@ -477,19 +481,19 @@ const populateDB = async() => {
 
   // ------------------------------------------------------------------- ajout de ratings ----------------------------------------------------------------------
   // ajout de ratings pour le producer1
-  const rating1p1 = await personRatingProducersServices.addPersonRatingProducer({ personId: user1.id, producerId: producer1.id, rating: 5 });
-  const rating2p1 = await personRatingProducersServices.addPersonRatingProducer({ personId: user2.id, producerId: producer1.id, rating: 3 });
-  const rating3p1 = await personRatingProducersServices.addPersonRatingProducer({ personId: producer2.id, producerId: producer1.id, rating: 2 });
+  const rating1p1 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer1.id, rating: 5 });
+  const rating2p1 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer1.id, rating: 3 });
+  const rating3p1 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer2.id, producerId: producer1.id, rating: 2 });
 
   // ajout de ratings pour le producer2
-  const rating1p2 = await personRatingProducersServices.addPersonRatingProducer({ personId: user1.id, producerId: producer2.id, rating: 3 });
-  const rating2p2 = await personRatingProducersServices.addPersonRatingProducer({ personId: user2.id, producerId: producer2.id, rating: 4 });
+  const rating1p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer2.id, rating: 3 });
+  const rating2p2 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer2.id, rating: 4 });
 
   // ajout de ratings pour le producer3
-  const rating1p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: user1.id, producerId: producer3.id, rating: 5 });
-  const rating2p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: user2.id, producerId: producer3.id, rating: 3 });
-  const rating3p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: producer1.id, producerId: producer3.id, rating: 4 });
-  const rating4p3 = await personRatingProducersServices.addPersonRatingProducer({ personId: producer2.id, producerId: producer3.id, rating: 2 });
+  const rating1p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user1.id, producerId: producer3.id, rating: 5 });
+  const rating2p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: user2.id, producerId: producer3.id, rating: 3 });
+  const rating3p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer1.id, producerId: producer3.id, rating: 4 });
+  const rating4p3 = await personRatingProducersServices.addOrUpdatePersonRatingProducer({ personId: producer2.id, producerId: producer3.id, rating: 2 });
 
   // -------------------------------------------------------------------- ajout de followers -------------------------------------------------------------------
   // ajout de 3 followers de producer1
