@@ -18,10 +18,6 @@ let tabProductTypes;
 const clearAndPopulateDB = async() => {
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
-
-  // FIXME: appeler les fonction getTab directement dans les tests (pour n'appeler que celles que j'utilise réellement!)
-  tabProducers = await getTabProducers();
-  tabProductTypes = await getTabProductTypes();
 };
 
 describe('Testing graphql request producers', () => {
@@ -32,107 +28,123 @@ describe('Testing graphql request producers', () => {
     describe('Testing producers()', () => {
       const { query } = {
         query: `
-query {
-  producers {
-    edges {
-      node {
-        id
-        firstname
-        lastname
-        email
-        image
-        followingProducers {
-          edges {
-            node {
-              id
-              firstname
-              lastname
-            }
-          }
-        }
-        emailValidated
-        isAdmin
-        followers {
-          edges {
-            node {
-              id
-              lastname
-              firstname
-            }
-          }
-        }
-        phoneNumber
-        description
-        website
-        salespoint {
-          name
-          address {
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule {
-            monday {
-              openingHour
-              closingHour
-            }
-            tuesday {
-              openingHour
-              closingHour
-            }
-            wednesday {
-              openingHour
-              closingHour
-            }
-            thursday {
-              openingHour
-              closingHour
-            }
-            friday {
-              openingHour
-              closingHour
-            }
-            saturday {
-              openingHour
-              closingHour
-            }
-            sunday {
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products {
-          edges {
-            node {
-              id
-              description
-              productType {
-                id
-                name
-                image
-                category {
-                  id
-                  name
+          query {
+            producers {
+              totalCount
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                  image
+                  followingProducers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  emailValidated
+                  isAdmin
+                  followers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  phoneNumber
+                  description
+                  website
+                  salespoint {
+                    name
+                    address {
+                      number
+                      street
+                      city
+                      postalCode
+                      state
+                      country
+                      longitude
+                      latitude
+                    }
+                    schedule {
+                      monday {
+                        openingHour
+                        closingHour
+                      }
+                      tuesday {
+                        openingHour
+                        closingHour
+                      }
+                      wednesday {
+                        openingHour
+                        closingHour
+                      }
+                      thursday {
+                        openingHour
+                        closingHour
+                      }
+                      friday {
+                        openingHour
+                        closingHour
+                      }
+                      saturday {
+                        openingHour
+                        closingHour
+                      }
+                      sunday {
+                        openingHour
+                        closingHour
+                      }
+                    }
+                  }
+                  isValidated
+                  products {
+                    edges {
+                      node {
+                        description
+                        productType {
+                          name
+                          image
+                          category {
+                            name
+                            image
+                          }
+                          producers {
+                            totalCount
+                            edges {
+                              node {
+                                firstname
+                                lastname
+                                email
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  rating {
+                    nbRatings
+                    grade
+                  }
                 }
               }
             }
-          }
-        }
-        rating {
-          nbRatings
-          rating
-        }
-      }
-    }
-  }
-}`
+          }`
       };
       it('should get all producers', async(done) => {
         const result = await graphql(schema, query, null, {}, {});
@@ -146,92 +158,119 @@ query {
     describe('Testing producer(producerId: ID!)', () => {
       const { query } = {
         query: `
-query($id: ID!){
-  producer(producerId: $id){
-    firstname
-    lastname
-    email
-    image
-    followingProducers{
-      edges {
-        node {
-          id
-          firstname
-          lastname
-          email
-          image
+    query($id: ID!){
+      producer(producerId: $id){
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers{
-      edges{
-        node{
-          id
-          firstname
-          lastname
-          email
-          image
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint{
-      name
-      address{
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule{
-        monday{
-          openingHour
-          closingHour
-        }
-        tuesday{
-          openingHour
-          closingHour
-        }
-        wednesday{
-          openingHour
-          closingHour
-        }
-        thursday{
-          openingHour
-          closingHour
-        }
-        friday{
-          openingHour
-          closingHour
-        }
-        saturday{
-          openingHour
-          closingHour
-        }
-        sunday{
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products{
-      edges{
-        node{
-          id
-          description
-          productType{
-            id
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
+            followingProducers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
+            }
           }
         }
       }
@@ -245,6 +284,8 @@ query($id: ID!){
       };
 
       it('should get a producer by id (without salespoint)', async(done) => {
+        tabProducers = await getTabProducers();
+
         const variables = { id: tabProducers[3].id };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -304,114 +345,120 @@ query($id: ID!){
 
       const { query } = {
         query: `
-query {
-  producersWaitingForValidation {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    edges {
-      node {
-        id
-        firstname
-        lastname
-        email
-        image
-        followingProducers {
-          edges {
-            node {
-              id
-              firstname
-              lastname
-              email
-              image
-            }
-          }
+    query{
+      producersWaitingForValidation{
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-        emailValidated
-        isAdmin
-        followers {
-          edges {
-            node {
-              id
-              firstname
-              lastname
-              email
-              image
-            }
-          }
-        }
-        phoneNumber
-        description
-        website
-        salespoint {
-          name
-          address {
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-            distance
-          }
-          schedule {
-            monday {
-              openingHour
-              closingHour
-            }
-            tuesday {
-              openingHour
-              closingHour
-            }
-            wednesday {
-              openingHour
-              closingHour
-            }
-            thursday {
-              openingHour
-              closingHour
-            }
-            friday {
-              openingHour
-              closingHour
-            }
-            saturday {
-              openingHour
-              closingHour
-            }
-            sunday {
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products {
-          edges {
-            node {
-              id
-              description
-              productType {
-                id
-                name
-                image
-                category {
-                  id
-                  name
-                  image
+        edges {
+          node {
+            firstname
+            lastname
+            email
+            image
+            followingProducers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
                 }
               }
             }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
+            }
           }
-        }
-        rating {
-          nbRatings
-          rating
         }
       }
     }
@@ -473,88 +520,118 @@ query {
         query: `
     query($id: [ID!]){
       filterProducers(byProductTypeIds: $id){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
-            category{
-              name
-              image
+            followingProducers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
             }
-            producers{
-              firstname
-              lastname
-              email
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
             }
           }
-        }
-        rating{
-          nbRatings
-          rating
         }
       }
     }`
@@ -610,91 +687,23 @@ query {
 
       const { mutation } = {
         mutation: `
-mutation($producerId: ID!, $state: Boolean!) {
-  validateAProducer(producerId: $producerId, validationState: $state) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
+    mutation($producerId: ID!, $state: Boolean!){
+      validateAProducer(producerId: $producerId, validationState: $state){
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      edges {
-        node {
-          description
-          productType {
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
-            category {
-              name
-              image
-            }
-            producers {
+            followingProducers {
+              totalCount
               edges {
                 node {
                   firstname
@@ -703,17 +712,98 @@ mutation($producerId: ID!, $state: Boolean!) {
                 }
               }
             }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
+            }
           }
         }
       }
-    }
-    rating {
-      nbRatings
-      rating
-    }
-  }
-}
-`
+    }`
       };
 
       it('should change the validation state of a producer to true', async(done) => {
@@ -764,110 +854,123 @@ mutation($producerId: ID!, $state: Boolean!) {
 
       const { mutation } = {
         mutation: `
-mutation($producer: ProducerInputUpdate!) {
-  updateProducer(producer: $producer) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      edges {
-        node {
-          description
-          productType {
-            name
-            image
-            category {
-              name
-              image
-            }
-            producers {
+          mutation($producer: ProducerInputUpdate!) {
+            updateProducer(producer: $producer) {
+              totalCount
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
               edges {
                 node {
                   firstname
                   lastname
                   email
+                  image
+                  followingProducers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  emailValidated
+                  isAdmin
+                  followers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  phoneNumber
+                  description
+                  website
+                  salespoint {
+                    name
+                    address {
+                      number
+                      street
+                      city
+                      postalCode
+                      state
+                      country
+                      longitude
+                      latitude
+                    }
+                    schedule {
+                      monday {
+                        openingHour
+                        closingHour
+                      }
+                      tuesday {
+                        openingHour
+                        closingHour
+                      }
+                      wednesday {
+                        openingHour
+                        closingHour
+                      }
+                      thursday {
+                        openingHour
+                        closingHour
+                      }
+                      friday {
+                        openingHour
+                        closingHour
+                      }
+                      saturday {
+                        openingHour
+                        closingHour
+                      }
+                      sunday {
+                        openingHour
+                        closingHour
+                      }
+                    }
+                  }
+                  isValidated
+                  products {
+                    edges {
+                      node {
+                        description
+                        productType {
+                          name
+                          image
+                          category {
+                            name
+                            image
+                          }
+                          producers {
+                            totalCount
+                            edges {
+                              node {
+                                firstname
+                                lastname
+                                email
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  rating {
+                    nbRatings
+                    grade
+                  }
                 }
               }
             }
-          }
-        }
-      }
-    }
-    rating {
-      nbRatings
-      rating
-    }
-  }
-}
-`
+          }`
       };
 
       it('should update a producer', async(done) => {
@@ -890,91 +993,23 @@ mutation($producer: ProducerInputUpdate!) {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-query($producerId: ID!) {
-  producer(producerId: $producerId) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      edges {
-        node {
-          description
-          productType {
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
-            category {
-              name
-              image
-            }
-            producers {
+            followingProducers {
+              totalCount
               edges {
                 node {
                   firstname
@@ -982,6 +1017,94 @@ query($producerId: ID!) {
                   email
                 }
               }
+            }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
             }
           }
         }
@@ -1128,91 +1251,23 @@ query($producerId: ID!) {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-query($producerId: ID!) {
-  producer(producerId: $producerId) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      edges {
-        node {
-          description
-          productType {
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
-            category {
-              name
-              image
-            }
-            producers {
+            followingProducers {
+              totalCount
               edges {
                 node {
                   firstname
@@ -1220,6 +1275,94 @@ query($producerId: ID!) {
                   email
                 }
               }
+            }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
             }
           }
         }
@@ -1261,91 +1404,23 @@ query($producerId: ID!) {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-query($producerId: ID!) {
-  producer(producerId: $producerId) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
+    query($producerId: ID!){
+      producer(producerId: $producerId){
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
-      }
-    }
-    emailValidated
-    isAdmin
-    followers {
-      edges {
-        node {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      edges {
-        node {
-          description
-          productType {
-            name
+        edges {
+          node {
+            firstname
+            lastname
+            email
             image
-            category {
-              name
-              image
-            }
-            producers {
+            followingProducers {
+              totalCount
               edges {
                 node {
                   firstname
@@ -1353,6 +1428,94 @@ query($producerId: ID!) {
                   email
                 }
               }
+            }
+            emailValidated
+            isAdmin
+            followers {
+              totalCount
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                }
+              }
+            }
+            phoneNumber
+            description
+            website
+            salespoint {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+            isValidated
+            products {
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rating {
+              nbRatings
+              grade
             }
           }
         }
@@ -1430,94 +1593,123 @@ query($producerId: ID!) {
 
       const { mutation } = {
         mutation: `
-        mutation($producerId: ID!) {
-  deleteProducer(producerId: $producerId) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      firstname
-      lastname
-      email
-    }
-    emailValidated
-    isAdmin
-    followers {
-      firstname
-      lastname
-      email
-    }
-    phoneNumber
-    description
-    website
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-    isValidated
-    products {
-      description
-      productType {
-        name
-        image
-        category {
-          name
-          image
-        }
-        producers {
-          firstname
-          lastname
-          email
-        }
-      }
-    }
-    rating {
-      nbRatings
-      rating
-    }
-  }
-      }
-`
+          mutation($producerId: ID!) {
+            deleteProducer(producerId: $producerId) {
+              totalCount
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node {
+                  firstname
+                  lastname
+                  email
+                  image
+                  followingProducers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  emailValidated
+                  isAdmin
+                  followers {
+                    totalCount
+                    edges {
+                      node {
+                        firstname
+                        lastname
+                        email
+                      }
+                    }
+                  }
+                  phoneNumber
+                  description
+                  website
+                  salespoint {
+                    name
+                    address {
+                      number
+                      street
+                      city
+                      postalCode
+                      state
+                      country
+                      longitude
+                      latitude
+                    }
+                    schedule {
+                      monday {
+                        openingHour
+                        closingHour
+                      }
+                      tuesday {
+                        openingHour
+                        closingHour
+                      }
+                      wednesday {
+                        openingHour
+                        closingHour
+                      }
+                      thursday {
+                        openingHour
+                        closingHour
+                      }
+                      friday {
+                        openingHour
+                        closingHour
+                      }
+                      saturday {
+                        openingHour
+                        closingHour
+                      }
+                      sunday {
+                        openingHour
+                        closingHour
+                      }
+                    }
+                  }
+                  isValidated
+                  products {
+                    edges {
+                      node {
+                        description
+                        productType {
+                          name
+                          image
+                          category {
+                            name
+                            image
+                          }
+                          producers {
+                            totalCount
+                            edges {
+                              node {
+                                firstname
+                                lastname
+                                email
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  rating {
+                    nbRatings
+                    grade
+                  }
+                }
+              }
+            }
+          }`
       };
 
       it('should delete an existing producer', async(done) => {
@@ -1534,93 +1726,123 @@ query($producerId: ID!) {
         const variables = { producerId: tabProducers[0].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
-        }
-      }
-    }`
+            query($producerId: ID!){
+              producer(producerId: $producerId){
+                totalCount
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                    image
+                    followingProducers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    emailValidated
+                    isAdmin
+                    followers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    phoneNumber
+                    description
+                    website
+                    salespoint {
+                      name
+                      address {
+                        number
+                        street
+                        city
+                        postalCode
+                        state
+                        country
+                        longitude
+                        latitude
+                      }
+                      schedule {
+                        monday {
+                          openingHour
+                          closingHour
+                        }
+                        tuesday {
+                          openingHour
+                          closingHour
+                        }
+                        wednesday {
+                          openingHour
+                          closingHour
+                        }
+                        thursday {
+                          openingHour
+                          closingHour
+                        }
+                        friday {
+                          openingHour
+                          closingHour
+                        }
+                        saturday {
+                          openingHour
+                          closingHour
+                        }
+                        sunday {
+                          openingHour
+                          closingHour
+                        }
+                      }
+                    }
+                    isValidated
+                    products {
+                      edges {
+                        node {
+                          description
+                          productType {
+                            name
+                            image
+                            category {
+                              name
+                              image
+                            }
+                            producers {
+                              totalCount
+                              edges {
+                                node {
+                                  firstname
+                                  lastname
+                                  email
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rating {
+                      nbRatings
+                      grade
+                    }
+                  }
+                }
+              }
+            }`
         };
         result = await graphql(schema, queryGetProducerById, null, context, variables);
         expect(result.data.producer).toBeNull();
@@ -1643,93 +1865,123 @@ query($producerId: ID!) {
         const variables = { producerId: tabProducers[1].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
-        }
-      }
-    }`
+            query($producerId: ID!){
+              producer(producerId: $producerId){
+                totalCount
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                    image
+                    followingProducers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    emailValidated
+                    isAdmin
+                    followers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    phoneNumber
+                    description
+                    website
+                    salespoint {
+                      name
+                      address {
+                        number
+                        street
+                        city
+                        postalCode
+                        state
+                        country
+                        longitude
+                        latitude
+                      }
+                      schedule {
+                        monday {
+                          openingHour
+                          closingHour
+                        }
+                        tuesday {
+                          openingHour
+                          closingHour
+                        }
+                        wednesday {
+                          openingHour
+                          closingHour
+                        }
+                        thursday {
+                          openingHour
+                          closingHour
+                        }
+                        friday {
+                          openingHour
+                          closingHour
+                        }
+                        saturday {
+                          openingHour
+                          closingHour
+                        }
+                        sunday {
+                          openingHour
+                          closingHour
+                        }
+                      }
+                    }
+                    isValidated
+                    products {
+                      edges {
+                        node {
+                          description
+                          productType {
+                            name
+                            image
+                            category {
+                              name
+                              image
+                            }
+                            producers {
+                              totalCount
+                              edges {
+                                node {
+                                  firstname
+                                  lastname
+                                  email
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rating {
+                      nbRatings
+                      grade
+                    }
+                  }
+                }
+              }
+            }`
         };
         result = await graphql(schema, queryGetProducerById, null, context, variables);
         expect(result.data.producer).not.toBeNull();
@@ -1751,93 +2003,123 @@ query($producerId: ID!) {
         const variables = { producerId: tabProducers[1].id };
         const { queryGetProducerById } = {
           queryGetProducerById: `
-    query($producerId: ID!){
-      producer(producerId: $producerId){
-        firstname
-        lastname
-        email
-        image
-        followingProducers{
-          firstname
-          lastname
-          email
-        }
-        emailValidated
-        isAdmin
-        followers{
-          firstname
-          lastname
-          email
-        }
-        phoneNumber
-        description
-        website
-        salespoint{
-          name
-          address{
-            number
-            street
-            city
-            postalCode
-            state
-            country
-            longitude
-            latitude
-          }
-          schedule{
-            monday{
-              openingHour
-              closingHour
-            }
-            tuesday{
-              openingHour
-              closingHour
-            }
-            wednesday{
-              openingHour
-              closingHour
-            }
-            thursday{
-              openingHour
-              closingHour
-            }
-            friday{
-              openingHour
-              closingHour
-            }
-            saturday{
-              openingHour
-              closingHour
-            }
-            sunday{
-              openingHour
-              closingHour
-            }
-          }
-        }
-        isValidated
-        products{
-          description
-          productType{
-            name
-            image
-            category{
-              name
-              image
-            }
-            producers{
-              firstname
-              lastname
-              email
-            }
-          }
-        }
-        rating{
-          nbRatings
-          rating
-        }
-      }
-    }`
+            query($producerId: ID!){
+              producer(producerId: $producerId){
+                totalCount
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                    image
+                    followingProducers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    emailValidated
+                    isAdmin
+                    followers {
+                      totalCount
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                    phoneNumber
+                    description
+                    website
+                    salespoint {
+                      name
+                      address {
+                        number
+                        street
+                        city
+                        postalCode
+                        state
+                        country
+                        longitude
+                        latitude
+                      }
+                      schedule {
+                        monday {
+                          openingHour
+                          closingHour
+                        }
+                        tuesday {
+                          openingHour
+                          closingHour
+                        }
+                        wednesday {
+                          openingHour
+                          closingHour
+                        }
+                        thursday {
+                          openingHour
+                          closingHour
+                        }
+                        friday {
+                          openingHour
+                          closingHour
+                        }
+                        saturday {
+                          openingHour
+                          closingHour
+                        }
+                        sunday {
+                          openingHour
+                          closingHour
+                        }
+                      }
+                    }
+                    isValidated
+                    products {
+                      edges {
+                        node {
+                          description
+                          productType {
+                            name
+                            image
+                            category {
+                              name
+                              image
+                            }
+                            producers {
+                              totalCount
+                              edges {
+                                node {
+                                  firstname
+                                  lastname
+                                  email
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    rating {
+                      nbRatings
+                      grade
+                    }
+                  }
+                }
+              }
+            }`
         };
         result = await graphql(schema, queryGetProducerById, null, context, variables);
         expect(result.data.producer).not.toBeNull();
