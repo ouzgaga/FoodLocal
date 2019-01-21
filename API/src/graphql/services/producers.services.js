@@ -40,10 +40,10 @@ const productTypesServices = require('./productTypes.services');
 function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   if (sortById) {
-    return ProducersModel.find({ ...tags, isValidated: true, deleted: false })
+    return ProducersModel.find({ isValidated: true, deleted: false, ...tags })
       .sort({ _id: 1 });
   } else {
-    return ProducersModel.find({ ...tags, isValidated: true, deleted: false });
+    return ProducersModel.find({ isValidated: true, deleted: false, ...tags });
   }
 }
 
@@ -100,7 +100,7 @@ function filterProducers(byProductTypeIds) {
   }
 }
 
-function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin) {
+function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin = 1) {
   if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
     return salespointsServices.geoFilterProducersSalespoints(locationClient, ratingMin);
   }

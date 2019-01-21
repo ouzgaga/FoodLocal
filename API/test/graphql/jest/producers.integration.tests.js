@@ -301,7 +301,6 @@ describe('Testing graphql request producers', () => {
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
         expect(result.data.producer).toBeNull();
         expect(result).toMatchSnapshot();
         done();
@@ -312,7 +311,6 @@ describe('Testing graphql request producers', () => {
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received producer.id is invalid!');
         expect(result.data.producer).toBeNull();
         expect(result).toMatchSnapshot();
         done();
@@ -447,29 +445,29 @@ describe('Testing graphql request producers', () => {
                 }
               }
             }
-          }`,
-        variables: {},
-        context: {}
+          }`
       };
 
-      it('should get all producers (2) waiting for validation', async(done) => {
+      it('should get all producers (1) waiting for validation', async(done) => {
         const result = await graphql(schema, query, null, context, null);
         expect.assertions(2);
         // on check qu'il y a bien 2 producteurs en attente de validation
-        expect(result.data.producersWaitingForValidation.length).toEqual(2);
+        expect(result.data.producersWaitingForValidation.edges.length).toEqual(1);
+        expect(result.data.producersWaitingForValidation.edges[0].node.firstname).toEqual('Monsieur');
+        expect(result.data.producersWaitingForValidation.edges[0].node.lastname).toEqual('UnValidated');
         expect(result).toMatchSnapshot();
         done();
       });
 
-      it('should get all producers (1) waiting for validation', async(done) => {
-        tabProducers = await getTabProducers();
+      it('should get all producers (0) waiting for validation', async(done) => {
 
-        await producersServices.validateAProducer(tabProducers[2].id, true);
+        let result = await graphql(schema, query, null, context, null);
+
+        await producersServices.validateAProducer(result.data.producersWaitingForValidation.edges[0].id, true);
         // on check qu'il ne reste plus qu'un producteur en attente de validation
-        const result = await graphql(schema, query, null, context, null);
+        result = await graphql(schema, query, null, context, null);
         expect.assertions(3);
-        expect(result.data.producersWaitingForValidation.length).toEqual(1);
-        expect(result.data.producersWaitingForValidation[0].firstname).toEqual('Jérémie');
+        expect(result.data.producersWaitingForValidation.edges.length).toEqual(0);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -506,8 +504,8 @@ describe('Testing graphql request producers', () => {
     describe('Testing filterProducers(byProductTypeIds: [ID!]!)', () => {
       const { query } = {
         query: `
-    query($id: [ID!]){
-      filterProducers(byProductTypeIds: $id){
+    query($clientLocation: ClientLocation!, $byProductTypeIds: [ID!]!, $ratingMin: Int){
+      geoFilterProducers(locationClient: $clientLocation, byProductTypeIds: $byProductTypeIds, ratingMin: $ratingMin){
         totalCount
         pageInfo {
           hasNextPage
@@ -625,14 +623,119 @@ describe('Testing graphql request producers', () => {
     }`
       };
 
-      it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers"', async(done) => {
+      it('should get all producers at max 3000km of me"', async(done) => {
         tabProductTypes = await getTabProductTypes();
 
-        const variables = { id: [tabProductTypes[1]._id] };
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 3000
+          },
+          byProductTypeIds: []
+        };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
-        expect(result.data.filterProducers.length).toEqual(3);
+        expect(result.data.geoFilterProducers.totalCount).toEqual(3);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers at max 1000km of me"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 1000
+          },
+          byProductTypeIds: []
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(1);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers at max 3000km of me and with at least 3 stars"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 3000
+          },
+          byProductTypeIds: [],
+          ratingMin: 3
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(2);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers at max 3000km of me"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 3000
+          },
+          byProductTypeIds: [tabProductTypes[1]._id]
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(3);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers at max 1000km of me"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 1000
+          },
+          byProductTypeIds: [tabProductTypes[1]._id]
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(1);
+        expect(result).toMatchSnapshot();
+        done();
+      });
+
+      it('should get all producers producing one or more products of productType "Fromages / Produits Laitiers at max 3000km of me and with at least 3'
+         + ' stars"', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.65,
+            latitude: 46.77,
+            maxDistance: 1000
+          },
+          byProductTypeIds: [tabProductTypes[1]._id],
+          ratingMin: 3
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 3 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(1);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -641,27 +744,61 @@ describe('Testing graphql request producers', () => {
          + ' productTypeCategory "Jus de fruits"', async(done) => {
         tabProductTypes = await getTabProductTypes();
 
-        const variables = { id: [tabProductTypes[10]._id, tabProductTypes[1]._id] };
+        const variables = {
+          clientLocation: {
+            longitude: 6.0,
+            latitude: 46.0
+          },
+          byProductTypeIds: [tabProductTypes[10]._id, tabProductTypes[1]._id]
+        };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers" et un ou plusieurs produits
         // de type "Jus de fruits"
-        expect(result.data.filterProducers.length).toEqual(2);
+        expect(result.data.geoFilterProducers.totalCount).toEqual(2);
         expect(result).toMatchSnapshot();
         done();
       });
 
+      it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
+         + ' productTypeCategory "Jus de fruits" atmax 3km of me and with at least 3 stars.', async(done) => {
+        tabProductTypes = await getTabProductTypes();
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.0,
+            latitude: 46.0
+          },
+          byProductTypeIds: [tabProductTypes[10]._id, tabProductTypes[1]._id],
+          ratingMin: 3
+        };
+        const result = await graphql(schema, query, null, null, variables);
+        expect.assertions(2);
+        // on check qu'il y a bien 2 producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers" et un ou plusieurs produits
+        // de type "Jus de fruits"
+        expect(result.data.geoFilterProducers.totalCount).toEqual(1);
+        expect(result).toMatchSnapshot();
+        done();
+      });
 
       it('should get all producers producing one or more products of productTypeCategory "Fromages / Produits Laitiers" AND one or more products of'
          + ' productTypeCategory "Jus de fruits" AND one or more products of productTypeCategory "Pâtes"', async(done) => {
         tabProductTypes = await getTabProductTypes();
 
-        const variables = { id: [tabProductTypes[1]._id, tabProductTypes[10]._id, tabProductTypes[17]._id] };
+
+        const variables = {
+          clientLocation: {
+            longitude: 6.0,
+            latitude: 46.0,
+            maxDistance: 5000
+          },
+          byProductTypeIds: [tabProductTypes[1]._id, tabProductTypes[10]._id, tabProductTypes[17]._id]
+        };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
         // on check qu'il y a bien qu'un producteurs produisant un ou plusieurs produits du type "Fromages / Produits Laitiers", un ou plusieurs produits
         // de type "Jus de fruits" et un ou plusieurs produits de type "pâtes"
-        expect(result.data.filterProducers.length).toEqual(1);
+        expect(result.data.geoFilterProducers.totalCount).toEqual(1);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -685,118 +822,107 @@ describe('Testing graphql request producers', () => {
         mutation: `
     mutation($producerId: ID!, $state: Boolean!){
       validateAProducer(producerId: $producerId, validationState: $state){
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
+        firstname
+        lastname
+        email
+        image
+        followingProducers {
+          totalCount
+          edges {
+            node {
+              firstname
+              lastname
+              email
+            }
+          }
         }
-        edges {
-          node {
-            firstname
-            lastname
-            email
-            image
-            followingProducers {
-              totalCount
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
-                }
-              }
+        emailValidated
+        isAdmin
+        followers {
+          totalCount
+          edges {
+            node {
+              firstname
+              lastname
+              email
             }
-            emailValidated
-            isAdmin
-            followers {
-              totalCount
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
-                }
-              }
+          }
+        }
+        phoneNumber
+        description
+        website
+        salespoint {
+          name
+          address {
+            number
+            street
+            city
+            postalCode
+            state
+            country
+            longitude
+            latitude
+          }
+          schedule {
+            monday {
+              openingHour
+              closingHour
             }
-            phoneNumber
-            description
-            website
-            salespoint {
-              name
-              address {
-                number
-                street
-                city
-                postalCode
-                state
-                country
-                longitude
-                latitude
-              }
-              schedule {
-                monday {
-                  openingHour
-                  closingHour
-                }
-                tuesday {
-                  openingHour
-                  closingHour
-                }
-                wednesday {
-                  openingHour
-                  closingHour
-                }
-                thursday {
-                  openingHour
-                  closingHour
-                }
-                friday {
-                  openingHour
-                  closingHour
-                }
-                saturday {
-                  openingHour
-                  closingHour
-                }
-                sunday {
-                  openingHour
-                  closingHour
-                }
-              }
+            tuesday {
+              openingHour
+              closingHour
             }
-            isValidated
-            products {
-              edges {
-                node {
-                  description
-                  productType {
-                    name
-                    image
-                    category {
-                      name
-                      image
-                    }
-                    producers {
-                      totalCount
-                      edges {
-                        node {
-                          firstname
-                          lastname
-                          email
-                        }
-                      }
+            wednesday {
+              openingHour
+              closingHour
+            }
+            thursday {
+              openingHour
+              closingHour
+            }
+            friday {
+              openingHour
+              closingHour
+            }
+            saturday {
+              openingHour
+              closingHour
+            }
+            sunday {
+              openingHour
+              closingHour
+            }
+          }
+        }
+        isValidated
+        products {
+          edges {
+            node {
+              description
+              productType {
+                name
+                image
+                category {
+                  name
+                  image
+                }
+                producers {
+                  totalCount
+                  edges {
+                    node {
+                      firstname
+                      lastname
+                      email
                     }
                   }
                 }
               }
             }
-            rating {
-              nbRatings
-              grade
-            }
           }
+        }
+        rating {
+          nbRatings
+          grade
         }
       }
     }`

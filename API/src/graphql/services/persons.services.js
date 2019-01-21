@@ -135,8 +135,8 @@ async function resetPassword(email) {
   const password = crypto.randomBytes(20).toString('hex');
   person.password = await bcrypt.hash(password, 10);
   const updatedPerson = await PersonsModel.findByIdAndUpdate(person.id, { password: person.password }, { new: true, runValidators: true });
-  if (updatedPerson != null) {
-    // FIXME: À décommenter pour réellement envoyer les emails!!!!!
+  if (updatedPerson != null && process.env.NODE_ENV === 'production') {
+    // les mails ne sont réellement envoyés que si l'API tourne en production
     mail.sendMailResetPassword(email, updatedPerson.firstname, updatedPerson.lastname, password);
   }
   return false;

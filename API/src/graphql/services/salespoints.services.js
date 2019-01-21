@@ -40,7 +40,7 @@ function getSalespointById(id) {
   return SalespointsModel.findById(id);
 }
 
-function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, ratingMin) {
+function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, ratingMin = 1) {
   return SalespointsModel.aggregate(
     [
       {
@@ -106,7 +106,7 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, rat
   );
 }
 
-function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab, ratingMin) {
+function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab, ratingMin = 1) {
   // FIXME: PAUL: est-ce possible de faire en sorte que GraphQL convertisse automatiquement les ID en ObjectID ?
   productTypeIdsTab = productTypeIdsTab.map(e => mongoose.Types.ObjectId(e));
 
@@ -185,7 +185,8 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
           rating: { $first: '$rating' },
           productTypeIds: { $addToSet: '$products.productTypeId' },
           salespoint: { $first: '$salespoint' },
-          products: { $first: '$products' }
+          products: { $first: '$products' },
+          deleted: { $first: '$deleted' }
         }
       },
       {
