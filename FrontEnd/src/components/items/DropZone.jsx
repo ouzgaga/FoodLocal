@@ -50,6 +50,8 @@ class DropZone extends React.Component {
   }
 
   onDrop = (files, rejected) => {
+    const { onChange } = this.props;
+
     if (rejected.length === 0) {
       this.setState({ files: files, error: '', });
 
@@ -58,8 +60,11 @@ class DropZone extends React.Component {
       fr.addEventListener("load", () => {
 
         this.setState({ imgSrc: fr.result });
-      }, false)
-      fr.readAsDataURL(files[0])
+        console.info(fr.result);
+        onChange(this.state.imgSrc);
+      }, false);
+      fr.readAsDataURL(files[0]);
+
     } else {
       this.setState({ error: <Typography color="error">Erreur, image non valide.</Typography> })
     }

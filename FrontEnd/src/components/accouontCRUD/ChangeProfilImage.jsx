@@ -57,16 +57,28 @@ const styles = theme => ({
  */
 class ChangeProfilImage extends Component {
 
+  constructor(props) {
+    super(props);
+     this.state = {
+        image: null,
+        myImage: null,
+     };
+  }
+
+  updateImage = (img) => {
+    this.setState({image: img});
+  }
+
   render() {
     const { classes, userId, token } = this.props;
-
+    const { image } = this.state;
     return (
       <>
         <Query
           query={queryMe}
           variables={{ token: token }}
         >
-          {({ loading, error, data }) => {
+          {({ loading, error, data, refetch }) => {
             if (loading) return <p>Chargement...</p>;
             if (error) return <p>{console.info(error)}<Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography></p>;
             // Le retour d'une mutation s'appelle aussi data
@@ -75,6 +87,7 @@ class ChangeProfilImage extends Component {
               <>
                 <Mutation
                   mutation={mutUpdateProd}
+                  onCompleted={() => refetch()}
                 >
                   {(updateTodo, { data, loading, error }) => (
                     <form
@@ -83,11 +96,13 @@ class ChangeProfilImage extends Component {
                         e.preventDefault();
                         const user = {
                           id: userId,
-                          description: document.getElementById('BorderedTextField-personal-description').value,
+                          image: this.state.image,
                         };
+                        console.info({user});
                         updateTodo({
                           variables: { user: user }
                         });
+                        refetch();
                       }}
                     >
                       <Grid container spacing={16}>
@@ -100,7 +115,7 @@ class ChangeProfilImage extends Component {
                           </ButtonBase>
                         </Grid>
                         <Grid item xs={4} container alignItems="center" className={classes.rightBox}>
-                          <DropZone />
+                          <DropZone onChange={this.updateImage} />
                         </Grid>
                       </Grid>
                       <BoxLeftRight

@@ -45,12 +45,6 @@ class PagePersonalInformations extends React.Component {
     const userSettings = (userId, status, token) => (
       <>
         <BoxWithHeader
-          header="Image de profil"
-        >
-          <ChangeProfilImage userId={userId} status={status} token={token} />
-        </BoxWithHeader>
-
-        <BoxWithHeader
           header="Informations personnels"
         >
           <PersonalInformation userId={userId} status={status} token={token} />
@@ -75,7 +69,7 @@ class PagePersonalInformations extends React.Component {
         <BoxWithHeader
           header="Image de profil"
         >
-          <ChangeProfilImage  userId={userId} status={status} token={token}/>
+          <ChangeProfilImage userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Informations personnels"
