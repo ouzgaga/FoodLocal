@@ -26,8 +26,8 @@ build-api:
   - docker push $CONTAINER_TEST_IMAGE_API
   only:
   - prod
-  #- master
-  #- API
+  - master
+  - API
 
 build-frontend:
   stage: build
@@ -39,9 +39,9 @@ build-frontend:
   - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
   - docker push $CONTAINER_TEST_IMAGE_FRONTEND
   only:
-  #- 10-site-web-creation-des-pages-principales-carte
+  - 10-site-web-creation-des-pages-principales-carte
   - prod
-  #- master
+  - master
 
 ##########
 ###TEST###
@@ -52,13 +52,10 @@ test-api:
   script:
   - cd ./API
   - npm i npm@latest -g
-  #- apk update
-  #- apk --no-cache add --virtual builds-deps build-base python
   - npm config set python /usr/bin/python
   - npm install
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
-  #- apk del builds-deps
   - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
   - sleep 10; npm test
   only:
@@ -69,28 +66,15 @@ test-api-full:
   script:
   - cd ./API
   - npm i npm@latest -g
-  #- apk update
-  #- apk --no-cache add --virtual builds-deps build-base python
   - npm config set python /usr/bin/python
   - npm install
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
-  #- apk del builds-deps
   - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
   - sleep 30 && npm test
-  #- npm test-jest
   only:
   - prod
   - master
-
-#test-api:
-#  stage: test
-#  image: docker:stable
-#  services:
-#    - docker:dind
-#  script:
-#    - docker-compose run -e NODE_ENV=development -e MONGODB_HOST=${MONGODB_HOST} -e MONGODB_PORT=${MONGODB_PORT} -e MONGODB_DBNAME_DEV=dev -e MONGODB_DBNAME_TEST=test -e  ./API
-
 
 ## Test quality
 code_quality-api:
@@ -113,7 +97,6 @@ code_quality-api:
       codequality: [gl-code-quality-report.json]
   only:
     - prod
-    - master
 
 
 ## container_scanning
