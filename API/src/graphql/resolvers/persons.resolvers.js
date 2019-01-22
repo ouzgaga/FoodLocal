@@ -7,7 +7,10 @@ const PersonType = {
   PRODUCER: 'producers'
 };
 
-
+/**
+ * Resolvers correspondant au schéma GraphQL person.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const personsResolvers = {
   Query: {
     checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email),

@@ -1,9 +1,13 @@
 type Query {
+	# Retourne tous les utilisateurs de la base de données.
 	users: UserConnection! @connection
+
+	# Retourne l'utilisateur correspondant à l'id reçu en paramètre.
 	user(userId: ID!) : User
 }
 
 type Mutation {
+	# Permet de mettre à jour les informations de l'utilisateur avec les informations reçues en paramètre.
 	updateUser(user: UserInputUpdate!): User
 }
 
@@ -12,19 +16,19 @@ type User implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	# password: String! # le password n'est pas accessible côté client!
 	image: String
+	# Tableau contenant tous les producteur que la personne suit.
 	followingProducers: ProducerConnection! @connection
+	# Booléen valant true si l'email a été validé par le membre, false sinon.
 	emailValidated: Boolean!
 	isAdmin: Boolean!
 }
 
 input UserInputAdd {
-	# id: ID!
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String! # password obligatoire à l'ajout
+	password: String!
 	image: String
 }
 

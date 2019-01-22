@@ -28,8 +28,11 @@ type PersonRatingProducer {
 }
 
 input PersonRatingProducerInput {
+	# L'id de la personne ayant fait le rating
 	personId: ID!
+	# L'id du producteur qui a été évalué
 	producerId: ID!
+	# Note attribuée au producteur
 	rating: Int!
 }
 

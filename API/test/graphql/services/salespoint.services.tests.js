@@ -465,7 +465,7 @@ describe('tests salespoints services', () => {
       try {
         await salespointsServices.updateSalespoint(null, salespointWithSchedule);
       } catch (err) {
-        err.message.should.be.equal('Received producerId is invalid!');
+        err.message.should.be.equal('Received producerId is not in the database!');
       }
     });
 

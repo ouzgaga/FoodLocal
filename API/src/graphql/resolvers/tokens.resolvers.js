@@ -3,6 +3,10 @@ const tokenValidationEmailServices = require('../services/tokenValidationEmail.s
 const connectionTokenServices = require('../services/connectionToken.services');
 const personsServices = require('../services/persons.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL token.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const producerResolvers = {
   Mutation: {
     validateAnEmailToken: (parent, args, context) => personsServices.validateEmailUserByToken(args.emailValidationToken),

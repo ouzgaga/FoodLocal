@@ -6,6 +6,10 @@ const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 const pubSub = require('../utils/pubSub');
 
+/**
+ * Resolvers correspondant au schéma GraphQL notification.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const notificationsResolvers = {
   Query: {
     numberOfUnSeenNotificationsOfPerson: async(parent, args, context) => {

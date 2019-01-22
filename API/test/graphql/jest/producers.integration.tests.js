@@ -690,7 +690,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 3000
           },
-          byProductTypeIds: [tabProductTypes[1].id]
+          byProductTypeIds: [tabProductTypes[2].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -709,7 +709,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 1000
           },
-          byProductTypeIds: [tabProductTypes[1].id]
+          byProductTypeIds: [tabProductTypes[2].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -729,7 +729,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 1000
           },
-          byProductTypeIds: [tabProductTypes[1].id],
+          byProductTypeIds: [tabProductTypes[2].id],
           ratingMin: 3
         };
         const result = await graphql(schema, query, null, null, variables);
@@ -749,7 +749,7 @@ describe('Testing graphql request producers', () => {
             longitude: 6.0,
             latitude: 46.0
           },
-          byProductTypeIds: [tabProductTypes[10].id, tabProductTypes[1].id]
+          byProductTypeIds: [tabProductTypes[11].id, tabProductTypes[2].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -769,7 +769,7 @@ describe('Testing graphql request producers', () => {
             longitude: 6.0,
             latitude: 46.0
           },
-          byProductTypeIds: [tabProductTypes[10].id, tabProductTypes[1].id],
+          byProductTypeIds: [tabProductTypes[11].id, tabProductTypes[2].id],
           ratingMin: 3
         };
         const result = await graphql(schema, query, null, null, variables);
@@ -792,7 +792,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.0,
             maxDistance: 5000
           },
-          byProductTypeIds: [tabProductTypes[1].id, tabProductTypes[10].id, tabProductTypes[17].id]
+          byProductTypeIds: [tabProductTypes[2].id, tabProductTypes[11].id, tabProductTypes[18].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);

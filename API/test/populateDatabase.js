@@ -613,7 +613,7 @@ const populateDB = async() => {
 
   tabProductTypeCategories = await productTypeCategoriesServices.getProductTypeCategories();
 
-  tabProducers = await producersServices.getProducers();
+  tabProducers = await producersServices.getProducers(true);
   tabSalespoints = await salespointsServices.getSalespoints();
 
   tabUsers = await usersServices.getUsers();
@@ -628,7 +628,7 @@ module.exports = {
   populateDB,
   getTabProductTypeCategories: () => productTypeCategoriesServices.getProductTypeCategories(),
   getTabProductTypes: () => productTypesServices.getProductTypes(),
-  getTabProducers: () => producersServices.getProducers(),
+  getTabProducers: () => producersServices.getProducers(true),
   getTabSalespoints: () => salespointsServices.getSalespoints(),
   getTabUsers: () => usersServices.getUsers(),
   getTabRatings: () => tabRatings

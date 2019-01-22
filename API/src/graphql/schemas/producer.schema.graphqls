@@ -1,7 +1,7 @@
 directive @connection on FIELD_DEFINITION
 
 type Query {
-	# Retourne tous les producteurs.
+	# Retourne tous les producteurs de la base de données.
 	producers: ProducerConnection! @connection
 
 	# Retourne le producteur correspondant à l'id reçu. Retourne null si aucun producteur ne possède cet id.
@@ -29,7 +29,7 @@ input ClientLocation {
 	longitude: Float!
 	latitude: Float!
 
-	# la distance maximale des producteurs à retourner. Tout producteur situé à plus de maxDistance mètres du client seront ignorés.
+	# la distance maximale des producteurs à retourner. Les producteurs situés à plus de maxDistance mètres du client seront ignorés.
 	maxDistance: Float
 }
 
@@ -38,7 +38,6 @@ type Producer implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# Tableau contenant tous les producteur que la personne suit.
 	followingProducers: ProducerConnection! @connection
@@ -51,10 +50,10 @@ type Producer implements Person {
 	description: String
 	website: String
 	salespoint: Salespoint
-	isValidated: Boolean! # validation côté serveur uniquement
+	isValidated: Boolean!
 	# Tableau contenant tous les produits proposés par le producteur.
 	products: ProductConnection! @connection
-	# Note moyenne attribuée au producteur par les autres membres du site.
+	# Note moyenne attribuée au producteur par les autres membres.
 	rating: ProducerRating
 }
 
@@ -69,7 +68,7 @@ input ProducerInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String! # password obligatoire à l'ajout
+	password: String!
 	image: String
 	phoneNumber: String
 	description: String
