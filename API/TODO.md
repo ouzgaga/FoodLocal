@@ -13,22 +13,6 @@ Reste à faire:
     - https://docs.mongodb.com/manual/reference/command/geoSearch/#dbcmd.geoSearch
     - https://docs.mongodb.com/manual/tutorial/build-a-geohaystack-index/index.html
 
-- Supprimer touuuutes les infos d'un producteur / Utilisateur lorsqu'on le supprime
-
-  - Producteur:
-    - Il faut delete tous ses produits
-    - Il faut delete son salespoint (s'il n'est pas partagé avec un autre producteur)
-    - Il faut delete l'id de tous les tableaux où il apparait :
-      - followers/follows de chaque producteur/user de la DB
-      - producerId des productType
-      - delete tous ses posts
-      - delete toutes ses notifications
-      - envoyer une notification à tous ses followers pour dire qu'il a supprimé son compte
-  - User:
-    - il faut delete son id de tous les tableaux followers des producteurs de la DB
-    - delete toutes ses notifications
-  - Conseil de Paul -> ne jamais rien supprimer -> mettre un paramètre disable à true et filtrer les données pour ignorer ces éléments.
-
 - Finir les tests d'intégration :
 
   - Il reste à faire les schémas :
@@ -64,5 +48,3 @@ Reste à faire:
       }
   }
   ```
-
-- **Ajouter tri par rapport au rating des producteurs (reçoit 4 étoiles -> rend prod de 4 étoiles et +)** 

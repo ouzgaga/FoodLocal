@@ -22,8 +22,8 @@ const ProductSchema = new mongoose.Schema(
 );
 
 /**
- * Vérifie l'existence du productTypeId entrés.
- * Lève une erreur s'il n'existe pas dans la collection des productType.
+ * Vérifie l'existence du productTypeId entrés avant chaque save.
+ * Lève une erreur s'il n'existe pas dans la base de données et annule l'enregistrement.
  */
 ProductSchema.pre('save', async function(next) {
   try {

@@ -28,7 +28,6 @@ const personSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
-    // l'image doit être encodée en base64
     image: {
       type: mongoose.Schema.Types.String,
       required: false
@@ -61,6 +60,10 @@ const personSchema = new mongoose.Schema(
 // il n'y a aucun check à faire lors de l'ajout d'un producer ou d'un user (ils sont tous fait au niveau de GraphQL)
 
 
+/**
+ * Vérifie l'existence du productId ainsi que des ids entrés dans les tableaux followerProducersIds et followersIds avant chaque update.
+ * Lève une erreur si l'un d'eux n'existe pas dans la base de données et annule l'update.
+ */
 personSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {
@@ -102,4 +105,3 @@ const PersonsModel = mongoose.model('persons', personSchema);
  */
 module.exports = PersonsModel;
 const ProductsModel = require('../models/products.modelgql');
-const { SalespointsModel } = require('./salespoints.modelgql');
