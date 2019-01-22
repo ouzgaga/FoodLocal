@@ -22,9 +22,6 @@ const NB_MAX_POSTS_BY_PRODUCER = 10;
 const NB_MIN_FOLLOWING_PRODUCERS = 0;
 const NB_MAX_FOLLOWING_PRODUCERS = NB_PRODUCERS_TO_GENERATE - 1;
 
-const NB_PRODUCERS_ADMIN = 10;
-const NB_USERS_ADMIN = 10;
-
 const tabProducersIds = [];
 const tabUsersIds = [];
 
