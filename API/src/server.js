@@ -1,5 +1,12 @@
 require('dotenv').config();
-const app = require('./app');
+const { createServer } = require('http');
+const { app, server } = require('./app');
 const config = require('./config/config');
 
-// app.listen(config.port, () => console.log(`Express Server is now running on http://localhost:${config.port}`));
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+httpServer.listen({ port: config.port }, () => {
+  console.log(`🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`);
+  console.log(`🚀 WS ready at ws://localhost:${config.port}${server.subscriptionsPath}`);
+});

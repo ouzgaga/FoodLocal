@@ -280,6 +280,7 @@ describe('tests productTypes services', () => {
 
   describe('tests addProductType', () => {
     it('should add a new productType', async() => {
+      productTypePomme._id = undefined;
       const addedProductType = (await productTypeServices.addProductType(productTypePomme)).toObject();
       // on test son contenu
       addedProductType.should.be.not.null;
@@ -330,6 +331,7 @@ describe('tests productTypes services', () => {
       )).toObject();
 
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette._id = undefined;
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(1);
@@ -365,6 +367,7 @@ describe('tests productTypes services', () => {
       )).toObject();
 
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette._id = undefined;
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       try {
         productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
@@ -376,6 +379,7 @@ describe('tests productTypes services', () => {
     it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is invalid (too'
        + ' short)', async() => {
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette._id = undefined;
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       try {
         productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, 'abcdef')).toObject();
@@ -387,6 +391,7 @@ describe('tests productTypes services', () => {
     it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is invalid (too'
        + ' long)', async() => {
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette._id = undefined;
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       try {
         productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id,
@@ -399,6 +404,7 @@ describe('tests productTypes services', () => {
     it('should not add the received producerId as producing one or more products of the received productTypeId because received producerId is unknown',
       async() => {
         // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+        productTypeCourgette._id = undefined;
         productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
         try {
           productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id,
@@ -425,6 +431,7 @@ describe('tests productTypes services', () => {
       )).toObject();
 
       // on ajoute un producteur produisant un ou plusieurs produits de type productTypeCourgette
+      productTypeCourgette._id = undefined;
       productTypeCourgette = (await productTypeServices.addProductType(productTypeCourgette));
       productTypeCourgette = (await productTypeServices.addProducerProducingThisProductType(productTypeCourgette.id, benoit.id)).toObject();
       productTypeCourgette.producersIds.length.should.be.equal(1);

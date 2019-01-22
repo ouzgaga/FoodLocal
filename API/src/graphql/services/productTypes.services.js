@@ -87,12 +87,7 @@ function countNbProductTypesInDB(filtersObject) {
  * @param {Integer} productType, Les informations du type de produit à ajouter.
  */
 function addProductType(productType) {
-  const newProductType = {
-    name: productType.name,
-    image: productType.image,
-    categoryId: productType.categoryId
-  };
-  return new ProductTypesModel(newProductType).save();
+  return new ProductTypesModel(productType).save();
 }
 
 async function addProducerProducingThisProductType(productTypeId, producerId) {

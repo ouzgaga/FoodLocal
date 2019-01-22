@@ -1,5 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
+const snapshot = require('snap-shot-it');
 const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabProducers, getTabProductTypeCategories } = require('../../populateDatabase');
 
@@ -28,12 +29,11 @@ describe('Testing graphql request productTypeCategory', () => {
 
     // -------------------------productTypeCategories()------------------------------------- //
     describe('Testing productTypeCategories()', () => {
-      it('should get all productTypeCategory', async(done) => {
-        const { query } = { query: 'query{ productTypeCategories{ pageInfo{hasNextPage hasPreviousPage startCursor endCursor}edges {node{id name image }}}}' };
+      it('should get all productTypeCategory', async() => {
+        const { query } = { query: 'query{ productTypeCategories{ pageInfo{hasNextPage hasPreviousPage startCursor endCursor}edges {node{name image }}}}' };
         const result = await graphql(schema, query, null, null, null);
-        expect.assertions(1);
-        expect(result).toMatchSnapshot();
-        done();
+
+        snapshot(result);
       });
     });
 
@@ -41,39 +41,35 @@ describe('Testing graphql request productTypeCategory', () => {
     describe('Testing productTypeCategory(productTypeCategoryId)', () => {
       const { query } = { query: 'query($id:ID!){ productTypeCategory(productTypeCategoryId: $id){ name image } }' };
 
-      it('should get a productTypeCategory by id', async(done) => {
+      it('should get a productTypeCategory by id', async() => {
         const variables = { id: tabProductTypeCategories[0].id };
         const result = await graphql(schema, query, null, null, variables);
-        expect.assertions(1);
-        expect(result).toMatchSnapshot();
-        done();
+
+        snapshot(result);
       });
 
-      it('should fail getting a productTypeCategory by id because invalid id received (too short)', async(done) => {
+      it('should fail getting a productTypeCategory by id because invalid id received (too short)', async() => {
         const variables = { id: 'abcdef' };
         const result = await graphql(schema, query, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail getting a productTypeCategory by id because invalid id received (too long)', async(done) => {
+      it('should fail getting a productTypeCategory by id because invalid id received (too long)', async() => {
         const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, query, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail getting a productTypeCategory by id because unknown id received', async(done) => {
+      it('should fail getting a productTypeCategory by id because unknown id received', async() => {
         const variables = { id: 'abcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, query, null, null, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
     });
   });
@@ -98,7 +94,7 @@ describe('Testing graphql request productTypeCategory', () => {
 }`
       };
 
-      it('should add a new productTypeCategory', async(done) => {
+      it('should add a new productTypeCategory', async() => {
         const ble = {
           name: 'blé',
           image: 'ceci est une image de blé encodée en base64! :D'
@@ -106,26 +102,24 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.addProductTypeCategoryById).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.addProductTypeCategoryById).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new productTypeCategory because missing name', async(done) => {
+      it('should fail adding a new productTypeCategory because missing name', async() => {
         const ble = {
           image: 'ceci est une image de blé encodée en base64! :D'
         };
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new productTypeCategory because given field "rienAVoir" is not defined in schema', async(done) => {
+      it('should fail adding a new productTypeCategory because given field "rienAVoir" is not defined in schema', async() => {
         const ble = {
           name: 'blé',
           image: 'ceci est une image de blé encodée en base64! :D',
@@ -134,13 +128,12 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new productTypeCategory because not authenticated', async(done) => {
+      it('should fail adding a new productTypeCategory because not authenticated', async() => {
         const ble = {
           name: 'blé',
           image: 'ceci est une image de blé encodée en base64! :D'
@@ -148,15 +141,14 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a new productTypeCategory because not authenticated as administrator', async(done) => {
+      it('should fail adding a new productTypeCategory because not authenticated as administrator', async() => {
         context.isAdmin = false;
 
         const ble = {
@@ -166,12 +158,11 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be an administrator to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be an administrator to do that.');
+        snapshot(result);
       });
     });
 
@@ -192,7 +183,7 @@ describe('Testing graphql request productTypeCategory', () => {
 }`
       };
 
-      it('should update a productTypeCategory', async(done) => {
+      it('should update a productTypeCategory', async() => {
         const ble = {
           id: tabProductTypeCategories[0].id,
           name: 'blé',
@@ -201,39 +192,36 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.updateProductTypeCategory).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateProductTypeCategory).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail updating a productTypeCategory because missing name', async(done) => {
+      it('should fail updating a productTypeCategory because missing name', async() => {
         const ble = {
           image: 'ceci est une image de blé encodée en base64! :D'
         };
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail updating a productTypeCategory because missing id', async(done) => {
+      it('should fail updating a productTypeCategory because missing id', async() => {
         const ble = {
           image: 'ceci est une image de blé encodée en base64! :D'
         };
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail updating a productTypeCategory because given field "rienAVoir" is not defined in schema', async(done) => {
+      it('should fail updating a productTypeCategory because given field "rienAVoir" is not defined in schema', async() => {
         const ble = {
           id: tabProductTypeCategories[0].id,
           name: 'blé',
@@ -243,12 +231,11 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(1);
-        expect(result.errors).not.toBeNull();
-        done();
+
+        expect(result.errors).to.be.not.null;
       });
 
-      it('should fail updating a productTypeCategory because not authenticated', async(done) => {
+      it('should fail updating a productTypeCategory because not authenticated', async() => {
         const ble = {
           id: tabProductTypeCategories[0].id,
           name: 'blé',
@@ -257,15 +244,14 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail updating a productTypeCategory because not authenticated as administrator', async(done) => {
+      it('should fail updating a productTypeCategory because not authenticated as administrator', async() => {
         context.isAdmin = false;
         const ble = {
           id: tabProductTypeCategories[0].id,
@@ -275,12 +261,11 @@ describe('Testing graphql request productTypeCategory', () => {
 
         const variables = { productTypeCategory: ble };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be an administrator to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be an administrator to do that.');
+        snapshot(result);
       });
     });
 
@@ -301,63 +286,57 @@ describe('Testing graphql request productTypeCategory', () => {
 }`
       };
 
-      it('should delete a productTypeCategory', async(done) => {
+      it('should delete a productTypeCategory', async() => {
         const variables = { id: tabProductTypeCategories[0].id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.deleteProductTypeCategory).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.deleteProductTypeCategory).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a productTypeCategory by id because invalid id received (too short)', async(done) => {
+      it('should fail deleting a productTypeCategory by id because invalid id received (too short)', async() => {
         const variables = { id: 'abcdef' };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a productTypeCategory by id because invalid id received (too long)', async(done) => {
+      it('should fail deleting a productTypeCategory by id because invalid id received (too long)', async() => {
         const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a productTypeCategory by id because unknown id received', async(done) => {
+      it('should fail deleting a productTypeCategory by id because unknown id received', async() => {
         const variables = { id: 'abcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a productTypeCategory because not authenticated', async(done) => {
+      it('should fail deleting a productTypeCategory because not authenticated', async() => {
         const variables = { id: tabProductTypeCategories[0].id };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail deleting a productTypeCategory because not authenticated as administrator', async(done) => {
+      it('should fail deleting a productTypeCategory because not authenticated as administrator', async() => {
         context.isAdmin = false;
         const variables = { id: tabProductTypeCategories[0].id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be an administrator to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be an administrator to do that.');
+        snapshot(result);
       });
     });
   });
