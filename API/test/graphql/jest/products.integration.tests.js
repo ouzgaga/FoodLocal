@@ -76,7 +76,7 @@ describe('Testing graphql request products', () => {
     describe('Testing product(productId: ID!)', () => {
       const { query } = {
         query:
-`query($productId: ID!) {
+          `query($productId: ID!) {
   product(productId: $productId) {
     description
     productType {
@@ -133,14 +133,11 @@ describe('Testing graphql request products', () => {
 
       it('should fail getting a product by id because unknown id received', async(done) => {
         const variables = { productId: 'abcdefabcdefabcdefabcdef' };
-        try {
-          await graphql(schema, query, null, {}, variables);
-        } catch (err) {
-          expect.assertions(2);
-          expect(err.errors).not.toBeNull();
-          expect(err).toMatchSnapshot();
-          done();
-        }
+        const result = await graphql(schema, query, null, {}, variables);
+        expect.assertions(2);
+        expect(result.errors).not.toBeNull();
+        expect(result).toMatchSnapshot();
+        done();
       });
     });
   });
@@ -258,7 +255,7 @@ mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
         const result = await graphql(schema, mutation, null, {}, variables);
         expect.assertions(4);
         expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(2);
+        expect(result.errors.length).toBe(1);
         expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
         expect(result).toMatchSnapshot();
         done();

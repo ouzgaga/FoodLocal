@@ -33,43 +33,43 @@ describe('Testing graphql resquest user', () => {
       });
       const { query } = {
         query: `
-query {
-  users {
-    pageInfo{
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    edges {
-      node{
-        id
-        firstname
-        lastname
-        email
-        image
-        emailValidated
-        isAdmin
-        followingProducers{
-          edges{
-            node{
-              id
-              firstname
-              lastname
+          query {
+            users {
+              pageInfo{
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node{
+                  id
+                  firstname
+                  lastname
+                  email
+                  image
+                  emailValidated
+                  isAdmin
+                  followingProducers{
+                    edges{
+                      node{
+                        id
+                        firstname
+                        lastname
+                      }
+                    }
+                  }
+                }
+              }
+              totalCount
             }
-          }
-        }
-      }
-    }
-    totalCount
-  }
-}`
+          }`
       };
 
       it('should get all users', async(done) => {
         const result = await graphql(schema, query, null, context, null);
         expect.assertions(2);
-        expect(result.data.users.length).toEqual(tabUsers.length);
+        expect(result.data.users.totalCount).toEqual(tabUsers.length);
         expect(result).toMatchSnapshot();
         done();
       });
@@ -106,33 +106,32 @@ query {
 
       const { query } = {
         query: `
-query($id: ID!) {
-  user(userId: $id) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          id
-          firstname
-          lastname
-          email
-          image
-          phoneNumber
-          rating {
-            nbRatings
-            rating
-          }
-        }
-      }
-    }
-    emailValidated
-    isAdmin
-  }
-}
-`
+          query($id: ID!) {
+            user(userId: $id) {
+              firstname
+              lastname
+              email
+              image
+              followingProducers {
+                edges {
+                  node {
+                    id
+                    firstname
+                    lastname
+                    email
+                    image
+                    phoneNumber
+                    rating {
+                      nbRatings
+                      rating
+                    }
+                  }
+                }
+              }
+              emailValidated
+              isAdmin
+            }
+          }`
       };
 
       it('should get a user by id', async(done) => {
@@ -214,32 +213,32 @@ query($id: ID!) {
 
       const { mutation } = {
         mutation: `
-mutation($user: UserInputUpdate!) {
-  updateUser(user: $user) {
-    firstname
-    lastname
-    email
-    image
-    followingProducers {
-      edges {
-        node {
-          id
-          firstname
-          lastname
-          email
-          image
-          phoneNumber
-          rating {
-            nbRatings
-            rating
+        mutation($user: UserInputUpdate!) {
+          updateUser(user: $user) {
+            firstname
+            lastname
+            email
+            image
+            followingProducers {
+              edges {
+                node {
+                  id
+                  firstname
+                  lastname
+                  email
+                  image
+                  phoneNumber
+                  rating {
+                    nbRatings
+                    rating
+                  }
+                }
+              }
+            }
+            emailValidated
+            isAdmin
           }
-        }
-      }
-    }
-    emailValidated
-    isAdmin
-  }
-}`
+        }`
       };
 
       it('should update a user', async(done) => {

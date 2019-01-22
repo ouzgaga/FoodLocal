@@ -27,11 +27,24 @@ const connectionTokenServices = require('./connectionToken.services');
 const config = require('../../config/config');
 const mail = require('../utils/sendEmailFoodlocal');
 
+/**
+ * Retourne true si l'email reçu en paramètre n'est pas encore présent dans la base de données (et donc disponible pour inscrire une nouvelle personne).
+ * Retourne false si l'email est déjà pris (déjà dans la base de données).
+ * @param emailUser, l'email dont on souhaite vérifier la disponibilité.
+ * @true si l'email est disponible pour un nouvel inscrit, false sinon.
+ */
 async function isEmailAvailable(emailUser) {
   const existingPerson = await PersonsModel.findOne({ email: emailUser });
   return existingPerson === null;
 }
 
+/**
+ * Retourne true si l'id 'personId' existe bien dans la collection persons, false sinon. Si isProducer vaut true, vérifie également que la personne
+ * correspondant à l'id 'personId' est bien un producer (kind === 'producers'). Retourne false si ce n'est pas le cas.
+ * @param personId, l'id de la personne dont on souhaite vérifier l'existence.
+ * @param isProducer, true si on souhaite vérifier que cette personne est également un producer, false sinon.
+ * @returns {Promise<boolean>}
+ */
 async function checkIfPersonIdExistInDB(personId, isProducer = false) {
   const person = await PersonsModel.findById(personId);
   if (isProducer) {
@@ -41,10 +54,23 @@ async function checkIfPersonIdExistInDB(personId, isProducer = false) {
   }
 }
 
+/**
+ * Retourne la personne correspondante à l'id reçu.
+ * @param id, l'ide de la personne que l'on souhaite récupérer.
+ * @returns la personne correspondante à l'id reçu.
+ */
 function getPersonById(id) {
   return PersonsModel.findById(id);
 }
 
+/**
+ * Retourne la personne correspondante au couple email, password reçu. Vérifie l'existence de l'email dans la base de données ainsi que la correspondance
+ * entre le password reçu en paramètre et celui enregistré dans la base de données. Lève une erreur si l'email n'existe pas ou si le password ne correspond
+ * pas à celui dans la base de données.
+ * @param email, l'email de la personne que l'on souhaite récupérer.
+ * @param password, le mot de passe de la personne que l'on souhaite récupérer.
+ * @returns la personne correspondant au couple email, password reçu.
+ */
 async function getPersonByLogin(email, password) {
   const person = await PersonsModel.findOne({ email });
 
@@ -61,8 +87,13 @@ async function getPersonByLogin(email, password) {
   return person;
 }
 
+/**
+ * Retourne la personne correspondante au token de connexion reçu, pour autant que celui-ci soit valide.
+ * @param token, un token de connexion valide.
+ * @returns la personne correspondante au token reçu
+ */
 async function getPersonByToken(token) {
-  const tokenContent = await jwt.verify(token, config.jwtSecret);
+  const tokenContent = await jwt.verify(token, config.jwtSecret, { subject: 'connectionToken' });
 
   if (tokenContent == null || tokenContent.id == null) {
     return null;
@@ -70,6 +101,11 @@ async function getPersonByToken(token) {
   return getPersonById(tokenContent.id);
 }
 
+/**
+ * Retourne toutes les personnes correspondantes à un id du tableau listOfIdToGet reçu.
+ * @param listOfIdToGet, un tableau d'id contenant l'id de toutes les personnes dont on souhaite récupérer les informations.
+ * @returns un tableau contenant toutes les personnes correspondantes à un id du tableau listOfIdToGet reçu.
+ */
 function getAllPersonsInReceivedIdList(listOfIdToGet) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });

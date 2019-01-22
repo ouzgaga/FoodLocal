@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { createServer } = require('http');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
 const { isAuthenticated } = require('./graphql/resolvers/authorization.resolvers');
@@ -49,12 +48,9 @@ const server = new ApolloServer(
 );
 server.applyMiddleware({ app });
 
-const httpServer = createServer(app);
-server.installSubscriptionHandlers(httpServer);
+const application = require('./config/express')(app, config);
 
-httpServer.listen({ port: config.port }, () => {
-  console.log(`🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`);
-  console.log(`🚀 WS ready at ws://localhost:${config.port}${server.subscriptionsPath}`);
-});
-
-module.exports = require('./config/express')(app, config);
+module.exports = {
+  server,
+  app: application
+};

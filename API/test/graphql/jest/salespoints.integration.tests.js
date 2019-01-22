@@ -17,9 +17,6 @@ let tabSalespoints;
 const clearAndPopulateDB = async() => {
   // ------------------------------------------------------------- on ajoute le contenu de départ -------------------------------------------------------------
   await populateDB();
-
-  tabProducers = await getTabProducers();
-  tabSalespoints = await getTabSalespoints();
 };
 
 describe('Testing graphql request salespoints', () => {
@@ -30,64 +27,64 @@ describe('Testing graphql request salespoints', () => {
     describe('Testing salespoints()', () => {
       const { query } = {
         query: `
-query {
-  salespoints {
-    pageInfo{
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    edges{
-      node{
-        id
-        name
-        address {
-          number
-          street
-          city
-          postalCode
-          state
-          country
-          longitude
-          latitude
-        }
-        schedule {
-          monday {
-            openingHour
-            closingHour
-          }
-          tuesday {
-            openingHour
-            closingHour
-          }
-          wednesday {
-            openingHour
-            closingHour
-          }
-          thursday {
-            openingHour
-            closingHour
-          }
-          friday {
-            openingHour
-            closingHour
-          }
-          saturday {
-            openingHour
-            closingHour
-          }
-          sunday {
-            openingHour
-            closingHour
-          }
-        }
-      }
-      cursor
-    }
-    totalCount
-  }
-}`
+          query {
+            salespoints {
+              pageInfo{
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges{
+                node{
+                  id
+                  name
+                  address {
+                    number
+                    street
+                    city
+                    postalCode
+                    state
+                    country
+                    longitude
+                    latitude
+                  }
+                  schedule {
+                    monday {
+                      openingHour
+                      closingHour
+                    }
+                    tuesday {
+                      openingHour
+                      closingHour
+                    }
+                    wednesday {
+                      openingHour
+                      closingHour
+                    }
+                    thursday {
+                      openingHour
+                      closingHour
+                    }
+                    friday {
+                      openingHour
+                      closingHour
+                    }
+                    saturday {
+                      openingHour
+                      closingHour
+                    }
+                    sunday {
+                      openingHour
+                      closingHour
+                    }
+                  }
+                }
+                cursor
+              }
+              totalCount
+            }
+          }`
       };
       it('should get all salespoints', async(done) => {
         const result = await graphql(schema, query, null, {}, null);
@@ -98,57 +95,59 @@ query {
     });
 
     // ----------------------producer(producerId: ID!)-------------------------------------- //
-    /*describe('Testing salespoint(salespointId: ID!)', () => {
+    describe('Testing salespoint(salespointId: ID!)', () => {
       const { query } = {
-        query: `query($id: ID!) {
-  salespoint(salespointId: $id) {
-    name
-    address {
-      number
-      street
-      city
-      postalCode
-      state
-      country
-      longitude
-      latitude
-    }
-    schedule {
-      monday {
-        openingHour
-        closingHour
-      }
-      tuesday {
-        openingHour
-        closingHour
-      }
-      wednesday {
-        openingHour
-        closingHour
-      }
-      thursday {
-        openingHour
-        closingHour
-      }
-      friday {
-        openingHour
-        closingHour
-      }
-      saturday {
-        openingHour
-        closingHour
-      }
-      sunday {
-        openingHour
-        closingHour
-      }
-    }
-  }
-}
-`
+        query: `
+          query($id: ID!) {
+            salespoint(salespointId: $id) {
+              name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
+              schedule {
+                monday {
+                  openingHour
+                  closingHour
+                }
+                tuesday {
+                  openingHour
+                  closingHour
+                }
+                wednesday {
+                  openingHour
+                  closingHour
+                }
+                thursday {
+                  openingHour
+                  closingHour
+                }
+                friday {
+                  openingHour
+                  closingHour
+                }
+                saturday {
+                  openingHour
+                  closingHour
+                }
+                sunday {
+                  openingHour
+                  closingHour
+                }
+              }
+            }
+          }`
       };
 
       it('should get a salespoint by id ', async(done) => {
+        tabSalespoints = await getTabSalespoints();
+
         const variables = { id: tabSalespoints[0].id };
         const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(2);
@@ -171,7 +170,7 @@ query {
         const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received salespoint.id is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "salespoints"');
         expect(result.data.salespoint).toBeNull();
         expect(result).toMatchSnapshot();
         done();
@@ -182,12 +181,12 @@ query {
         const result = await graphql(schema, query, null, {}, variables);
         expect.assertions(4);
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received salespoint.id is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "salespoints"');
         expect(result.data.salespoint).toBeNull();
         expect(result).toMatchSnapshot();
         done();
       });
-    });*/
+    });
   });
 
   describe('MUTATION producers', () => {
@@ -198,6 +197,8 @@ query {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+
+        tabProducers = await getTabProducers();
         context = { id: tabProducers[3].id, email: tabProducers[3].email, isAdmin: tabProducers[3].isAdmin, kind: tabProducers[3].kind };
       });
 
@@ -639,7 +640,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
         expect(result).toMatchSnapshot();
         done();
       });
@@ -694,7 +695,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
         expect(result).toMatchSnapshot();
         done();
       });
@@ -760,61 +761,63 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+
+        tabProducers = await getTabProducers();
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: tabProducers[0].isAdmin, kind: tabProducers[0].kind };
       });
 
       const { mutation } = {
         mutation: `
-    mutation($producerId: ID!, $salespoint: SalespointInput!) {
-  updateSalespoint(producerId:$producerId, salespoint:$salespoint) {
-    firstname
-    lastname
-    email
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-  }
-}`
+          mutation($producerId: ID!, $salespoint: SalespointInput!) {
+            updateSalespoint(producerId:$producerId, salespoint:$salespoint) {
+              firstname
+              lastname
+              email
+              salespoint {
+                name
+                address {
+                  number
+                  street
+                  city
+                  postalCode
+                  state
+                  country
+                  longitude
+                  latitude
+                }
+                schedule {
+                  monday {
+                    openingHour
+                    closingHour
+                  }
+                  tuesday {
+                    openingHour
+                    closingHour
+                  }
+                  wednesday {
+                    openingHour
+                    closingHour
+                  }
+                  thursday {
+                    openingHour
+                    closingHour
+                  }
+                  friday {
+                    openingHour
+                    closingHour
+                  }
+                  saturday {
+                    openingHour
+                    closingHour
+                  }
+                  sunday {
+                    openingHour
+                    closingHour
+                  }
+                }
+              }
+            }
+          }`
       };
 
       it('should update the salespoint of a producer', async(done) => {
@@ -1219,61 +1222,63 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
+
+        tabProducers = await getTabProducers();
         context = { id: tabProducers[0].id, email: tabProducers[0].email, isAdmin: tabProducers[0].isAdmin, kind: tabProducers[0].kind };
       });
 
       const { mutation } = {
         mutation: `
-    mutation($producerId: ID!) {
-  deleteSalespointToProducer(producerId: $producerId) {
-    firstname
-    lastname
-    email
-    salespoint {
-      name
-      address {
-        number
-        street
-        city
-        postalCode
-        state
-        country
-        longitude
-        latitude
-      }
-      schedule {
-        monday {
-          openingHour
-          closingHour
-        }
-        tuesday {
-          openingHour
-          closingHour
-        }
-        wednesday {
-          openingHour
-          closingHour
-        }
-        thursday {
-          openingHour
-          closingHour
-        }
-        friday {
-          openingHour
-          closingHour
-        }
-        saturday {
-          openingHour
-          closingHour
-        }
-        sunday {
-          openingHour
-          closingHour
-        }
-      }
-    }
-  }
-}`
+          mutation($producerId: ID!) {
+            deleteSalespointToProducer(producerId: $producerId) {
+              firstname
+              lastname
+              email
+              salespoint {
+                name
+                address {
+                  number
+                  street
+                  city
+                  postalCode
+                  state
+                  country
+                  longitude
+                  latitude
+                }
+                schedule {
+                  monday {
+                    openingHour
+                    closingHour
+                  }
+                  tuesday {
+                    openingHour
+                    closingHour
+                  }
+                  wednesday {
+                    openingHour
+                    closingHour
+                  }
+                  thursday {
+                    openingHour
+                    closingHour
+                  }
+                  friday {
+                    openingHour
+                    closingHour
+                  }
+                  saturday {
+                    openingHour
+                    closingHour
+                  }
+                  sunday {
+                    openingHour
+                    closingHour
+                  }
+                }
+              }
+            }
+          }`
       };
 
       it('should remove the salespoint of a producer', async(done) => {
@@ -1323,7 +1328,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
         expect(result).toMatchSnapshot();
         done();
       });
@@ -1337,7 +1342,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         const result = await graphql(schema, mutation, null, context, variables);
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
+        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
         expect(result).toMatchSnapshot();
         done();
       });

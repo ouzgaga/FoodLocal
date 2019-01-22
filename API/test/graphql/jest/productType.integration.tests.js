@@ -110,7 +110,7 @@ describe('Testing graphql request productType', () => {
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Received productType.id is invalid!'));
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdef" at path "_id" for model "productType"'));
         done();
       });
 
@@ -120,7 +120,7 @@ describe('Testing graphql request productType', () => {
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Received productType.id is invalid!'));
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "productType"'));
         done();
       });
 
