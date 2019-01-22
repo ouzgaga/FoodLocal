@@ -66,7 +66,7 @@ class DeleteAccount extends Component {
   };
 
   render() {
-    const { classes, fullScreen } = this.props;
+    const { classes } = this.props;
 
     return (
       <>
@@ -105,39 +105,40 @@ class DeleteAccount extends Component {
                       {({ signOut }) => signOut()}
                     </AuthContext>
                   )}
-
-                  <Dialog
-                    fullScreen={fullScreen}
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    aria-labelledby="responsive-dialog-title"
-                  >
-                    <DialogTitle id="responsive-dialog-title">{"Voulez-vous vraiment supprimer votre compte?"}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>Apès avoir suuprimé votre compte, toutes vos information seront supprimées ormis. Vous ne pourrez plus vous connecter avec celui-ci sur foodloacl.ch.</DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button type="button" onClick={this.handleClose} color="default">
-                        annuler
-                      </Button>
-                      <Button
-                        type="submit" 
-                        color="primary"
-                        autoFocus
-                        id="delete-account-button-dialog" 
-                        onClick={
-                          (e) => {
-                            e.preventDefault();
-                            //updateTodo();
-                            console.info("yoo");
-                          }
-                        }
+                  <AuthContext>
+                    {({ signOut }) => (
+                      <Dialog
+                        fullScreen
+                        open={this.state.open}
+                        onClose={this.handleClose}
+                        aria-labelledby="responsive-dialog-title"
                       >
-                        supprimer
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-
+                        <DialogTitle id="responsive-dialog-title">{"Voulez-vous vraiment supprimer votre compte?"}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>Apès avoir suuprimé votre compte, toutes vos information seront supprimées ormis. Vous ne pourrez plus vous connecter avec celui-ci sur foodloacl.ch.</DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button type="button" onClick={this.handleClose} color="default">Annuler</Button>
+                          <Button
+                            type="button"
+                            color="primary"
+                            autoFocus
+                            id="delete-account-button-dialog"
+                            onClick={
+                              (e) => {
+                                e.preventDefault();
+                                updateTodo();
+                                //signOut();
+                                console.info("yoo");
+                              }
+                            }
+                          >
+                              Supprimer
+                            </Button>
+                        </DialogActions>
+                      </Dialog>
+                    )}
+                  </AuthContext>
                 </>
               </BoxLeftRight>
             </form>

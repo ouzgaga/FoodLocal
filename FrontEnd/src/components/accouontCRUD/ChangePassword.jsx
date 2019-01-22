@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import BorderedPasswordField from '../items/fields/BorderedPasswordField';
-import BoxLeftRight from './BoxLeftRight';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import DoneOutline from '@material-ui/icons/DoneOutline';
+import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Mutation } from 'react-apollo';
+import BorderedPasswordField from '../items/fields/BorderedPasswordField';
+import BoxLeftRight from './BoxLeftRight';
 
 const mutUpdatePassword = gql`
   mutation ($newPassword: String!, $oldPassword: String!, $id: ID!){
@@ -46,7 +46,6 @@ const styles = theme => ({
  * Permet qu'un utilisateur puisse changer son mot de passe
  */
 class ChangePassword extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -77,7 +76,7 @@ checkPassword = (newPassword, oldPassword, confPassword) => {
 }
 
 render() {
-  const { classes, userId, status, token } = this.props;
+  const { classes, userId } = this.props;
   const { errorPassword } = this.state;
 
   return (

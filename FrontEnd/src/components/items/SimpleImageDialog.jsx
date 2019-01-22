@@ -5,16 +5,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import DefaultUserLogo from '../../img/DefaultUserLogo.jpg';
 
 const styles = theme => ({
 
   img: {
     margin: 'auto',
     display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxHeight: 255,
+    maxWidth: 255,
+  },
+  image: {
+
   },
 });
 
@@ -36,23 +38,26 @@ class SimpleImageDialog extends React.Component {
 
   render() {
     const { classes, image } = this.props;
-
+    let displayImage = image;
+    if (!image) displayImage = DefaultUserLogo;
     return (
       <div>
-        <Button onClick={this.handleClickOpen}><img className={classes.img} alt="complex" src={image} /></Button>
+        {console.info(image)}
+        <Button onClick={this.handleClickOpen}><img className={classes.img} alt="complex" src={displayImage} /></Button>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogContent>
-            <img alt="complex" className={classes.img} src={image}/>
+          <DialogContent className={classes.image}>
+            <img alt="complex" className={classes.img} src={displayImage} />
           </DialogContent>
         </Dialog>
       </div>
     );
   }
 }
+
 
 export default withStyles(styles)(SimpleImageDialog);

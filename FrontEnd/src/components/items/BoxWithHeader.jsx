@@ -23,13 +23,21 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Container de type
+ *  **********
+ *  * header *
+ *  **********
+ *  *children*
+ *  **********
+ */
 function BoxWithHeader(props) {
   const { classes, header, children } = props;
 
   return (
     <Grid className={classes.root} container spacing={16}>
-      { header ?
-        (
+      { header
+        ? (
           <Grid item xs={12} className={classes.header}>
             <Typography>{header}</Typography>
           </Grid>

@@ -30,6 +30,15 @@ const mutRelog = gql`
   }
   `;
 
+  
+const subNotif = gql`
+  subscription{
+    newNotificationReceived{
+      id
+    }
+  }
+  `;
+
 class AuthProvider extends React.Component {
   constructor(props) {
     super(props);
@@ -48,12 +57,16 @@ class AuthProvider extends React.Component {
       signIn: this.signIn,
       signOut: this.signOut,
       //renewToken: this.renewToken,
-      resetError: this.setState({error: null}),
+      clearError: this.clearError,
     };
   }
 
+  clearError = () => {
+    this.setState({error: null});
+  }
 
-  componentDidMount() {
+
+  componentWillMount() {
     const token = window.localStorage.getItem('token');
     console.log(token);
     if(token) this.addState(token);
@@ -86,6 +99,7 @@ class AuthProvider extends React.Component {
     const decoded = jwtDecode(token);
     console.info("token", token, decoded.isAdmin);
     this.setState({
+      notificationCount: 0,
       userId: decoded.id,
       userMail: decoded.email,
       userStatus: decoded.kind,
@@ -97,14 +111,30 @@ class AuthProvider extends React.Component {
     });
   }
 
+  subscribe = () => {
+    // call the "subscribe" method on Apollo Client
+    this.subscriptionObserver = this.props.client.subscribe({
+      query: subNotif,
+    }).subscribe({
+      next(data) {
+        this.setState(prevState => ({
+          notificationCount: ++prevState.notificationCount
+        }));
+      },
+      error(err) { console.error('err', err); },
+    });
+  }
+
+
   signIn = async ({ userMail, password }) => {
     const { client } = this.props;
-
+    console.log({ userMail, password });
     return client.mutate({ mutation: mutLogin, variables: { email: userMail, password: password } }).then(
       (data) => {
         console.log(data);
         this.addState(data.data.login.token);
         window.localStorage.setItem('token', data.data.login.token);
+        this.subscribe();
         return true;
       }
     ).catch((error) => {

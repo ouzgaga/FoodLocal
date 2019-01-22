@@ -1,0 +1,1 @@
+ { name: \"asd\", address: { number: 3, city: \"Winterthour\", postalCode: \"8408\", state: \"Zurich\", country: \"Suisse\", longitude: 8.68873715400696, latitude: 47.51030212706903 } }; Field value.address.street of required type String! was not provided.","locations":[{"line":1,"column":25}],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}
