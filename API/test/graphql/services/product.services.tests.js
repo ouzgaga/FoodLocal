@@ -52,7 +52,7 @@ const clearAndPopulateDB = async() => {
   tabProducts = [productPomme, productPoire];
 };
 
-describe('tests product services', () => {
+describe('tests products services', () => {
   beforeEach(() => clearAndPopulateDB());
 
   describe('tests getProducts', () => {

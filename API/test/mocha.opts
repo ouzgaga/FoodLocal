@@ -1,2 +1,3 @@
+--timeout 5000
 --require ./test/chai-config.js
 --exit
