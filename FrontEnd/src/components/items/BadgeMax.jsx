@@ -17,7 +17,7 @@ function NotificationBagde(props) {
 
   return (
     <React.Fragment>
-      <Badge className={classes.margin} badgeContent={value} max={99} color="primary">
+      <Badge badgeContent={value} max={99} color="primary">
         <NotificationsNoneIcone />
       </Badge>
     </React.Fragment>

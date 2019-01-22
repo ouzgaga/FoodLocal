@@ -14,21 +14,14 @@ const {
 } = React.createContext();
 
 
-const mutLogin = gql`
-  mutation ($email: String!, $password: String!){
-    login(email:$email, password:$password){
-      token
+const subNotif = gql`
+  subscription{
+    newNotificationReceived{
+      id
     }
   }
   `;
 
-const mutRelog = gql`
-  mutation{
-    renewToken{
-      token
-    }
-  }
-  `;
 
 class NotificationProvider extends React.Component {
   constructor(props) {
@@ -37,10 +30,28 @@ class NotificationProvider extends React.Component {
     this.state = {
       notificationCount: 0,
       resetCount: this.resetCount,
+      subscribe: this.subscribe,
     };
   }
 
   componentDidMount() {
+    const repoName = this.props.entry.repository.full_name;
+    const updateQueryFunction = this.props.updateCommentsQuery;
+    this.subscribe(repoName, updateQueryFunction);
+  }
+
+  subscribe = () => {
+    // call the "subscribe" method on Apollo Client
+    this.subscriptionObserver = this.props.client.subscribe({
+      query: subNotif,
+    }).subscribe({
+      next(data) {
+        this.setState(prevState => ({
+          notificationCount: ++prevState.notificationCount
+        }));
+      },
+      error(err) { console.error('err', err); },
+    });
   }
 
   // Réinitalise le nombre de notifications à 0

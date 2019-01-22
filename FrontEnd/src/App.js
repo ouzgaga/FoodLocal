@@ -209,7 +209,7 @@ class App extends React.Component {
             <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />
-            <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
+            <Route path="/settings" component={PagePersonalInformations} classes={classes} />
             <Route path="/error/email" component={PageErrorEmail} />
             <ProtectedErrorConected path="/error/notConnected" component={PageErrorLogin} />
             <Route path="/error/page404" component={PageError404} classes={classes} />
