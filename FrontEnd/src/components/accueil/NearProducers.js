@@ -20,7 +20,6 @@ function NearProducers(props) {
   const producers = entries.edges || [];
   return (
     <>
-
       <Typography className={classes.title} variant="h6" color="primary" gutterBottom>Producteurs à proximité</Typography>
 
       <InfiniteScroll
@@ -36,7 +35,7 @@ function NearProducers(props) {
 
       </InfiniteScroll>
 
-      {loading && <div>ddd</div>}
+      {loading && <div>Chargement...</div>}
 
     </>
   );

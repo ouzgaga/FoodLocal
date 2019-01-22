@@ -53,7 +53,7 @@ class AuthProvider extends React.Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
     const token = window.localStorage.getItem('token');
     console.log(token);
     if(token) this.addState(token);
@@ -84,7 +84,7 @@ class AuthProvider extends React.Component {
   // Décode le token et l'insère dans le state
   addState = (token) => {
     const decoded = jwtDecode(token);
-    console.info("token", token);
+    console.info("token", token, decoded.isAdmin);
     this.setState({
       userId: decoded.id,
       userMail: decoded.email,

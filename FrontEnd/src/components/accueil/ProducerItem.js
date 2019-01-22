@@ -80,7 +80,7 @@ function ProducerItem(props) {
                       <Grid item>
                         <RatingItem
                           readOnly
-                          defaultValue={Math.round(rating ? rating.rating : 0)}
+                          defaultValue={Math.round(rating ? rating.grade : 0)}
                         />
                       </Grid>
                       <Grid item>

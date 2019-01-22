@@ -18,7 +18,7 @@ query($producer: ID!) {
     image
     description
     rating {
-      rating
+      grade
       nbRatings
     }
   }
@@ -74,7 +74,7 @@ class PageProducer extends React.Component {
               ratingValue = null;
               nbRatings = null;
             } else {
-              ratingValue = rating.rating;
+              ratingValue = rating.grade;
               nbRatings = rating.nbRatings;
             }
             return (

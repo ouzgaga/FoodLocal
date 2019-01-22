@@ -21,7 +21,6 @@ const styles = ({
   },
   description:{
     marginTop: 400,
-    height:500,
     backgroundColor: '#FFFFFF',
   },
   nearProducers: {
@@ -73,7 +72,7 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
           }
         }
         rating {
-          rating
+          grade
           nbRatings
         }
       }

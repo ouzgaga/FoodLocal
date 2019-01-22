@@ -14,6 +14,7 @@ import TableProducerItem from './TableProducerItem';
 const GET_ALL_PRODUCERS = gql`
   query($after : String) {
   producers(first : 20, after : $after) {
+    totalCount
     pageInfo{
       hasNextPage
       hasPreviousPage
@@ -112,7 +113,7 @@ class Admin extends Component {
                     id: 'age-simple',
                   }}
                 >
-                  <MenuItem value={0}>Tous</MenuItem>
+                  <MenuItem value={0}>Validés</MenuItem>
                   <MenuItem value={1}>Non Validés</MenuItem>
                   <MenuItem value={2}>Par ID</MenuItem>
                 </Select>

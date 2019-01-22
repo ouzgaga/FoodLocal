@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import './PageMap.css';
 import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
 import MainMap from './MainMap';
@@ -22,8 +21,8 @@ const styles = ({
 
 // Retourne les producteurs selon les filtres donnés
 const GET_PRODUCERS_BY_LOCATION = gql`
-query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: String) {
-  geoFilterProducers(locationClient: $locationClient, byProductTypeIds: $byProductTypeIds, first:100, after: $cursor ) {
+query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $ratingMin:Int, $cursor: String) {
+  geoFilterProducers(locationClient: $locationClient, byProductTypeIds: $byProductTypeIds, ratingMin: $ratingMin, first:100, after: $cursor ) {
     edges{
       cursor
       node {
@@ -65,6 +64,7 @@ class MapFetchContainer extends React.Component {
         longitude: 6.6667,
       },
       maxDistance: 100,
+      ratingMin: null,
     };
   }
 
@@ -102,15 +102,23 @@ class MapFetchContainer extends React.Component {
     });
   };
 
+  changeRatingMin = value => () => {
+    this.setState({
+      ratingMin: value
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const { products, userLocation, maxDistance } = this.state;
+    const {
+      products, userLocation, maxDistance, ratingMin
+    } = this.state;
     return (
       <div className={classes.root}>
 
         <Query
           query={GET_PRODUCERS_BY_LOCATION}
-          variables={{ locationClient: { latitude: userLocation.latitude, longitude: userLocation.longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) }, byProductTypeIds: products }} // TODO
+          variables={{ locationClient: { latitude: userLocation.latitude, longitude: userLocation.longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) }, byProductTypeIds: products, ratingMin }} // TODO
         >
           {({
             data, loading, error, fetchMore
@@ -124,6 +132,8 @@ class MapFetchContainer extends React.Component {
                 products={products}
                 userLocation={userLocation}
                 maxDistance={maxDistance}
+                ratingMin={ratingMin}
+                changeRatingMin={this.changeRatingMin}
                 addProduct={this.addProduct}
                 removeProduct={this.removeProduct}
                 changeMaxDistance={this.changeMaxDistance}
@@ -134,6 +144,7 @@ class MapFetchContainer extends React.Component {
                   variables: {
                     locationClient: { latitude, longitude, maxDistance: (maxDistance === 100 ? null : maxDistance * 1000) },
                     byProductTypeIds: products,
+                    ratingMin
                   },
                   updateQuery: (prevResult, { fetchMoreResult }) => {
                     const newEdges = fetchMoreResult.geoFilterProducers.edges;
