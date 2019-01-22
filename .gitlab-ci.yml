@@ -26,8 +26,8 @@ build-api:
   - docker push $CONTAINER_TEST_IMAGE_API
   only:
   - prod
-  - master
-  - API
+  #- master
+  #- API
 
 build-frontend:
   stage: build
@@ -39,9 +39,9 @@ build-frontend:
   - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
   - docker push $CONTAINER_TEST_IMAGE_FRONTEND
   only:
-  - 10-site-web-creation-des-pages-principales-carte
+  #- 10-site-web-creation-des-pages-principales-carte
   - prod
-  - master
+  #- master
 
 ##########
 ###TEST###
@@ -76,7 +76,7 @@ test-api-full:
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
   #- apk del builds-deps
-  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q
+  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
   - npm test
   #- npm test-jest
   only:
