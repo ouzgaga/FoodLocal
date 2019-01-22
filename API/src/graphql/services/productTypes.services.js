@@ -11,7 +11,6 @@ module.exports = {
   deleteProductType
 };
 
-const mongoose = require('mongoose');
 const ProductTypesModel = require('../models/productTypes.modelgql');
 const ProducerModel = require('../models/producers.modelgql');
 
@@ -38,10 +37,6 @@ function getProductTypes({ tags = undefined } = {}) {
  * @param {Integer} id, L'id du type de produit à récupérer.
  */
 function getProductTypeById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received productType.id is invalid!');
-  }
-
   return ProductTypesModel.findById(id);
 }
 
@@ -101,11 +96,11 @@ function addProductType(productType) {
 }
 
 async function addProducerProducingThisProductType(productTypeId, producerId) {
-  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $addToSet: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $addToSet: { producersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 async function removeProducerProducingThisProductType(productTypeId, producerId) {
-  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $pull: { producersIds: producerId } }, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(productTypeId, { $pull: { producersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -116,10 +111,6 @@ async function removeProducerProducingThisProductType(productTypeId, producerId)
  * @param {ProductType} productType, Les informations du type de produit à mettre à jour.
  */
 function updateProductType(productType) {
-  if (!mongoose.Types.ObjectId.isValid(productType.id)) {
-    throw new Error('Received productType.id is invalid!');
-  }
-
   const updatedProductType = {
     id: productType.id,
     name: productType.name,
@@ -128,7 +119,7 @@ function updateProductType(productType) {
     // fixme: checker que le tableau de producersIds n'est pas supprimé lorsqu'on met à jour!
   };
 
-  return ProductTypesModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true }); // retourne l'objet modifié
+  return ProductTypesModel.findByIdAndUpdate(updatedProductType.id, updatedProductType, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -137,9 +128,5 @@ function updateProductType(productType) {
  * @param id, Les informations du type de produit à supprimer.
  */
 function deleteProductType(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received productType.id is invalid!');
-  }
-
   return ProductTypesModel.findByIdAndRemove(id);
 }

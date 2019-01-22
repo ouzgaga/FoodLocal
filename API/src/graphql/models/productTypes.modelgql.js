@@ -31,8 +31,8 @@ const productTypeSchema = new mongoose.Schema(
 );
 
 /**
- * Vérifie l'existence de la categoryId entrée ainsi que l'existence de chaque producer du tableau producersIds.
- * Lève une erreur si l'un d'entre eux n'existe pas dans la base de données.
+ * Vérifie l'existence de la categoryId entrée avant chaque enregistrement dans la collection.
+ * Lève une erreur s'il n'existe pas dans la base de données et annule l'enregistrement.
  */
 productTypeSchema.pre('save', async function(next) {
   try {
@@ -45,7 +45,10 @@ productTypeSchema.pre('save', async function(next) {
   }
 });
 
-
+/**
+ * Vérifie l'existence du producerId entrés avant chaque update.
+ * Lève une erreur s'il n'existe pas dans la base de données et annule l'update.
+ */
 productTypeSchema.pre('findOneAndUpdate', async function(next) {
   try {
     if (this._update != null && this._update.$addToSet != null) {

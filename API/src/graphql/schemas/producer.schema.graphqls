@@ -1,7 +1,7 @@
 directive @connection on FIELD_DEFINITION
 
 type Query {
-	# Retourne tous les producteurs.
+	# Retourne tous les producteurs de la base de données.
 	producers: ProducerConnection! @connection
 
 	# Retourne le producteur correspondant à l'id reçu. Retourne null si aucun producteur ne possède cet id.
@@ -10,8 +10,10 @@ type Query {
 	# Retourne tous les producteurs attendant d'être validés par un administrateur (isValidated = false).
 	producersWaitingForValidation: ProducerConnection! @connection
 
-	# Retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre. Retourne les producteurs du plus proche au plus éloigné par rapport à la position 'locationClient' reçue en paramètre. Ignore les producteurs situés à plus de 'maxDistance' du client.
-	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!]): ProducerConnection! @connection
+	# Retourne tous les producteurs du plus proche au plus éloigné par rapport à la position 'locationClient' reçue en paramètre. Ignore les producteurs situés à plus de 'maxDistance' du client.
+	# Si un paramètre byProductTypeIds est donné, retourne tous les producteurs produisant au moins un produit du type correspondant à un des ids du tableau reçu en paramètre.
+	# Si un paramètre ratingMin est donné, retourne uniquement les producteurs dont le rating est égal ou plus grand que 'ratingMin'.
+	geoFilterProducers(locationClient: ClientLocation!, byProductTypeIds: [ID!], ratingMin: Int): ProducerConnection! @connection
 }
 
 type Mutation {
@@ -27,7 +29,7 @@ input ClientLocation {
 	longitude: Float!
 	latitude: Float!
 
-	# la distance maximale des producteurs à retourner. Tout producteur situé à plus de maxDistance mètres du client seront ignorés.
+	# la distance maximale des producteurs à retourner. Les producteurs situés à plus de maxDistance mètres du client seront ignorés.
 	maxDistance: Float
 }
 
@@ -36,7 +38,6 @@ type Producer implements Person {
 	firstname: String!
 	lastname: String!
 	email: String!
-	# password: String! # le password n'est pas accessible côté client!
 	image: String
 	# Tableau contenant tous les producteur que la personne suit.
 	followingProducers: ProducerConnection! @connection
@@ -49,10 +50,10 @@ type Producer implements Person {
 	description: String
 	website: String
 	salespoint: Salespoint
-	isValidated: Boolean! # validation côté serveur uniquement
+	isValidated: Boolean!
 	# Tableau contenant tous les produits proposés par le producteur.
 	products: ProductConnection! @connection
-	# Note moyenne attribuée au producteur par les autres membres du site.
+	# Note moyenne attribuée au producteur par les autres membres.
 	rating: ProducerRating
 }
 
@@ -60,14 +61,14 @@ type ProducerRating {
 	# Nombre total de notes qu'à reçu le producteur
 	nbRatings: Int!
 	# Moyenne des notes qu'à reçu le producteur
-	rating: Float!
+	grade: Float!
 }
 
 input ProducerInputAdd {
 	firstname: String!
 	lastname: String!
 	email: String!
-	password: String! # password obligatoire à l'ajout
+	password: String!
 	image: String
 	phoneNumber: String
 	description: String

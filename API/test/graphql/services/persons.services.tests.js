@@ -19,11 +19,11 @@ const clearAndPopulateDB = async() => {
 
   users = await usersServices.getUsers();
   users = users.map(u => u.toObject());
-  producers = await producersServices.getProducers();
+  producers = await producersServices.getProducers(true);
   producers = producers.map(p => p.toObject());
 };
 
-describe('tests users services', () => {
+describe('tests persons services', () => {
   beforeEach(() => clearAndPopulateDB());
 
 
@@ -79,12 +79,14 @@ describe('tests users services', () => {
       try {
         await personsServices.checkIfPersonIdExistInDB('');
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
       try {
         await personsServices.checkIfPersonIdExistInDB('', true);
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -92,23 +94,27 @@ describe('tests users services', () => {
       try {
         await personsServices.checkIfPersonIdExistInDB('abcedf'); // id trop court (< 24 caractères)
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
       try {
         await personsServices.checkIfPersonIdExistInDB('abcedf', true); // id trop court (< 24 caractères)
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
 
       try {
         await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf'); // id trop long (> 24 caractères)
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
       try {
         await personsServices.checkIfPersonIdExistInDB('abcedfabcedfabcedfabcedfabcedf', true); // id trop long (> 24 caractères)
       } catch (err) {
-        err.message.should.be.equal('Received personId is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
   });
@@ -183,7 +189,8 @@ describe('tests users services', () => {
       try {
         await personsServices.getPersonById('');
       } catch (err) {
-        err.message.should.be.equal('Received person.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 
@@ -191,7 +198,8 @@ describe('tests users services', () => {
       try {
         await personsServices.getPersonById(users[0].id + users[0].id);
       } catch (err) {
-        err.message.should.be.equal('Received person.id is invalid!');
+        err.name.should.be.equal('CastError');
+        err.kind.should.be.equal('ObjectId');
       }
     });
 

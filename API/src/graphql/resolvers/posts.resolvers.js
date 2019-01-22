@@ -2,6 +2,10 @@ const { isAuthenticatedAsProducerAndIsYourself } = require('./authorization.reso
 const postsServices = require('../services/posts.services');
 const producersServices = require('../services/producers.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL post.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const postsResolvers = {
   Query: {
     postsOfProducer: (parent, args, context) => postsServices.getAllPostsOfProducer(args.producerId, args)

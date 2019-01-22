@@ -3,6 +3,10 @@ const personRatingProducersServices = require('../services/personRatingProducers
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL personRatingProducer.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const personRatingProducersResolvers = {
   Query: {
     ratingsAboutProducer: (parent, args, context) => personRatingProducersServices.getAllRatingsAboutProducerWithId(args.producerId),

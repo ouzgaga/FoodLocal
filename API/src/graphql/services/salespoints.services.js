@@ -37,14 +37,10 @@ function getSalespoints({ tags = undefined } = {}) {
  * @param {Integer} id, L'id du point de vente à récupérer.
  */
 function getSalespointById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received salespoint.id is invalid!');
-  }
-
   return SalespointsModel.findById(id);
 }
 
-function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }) {
+function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }, ratingMin = 1) {
   return SalespointsModel.aggregate(
     [
       {
@@ -101,14 +97,16 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }) {
       },
       {
         $match: {
-          isValidated: true
+          isValidated: true,
+          deleted: false,
+          'rating.grade': { $gte: ratingMin }
         }
       }
     ]
   );
 }
 
-function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab) {
+function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, maxDistance }, productTypeIdsTab, ratingMin = 1) {
   // FIXME: PAUL: est-ce possible de faire en sorte que GraphQL convertisse automatiquement les ID en ObjectID ?
   productTypeIdsTab = productTypeIdsTab.map(e => mongoose.Types.ObjectId(e));
 
@@ -187,7 +185,8 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
           rating: { $first: '$rating' },
           productTypeIds: { $addToSet: '$products.productTypeId' },
           salespoint: { $first: '$salespoint' },
-          products: { $first: '$products' }
+          products: { $first: '$products' },
+          deleted: { $first: '$deleted' }
         }
       },
       {
@@ -200,7 +199,9 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
           productTypeIds: {
             $all: productTypeIdsTab
           },
-          isValidated: true
+          isValidated: true,
+          deleted: false,
+          'rating.grade': { $gte: ratingMin }
         }
       }
     ]
@@ -291,7 +292,7 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
     updatedSalespoint.schedule = schedule;
   }
 
-  await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true }); // retourne l'objet modifié
+  await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true, runValidators: true }); // retourne l'objet modifié
 
   // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
   await notificationsServices.addNotification('PRODUCER_UPDATE_SALESPOINT_INFO', producer.id);
@@ -305,9 +306,5 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
  * @param {Integer} id, L'id du point de vente à supprimer.
  */
 async function deleteSalespoint(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received salespoint.id is invalid!');
-  }
-
   return SalespointsModel.findByIdAndRemove(id);
 }

@@ -26,8 +26,8 @@ build-api:
   - docker push $CONTAINER_TEST_IMAGE_API
   only:
   - prod
-  - master
-  - API
+  #- master
+  #- API
 
 build-frontend:
   stage: build
@@ -39,47 +39,45 @@ build-frontend:
   - docker build --pull -t $CONTAINER_TEST_IMAGE_FRONTEND ./FrontEnd
   - docker push $CONTAINER_TEST_IMAGE_FRONTEND
   only:
-  - 10-site-web-creation-des-pages-principales-carte
+  #- 10-site-web-creation-des-pages-principales-carte
   - prod
-  - master
+  #- master
 
 ##########
 ###TEST###
 ##########
 test-api:
   stage: test
-  image: node:9-alpine
-  services:
-  - mongo:latest
+  image: node:8.15.0-jessie
   script:
   - cd ./API
   - npm i npm@latest -g
-  - apk update
-  - apk --no-cache add --virtual builds-deps build-base python
+  #- apk update
+  #- apk --no-cache add --virtual builds-deps build-base python
   - npm config set python /usr/bin/python
   - npm install
+  - npm install run-rs
   - npm rebuild bcrypt --build-from-source
-  - apk del builds-deps
-  - npm test
+  #- apk del builds-deps
+  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
+  - sleep 10; npm test
   only:
   - API
 test-api-full:
   stage: test
-  image: node:9-alpine
-  services:
-  - mongo:latest
+  image: node:8.15.0-jessie
   script:
   - cd ./API
   - npm i npm@latest -g
-  - apk update
-  - apk --no-cache add --virtual builds-deps build-base python
+  #- apk update
+  #- apk --no-cache add --virtual builds-deps build-base python
   - npm config set python /usr/bin/python
   - npm install
-  #- npm install --save run-rs
+  - npm install run-rs
   - npm rebuild bcrypt --build-from-source
-  - apk del builds-deps
-  #- node ./node_modules/run-rs/
-  #- npm test
+  #- apk del builds-deps
+  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
+  - sleep 30 && npm test
   #- npm test-jest
   only:
   - prod

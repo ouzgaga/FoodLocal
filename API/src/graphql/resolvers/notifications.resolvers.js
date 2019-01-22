@@ -1,13 +1,22 @@
 const { withFilter } = require('graphql-subscriptions');
-const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
+const { isAuthenticated, isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const notificationsServices = require('../services/notifications.services');
 const personNotificationsServices = require('../services/personNotifications.services');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
 const pubSub = require('../utils/pubSub');
 
+/**
+ * Resolvers correspondant au schéma GraphQL notification.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const notificationsResolvers = {
   Query: {
+    numberOfUnSeenNotificationsOfPerson: async(parent, args, context) => {
+      await isAuthenticated(context.id);
+      return personNotificationsServices.countUnSeenNotificationsOfPerson(context.id);
+    },
+
     notificationsOfPerson: async(parent, args, context) => {
       await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personNotificationsServices.getAllNotificationsOfPerson(args.personId);
@@ -15,6 +24,11 @@ const notificationsResolvers = {
   },
 
   Mutation: {
+    setAllNotificationsAsSeen: async(parent, args, context) => {
+      await isAuthenticated(context.id);
+      return (await personNotificationsServices.setAllPersonNotificationAsSeen(context.id)).nModified;
+    },
+
     setNotificationAsSeen: async(parent, args, context) => {
       await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personNotificationsServices.setPersonNotificationAsSeen(args.personNotificationId);

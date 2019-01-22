@@ -3,7 +3,7 @@ module.exports = {
   getProducerById,
   getAllProducerWaitingForValidation,
   getAllProducersInReceivedIdList,
-  countProducersIndBD,
+  countProducersInDB,
   filterProducers,
   geoFilterProducers,
   addProducer,
@@ -12,14 +12,12 @@ module.exports = {
   removeSalespointToProducer,
   removeProductFromProducer,
   updateProducer,
-  updateProducerRating,
   validateAProducer,
   deleteProducer,
   addFollowerToProducer,
   removeFollowerToProducer
 };
 
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const salespointsServices = require('./salespoints.services');
 const notificationsServices = require('./notifications.services');
@@ -42,10 +40,10 @@ const productTypesServices = require('./productTypes.services');
 function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   if (sortById) {
-    return ProducersModel.find(tags)
+    return ProducersModel.find({ isValidated: true, deleted: false, ...tags })
       .sort({ _id: 1 });
   } else {
-    return ProducersModel.find(tags);
+    return ProducersModel.find({ isValidated: true, deleted: false, ...tags });
   }
 }
 
@@ -56,10 +54,6 @@ function getProducers(sortById, { tags = undefined } = {}) {
  * @returns {*}
  */
 function getProducerById(id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received producer.id is invalid!');
-  }
-
   return ProducersModel.findById(id);
 }
 
@@ -80,8 +74,8 @@ function getAllProducerWaitingForValidation() {
   return getProducers(true, { tags: { isValidated: false } });
 }
 
-function countProducersIndBD() {
-  return ProducersModel.countDocuments({ isValidated: true });
+function countProducersInDB() {
+  return ProducersModel.countDocuments({ isValidated: true, deleted: false });
 }
 
 /**
@@ -106,12 +100,12 @@ function filterProducers(byProductTypeIds) {
   }
 }
 
-function geoFilterProducers(locationClient, productTypeIdsTab) {
+function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin = 1) {
   if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
-    return salespointsServices.geoFilterProducersSalespoints(locationClient);
+    return salespointsServices.geoFilterProducersSalespoints(locationClient, ratingMin);
   }
 
-  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds(locationClient, productTypeIdsTab);
+  return salespointsServices.geoFilterProducersSalespointsByProductTypeIds(locationClient, productTypeIdsTab, ratingMin);
 }
 
 /**
@@ -152,11 +146,12 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
 }
 
 function addProductToProducer(productId, producerId) {
-  return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
+  // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true, runValidators: true });
 }
 
 function removeProductFromProducer(productId, producerId) {
-  return ProducersModel.findByIdAndUpdate(producerId, { $pull: { productsIds: productId } }, { new: true }); // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $pull: { productsIds: productId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -206,7 +201,7 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
   // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
   await notificationsServices.addNotification('PRODUCER_UPDATE_INFO', id);
 
-  return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true }); // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerToUpdate.id, producerToUpdate, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -216,10 +211,6 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
  * @param salespoint, Les informations du salespoint que l'on souhaite ajouter au producteur.
  */
 async function addSalespointToProducer(producerId, salespoint) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producerId is invalid!');
-  }
-
   const producer = await getProducerById(producerId);
   if (producer == null) {
     throw new Error('The received producerId is not in the database!');
@@ -232,7 +223,7 @@ async function addSalespointToProducer(producerId, salespoint) {
   const addedSalespoint = await salespointsServices.addSalespoint(salespoint);
 
   // on met à jour le salespointId du producteur avec l'id du nouveau salespoint
-  return ProducersModel.findByIdAndUpdate(producerId, { salespointId: addedSalespoint.id }, { new: true }); // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { salespointId: addedSalespoint.id }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
@@ -241,10 +232,6 @@ async function addSalespointToProducer(producerId, salespoint) {
  * @param {Integer} producerId, L'id du producteur dont on souhaite supprimer le salespoint.
  */
 async function removeSalespointToProducer(producerId) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producerId is invalid!');
-  }
-
   // on supprime le salespointId contenu dans les informations du producteur
   const producer = await ProducersModel.findByIdAndUpdate(producerId, { salespointId: null }, { new: false }); // retourne l'objet avant sa modification
 
@@ -259,21 +246,9 @@ async function removeSalespointToProducer(producerId) {
   return producer;
 }
 
-// TOD: à ajouter dans les tests des services!!!
-function updateProducerRating(producerId, rating) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producer.id is invalid!');
-  }
-
-  // retourne l'objet modifié
-  return ProducersModel.findByIdAndUpdate(producerId, { rating }, { new: true });
-}
-
 async function validateAProducer(producerId, validationState) {
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received producer.id is invalid!');
-  }
-  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true }); // retourne l'objet modifié
+  // retourne l'objet modifié
+  return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true, runValidators: true });
 }
 
 /**
@@ -298,18 +273,17 @@ async function deleteProducer(id) {
     // salespoint: null,
     isValidated: null,
     // products: null,
-    rating: null
+    rating: null,
+    deleted: true
   });
 
-  const salespoint = salespointsServices.deleteSalespoint(producer.salespointId);
-
+  if (producer != null) {
+    salespointsServices.deleteSalespoint(producer.salespointId);
+  }
   return producer;
 }
 
 async function addFollowerToProducer(producerId, followerId) {
-  if (!mongoose.Types.ObjectId.isValid(followerId)) {
-    throw new Error('Received followerId is invalid!');
-  }
   if (producerId === followerId) {
     throw new Error('You can\'t follow yourself!');
   }
@@ -327,16 +301,13 @@ async function addFollowerToProducer(producerId, followerId) {
   }
 
   // on ajoute le nouveau follower au tableaux d'ids des followers du producteur et on met à jour le producteur dans la base de données
-  const updatedProducer = await ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { followersIds: followerId } }, { new: true });
+  const updatedProducer = await ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { followersIds: followerId } }, { new: true, runValidators: true });
 
   // on ajoute le producerId au tableaux d'ids des producteurs suivi par la personne et on met à jour la personne dans la base de données
   return personsServices.addProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
 
 async function removeFollowerToProducer(producerId, followerId) {
-  if (!mongoose.Types.ObjectId.isValid(followerId)) {
-    throw new Error('Received followerId is invalid!');
-  }
   if (producerId === followerId) {
     throw new Error('You can\'t follow yourself!');
   }
@@ -354,7 +325,7 @@ async function removeFollowerToProducer(producerId, followerId) {
   }
 
   // on supprime followerId du tableaux d'ids des followers du producteur et on met à jour le producteur dans la base de données
-  const updatedProducer = await ProducersModel.findByIdAndUpdate(producerId, { $pull: { followersIds: followerId } }, { new: true });
+  const updatedProducer = await ProducersModel.findByIdAndUpdate(producerId, { $pull: { followersIds: followerId } }, { new: true, runValidators: true });
 
   // on ajoute le producerId au tableaux d'ids des producteurs suivi par la personne et on met à jour la personne dans la base de données
   return personsServices.removeProducerToPersonsFollowingList(followerId, updatedProducer.id);

@@ -4,9 +4,13 @@ const producersServices = require('../services/producers.services');
 const salespointsServices = require('../services/salespoints.services');
 const personsServices = require('../services/persons.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL producer.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const producerResolvers = {
   Query: {
-    producers: (parent, args, context) => producersServices.getProducers(),
+    producers: (parent, args, context) => producersServices.getProducers(true),
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 
@@ -15,8 +19,7 @@ const producerResolvers = {
       return producersServices.getAllProducerWaitingForValidation();
     },
 
-    // FIXME: PAUL: Comment faire en sorte de bypasser les resolvers ?
-    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds)
+    geoFilterProducers: (parent, args, context) => producersServices.geoFilterProducers(args.locationClient, args.byProductTypeIds, args.ratingMin)
   },
 
   Mutation: {
@@ -34,7 +37,7 @@ const producerResolvers = {
   Producer: {
     id: (parent, args, context) => parent._id.toString(),
 
-    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds,),
+    followingProducers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.followingProducersIds),
 
     followers: (parent, args, context) => personsServices.getAllPersonsInReceivedIdList(parent.followersIds),
 
@@ -54,7 +57,8 @@ const producerResolvers = {
   },
 
   ProducerConnection: {
-    totalCount: (parent, args, context) => producersServices.countProducersIndBD()
+    // ne fonctionne que parce qu'il n'y a pas de pagination entre la DB et le serveur...!
+    totalCount: (parent, args, context) => parent.edges.length // FIXME: mieux mais pas toujours correct... -> producersServices.countProducersInDB()
   }
 };
 

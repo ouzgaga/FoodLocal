@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { createServer } = require('http');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
+const { isAuthenticated } = require('./graphql/resolvers/authorization.resolvers');
 const connectionTokenServices = require('./graphql/services/connectionToken.services');
 const { resolvers, schema: typeDefs, connectionDirective } = require('./graphql/graphqlConfig');
 
@@ -37,7 +38,9 @@ const server = new ApolloServer(
     },
     subscriptions: {
       path: '/subscriptions',
-      onConnect: (connectionParams) => {
+      onConnect: async(connectionParams) => {
+        const user = await connectionTokenServices.verifyToken(connectionParams.token, false);
+        await isAuthenticated(user.id);
         console.log('Subscription client connected using Apollo server\'s built-in SubscriptionServer.');
         return connectionParams;
       }

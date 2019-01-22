@@ -50,6 +50,10 @@ async function checkGivenPersonAndProducerExists(query, next) {
   next();
 }
 
+/**
+ * Vérifie l'existence des personId et producerId entrés avant chaque update.
+ * Lève une erreur si l'un des deux n'existe pas dans la base de données et annule l'update.
+ */
 personRatingProducer.pre('findOneAndUpdate', function(next) {
   try {
     return checkGivenPersonAndProducerExists(this._conditions, next);
@@ -71,25 +75,32 @@ async function updateProducerRating(doc) {
 
   let rating = await PersonRatingProducersModel.aggregate([
     { $match: { producerId: mongoose.Types.ObjectId(doc.producerId) } },
-    { $group: { _id: null, nbRatings: { $sum: 1 }, rating: { $avg: '$rating' } } },
+    { $group: { _id: null, nbRatings: { $sum: 1 }, grade: { $avg: '$rating' } } },
     { $project: { _id: false } }
   ]);
 
   if (rating.length === 0) {
-    rating = rating[0];
-    rating = {
-      rating: null,
-      nbRatings: null
-    };
+    rating = null;
   } else {
     rating = rating[0];
   }
 
-  return ProducersModel.findByIdAndUpdate(doc.producerId, { rating }, { new: true });
+  return ProducersModel.findByIdAndUpdate(doc.producerId, { rating }, { new: true, runValidators: true });
 }
 
+/**
+ * Met à jour le rating du producteur après qu'un nouveau rating le concernant ait été enregistré dans la base de données.
+ */
 personRatingProducer.post('save', doc => updateProducerRating(doc));
+
+/**
+ * Met à jour le rating du producteur après qu'un nouveau rating le concernant ait été mis à jour dans la base de données.
+ */
 personRatingProducer.post('findOneAndUpdate', doc => updateProducerRating(doc));
+
+/**
+ * Met à jour le rating du producteur après qu'un nouveau rating le concernant ait été supprimé de la base de données.
+ */
 personRatingProducer.post('findOneAndRemove', doc => updateProducerRating(doc));
 
 const PersonRatingProducersModel = mongoose.model('personRatingProducer', personRatingProducer);
