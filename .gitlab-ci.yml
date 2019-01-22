@@ -77,7 +77,7 @@ test-api-full:
   - npm rebuild bcrypt --build-from-source
   #- apk del builds-deps
   - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 &
-  - sleep 15 && npm test
+  - sleep 30 && npm test
   #- npm test-jest
   only:
   - prod
