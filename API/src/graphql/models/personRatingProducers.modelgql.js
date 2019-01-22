@@ -50,9 +50,9 @@ async function checkGivenPersonAndProducerExists(query, next) {
   next();
 }
 
-personRatingProducer.pre('save', function(next) {
+personRatingProducer.pre('findOneAndUpdate', function(next) {
   try {
-    return checkGivenPersonAndProducerExists(this, next);
+    return checkGivenPersonAndProducerExists(this._conditions, next);
   } catch (err) {
     next(err);
   }

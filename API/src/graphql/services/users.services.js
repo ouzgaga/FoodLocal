@@ -99,6 +99,7 @@ async function updateUser({ id, firstname, lastname, image }) {
   // si userValidation n'est pas nul -> l'utilisateur existe dans la DB
   const { emailValidated, isAdmin } = userValidation;
   const userToUpdate = {
+    id,
     emailValidated,
     isAdmin
   };
@@ -114,7 +115,7 @@ async function updateUser({ id, firstname, lastname, image }) {
     userToUpdate.image = image;
   }
 
-  return UsersModel.findByIdAndUpdate(id, userToUpdate, { new: true }); // retourne l'objet modifié
+  return UsersModel.findByIdAndUpdate(userToUpdate.id, userToUpdate, { new: true }); // retourne l'objet modifié
 }
 
 /**

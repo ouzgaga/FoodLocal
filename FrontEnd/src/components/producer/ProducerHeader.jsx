@@ -5,11 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
-
-
 import DefaultUserLogo from '../../img/DefaultUserLogo.jpg';
-
-
 import RatingItem from '../items/RatingItem';
 import SimpleImageDialog from '../items/SimpleImageDialog';
 
@@ -68,7 +64,6 @@ function ProducerHeader(props) {
         <Grid item xs={10} sm container alignItems="justify">
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-
               <Typography variant="h6" wrap="nowrap">
                 {`${lastname} ${firstname}` || 'Pas de noms'}
               </Typography>
@@ -86,9 +81,14 @@ function ProducerHeader(props) {
 }
 
 ProducerHeader.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape().isRequired,
+  lastname: PropTypes.string.isRequired,
+  firstname: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  ratingValue: PropTypes.number.isRequired,
+  nbRating: PropTypes.number.isRequired,
 };
-
 
 ProducerHeader.defaultProps = {
   image: DefaultUserLogo,

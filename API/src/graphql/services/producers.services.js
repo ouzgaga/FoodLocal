@@ -72,10 +72,6 @@ function getAllProducersInReceivedIdList(listOfIdToGet) {
   return getProducers(true, { tags: { _id: { $in: listOfIdToGet } } });
 }
 
-function getAllProducersWithSalespointInReceivedIdList(listOfSalespointsIdToGet) {
-  return getProducers(false, { tags: { salespointId: { $in: listOfSalespointsIdToGet } } });
-}
-
 /**
  * Retourne tous les producteurs qui n'ont pas encore été validés (isValidated = false)
  * @returns {*}
@@ -85,7 +81,7 @@ function getAllProducerWaitingForValidation() {
 }
 
 function countProducersIndBD() {
-  return ProducersModel.countDocuments();
+  return ProducersModel.countDocuments({ isValidated: true });
 }
 
 /**
@@ -170,9 +166,6 @@ function removeProductFromProducer(productId, producerId) {
  * @param {Integer} producer, Les informations du producteur à mettre à jour.
  */
 async function updateProducer({ id, firstname, lastname, image, phoneNumber, description, website }) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received producer.id is invalid!');
-  }
 
   const producerValidation = await ProducersModel.findById(id, 'emailValidated isValidated isAdmin');
 
@@ -184,6 +177,7 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
   const { emailValidated, isValidated, isAdmin } = producerValidation;
 
   const producerToUpdate = {
+    id,
     emailValidated,
     isAdmin,
     isValidated

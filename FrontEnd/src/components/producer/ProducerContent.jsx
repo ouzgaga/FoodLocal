@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import gql from 'graphql-tag';
@@ -11,14 +10,12 @@ import ProductsInformations from './ProductsInformations';
 import ProducerMur from './ProducerMur';
 import Loading from '../Loading';
 import ErrorLoading from '../ErrorLoading';
-import InfiniteScroll from 'react-infinite-scroller';
 
 const styles = {
   root: {
     flexGrow: 1,
     width: '100%',
     height: '100%',
-    widht: 1000,
     padding: 16,
     backgroundColor: 'rgba(255, 255, 255, 1)',
   },
@@ -27,6 +24,7 @@ const styles = {
   }
 };
 
+// Retourne les informations principales d'un producteur par rapport à son id
 const GET_PRODUCER_INFORMATIONS = gql`
 query($producer: ID!) {
   producer(producerId: $producer) {
@@ -80,11 +78,11 @@ query($producer: ID!) {
 }
 `;
 
-// TODO : Changer le 5 en 10
+// Retourne les produits d'un producteur
 const GET_PRODUCER_PRODUCTS = gql`
 query($producerId: ID!, $cursor:String) {
   producer(producerId: $producerId) {
-    products(first: 3, after:$cursor) {
+    products(first: 4, after:$cursor) {
       pageInfo{
         hasNextPage
         hasPreviousPage
@@ -108,7 +106,7 @@ query($producerId: ID!, $cursor:String) {
 }
 `;
 
-// TODO : Changer le 2 en 10
+// Retourne les posts d'un producteur
 const GET_POSTS_OF_PRODUCER = gql`
   query($producerId: ID!, $cursor:String){
   postsOfProducer(producerId: $producerId, first: 4, after:$cursor){
@@ -164,7 +162,7 @@ class ProducerContent extends React.Component {
     return (
       <div className={classes.root}>
         <Tabs
-          value={this.state.value}
+          value={value}
           onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
@@ -191,8 +189,8 @@ class ProducerContent extends React.Component {
               </Query>
             )
           }
-          {value === 1 && (
 
+          {value === 1 && (
             <Query
               query={GET_PRODUCER_PRODUCTS}
               variables={{ producerId }}
@@ -201,8 +199,6 @@ class ProducerContent extends React.Component {
                 data, loading, error, fetchMore
               }) => {
                 if (error) return <ErrorLoading />;
-
-                console.log('a', data)
                 return (
                   <ProductsInformations
                     loading={loading}
@@ -214,7 +210,7 @@ class ProducerContent extends React.Component {
                       },
                       updateQuery: (prevResult, { fetchMoreResult }) => {
                         const newEdges = fetchMoreResult.producer.products.edges;
-                        const pageInfo = fetchMoreResult.producer.products.pageInfo;
+                        const { pageInfo } = fetchMoreResult.producer.products;
                         return newEdges.length
                           ? {
                             producer: {
@@ -228,10 +224,8 @@ class ProducerContent extends React.Component {
                           }
                           : prevResult;
                       }
-                    })
-                    }
+                    })}
                   />
-
                 );
               }}
             </Query>
@@ -245,7 +239,7 @@ class ProducerContent extends React.Component {
                 data, loading, error, fetchMore
               }) => {
                 if (error) return <ErrorLoading />;
-                const postsOfProducer = data.postsOfProducer;
+                const { postsOfProducer } = data;
 
                 return (
                   <ProducerMur
@@ -258,7 +252,7 @@ class ProducerContent extends React.Component {
                       },
                       updateQuery: (prevResult, { fetchMoreResult }) => {
                         const newEdges = fetchMoreResult.postsOfProducer.edges;
-                        const pageInfo = fetchMoreResult.postsOfProducer.pageInfo;
+                        const { pageInfo } = fetchMoreResult.postsOfProducer;
                         return newEdges.length
                           ? {
                             postsOfProducer: {
@@ -284,6 +278,7 @@ class ProducerContent extends React.Component {
 
 ProducerContent.propTypes = {
   classes: PropTypes.shape().isRequired,
+  producerId: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(ProducerContent);

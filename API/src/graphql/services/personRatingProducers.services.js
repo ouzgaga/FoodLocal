@@ -4,8 +4,7 @@ module.exports = {
   getAllRatingsMadeByPersonWithId,
   countNbRatingsMadeByPersonWithId,
   countNbRatingsAboutProducerWithId,
-  addPersonRatingProducer,
-  updatePersonRatingProducer,
+  addOrUpdatePersonRatingProducer,
   deletePersonRatingProducer
 };
 
@@ -31,7 +30,7 @@ function getAllRatingsAboutProducerWithId(producerId) {
  * @param producerId, l'id du producteur concerné par le rating qu'on souhaite récupérer.
  * @returns {*}
  */
-async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { limit = 30, page = 0 } = {}) {
+function getRatingAboutProducerIdMadeByPersonId(producerId, personId) {
   if (!mongoose.Types.ObjectId.isValid(producerId)) {
     throw new Error('Received personRatingProducer.producerId is invalid!');
   }
@@ -39,16 +38,8 @@ async function getRatingAboutProducerIdMadeByPersonId(producerId, personId, { li
     throw new Error('Received personRatingProducer.personId is invalid!');
   }
 
-  let skip;
-  if (page !== 0) {
-    skip = page * limit;
-  }
-
-  const res = await PersonRatingProducersModel.findOne({ producerId, personId })
-    .sort({ _id: 1 })
-    .skip(+skip)
-    .limit(+limit);
-  return res;
+  return PersonRatingProducersModel.findOne({ producerId, personId })
+    .sort({ _id: 1 });
 }
 
 /**
@@ -76,26 +67,12 @@ function countNbRatingsAboutProducerWithId(producerId) {
  *
  * @param personRatingProducer, Les informations du rating à ajouter.
  */
-async function addPersonRatingProducer({ personId, producerId, rating }) {
-  if (!mongoose.Types.ObjectId.isValid(personId)) {
-    throw new Error('Received personRatingProducer.personId is invalid!');
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(producerId)) {
-    throw new Error('Received personRatingProducer.producerId is invalid!');
-  }
+function addOrUpdatePersonRatingProducer({ personId, producerId, rating }) {
   // les tests d'existence de personId et producerId sont fait directement dans le schéma mongoose
 
-  // on check si cet personne a déjà voté pour ce producteur
-  const ratingForThisProducerAlreadyMade = await PersonRatingProducersModel.findOne({ personId, producerId });
-
-  if (ratingForThisProducerAlreadyMade != null) {
-    // cette personne a déjà voté pour ce producteur !
-    throw new Error('This person has already rated this producer! You can\'t rate twice the same producer.');
-  }
-
-  // on enregistre le nouveau rating dans la base de données
-  return new PersonRatingProducersModel({ personId, producerId, rating }).save();
+  // on met à jour le rating fait par personId et concernant producerId. On le crée s'il n'existe pas.
+  return PersonRatingProducersModel.findOneAndUpdate({ personId, producerId }, { rating }, { new: true, upsert: true }); // retourne l'objet modifié
+  // la mise à jour du rating du producteur est faite automatiquement dans le schéma mongoose
 }
 
 async function updateProducerRating(producerId) {
@@ -124,10 +101,6 @@ async function updateProducerRating(producerId) {
  * @param personRatingProducer, Les informations du rating à mettre à jour.
  */
 async function updatePersonRatingProducer({ id, rating }) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Received personRatingProducer.id is invalid!');
-  }
-
   const update = await PersonRatingProducersModel.findByIdAndUpdate(id, { rating }, { new: true }); // retourne l'objet modifié
   await updateProducerRating(update.producerId);
   return update;

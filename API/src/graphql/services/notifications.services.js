@@ -34,7 +34,7 @@ async function addNotification(type, producerId) {
   const notification = await new NotificationsModel(notificationToAdd).save();
 
   // on ajoute une personNotification pour chaque follower du producteur ayant produit la nouvelle notification
-  const res = await personNotificationsServices.addNotificationOfPersonForAllPersonIdInArray(producer.followersIds, notification.id);
+  await personNotificationsServices.addNotificationOfPersonForAllPersonIdInArray(producer.followersIds, notification.id);
 
   return notification;
 }

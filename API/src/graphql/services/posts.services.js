@@ -45,7 +45,7 @@ async function addPostOfProducer(post) {
   // on enregistre le nouveau post dans la base de données
   const newPost = await new PostsModel(postToAdd).save();
 
-  const res = await notificationsServices.addNotification('NEW_POST', newPost.producerId);
+  await notificationsServices.addNotification('NEW_POST', newPost.producerId);
 
   return newPost;
 }

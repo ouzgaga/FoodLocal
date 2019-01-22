@@ -1,24 +1,24 @@
 
-import React, { Component, Fragment } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
-
+import { List, ListItem } from '@material-ui/core';
 import ProducerPost from './ProducerPost';
 import Loading from '../Loading';
-import { List, ListItem } from '@material-ui/core';
 
 
-class ProducerMur extends Component {
+function ProducerMur(props) {
+  const { entries, loading, onLoadMore } = props;
 
-  render() {
-    if (!this.props.entries && this.props.loading) return <p>Loading....</p>;
-    const repos = this.props.entries.edges || [];
-    console.log(this.props);
-    return (
+  if (!entries && loading) return <Loading />;
+  const repos = entries.edges || [];
+  return (
+    <>
       <List>
         <InfiniteScroll
           pageStart={0}
-          loadMore={() => this.props.onLoadMore()}
-          hasMore={this.props.entries.pageInfo.hasNextPage}
+          loadMore={onLoadMore}
+          hasMore={entries.pageInfo.hasNextPage}
         >
           {repos.map(({ node }) => (
             <ListItem key={node.id}>
@@ -35,11 +35,18 @@ class ProducerMur extends Component {
           }
 
         </InfiniteScroll>
-
-        {this.props.loading && <h2>Loading...</h2>}
       </List>
-    );
-  }
+
+      {loading && <Loading />}
+    </>
+
+  );
 }
+
+ProducerMur.propTypes = {
+  entries: PropTypes.shape().isRequired,
+  loading: PropTypes.shape().isRequired,
+  onLoadMore: PropTypes.func.isRequired,
+};
 
 export default ProducerMur;
