@@ -4,6 +4,10 @@ const producersServices = require('../services/producers.services');
 const salespointsServices = require('../services/salespoints.services');
 const personsServices = require('../services/persons.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL producer.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const producerResolvers = {
   Query: {
     producers: (parent, args, context) => producersServices.getProducers(),

@@ -2,7 +2,11 @@ const { isAuthenticatedAsUserAndIsYourself, isAuthenticatedAsAdmin } = require('
 const usersServices = require('../services/users.services');
 const producersServices = require('../services/producers.services');
 
-const producerResolvers = {
+/**
+ * Resolvers correspondant au schéma GraphQL user.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
+const userResolvers = {
   Query: {
     users: async(parent, args, context) => {
       await isAuthenticatedAsAdmin(context.id, context.isAdmin);
@@ -30,4 +34,4 @@ const producerResolvers = {
     totalCount: (parent, args, context) => usersServices.countNbUsersInDB()
   }
 };
-module.exports = producerResolvers;
+module.exports = userResolvers;

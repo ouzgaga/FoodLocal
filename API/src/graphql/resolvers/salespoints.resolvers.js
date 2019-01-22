@@ -2,6 +2,10 @@ const { isAuthenticatedAsProducerAndIsYourself } = require('./authorization.reso
 const salespointsServices = require('../services/salespoints.services');
 const producersServices = require('../services/producers.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL salespoint.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const salespointsResolvers = {
   Query: {
     salespoints: (parent, args, context) => salespointsServices.getSalespoints(),

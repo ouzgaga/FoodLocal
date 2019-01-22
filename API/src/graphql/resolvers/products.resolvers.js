@@ -4,6 +4,10 @@ const producersServices = require('../services/producers.services');
 const productTypesServices = require('../services/productTypes.services');
 const productTypeCategoriesServices = require('../services/productTypeCategories.services');
 
+/**
+ * Resolvers correspondant au schéma GraphQL product.graphqls
+ * La documentation correspondant à chaque resolver se trouve dans le schéma GraphQL.
+ */
 const productResolvers = {
   Query: {
     // --------------------------------------------------------- Products ---------------------------------------------------------
@@ -83,6 +87,11 @@ const productResolvers = {
     category: (parent, args, context) => productTypeCategoriesServices.getProductTypeCategoryById(parent.categoryId),
 
     producers: (parent, args, context) => producersServices.getAllProducersInReceivedIdList(parent.producersIds)
+  },
+
+  ProductConnection: {
+    // ne fonctionne que parce qu'il n'y a pas de pagination entre la DB et le serveur...!
+    totalCount: (parent, args, context) => parent.edges.length
   },
 
   ProductTypeConnection: {

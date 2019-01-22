@@ -30,46 +30,42 @@ describe('Testing graphql request products', () => {
     describe('Testing products()', () => {
       it('should get all products', async(done) => {
         const { query } = {
-          query:
-`query{
-  products{
-    pageInfo{
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    edges{
-      node{
-        id
-        description
-        productType{
-          id
-          name
-          image
-          category{
-            id
-            name
-            image
-          }
-          producers{
-            edges{
-              node{
-                firstname
-                lastname
-                email
+          query: `
+            query {
+              products {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  cursor
+                  node {
+                    description
+                    productType {
+                      name
+                      image
+                      category {
+                        name
+                        image
+                      }
+                      producers {
+                        edges {
+                          node {
+                            firstname
+                            lastname
+                            email
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
-            }
-          }
-        }
-      }
-      cursor
-    }
-  }
-}`
+            }`
         };
         const result = await graphql(schema, query, null, {}, null);
-        console.log(result);
         expect.assertions(1);
         expect(result).toMatchSnapshot();
         done();
@@ -108,7 +104,6 @@ describe('Testing graphql request products', () => {
       it('should get a product by id', async(done) => {
         const variables = { productId: tabProducers[2].productsIds[0].toString() };
         const result = await graphql(schema, query, null, {}, variables);
-        console.log(result);
         expect.assertions(2);
         expect(result.data.product).not.toBeNull();
         expect(result).toMatchSnapshot();
@@ -121,7 +116,7 @@ describe('Testing graphql request products', () => {
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Received product.id is invalid!'));
+        expect(result.errors[0].message).toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdef" at path "_id" for model "products"'));
         done();
       });
 
@@ -131,17 +126,21 @@ describe('Testing graphql request products', () => {
         expect.assertions(3);
         expect(result.errors).not.toBeNull();
         expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Received product.id is invalid!'));
+        expect(result.errors[0].message)
+          .toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "products"'));
         done();
       });
 
       it('should fail getting a product by id because unknown id received', async(done) => {
         const variables = { productId: 'abcdefabcdefabcdefabcdef' };
-        const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+        try {
+          await graphql(schema, query, null, {}, variables);
+        } catch (err) {
+          expect.assertions(2);
+          expect(err.errors).not.toBeNull();
+          expect(err).toMatchSnapshot();
+          done();
+        }
       });
     });
   });

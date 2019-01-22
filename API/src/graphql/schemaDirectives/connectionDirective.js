@@ -2,6 +2,14 @@ const { defaultFieldResolver } = require('graphql');
 const { connectionArgs, connectionFromArray } = require('graphql-relay');
 const { SchemaDirectiveVisitor } = require('apollo-server-express');
 
+/**
+ * Classe créant une directive permettant de créer automatiquement une connexion à partir d'un tableau. Lorsque la directive @connection est ajoutée dans le
+ * schéma, le résultat obtenu dans le resolver correspondant est passé par cette classe. Les 4 paramètres optionnels (after, before, first et last) sont alors
+ * ajoutés et le résultat du resolver (un tableau) est passé dans la fonction connectionFromArray qui le transforme tout seul en une connection respectant
+ * la spécification des connections décrite ici: https://facebook.github.io/relay/graphql/connections.htm
+ *
+ * Créé par notre dieu à tous: Paul Nta
+ */
 class ConnectionDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     // get original resolver

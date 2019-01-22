@@ -1,27 +1,40 @@
 type Query {
+	# Retourne tous les salespoints de la base de données.
 	salespoints: SalespointConnection! @connection
 
+	# Retourne le salespoint correspondant à l'id reçu. Retourne null si aucun salespoint ne possède cet id.
 	salespoint(salespointId: ID!) : Salespoint
 }
 
 type Mutation {
+	# Ajoute un nouveau salespoint à la base de donnée et l'attribue au producteur avec l'id 'producerId' reçu.
 	addSalespointToProducer(producerId: ID!, salespoint: SalespointInput!): Producer!
+	# Met à jour le salespoint du producteur avec l'id 'producerId'.
 	updateSalespoint(producerId: ID!, salespoint: SalespointInput!): Producer
+	# Supprime le salespoint du producteur avec l'id 'producerId'.
 	deleteSalespointToProducer(producerId: ID!): Producer
 }
 
+# Le point de vente d'un producteur
 type Salespoint {
+	# Le nom du point de vente.
 	name: String!
+	# L'adresse du point de vente
 	address: Address
+	# Les horaires d'ouvertures du point de vente.
 	schedule: Schedule
 }
 
 input SalespointInput {
+	# Le nom du point de vente.
 	name: String!
+	# L'adresse du point de vente
 	address: AddressInput
+	# Les horaires d'ouvertures du point de vente.
 	schedule: ScheduleInput
 }
 
+# Les horaires d'ouvertures du point de vente.
 type Schedule {
 	monday: [DaySchedule!]!
 	tuesday: [DaySchedule!]!
@@ -43,23 +56,36 @@ input ScheduleInput {
 }
 
 type DaySchedule {
+	# L'heure d'ouverture d'un point de vente
 	openingHour: String!
+	# L'heure de fermeture d'un point de vente
 	closingHour: String!
 }
 
 input DayScheduleInput {
+	# L'heure d'ouverture d'un point de vente
 	openingHour: String!
+	# L'heure de fermeture d'un point de vente
 	closingHour: String!
 }
 
+# L'adresse d'un point de vente
 type Address {
+	# Le n° de l'adresse du point de vente
 	number: Int
+	# La rue de l'adresse du point de vente
 	street: String!
+	# La ville de l'adresse du point de vente
 	city: String!
+	# Le code postal de l'adresse du point de vente
 	postalCode: String!
+	# L'état/canton/département de l'adresse du point de vente
 	state: String!
+	# Le pays de l'adresse du point de vente
 	country: String!
+	# La longitude de l'adresse du point de vente
 	longitude: Float!
+	# La latitude de l'adresse du point de vente
 	latitude: Float!
 
 	# Distance entre le point de vente et la position de l'utilisateur reçue lors de l'appel à geoFilterProducer().
@@ -67,13 +93,21 @@ type Address {
 }
 
 input AddressInput {
+	# Le n° de l'adresse du point de vente
 	number: Int
+	# La rue de l'adresse du point de vente
 	street: String!
+	# La ville de l'adresse du point de vente
 	city: String!
+	# Le code postal de l'adresse du point de vente
 	postalCode: String!
+	# L'état/canton/département de l'adresse du point de vente
 	state: String!
+	# Le pays de l'adresse du point de vente
 	country: String!
+	# La longitude de l'adresse du point de vente
 	longitude: Float!
+	# La latitude de l'adresse du point de vente
 	latitude: Float!
 }
 

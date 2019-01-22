@@ -124,6 +124,7 @@ input ProductTypeCategoryInputUpdate {
 type ProductConnection {
 	pageInfo: PageInfo!
 	edges: [ProductEdge!]!
+	totalCount: Int!
 }
 
 type ProductEdge {
