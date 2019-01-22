@@ -1,3 +1,16 @@
+// Stages that have been excluded from the aggregation pipeline query
+__3tsoftwarelabs_disabled_aggregation_stages = [
+
+	{
+		// Stage 9 - excluded
+		stage: 9,  source: {
+			$project: {
+			rating: true
+			}
+		}
+	},
+]
+
 db.getCollection("salespoints").aggregate(
 
 	// Pipeline
@@ -5,10 +18,10 @@ db.getCollection("salespoints").aggregate(
 		// Stage 1
 		{
 			$geoNear: {
-			    near: { type: 'Point', coordinates: [6.68, 46.76] },
+			    near: { type: 'Point', coordinates: [6.65, 46.77] },
 			    spherical: true,
 			    distanceField: 'address.distance',
-			    maxDistance: 1000000
+			    maxDistance: 300
 			}
 		},
 
@@ -77,17 +90,10 @@ db.getCollection("salespoints").aggregate(
 		{
 			$match: {
 			  productTypeIds: {
-			    $all: [ObjectId('5c46205a391f990320dd54a3')]
+			    $all: [ObjectId('5c477f57d989178f3211e3df'), ObjectId('5c477f57d989178f3211e3f1'), ObjectId('5c477f57d989178f3211e3ff')]
 			  },
 			  isValidated: true,
-			  'rating.grade': {$gte: 4}
-			}
-		},
-
-		// Stage 9
-		{
-			$project: {
-			rating: true
+			  'rating.grade': {$gte: 3}
 			}
 		},
 

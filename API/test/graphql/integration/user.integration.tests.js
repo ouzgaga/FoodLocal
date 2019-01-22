@@ -1,5 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
+const snapshot = require('snap-shot-it');
 const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabUsers } = require('../../populateDatabase');
 
@@ -22,7 +23,6 @@ const clearAndPopulateDB = async() => {
 };
 
 describe('Testing graphql resquest user', () => {
-
   describe('QUERY user', () => {
     // ----------------------users()-------------------------------------- //
     describe('Testing users()', () => {
@@ -43,7 +43,6 @@ describe('Testing graphql resquest user', () => {
               }
               edges {
                 node{
-                  id
                   firstname
                   lastname
                   email
@@ -53,7 +52,6 @@ describe('Testing graphql resquest user', () => {
                   followingProducers{
                     edges{
                       node{
-                        id
                         firstname
                         lastname
                       }
@@ -66,33 +64,30 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should get all users', async(done) => {
+      it('should get all users', async() => {
         const result = await graphql(schema, query, null, context, null);
-        expect.assertions(2);
-        expect(result.data.users.totalCount).toEqual(tabUsers.length);
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.users.totalCount).to.be.equal(tabUsers.length);
+        snapshot(result);
       });
 
-      it('should not get all users because not authenticated', async(done) => {
+      it('should not get all users because not authenticated', async() => {
         const result = await graphql(schema, query, null, {}, null);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should get all users because not authenticated as administrator', async(done) => {
+      it('should get all users because not authenticated as administrator', async() => {
         context.isAdmin = false;
         const result = await graphql(schema, query, null, context, null);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be an administrator to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be an administrator to do that.');
+        snapshot(result);
       });
     });
 
@@ -115,7 +110,6 @@ describe('Testing graphql resquest user', () => {
               followingProducers {
                 edges {
                   node {
-                    id
                     firstname
                     lastname
                     email
@@ -123,7 +117,7 @@ describe('Testing graphql resquest user', () => {
                     phoneNumber
                     rating {
                       nbRatings
-                      rating
+                      grade
                     }
                   }
                 }
@@ -134,70 +128,64 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should get a user by id', async(done) => {
+      it('should get a user by id', async() => {
         const variables = { id: tabUsers[0].id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.user).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.user).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should not get a user because not authenticated', async(done) => {
+      it('should not get a user because not authenticated', async() => {
         const variables = { id: tabUsers[0].id };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should get a user because not authenticated as administrator', async(done) => {
+      it('should get a user because not authenticated as administrator', async() => {
         context.isAdmin = false;
         const variables = { id: tabUsers[0].id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be an administrator to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be an administrator to do that.');
+        snapshot(result);
       });
 
-      it('should fail getting a user by id because unknown id received', async(done) => {
+      it('should fail getting a user by id because unknown id received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.user).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.user).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail getting a user by id because invalid id received (too short)', async(done) => {
+      it('should fail getting a user by id because invalid id received (too short)', async() => {
         context.id = 'abcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.user).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "users"');
+        expect(result.data.user).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail getting a user by id because invalid id received (too long)', async(done) => {
+      it('should fail getting a user by id because invalid id received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, query, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.user).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "users"');
+        expect(result.data.user).to.be.null;
+        snapshot(result);
       });
     });
   });
@@ -222,7 +210,6 @@ describe('Testing graphql resquest user', () => {
             followingProducers {
               edges {
                 node {
-                  id
                   firstname
                   lastname
                   email
@@ -230,7 +217,7 @@ describe('Testing graphql resquest user', () => {
                   phoneNumber
                   rating {
                     nbRatings
-                    rating
+                    grade
                   }
                 }
               }
@@ -241,7 +228,7 @@ describe('Testing graphql resquest user', () => {
         }`
       };
 
-      it('should update a user', async(done) => {
+      it('should update a user', async() => {
         const variables = {
           user: {
             id: tabUsers[0].id,
@@ -250,75 +237,75 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.updateUser).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateUser).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should not update a user because missing mendatory information (id)', async(done) => {
+      it('should update a user without erasing the firstname', async() => {
+        tabUsers = await getTabUsers();
+
         const variables = {
           user: {
+            id: tabUsers[0].id,
+            lastname: 'Schöpfli',
+            image: 'ceci est une image encodée en base 64'
+          }
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+
+        expect(result.data.updateUser).to.be.not.null;
+        expect(result.data.updateUser.firstname).to.be.equal(tabUsers[0].firstname);
+      });
+
+      it('should update a user without erasing the lastname', async() => {
+        tabUsers = await getTabUsers();
+
+        const variables = {
+          user: {
+            id: tabUsers[0].id,
+            firstname: 'ben',
+            image: 'ceci est une image encodée en base 64'
+          }
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+
+        expect(result.data.updateUser).to.be.not.null;
+        expect(result.data.updateUser.lastname).to.be.equal(tabUsers[0].lastname);
+      });
+
+      it('should update only the user\'s firstname without erasing the other informations', async() => {
+        tabUsers = await getTabUsers();
+
+        const variables = {
+          user: {
+            id: tabUsers[0].id,
+            firstname: 'ben'
+          }
+        };
+        const result = await graphql(schema, mutation, null, context, variables);
+
+        expect(result.data.updateUser).to.be.not.null;
+        expect(result.data.updateUser.lastname).to.be.equal(tabUsers[0].lastname);
+        expect(result.data.updateUser.image).to.be.equal(tabUsers[0].image);
+      });
+
+      it('should not update the user image because image not received (undefined)', async() => {
+        const variables = {
+          user: {
+            id: tabUsers[0].id,
             firstname: tabUsers[1].firstname,
             lastname: tabUsers[1].lastname
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.id of required type ID! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateUser).to.be.not.null;
+        expect(result.data.updateUser.image).to.be.equal(tabUsers[0].image);
+        snapshot(result);
       });
 
-      it('should not update a user because missing mendatory information (firstname)', async(done) => {
-        const variables = {
-          user: {
-            id: tabUsers[0].id,
-            lastname: tabUsers[1].lastname
-          }
-        };
-        const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.firstname of required type String! was not provided.'));
-        done();
-      });
-
-      it('should not update a user because missing mendatory information (lastname)', async(done) => {
-        const variables = {
-          user: {
-            id: tabUsers[0].id,
-            firstname: tabUsers[1].firstname
-          }
-        };
-        const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.lastname of required type String! was not provided.'));
-        done();
-      });
-
-      it('should not update the user image because image not received (undefined)', async(done) => {
-        const variables = {
-          user: {
-            id: tabUsers[0].id,
-            firstname: tabUsers[1].firstname,
-            lastname: tabUsers[1].lastname
-          }
-        };
-        const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.data.updateUser).not.toBeNull();
-        expect(result.data.updateUser.image).toEqual(tabUsers[0].image);
-        expect(result).toMatchSnapshot();
-        done();
-      });
-
-      it('should update the user image to null because null image received', async(done) => {
+      it('should update the user image to null because null image received', async() => {
         const variables = {
           user: {
             id: tabUsers[0].id,
@@ -328,14 +315,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.data.updateUser).not.toBeNull();
-        expect(result.data.updateUser.image).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateUser).to.be.not.null;
+        expect(result.data.updateUser.image).to.be.null;
+        snapshot(result);
       });
 
-      it('should not update a user because not authenticated', async(done) => {
+      it('should not update a user because not authenticated', async() => {
         const variables = {
           user: {
             id: tabUsers[0].id,
@@ -344,15 +330,14 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should not update a user because not authenticated as yourself', async(done) => {
+      it('should not update a user because not authenticated as yourself', async() => {
         const variables = {
           user: {
             id: tabUsers[1].id,
@@ -361,15 +346,14 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
 
-      it('should fail updating a user because unknown id received', async(done) => {
+      it('should fail updating a user because unknown id received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = {
           user: {
@@ -379,13 +363,12 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.updateUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateUser).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail updating a user because invalid id received (too short)', async(done) => {
+      it('should fail updating a user because invalid id received (too short)', async() => {
         context.id = 'abcdef';
         const variables = {
           user: {
@@ -395,15 +378,14 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.updateUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "users"');
+        expect(result.data.updateUser).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail updating a user because invalid id received (too long)', async(done) => {
+      it('should fail updating a user because invalid id received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = {
           user: {
@@ -413,18 +395,17 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.updateUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "users"');
+        expect(result.data.updateUser).to.be.null;
+        snapshot(result);
       });
     });
 
     // TODO: deletePersonAccount
     // ----------------------deleteUser(userId: ID!)-------------------------------------- //
-    /*describe('Testing deleteUser(userId: ID!)', () => {
+    /* describe('Testing deleteUser(userId: ID!)', () => {
       let context;
       beforeEach(async() => {
         await clearAndPopulateDB();
@@ -461,76 +442,76 @@ describe('Testing graphql resquest user', () => {
 }`
       };
 
-      it('should delete a user', async(done) => {
+      it('should delete a user', async() => {
         const variables = {
           id: tabUsers[0].id
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.updateUser).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateUser).to.be.not.null;
+        snapshot(result)
+
       });
 
-      it('should not delete a user because not authenticated', async(done) => {
+      it('should not delete a user because not authenticated', async() => {
         const variables = {
           id: tabUsers[0].id
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.'));
+        snapshot(result)
+
       });
 
-      it('should not delete a user because not authenticated as yourself', async(done) => {
+      it('should not delete a user because not authenticated as yourself', async() => {
         const variables = {
           id: tabUsers[1].id
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!'));
+        snapshot(result)
+
       });
 
-      it('should fail deleting a user because unknown id received', async(done) => {
+      it('should fail deleting a user because unknown id received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.deleteUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.deleteUser).to.be.null;
+        snapshot(result)
+
       });
 
-      it('should fail deleting a user because invalid id received (too short)', async(done) => {
+      it('should fail deleting a user because invalid id received (too short)', async() => {
         context.id = 'abcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.deleteUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Received user.id is invalid!');
+        expect(result.data.deleteUser).to.be.null;
+        snapshot(result)
+
       });
 
-      it('should fail deleting a user because invalid id received (too long)', async(done) => {
+      it('should fail deleting a user because invalid id received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = { id: context.id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data.deleteUser).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Received user.id is invalid!');
+        expect(result.data.deleteUser).to.be.null;
+        snapshot(result)
+
       });
-    });*/
+    }); */
   });
 });

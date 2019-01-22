@@ -111,10 +111,20 @@ function getAllPersonsInReceivedIdList(listOfIdToGet) {
   return PersonsModel.find({ _id: { $in: listOfIdToGet } }).sort({ _id: 1 });
 }
 
+/**
+ * Retourne le nombre total de personnes (users et producers) présentes dans la base de données.
+ * @returns le nombre total de personnes (users et producers) présentes dans la base de données.
+ */
 function countNbPersonsInDB() {
   return PersonsModel.countDocuments();
 }
 
+/**
+ * Ajoute le producteur correspondant à 'producerId' à la liste des personnes suivies par la personne 'personId'.
+ * @param personId, l'id de la personne à qui on souhaite ajouter un producteur dans la liste des personnes suivies.
+ * @param producerId, l'id du producteur que la personne veut désormais suivre.
+ * @returns {Query}
+ */
 function addProducerToPersonsFollowingList(personId, producerId) {
   if (personId === producerId) {
     throw new Error('You can\'t follow yourself!');
@@ -123,6 +133,12 @@ function addProducerToPersonsFollowingList(personId, producerId) {
   return PersonsModel.findByIdAndUpdate(personId, { $addToSet: { followingProducersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
+/**
+ *
+ * @param personId
+ * @param producerId
+ * @returns {Query}
+ */
 function removeProducerToPersonsFollowingList(personId, producerId) {
   if (personId === producerId) {
     throw new Error('You can\'t follow yourself!');

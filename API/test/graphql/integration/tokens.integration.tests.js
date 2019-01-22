@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
+const snapshot = require('snap-shot-it');
 const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabUsers, getTabProducers } = require('../../populateDatabase');
 
@@ -24,7 +25,7 @@ const clearAndPopulateDB = async() => {
   tabProducers = await getTabProducers();
 };
 
-describe('Testing graphql resquest user', () => {
+describe('Testing graphql resquest tokens', () => {
   describe('MUTATION tokens', () => {
     // ----------------------validateAnEmailToken(emailValidationToken: String!)-------------------------------------- //
     describe('Testing validateAnEmailToken(emailValidationToken: String!)', () => {
@@ -41,7 +42,7 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should validate an email with received token', async(done) => {
+      it('should validate an email with received token', async() => {
         // on vérifie que l'email du producteur ne soit pas encore validé
         const variableQuery = { id: tabProducers[0].id };
         const { query } = {
@@ -138,14 +139,14 @@ describe('Testing graphql resquest user', () => {
                 }
                 rating{
                   nbRatings
-                  rating
+                  grade
                 }
               }
             }`
         };
         let result = await graphql(schema, query, null, null, variableQuery);
-        expect.assertions(4);
-        expect(result.data.producer.emailValidated).toBeFalsy();
+
+        expect(result.data.producer.emailValidated).to.be.false;
 
         // on demande un nouveu token de validation d'email
         let variables = { email: result.data.producer.email, password: '1234abcd' };
@@ -163,57 +164,50 @@ describe('Testing graphql resquest user', () => {
         // on valide l'email à l'aide de ce token
         variables = { emailValidationToken: token };
         result = await graphql(schema, mutation, null, {}, variables);
-        expect(result.data.validateAnEmailToken).toBeTruthy();
-        expect(result).toMatchSnapshot();
 
         // on récupère à nouveau le producteur dans la DB et on check que son email ait bien été validé
         result = await graphql(schema, query, null, null, variableQuery);
-        expect(result.data.producer.emailValidated).toBeTruthy();
-        done();
+        expect(result.data.producer.emailValidated).to.be.true;
       });
 
-      it('should fail validating an email with received token because token has been modified', async(done) => {
+      it('should fail validating an email with received token because token has been modified', async() => {
         const variables = { emailValidationToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmY0MWQ5OWZkMTY1NDMxZGM5MGNlNyIsImVtYWlsIjoiYmVub2l0QHBheXNhbi5jaCIsImlhdCI6MTU0NjYwMDk0NywiZXhwIjoxNTQ3MjA1NzQzfQ.gD7vCV4KAQKnU0Mus9BOIlkA_OMzXQBa3822PNcZM_g' };
         const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('invalid signature');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('invalid signature');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail validating an email with received token because invalid token received', async(done) => {
+      it('should fail validating an email with received token because invalid token received', async() => {
         const variables = { emailValidationToken: 'eyJhbGciOiJIzI1NiIsIn5cCI6IkpXVCJ9.eyJpZCI6IjVjMmY0MWQ5OWZkMTY1NDMxZGM5MGlNyIsImVtYWlsIjoiYmVub2l0QHBheXNhbi5jaCIsImlhdCI6MTU0NjYwMDk0NywiZXhwIjoxNTQ3Mj1NzQzfQ.gD7vCVKAQKnU0Mus9BOIlkA_OMzXQBa3822PNcZM_g' };
         const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('invalid token');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('invalid token');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail validating an email with received token because no token received', async(done) => {
+      it('should fail validating an email with received token because no token received', async() => {
         const variables = { emailValidationToken: '' };
         const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('jwt must be provided');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('jwt must be provided');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail validating an email with received token because token has expired', async(done) => {
+      it('should fail validating an email with received token because token has expired', async() => {
         const variables = { emailValidationToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmY0MWQ5OWZkMTY1NDMxZGM5MGNlNyIsImVtYWlsIjoiYmVub2l0QHBheXNhbi5jaCIsImlhdCI6MTU0NTMwNDk0NywiZXhwIjoxNTQ1OTA5NzQ3fQ.kUo15r_2B6czmiHyxpNFNYvFk73NMHwj_uzHYYAHDbo' };
         const result = await graphql(schema, mutation, null, null, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Your token is expired. Please ask for a new one.');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Your token is expired. Please ask for a new one.');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
     });
 
@@ -232,7 +226,7 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should return a new token for validate an email', async(done) => {
+      it('should return a new token for validate an email', async() => {
         // on demande un nouveu token de validation d'email
         let variables = { email: tabProducers[0].email, password: '1234abcd' };
 
@@ -245,40 +239,49 @@ describe('Testing graphql resquest user', () => {
         setTimeout(async() => {
           result = await graphql(schema, mutation, null, {}, variables);
           const token2 = result.data.askNewEmailToken.token;
-          expect(token1).not.toBe(token2);
-          done();
+          expect(token1).not.to.be.equal(token2);
         }, 1000);
       });
 
-      it('should fail returning a new token for validate an email because email already validated', async(done) => {
+      it('should fail returning a new token for validate an email because email already validated', async() => {
         // on vérifie que l'email du producteur ne soit pas encore validé
         const variableQuery = { id: tabProducers[0].id };
         const { query } = {
           query: `
-            query($id: ID!){
-              producer(producerId: $id){
+            query($id: ID!) {
+              producer(producerId: $id) {
                 firstname
                 lastname
                 email
                 image
-                followingProducers{
-                  firstname
-                  lastname
-                  email
+                followingProducers {
+                  totalCount
+                  edges {
+                    node {
+                      firstname
+                      lastname
+                      email
+                    }
+                  }
                 }
                 emailValidated
                 isAdmin
-                followers{
-                  firstname
-                  lastname
-                  email
+                followers {
+                  totalCount
+                  edges {
+                    node {
+                      firstname
+                      lastname
+                      email
+                    }
+                  }
                 }
                 phoneNumber
                 description
                 website
-                salespoint{
+                salespoint {
                   name
-                  address{
+                  address {
                     number
                     street
                     city
@@ -288,64 +291,72 @@ describe('Testing graphql resquest user', () => {
                     longitude
                     latitude
                   }
-                  schedule{
-                    monday{
+                  schedule {
+                    monday {
                       openingHour
                       closingHour
                     }
-                    tuesday{
+                    tuesday {
                       openingHour
                       closingHour
                     }
-                    wednesday{
+                    wednesday {
                       openingHour
                       closingHour
                     }
-                    thursday{
+                    thursday {
                       openingHour
                       closingHour
                     }
-                    friday{
+                    friday {
                       openingHour
                       closingHour
                     }
-                    saturday{
+                    saturday {
                       openingHour
                       closingHour
                     }
-                    sunday{
+                    sunday {
                       openingHour
                       closingHour
                     }
                   }
                 }
                 isValidated
-                products{
-                  description
-                  productType{
-                    name
-                    image
-                    category{
-                      name
-                      image
-                    }
-                    producers{
-                      firstname
-                      lastname
-                      email
+                products {
+                  edges {
+                    node {
+                      description
+                      productType {
+                        name
+                        image
+                        category {
+                          name
+                          image
+                        }
+                        producers {
+                          edges {
+                            node {
+                              firstname
+                              lastname
+                              email
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
-                rating{
+                rating {
                   nbRatings
-                  rating
+                  grade
                 }
               }
             }`
         };
         let result = await graphql(schema, query, null, null, variableQuery);
-        expect.assertions(8);
-        expect(result.data.producer.emailValidated).toBeFalsy();
+
+        expect(result.data.producer.emailValidated).to.be.false;
 
         // on demande un nouveu token de validation d'email
         let variables = { email: result.data.producer.email, password: '1234abcd' };
@@ -363,47 +374,43 @@ describe('Testing graphql resquest user', () => {
         // on valide l'email à l'aide de ce token
         variables = { emailValidationToken: token };
         result = await graphql(schema, mutation1, null, {}, variables);
-        expect(result.data.validateAnEmailToken).toBeTruthy();
-        expect(result).toMatchSnapshot();
+        expect(result.data.validateAnEmailToken.token).to.be.not.null;
 
         // on récupère à nouveau le producteur dans la DB et on check que son email ait bien été validé
         result = await graphql(schema, query, null, null, variableQuery);
-        expect(result.data.producer.emailValidated).toBeTruthy();
+        expect(result.data.producer.emailValidated).to.be.true;
 
         // on tente de revalide l'email à l'aide du même token -> erreur car email déjà validé
         variables = { emailValidationToken: token };
         result = await graphql(schema, mutation1, null, {}, variables);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Email already validated!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Email already validated!');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail returning a new token for validate an email because unknown email received', async(done) => {
+      it('should fail returning a new token for validate an email because unknown email received', async() => {
         // on demande un nouveu token de validation d'email
         const variables = { email: 'unknown@mail.com', password: '1234abcd' };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(`There is no user corresponding to the email "${variables.email}"`);
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal(`There is no user corresponding to the email "${variables.email}"`);
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail returning a new token for validate an email because incorrect password received', async(done) => {
+      it('should fail returning a new token for validate an email because incorrect password received', async() => {
         // on demande un nouveu token de validation d'email
         const variables = { email: tabProducers[0].email, password: 'wrongPassword' };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received password is not correct!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Received password is not correct!');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
     });
 
@@ -422,39 +429,36 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should return a new token because login succeed', async(done) => {
+      it('should return a new token because login succeed', async() => {
         const variables = { email: tabProducers[0].email, password: '1234abcd' };
         const result = await graphql(schema, mutation, null, {}, variables);
         const { token } = result.data.login;
 
-        expect(token).not.toBeNull();
-        done();
+        expect(token).to.be.not.null;
       });
 
-      it('should fail during login because unknown email received', async(done) => {
+      it('should fail during login because unknown email received', async() => {
         // on demande un nouveu token de validation d'email
         const variables = { email: 'unknown@mail.com', password: '1234abcd' };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(`There is no user corresponding to the email "${variables.email}"`);
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal(`There is no user corresponding to the email "${variables.email}"`);
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail during login because incorrect password received', async(done) => {
+      it('should fail during login because incorrect password received', async() => {
         // on demande un nouveu token de validation d'email
         const variables = { email: tabProducers[0].email, password: 'wrongPassword' };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received password is not correct!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Received password is not correct!');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
     });
 
@@ -473,7 +477,7 @@ describe('Testing graphql resquest user', () => {
         }`
       };
 
-      it('should create a new user and return a token', async(done) => {
+      it('should create a new user and return a token', async() => {
         const variables = {
           user: {
             firstname: 'benoit',
@@ -484,8 +488,8 @@ describe('Testing graphql resquest user', () => {
         };
         let result = await graphql(schema, mutation, null, {}, variables);
         const { token } = result.data.signUpAsUser;
-        expect.assertions(3);
-        expect(token).not.toBeNull();
+
+        expect(token).to.be.not.null;
 
         const context = { id: tabUsers[0].id, email: tabUsers[0].email, isAdmin: true, kind: tabUsers[0].kind };
         const { query } = {
@@ -519,12 +523,11 @@ describe('Testing graphql resquest user', () => {
         const tokenContent = await jwt.decode(token);
         const variableQuery = { id: tokenContent.id };
         result = await graphql(schema, query, null, context, variableQuery);
-        expect(result.data.user).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+        expect(result.data.user).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail creating a new user and returning a token because missing mendatory information (firstname)', async(done) => {
+      it('should fail creating a new user and returning a token because missing mendatory information (firstname)', async() => {
         const variables = {
           user: {
             lastname: 'schop',
@@ -533,14 +536,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.firstname of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.firstname of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new user and returning a token because missing mendatory information (lastname)', async(done) => {
+      it('should fail creating a new user and returning a token because missing mendatory information (lastname)', async() => {
         const variables = {
           user: {
             firstname: 'benoit',
@@ -549,14 +551,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.lastname of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.lastname of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new user and returning a token because missing mendatory information (email)', async(done) => {
+      it('should fail creating a new user and returning a token because missing mendatory information (email)', async() => {
         const variables = {
           user: {
             firstname: 'benoit',
@@ -565,14 +566,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.email of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.email of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new user and returning a token because missing mendatory information (password)', async(done) => {
+      it('should fail creating a new user and returning a token because missing mendatory information (password)', async() => {
         const variables = {
           user: {
             firstname: 'benoit',
@@ -581,11 +581,10 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.password of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.password of required type String! was not provided.');
+        snapshot(result);
       });
     });
 
@@ -604,7 +603,7 @@ describe('Testing graphql resquest user', () => {
            }`
       };
 
-      it('should create a new producer and return a token', async(done) => {
+      it('should create a new producer and return a token', async() => {
         const variables = {
           producer: {
             firstname: 'benoit',
@@ -615,8 +614,8 @@ describe('Testing graphql resquest user', () => {
         };
         let result = await graphql(schema, mutation, null, {}, variables);
         const { token } = result.data.signUpAsProducer;
-        expect.assertions(3);
-        expect(token).not.toBeNull();
+
+        expect(token).to.be.not.null;
 
         const { query } = {
           query: `
@@ -712,7 +711,7 @@ describe('Testing graphql resquest user', () => {
                 }
                 rating{
                   nbRatings
-                  rating
+                  grade
                 }
               }
             }`
@@ -720,12 +719,11 @@ describe('Testing graphql resquest user', () => {
         const tokenContent = await jwt.decode(token);
         const variableQuery = { id: tokenContent.id };
         result = await graphql(schema, query, null, null, variableQuery);
-        expect(result.data.producer).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+        expect(result.data.producer).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a token because missing mendatory information (firstname)', async(done) => {
+      it('should fail creating a new producer and returning a token because missing mendatory information (firstname)', async() => {
         const variables = {
           producer: {
             lastname: 'schop',
@@ -734,14 +732,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.firstname of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.firstname of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a token because missing mendatory information (lastname)', async(done) => {
+      it('should fail creating a new producer and returning a token because missing mendatory information (lastname)', async() => {
         const variables = {
           producer: {
             firstname: 'benoit',
@@ -750,14 +747,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.lastname of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.lastname of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a token because missing mendatory information (email)', async(done) => {
+      it('should fail creating a new producer and returning a token because missing mendatory information (email)', async() => {
         const variables = {
           producer: {
             firstname: 'benoit',
@@ -766,14 +762,13 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.email of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.email of required type String! was not provided.');
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a token because missing mendatory information (password)', async(done) => {
+      it('should fail creating a new producer and returning a token because missing mendatory information (password)', async() => {
         const variables = {
           producer: {
             firstname: 'benoit',
@@ -782,11 +777,10 @@ describe('Testing graphql resquest user', () => {
           }
         };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.password of required type String! was not provided.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.password of required type String! was not provided.');
+        snapshot(result);
       });
     });
 
@@ -910,18 +904,15 @@ describe('Testing graphql resquest user', () => {
           }`
       };
 
-      it('should create a new producer and return a new token', async(done) => {
+      it('should create a new producer and return a new token', async() => {
         const variables = {
           idUser: tabUsers[0].id,
           password: '1234abcd'
         };
         let result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(5);
-        expect(result.data.upgradeUserToProducer.producer).not.toBeNull();
-        expect(result.data.upgradeUserToProducer.newLoginToken).not.toBeNull();
-        expect(result).toMatchSnapshot({
-          data: { upgradeUserToProducer: { newLoginToken: { token: expect.any(String) } } }
-        });
+
+        expect(result.data.upgradeUserToProducer.producer).to.be.not.null;
+        expect(result.data.upgradeUserToProducer.newLoginToken).to.be.not.null;
 
         const { query: queryProducer } = {
           query: `
@@ -1017,7 +1008,7 @@ describe('Testing graphql resquest user', () => {
                 }
                 rating{
                   nbRatings
-                  rating
+                  grade
                 }
               }
             }`
@@ -1026,7 +1017,7 @@ describe('Testing graphql resquest user', () => {
 
         const variableQuery = { id: tokenContent.id };
         result = await graphql(schema, queryProducer, null, null, variableQuery);
-        expect(result.data.producer).not.toBeNull();
+        expect(result.data.producer).to.be.not.null;
 
         const { query: queryUser } = {
           query: `
@@ -1047,7 +1038,7 @@ query($id: ID!) {
           phoneNumber
           rating {
             nbRatings
-            rating
+            grade
           }
         }
       }
@@ -1058,96 +1049,89 @@ query($id: ID!) {
 }`
         };
         result = await graphql(schema, queryUser, null, context, variableQuery);
-        expect(result.data.user).toBeNull();
-        done();
+        expect(result.data.user).to.be.null;
       });
 
-      it('should fail creating a new producer and returning a new token because wrong password', async(done) => {
+      it('should fail creating a new producer and returning a new token because wrong password', async() => {
         const variables = {
           idUser: tabUsers[0].id,
           password: 'wrongPassword'
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received password is not correct!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Received password is not correct!');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
-      it('should fail creating a new producer and returning a new token because unknown idUser received', async(done) => {
+      it('should fail creating a new producer and returning a new token because unknown idUser received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = {
           idUser: context.id,
           password: '1234abcd'
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('The received idUserToUpgrade is not in the database!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('The received idUserToUpgrade is not in the database!');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a new token because idUser received (too short)', async(done) => {
+      it('should fail creating a new producer and returning a new token because idUser received (too short)', async() => {
         context.id = 'abcdef';
         const variables = {
           idUser: context.id,
           password: '1234abcd'
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "users"');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail creating a new producer and returning a new token because invalid idUser received (too long)', async(done) => {
+      it('should fail creating a new producer and returning a new token because invalid idUser received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = {
           idUser: context.id,
           password: '1234abcd'
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Received user.id is invalid!');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "users"');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new productType because not authenticated', async(done) => {
+      it('should fail adding a new productType because not authenticated', async() => {
         const variables = {
           idUser: tabUsers[0].id,
           password: '1234abcd'
         };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a new productType because not authenticated as yourself', async(done) => {
+      it('should fail adding a new productType because not authenticated as yourself', async() => {
         const variables = {
           idUser: tabUsers[1].id,
           password: '1234abcd'
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
     });
   });

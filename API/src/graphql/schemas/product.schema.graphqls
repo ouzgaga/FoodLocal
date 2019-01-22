@@ -1,49 +1,48 @@
 type Query {
-	#Retourne tous les produits de la base de données
+	# Retourne tous les produits de la base de données
 	products: ProductConnection! @connection
-	#Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
+	# Retourne le produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
 	product(productId: ID!) : Product
 
 
-	#Retourne tous les type de produits de la base de données
+	# Retourne tous les type de produits de la base de données
 	productTypes: ProductTypeConnection! @connection
-	#Retourne le type de produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
+	# Retourne le type de produit correspondant à l'ide reçu en paramètre. Retourne null s'il n'existe pas dans la base de données.
 	productType(productTypeId: ID!): ProductType
-	#Retourne tous les types de produits de la catégorie dont l'id est passé en paramètre.
+	# Retourne tous les types de produits de la catégorie dont l'id est passé en paramètre.
 	productTypesOfCategory(productTypeCategoryId: ID!): ProductTypeOfCategoryConnection! @connection
 
 
-	#Retourne toutes les catégories de produits de la base de données
+	# Retourne toutes les catégories de produits de la base de données
 	productTypeCategories: ProductTypeCategoryConnection! @connection
-	#Retourne la catégorie de produits correspondant à l'ide reçu en paramètre. Retourne null si elle n'existe pas dans la base de données.
+	# Retourne la catégorie de produits correspondant à l'ide reçu en paramètre. Retourne null si elle n'existe pas dans la base de données.
 	productTypeCategory(productTypeCategoryId: ID!): ProductTypeCategory
-
 }
 
 type Mutation {
-	#Ajoute à la base de données tous les produits du tableau reçu comme des produits proposés par le producteur correspondant à l'id reçu en paramère.
+	# Ajoute à la base de données tous les produits du tableau reçu comme des produits proposés par le producteur correspondant à l'id reçu en paramère.
 	addMultipleProducts(producerId: ID!, products: [ProductInputAdd!]!): ProductConnection! @connection
-	#Ajoute à la base de données un nouveau produit proposé par le producteur correspondant à l'id reçu en paramère.
+	# Ajoute à la base de données un nouveau produit proposé par le producteur correspondant à l'id reçu en paramère.
 	addProduct(producerId: ID!, product: ProductInputAdd!): Product!
-	#Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
+	# Met à jour les informations du produit passé en paramètre. Ne modifie pas les informations du 'productType', ni celle du 'productType.category'
 	updateProduct(producerId: ID!, product: ProductInputUpdate!): Product
-	#Supprime le produit correspondant à l'id passée en paramètre. Supprime aussi le produit du tableau des produits proposés par le producteur. Ne supprime pas le 'productType'.
+	# Supprime le produit correspondant à l'id passée en paramètre. Supprime aussi le produit du tableau des produits proposés par le producteur. Ne supprime pas le 'productType'.
 	deleteProduct(producerId: ID!, productId: ID!): Product
 
 
-	#Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
+	# Ajoute un nouveau type de produit à la base de données. N'ajoute rien si le type de produit reçu contient un id.
 	addProductType(productType: ProductTypeInputAdd!): ProductType!
-	#Met à jour les informations du type de produit passé en paramètre.
+	# Met à jour les informations du type de produit passé en paramètre.
 	updateProductType(productType: ProductTypeInputUpdate!): ProductType
-	#Supprime le type de produit reçu en paramètre.
+	# Supprime le type de produit reçu en paramètre.
 	deleteProductType(productTypeId: ID!): ProductType
 
 
-	#Ajoute une nouvelle catégorie de produits à la base de données. N'ajoute rien si la catégorie de produits reçue contient un id.
+	# Ajoute une nouvelle catégorie de produits à la base de données. N'ajoute rien si la catégorie de produits reçue contient un id.
 	addProductTypeCategory(productTypeCategory: ProductTypeCategoryInputAdd!): ProductTypeCategory!
-	#Met à jour les informations de la catégorie de produits passée en paramètre.
+	# Met à jour les informations de la catégorie de produits passée en paramètre.
 	updateProductTypeCategory(productTypeCategory: ProductTypeCategoryInputUpdate!): ProductTypeCategory
-	#Supprime la catégorie de produits reçue en paramètre.
+	# Supprime la catégorie de produits reçue en paramètre.
 	deleteProductTypeCategory(productTypeCategoryId: ID!): ProductTypeCategory
 }
 

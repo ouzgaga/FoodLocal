@@ -21,7 +21,7 @@ async function addTokenValidationEmail({ id, email, firstname, lastname }) {
   // console.log(`token evoyé : ${token}`);
   if (process.env.NODE_ENV === 'production') {
     // les mails ne sont réellement envoyés que si l'API tourne en production
-    mail.sendMailConfirmation(email, firstname, lastname, token);
+    // mail.sendMailConfirmation(email, firstname, lastname, token);
   }
   return token;
 }

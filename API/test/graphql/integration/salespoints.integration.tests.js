@@ -1,5 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
+const snapshot = require('snap-shot-it');
 const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabProducers, getTabSalespoints } = require('../../populateDatabase');
 
@@ -86,11 +87,10 @@ describe('Testing graphql request salespoints', () => {
             }
           }`
       };
-      it('should get all salespoints', async(done) => {
+      it('should get all salespoints', async() => {
         const result = await graphql(schema, query, null, {}, null);
-        expect.assertions(1);
-        expect(result).toMatchSnapshot();
-        done();
+
+        snapshot(result);
       });
     });
 
@@ -145,46 +145,42 @@ describe('Testing graphql request salespoints', () => {
           }`
       };
 
-      it('should get a salespoint by id ', async(done) => {
+      it('should get a salespoint by id ', async() => {
         tabSalespoints = await getTabSalespoints();
 
         const variables = { id: tabSalespoints[0].id };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(2);
-        expect(result.data.salespoint).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.salespoint).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail getting a salespoint because unknown id received', async(done) => {
+      it('should fail getting a salespoint because unknown id received', async() => {
         const variables = { id: 'abcdefabcdefabcdefbacdef' };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(2);
-        expect(result.data.salespoint).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.salespoint).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail getting a salespoint because invalid id received (too short)', async(done) => {
+      it('should fail getting a salespoint because invalid id received (too short)', async() => {
         const variables = { id: 'abcdef' };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "salespoints"');
-        expect(result.data.salespoint).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "salespoints"');
+        expect(result.data.salespoint).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail getting a salespoint because invalid id received (too long)', async(done) => {
+      it('should fail getting a salespoint because invalid id received (too long)', async() => {
         const variables = { id: 'abcdefabcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "salespoints"');
-        expect(result.data.salespoint).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "salespoints"');
+        expect(result.data.salespoint).to.be.null;
+        snapshot(result);
       });
     });
   });
@@ -256,7 +252,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
 }`
       };
 
-      it('should add a salespoint to a producer', async(done) => {
+      it('should add a salespoint to a producer', async() => {
         const variables = {
           producerId: tabProducers[3].id,
           salespoint: {
@@ -303,13 +299,12 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.addSalespointToProducer).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.addSalespointToProducer).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because he already has one.', async(done) => {
+      it('should fail adding a salespoint to a producer because he already has one.', async() => {
         context = { id: tabProducers[1].id, email: tabProducers[1].email, isAdmin: tabProducers[1].isAdmin, kind: tabProducers[1].kind };
 
         const variables = {
@@ -358,16 +353,15 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors.length).toBe(1);
+
+        expect(result.errors.length).to.be.equal(1);
         expect(result.errors[0].message)
-          .toEqual('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
-        expect(result.data).toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+          .to.be.equal('This producer has already a salespoint but a producer can\'t have more than one salespoint. Try to update the current salespoint.');
+        expect(result.data).to.be.null;
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because missing mendatory information (producerId).', async(done) => {
+      it('should fail adding a salespoint to a producer because missing mendatory information (producerId).', async() => {
         context = { id: tabProducers[1].id, email: tabProducers[1].email, isAdmin: tabProducers[1].isAdmin, kind: tabProducers[1].kind };
         const variables = {
           salespoint: {
@@ -413,25 +407,23 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Variable "$producerId" of required type "ID!" was not provided.');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Variable "$producerId" of required type "ID!" was not provided.');
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because missing mendatory information (salespoint).', async(done) => {
+      it('should fail adding a salespoint to a producer because missing mendatory information (salespoint).', async() => {
         const variables = {
           producerId: tabProducers[3].id
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Variable "$salespoint" of required type "SalespointInput!" was not provided.');
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Variable "$salespoint" of required type "SalespointInput!" was not provided.');
       });
 
-      it('should fail adding a salespoint to a producer because missing mendatory information (salespoint.name).', async(done) => {
+      it('should fail adding a salespoint to a producer because missing mendatory information (salespoint.name).', async() => {
         const variables = {
           producerId: tabProducers[3].id,
           salespoint: {
@@ -476,13 +468,12 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.name of required type String! was not provided.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('Field value.name of required type String! was not provided.');
       });
 
-      it('should fail adding a salespoint to a producer because not authenticated', async(done) => {
+      it('should fail adding a salespoint to a producer because not authenticated', async() => {
         const variables = {
           producerId: tabProducers[3].id,
           salespoint: {
@@ -529,14 +520,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because you can\'t modify someone else than yourself', async(done) => {
+      it('should fail adding a salespoint to a producer because you can\'t modify someone else than yourself', async() => {
         const variables = {
           producerId: tabProducers[1].id,
           salespoint: {
@@ -583,14 +573,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because invalid producerId received (too short)', async(done) => {
+      it('should fail adding a salespoint to a producer because invalid producerId received (too short)', async() => {
         context.id = 'abcdef';
         const variables = {
           producerId: context.id,
@@ -638,14 +627,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because invalid producerId received (too long)', async(done) => {
+      it('should fail adding a salespoint to a producer because invalid producerId received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id,
@@ -693,14 +681,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
+        snapshot(result);
       });
 
-      it('should fail adding a salespoint to a producer because unknown producerId received', async(done) => {
+      it('should fail adding a salespoint to a producer because unknown producerId received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id,
@@ -748,11 +735,10 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('The received producerId is not in the database!');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('The received producerId is not in the database!');
+        snapshot(result);
       });
     });
 
@@ -820,7 +806,7 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
           }`
       };
 
-      it('should update the salespoint of a producer', async(done) => {
+      it('should update the salespoint of a producer', async() => {
         const variables = {
           producerId: tabProducers[0].id,
           salespoint: {
@@ -885,14 +871,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.data.updateSalespoint).not.toBeNull();
-        expect(result.data.updateSalespoint.salespoint.name).toEqual(variables.salespoint.name);
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateSalespoint).to.be.not.null;
+        expect(result.data.updateSalespoint.salespoint.name).to.be.equal(variables.salespoint.name);
+        snapshot(result);
       });
 
-      it('should fail updating the salespoint of a producer because missing mendatory information (salespoint.name).', async(done) => {
+      it('should fail updating the salespoint of a producer because missing mendatory information (salespoint.name).', async() => {
         const variables = {
           producerId: tabProducers[0].id,
           salespoint: {
@@ -937,13 +922,12 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
           }
         };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.name of required type String! was not provided.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('Field value.name of required type String! was not provided.');
       });
 
-      it('should fail updating the salespoint of a producer because not authenticated', async(done) => {
+      it('should fail updating the salespoint of a producer because not authenticated', async() => {
         const variables = {
           producerId: tabProducers[0].id,
           salespoint: {
@@ -990,14 +974,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail updating the salespoint of a producer because you can\'t modify someone else than yourself', async(done) => {
+      it('should fail updating the salespoint of a producer because you can\'t modify someone else than yourself', async() => {
         const variables = {
           producerId: tabProducers[1].id,
           salespoint: {
@@ -1044,14 +1027,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
 
-      it('should fail updating the salespoint of a producer because invalid producerId received (too short)', async(done) => {
+      it('should fail updating the salespoint of a producer because invalid producerId received (too short)', async() => {
         context.id = 'abcdef';
         const variables = {
           producerId: context.id,
@@ -1099,14 +1081,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Received producerId is invalid!');
+        snapshot(result);
       });
 
-      it('should fail updating the salespoint of a producer because invalid producerId received (too long)', async(done) => {
+      it('should fail updating the salespoint of a producer because invalid producerId received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id,
@@ -1154,14 +1135,13 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is invalid!');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Received producerId is invalid!');
+        snapshot(result);
       });
 
-      it('should fail updating the salespoint of a producer because unknown producerId received', async(done) => {
+      it('should fail updating the salespoint of a producer because unknown producerId received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id,
@@ -1209,11 +1189,10 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Received producerId is not in the database!');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Received producerId is not in the database!');
+        snapshot(result);
       });
     });
 
@@ -1281,84 +1260,78 @@ mutation($producerId: ID!, $salespoint: SalespointInput!) {
           }`
       };
 
-      it('should remove the salespoint of a producer', async(done) => {
+      it('should remove the salespoint of a producer', async() => {
         const variables = {
           producerId: tabProducers[0].id
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.deleteSalespointToProducer).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.deleteSalespointToProducer).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail removing the salespoint of a producer because not authenticated', async(done) => {
+      it('should fail removing the salespoint of a producer because not authenticated', async() => {
         const variables = {
           producerId: tabProducers[0].id
         };
 
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail removing the salespoint of a producer because you can\'t modify someone else than yourself', async(done) => {
+      it('should fail removing the salespoint of a producer because you can\'t modify someone else than yourself', async() => {
         const variables = {
           producerId: tabProducers[1].id
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
 
-      it('should fail removing the salespoint of a producer because invalid producerId received (too short)', async(done) => {
+      it('should fail removing the salespoint of a producer because invalid producerId received (too short)', async() => {
         context.id = 'abcdef';
         const variables = {
           producerId: context.id
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
+        snapshot(result);
       });
 
-      it('should fail removing the salespoint of a producer because invalid producerId received (too long)', async(done) => {
+      it('should fail removing the salespoint of a producer because invalid producerId received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
+        snapshot(result);
       });
 
-      it('should fail removing the salespoint of a producer because unknown producerId received', async(done) => {
+      it('should fail removing the salespoint of a producer because unknown producerId received', async() => {
         context.id = 'abcdefabcdefabcdefabcdef';
         const variables = {
           producerId: context.id
         };
 
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors[0].message).toEqual('The received producerId is not in the database!');
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors[0].message).to.be.equal('The received producerId is not in the database!');
+        snapshot(result);
       });
     });
   });
