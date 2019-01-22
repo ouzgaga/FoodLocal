@@ -55,7 +55,7 @@ function ProducerPost(props) {
           </ButtonBase>
         </Grid>
 
-        <Grid item xs={9}  className={classes.postHeader}>
+        <Grid item xs={9} className={classes.postHeader}>
           <Typography className={classes.name} color="primary">
             {`${firstname} ${lastname}`}
           </Typography>
@@ -98,6 +98,7 @@ ProducerPost.propTypes = {
   date: PropTypes.string.isRequired,
   post: PropTypes.string.isRequired,
   image: PropTypes.string,
+  address: PropTypes.shape().isRequired,
 };
 
 

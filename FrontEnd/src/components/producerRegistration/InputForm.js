@@ -47,7 +47,6 @@ class InputForm extends Component {
   }
 }
 
-
 InputForm.propTypes = {
   classes: PropTypes.shape().isRequired,
   handleChangeProperty: PropTypes.func.isRequired,

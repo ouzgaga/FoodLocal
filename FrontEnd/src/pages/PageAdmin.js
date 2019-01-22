@@ -4,7 +4,7 @@ import Admin from '../components/admin/Admin';
 class PageAdmin extends Component {
   constructor(props) {
     super(props);
-    document.title = 'Devenir Producteur';
+    document.title = 'Administrateur';
   }
 
   render() {

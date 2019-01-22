@@ -10,6 +10,7 @@ module.exports = {
 };
 
 const mongoose = require('mongoose');
+const notificationsServices = require('./notifications.services');
 const producersServices = require('./producers.services');
 const { SalespointsModel } = require('../models/salespoints.modelgql');
 
@@ -96,6 +97,11 @@ function geoFilterProducersSalespoints({ longitude, latitude, maxDistance }) {
           localField : 'productsIds',
           foreignField : '_id',
           as : 'products'
+        }
+      },
+      {
+        $match: {
+          isValidated: true
         }
       }
     ]
@@ -193,7 +199,8 @@ function geoFilterProducersSalespointsByProductTypeIds({ longitude, latitude, ma
         $match: {
           productTypeIds: {
             $all: productTypeIdsTab
-          }
+          },
+          isValidated: true
         }
       }
     ]
@@ -285,6 +292,10 @@ async function updateSalespoint(producerId, { name, address, schedule }) {
   }
 
   await SalespointsModel.findByIdAndUpdate(producer.salespointId, updatedSalespoint, { new: true }); // retourne l'objet modifié
+
+  // on ajoute une nouvelle notification signalant la mise à jour des informations du producteur à tous ses followers
+  await notificationsServices.addNotification('PRODUCER_UPDATE_SALESPOINT_INFO', producer.id);
+
   return producer;
 }
 

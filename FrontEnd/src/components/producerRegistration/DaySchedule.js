@@ -131,7 +131,6 @@ class DaySchedule extends Component {
 
                     </Hidden>
                   </Fragment>)
-
                 }
 
                 {day.length < 2

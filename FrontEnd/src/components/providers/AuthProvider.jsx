@@ -97,7 +97,7 @@ class AuthProvider extends React.Component {
   // Décode le token et l'insère dans le state
   addState = (token) => {
     const decoded = jwtDecode(token);
-    console.info("token", token);
+    console.info("token", token, decoded.isAdmin);
     this.setState({
       notificationCount: 0,
       userId: decoded.id,

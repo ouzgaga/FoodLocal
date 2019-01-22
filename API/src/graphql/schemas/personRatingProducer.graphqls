@@ -10,11 +10,8 @@ type Query {
 }
 
 type Mutation {
-	# Ajoute un nouveau rating fait par la personne 'personId' et concernant le producteur 'producerId'
-	addProducerRating(rating: PersonRatingProducerInputAdd!): PersonRatingProducer!
-
-	# Met à jour le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
-	updateProducerRating(rating: PersonRatingProducerInputUpdate!): PersonRatingProducer
+	# Ajoute un nouveau rating fait par la personne 'personId' et concernant le producteur 'producerId' ou met à jour celui existant si l'utilisateur reçu a déjà effectué un vote pour ce producteur
+	addOrUpdateProducerRating(rating: PersonRatingProducerInput!): PersonRatingProducer!
 
 	# Supprime le rating 'id', fait par la personne 'personId' et concernant le producteur 'producerId'
 	deleteProducerRating(ratingId: ID!): PersonRatingProducer
@@ -30,14 +27,9 @@ type PersonRatingProducer {
 	rating: Int!
 }
 
-input PersonRatingProducerInputAdd {
+input PersonRatingProducerInput {
 	personId: ID!
 	producerId: ID!
-	rating: Int!
-}
-
-input PersonRatingProducerInputUpdate {
-	id: ID!
 	rating: Int!
 }
 

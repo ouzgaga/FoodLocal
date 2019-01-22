@@ -21,7 +21,7 @@ import {
   PageAbout,
   PageMap,
   PageNewAccount,
-  PageAcceuil,
+  PageAccueil,
   PageProducer,
   PageEmailValidation,
   PageError404,
@@ -200,11 +200,11 @@ class App extends React.Component {
         <Header />
         <div className={classes.page} center="xs">
           <Switch>
-            <Route path="/" exact component={PageAcceuil} classes={classes} />
+            <Route path="/" exact component={PageAccueil} classes={classes} />
             <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
-            <Route path="/admin" exct component={PageAdmin} classes={classes} />
+            <ProtectedAdminRoute path="/admin" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
             <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
