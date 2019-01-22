@@ -59,9 +59,19 @@ const authLink = setContext((_, { headers }) => {
     });
 });
 
-
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+}
 
 const client = new ApolloClient({
+  defaultOptions,
   link: authLink.concat(httpLink).split(
       // split based on operation type
       ({ query }) => {
@@ -71,7 +81,7 @@ const client = new ApolloClient({
       wsLink,
       httpLink
     ),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(), // No cash caus no update of it
 });
 
 ReactDOM.render(

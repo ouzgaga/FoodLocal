@@ -7,6 +7,12 @@ import DetailsInscriptionProducerForm from './DetailsInscriptionProducerForm';
 import AvailableProductsForm from './AvailableProductsForm';
 import ProductsDescriptionForm from './ProductsDescriptionForm';
 import ConfirmationForm from './ConfirmationForm';
+import Typography from '@material-ui/core/Typography';
+
+import { withApollo, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import DoFunction from '../items/DoFunction';
 
 function getSteps() {
   return ['Détails', 'Produits disponibles', 'Description des produits'];
@@ -14,9 +20,84 @@ function getSteps() {
 
 export const IncriptionProducerContext = React.createContext({});
 
+const queryMe = gql`
+query($userId: ID!) {
+  producer(producerId: $userId){
+    salespoint{
+      name,
+      address{
+        number,
+        street,
+        city,
+        postalCode,
+        state,
+        country,
+        longitude,
+        latitude
+      },
+      schedule{
+        monday{
+        	openingHour,
+          closingHour
+        },
+        tuesday{
+        	openingHour,
+          closingHour
+        },
+        wednesday{
+        	openingHour,
+          closingHour
+        },
+        thursday{
+        	openingHour,
+          closingHour
+        },
+        friday{
+        	openingHour,
+          closingHour
+        },
+        saturday{
+        	openingHour,
+          closingHour
+        },
+        sunday{
+        	openingHour,
+          closingHour
+        }
+      }
+    }
+    products{
+      edges{
+        node{
+          id,
+          description,
+        }
+      }
+    }
+  }
+}
+`;
+
+const mutNewProd = gql`
+  mutation($userId: ID!, $salePoint: SalespointInput!){
+    addSalespointToProducer(producerId: $userId, salespoint: $salePoint){
+      id
+    }
+  }
+  `;
+
+const mutUpdateProd = gql`
+  mutation($userId: ID!, $salePoint: SalespointInput!){
+    updateSalespoint(producerId: $userId, salespoint: $salePoint){
+      id
+    }
+  }
+  `;
+
 class InscriptionProducer extends Component {
   state = {
     step: 0,
+    isNewProd: true,
     name: '',
     number: '',
     street: '',
@@ -42,6 +123,47 @@ class InscriptionProducer extends Component {
     showCompleteAddress: false,
     scheduleActive: false,
     items: [],
+
+    error: null,
+  }
+
+  componentDidMount() {
+    const { client, userId } = this.props;
+    client.query({ query: queryMe, variables: { userId } })
+      .then(
+        (data) => {
+          if (data.data.producer.salespoint) {
+            this.setState({
+              isNewProd: false,
+              phoneNumber: data.data.producer.phoneNumber,
+              website: data.data.producer.website,
+              name: data.data.producer.salespoint,
+              number: data.data.producer.address.number,
+              street: data.data.producer.address.street,
+              city: data.data.producer.address.city,
+              postalCode: data.data.producer.address.postalCode,
+              state: data.data.producer.address.state,
+              country: data.data.producer.address.country,
+              longitude: data.data.producer.address.longitude,
+              latitude: data.data.producer.address.latitude,
+              
+              error: null,
+            });
+          }
+
+          if (data.data.producer.description) {
+            this.setState({
+              description: data.data.producer.description,
+              error: null,
+            });
+          }
+        }
+      ).catch(
+        (error) => {
+          console.log("Erreur", error);
+          this.setState({ error: "Erreur, Veuillez essayer plus tard" })
+        }
+      );
   }
 
   // Proceed to next step
@@ -134,7 +256,9 @@ class InscriptionProducer extends Component {
   };
 
   pageContext = () => {
+    
     const { step } = this.state;
+    const { userId } = this.props;
     switch (step) {
       case 0:
         return (
@@ -149,7 +273,69 @@ class InscriptionProducer extends Component {
           <ProductsDescriptionForm />
         );
       default:
-        return <ConfirmationForm />;
+        const {
+          isNewProd,
+
+          name,
+          number,
+          street,
+          city,
+          postalCode,
+          state,
+          country,
+          longitude,
+          latitude,
+
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday,
+          sunday,
+
+          phoneNumber,
+          website,
+          description,
+          items,
+          error,
+        } = this.state;
+        return (
+          <>
+            <Mutation
+              mutation={(isNewProd ? mutNewProd : mutUpdateProd)}
+              variables={{
+                userId: userId,
+                website: website,
+                phoneNumber: phoneNumber,
+                description: description,
+                salePoint: {
+                  name: name,
+                  address: {
+                    number: parseInt(number),
+                    street: street,
+                    city: city,
+                    postalCode: postalCode,
+                    state: state,
+                    country: country,
+                    longitude: parseFloat(longitude),
+                    latitude: parseFloat(latitude),
+                  }
+                }
+              }}
+            >
+              {(updateTodo, { data, loading, error }) => (
+                <>
+                  <DoFunction func={updateTodo} />
+                  {data && <Typography> Point de vente ok </Typography>}
+                  {loading && <Typography> Chargement </Typography>}
+                  {error &&  <Typography color="error"> Une erreur est survenue. Le point de vente n'est pas ok. </Typography>}
+                </>
+              )}
+            </Mutation>
+            <ConfirmationForm> {console.info(this.state.items)} </ConfirmationForm>
+          </>
+        );
     }
   }
 
@@ -189,4 +375,4 @@ class InscriptionProducer extends Component {
   }
 }
 
-export default InscriptionProducer;
+export default withApollo(InscriptionProducer);

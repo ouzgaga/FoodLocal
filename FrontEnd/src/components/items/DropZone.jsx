@@ -123,7 +123,7 @@ class DropZone extends React.Component {
             accept="image/*"
             multiple={false}
             onDrop={this.onDrop}
-
+            maxSize={7340032}
             className={classes.container}
 
           >

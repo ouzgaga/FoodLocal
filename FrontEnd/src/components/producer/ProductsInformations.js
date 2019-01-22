@@ -44,7 +44,6 @@ class ProductsInformations extends Component {
                 hasMore={this.props.entries.products.pageInfo.hasNextPage}
                 loader={<p>Loading...</p>}
               >
-
                 {products.map(({ node }) => (
                   <ListItem key={node.productType.name}>
                     <Grid container spacing={24}>
