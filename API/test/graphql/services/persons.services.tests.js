@@ -23,7 +23,7 @@ const clearAndPopulateDB = async() => {
   producers = producers.map(p => p.toObject());
 };
 
-describe('tests users services', () => {
+describe('tests persons services', () => {
   beforeEach(() => clearAndPopulateDB());
 
 

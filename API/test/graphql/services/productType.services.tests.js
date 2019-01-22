@@ -67,7 +67,7 @@ const clearAndPopulateDB = async() => {
   tabProductType = [productTypePomme, productTypePoire, productTypeRaisin, productTypeCourgette];
 };
 
-describe('tests productType services', () => {
+describe('tests productTypes services', () => {
   beforeEach(() => clearAndPopulateDB());
 
   describe('tests getProductTypes', () => {
