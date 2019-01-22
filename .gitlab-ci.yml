@@ -57,24 +57,11 @@ test-api:
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
   - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
-  - sleep 10; npm test
-  only:
-  - API
-test-api-full:
-  stage: test
-  image: node:8.15.0-jessie
-  script:
-  - cd ./API
-  - npm i npm@latest -g
-  - npm config set python /usr/bin/python
-  - npm install
-  - npm install run-rs
-  - npm rebuild bcrypt --build-from-source
-  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
   - sleep 30 && npm test
   only:
   - prod
   - master
+  - API
 
 ## Test quality
 code_quality-api:
