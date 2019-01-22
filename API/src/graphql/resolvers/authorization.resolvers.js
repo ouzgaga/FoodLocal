@@ -1,6 +1,5 @@
 const { ForbiddenError } = require('apollo-server-express');
 
-
 const checkIfIsAuthenticated = idInContext => (idInContext ? true : new ForbiddenError('Sorry, you need to be authenticated to do that.'));
 
 const checkIfIsYourself = (idInContext, idInArgs) => (idInArgs === idInContext ? true : new ForbiddenError(

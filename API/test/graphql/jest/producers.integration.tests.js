@@ -690,7 +690,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 3000
           },
-          byProductTypeIds: [tabProductTypes[1]._id]
+          byProductTypeIds: [tabProductTypes[1].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -709,7 +709,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 1000
           },
-          byProductTypeIds: [tabProductTypes[1]._id]
+          byProductTypeIds: [tabProductTypes[1].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -729,7 +729,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.77,
             maxDistance: 1000
           },
-          byProductTypeIds: [tabProductTypes[1]._id],
+          byProductTypeIds: [tabProductTypes[1].id],
           ratingMin: 3
         };
         const result = await graphql(schema, query, null, null, variables);
@@ -749,7 +749,7 @@ describe('Testing graphql request producers', () => {
             longitude: 6.0,
             latitude: 46.0
           },
-          byProductTypeIds: [tabProductTypes[10]._id, tabProductTypes[1]._id]
+          byProductTypeIds: [tabProductTypes[10].id, tabProductTypes[1].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -769,7 +769,7 @@ describe('Testing graphql request producers', () => {
             longitude: 6.0,
             latitude: 46.0
           },
-          byProductTypeIds: [tabProductTypes[10]._id, tabProductTypes[1]._id],
+          byProductTypeIds: [tabProductTypes[10].id, tabProductTypes[1].id],
           ratingMin: 3
         };
         const result = await graphql(schema, query, null, null, variables);
@@ -792,7 +792,7 @@ describe('Testing graphql request producers', () => {
             latitude: 46.0,
             maxDistance: 5000
           },
-          byProductTypeIds: [tabProductTypes[1]._id, tabProductTypes[10]._id, tabProductTypes[17]._id]
+          byProductTypeIds: [tabProductTypes[1].id, tabProductTypes[10].id, tabProductTypes[17].id]
         };
         const result = await graphql(schema, query, null, null, variables);
         expect.assertions(2);
@@ -988,118 +988,107 @@ describe('Testing graphql request producers', () => {
         mutation: `
           mutation($producer: ProducerInputUpdate!) {
             updateProducer(producer: $producer) {
-              totalCount
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+              firstname
+              lastname
+              email
+              image
+              followingProducers {
+                totalCount
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
+                  }
+                }
               }
-              edges {
-                node {
-                  firstname
-                  lastname
-                  email
-                  image
-                  followingProducers {
-                    totalCount
-                    edges {
-                      node {
-                        firstname
-                        lastname
-                        email
-                      }
-                    }
+              emailValidated
+              isAdmin
+              followers {
+                totalCount
+                edges {
+                  node {
+                    firstname
+                    lastname
+                    email
                   }
-                  emailValidated
-                  isAdmin
-                  followers {
-                    totalCount
-                    edges {
-                      node {
-                        firstname
-                        lastname
-                        email
-                      }
-                    }
+                }
+              }
+              phoneNumber
+              description
+              website
+              salespoint {
+                name
+                address {
+                  number
+                  street
+                  city
+                  postalCode
+                  state
+                  country
+                  longitude
+                  latitude
+                }
+                schedule {
+                  monday {
+                    openingHour
+                    closingHour
                   }
-                  phoneNumber
-                  description
-                  website
-                  salespoint {
-                    name
-                    address {
-                      number
-                      street
-                      city
-                      postalCode
-                      state
-                      country
-                      longitude
-                      latitude
-                    }
-                    schedule {
-                      monday {
-                        openingHour
-                        closingHour
-                      }
-                      tuesday {
-                        openingHour
-                        closingHour
-                      }
-                      wednesday {
-                        openingHour
-                        closingHour
-                      }
-                      thursday {
-                        openingHour
-                        closingHour
-                      }
-                      friday {
-                        openingHour
-                        closingHour
-                      }
-                      saturday {
-                        openingHour
-                        closingHour
-                      }
-                      sunday {
-                        openingHour
-                        closingHour
-                      }
-                    }
+                  tuesday {
+                    openingHour
+                    closingHour
                   }
-                  isValidated
-                  products {
-                    edges {
-                      node {
-                        description
-                        productType {
-                          name
-                          image
-                          category {
-                            name
-                            image
-                          }
-                          producers {
-                            totalCount
-                            edges {
-                              node {
-                                firstname
-                                lastname
-                                email
-                              }
-                            }
+                  wednesday {
+                    openingHour
+                    closingHour
+                  }
+                  thursday {
+                    openingHour
+                    closingHour
+                  }
+                  friday {
+                    openingHour
+                    closingHour
+                  }
+                  saturday {
+                    openingHour
+                    closingHour
+                  }
+                  sunday {
+                    openingHour
+                    closingHour
+                  }
+                }
+              }
+              isValidated
+              products {
+                edges {
+                  node {
+                    description
+                    productType {
+                      name
+                      image
+                      category {
+                        name
+                        image
+                      }
+                      producers {
+                        totalCount
+                        edges {
+                          node {
+                            firstname
+                            lastname
+                            email
                           }
                         }
                       }
                     }
                   }
-                  rating {
-                    nbRatings
-                    grade
-                  }
                 }
+              }
+              rating {
+                nbRatings
+                grade
               }
             }
           }`
