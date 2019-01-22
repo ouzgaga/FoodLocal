@@ -10,7 +10,7 @@ const personsServices = require('../services/persons.services');
  */
 const producerResolvers = {
   Query: {
-    producers: (parent, args, context) => producersServices.getProducers(),
+    producers: (parent, args, context) => producersServices.getProducers(true),
 
     producer: (parent, args, context) => producersServices.getProducerById(args.producerId),
 

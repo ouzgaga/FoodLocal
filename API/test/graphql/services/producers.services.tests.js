@@ -127,8 +127,13 @@ const clearAndPopulateDB = async() => {
   productPomme.productTypeId = productTypePomme.id;
   productPoire.productTypeId = productTypePoire.id;
 
+  // on ajoute 2 producteurs non validés
+  const unvalidatedProducer1 = (await producersServices.addProducer({ ...benoit, email: 'benoitUnvalidated@paysan.ch' })).toObject();
+  const unvalidatedProducer2 = (await producersServices.addProducer({ ...antoine, email: 'antioneUnvalidated@paysan.ch' })).toObject();
+
   // on ajoute 1 producteur contenant le salespoint 'salespointBenoit' ainsi que 2 produits ('productPomme' et 'productPoire')
   benoit = (await producersServices.addProducer(benoit)).toObject();
+  benoit = await producersServices.validateAProducer(benoit.id, true);
   await producersServices.addSalespointToProducer(benoit.id, salespointBenoit);
   tabProductsBenoit.push((await productsServices.addProduct(productPomme, benoit.id)).toObject());
   tabProductsBenoit.push((await productsServices.addProduct(productPoire, benoit.id)).toObject());
@@ -137,6 +142,7 @@ const clearAndPopulateDB = async() => {
 
   // on ajoute 1 producteur ne contenant pas de salespoint ainsi que 1 produit ('productPomme')
   antoine = (await producersServices.addProducer(antoine)).toObject();
+  antoine = await producersServices.validateAProducer(antoine.id, true);
   tabProductsAntoine.push((await productsServices.addProduct(productPomme, antoine.id)).toObject());
   antoine = (await producersServices.getProducerById(antoine.id)).toObject();
 
@@ -149,7 +155,7 @@ describe('tests producers services', () => {
   describe('tests getProducers', () => {
     it('should get all producers', async() => {
       // on récupère un tableau contenant tous les producteurs
-      let allProducers = await producersServices.getProducers();
+      let allProducers = await producersServices.getProducers(true);
 
       // on transforme chaque producteur du tableau en un objet
       allProducers = allProducers.map(producer => producer.toObject());
@@ -250,7 +256,7 @@ describe('tests producers services', () => {
       try {
         await producersServices.getProducerById('');
       } catch (err) {
-        err.message.should.be.equal('Received producer.id is invalid!');
+        err.message.should.be.equal('Cast to ObjectId failed for value "" at path "_id" for model "producers"');
       }
     });
 
@@ -258,7 +264,7 @@ describe('tests producers services', () => {
       try {
         await producersServices.getProducerById(benoit.id + benoit.id);
       } catch (err) {
-        err.message.should.be.equal('Received producer.id is invalid!');
+        err.message.should.contains('Cast to ObjectId failed for value');
       }
     });
 
@@ -339,29 +345,18 @@ describe('tests producers services', () => {
       addedProducer.password.should.be.not.null;
       addedProducer.image.should.be.equal(benoit.image);
 
-      // TODO: tester l'intérieur de subscription lorsqu'on pourra les gérer...!
       addedProducer.followingProducersIds.should.be.an('array');
       addedProducer.followingProducersIds.length.should.be.equal(benoit.followingProducersIds.length);
 
       addedProducer.emailValidated.should.be.equal(benoit.emailValidated);
       addedProducer.followersIds.should.be.an('array');
       addedProducer.followersIds.length.should.be.equal(benoit.followersIds.length);
-      // TODO: tester l'intérieur de followersIds lorsqu'on pourra les gérer...!
-      /*
-      // le 2ème paramètre (index) permet de récupérer l'index de l'itération (le i d'un for normal)
-      producer.followersIds.forEach((subscribedUser, index) => {
-        subscribedUser.id.should.be.not.null;
-        subscribedUser.firstname.should.be.not.null;
-        subscribedUser.lastname.should.be.not.null;
-        subscribedUser.email.should.be.not.null;
-        subscribedUser.password.should.be.not.null;
-      });
-      */
+
       addedProducer.phoneNumber.should.be.equal(benoit.phoneNumber);
       addedProducer.description.should.be.equal(benoit.description);
       addedProducer.website.should.be.equal(benoit.website);
       expect(addedProducer.salespointId).to.be.null; // car n'est pas ajouté lors de la création d'un producteur
-      addedProducer.isValidated.should.be.equal(benoit.isValidated);
+      addedProducer.isValidated.should.be.equal(false);
       // on test le tableau productsIds et son contenu
       const promisesTestsProductsIds = addedProducer.productsIds.map((async(productId) => {
         productId.should.be.not.null;
@@ -414,7 +409,7 @@ describe('tests producers services', () => {
 
       // on ajoute un nouveau producteur
       try {
-        const res = (await producersServices.addProducer(producerToAdd)).toObject();
+        (await producersServices.addProducer(producerToAdd)).toObject();
       } catch (err) {
         err.should.be.not.null;
         err.message.should.be.equal(`producers validation failed: email: Path \`email\` is invalid (${producerToAdd.email}).`);
@@ -721,7 +716,7 @@ describe('tests producers services', () => {
         // on ajoute un point de vente au producteur
         await producersServices.addSalespointToProducer('abcdef', salespointBenoit);
       } catch (err) {
-        err.message.should.be.equal('Received producerId is invalid!');
+        err.message.should.be.equal('Cast to ObjectId failed for value "abcdef" at path "_id" for model "producers"');
       }
     });
 
@@ -776,7 +771,7 @@ describe('tests producers services', () => {
         // on ajoute un point de vente au producteur
         await producersServices.addSalespointToProducer('abcdefabcdefabcdefabcdefabcdef', salespointBenoit);
       } catch (err) {
-        err.message.should.be.equal('Received producerId is invalid!');
+        err.message.should.be.equal('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "producers"');
       }
     });
 
@@ -1070,7 +1065,7 @@ describe('tests producers services', () => {
 
       users = await usersServices.getUsers();
       users = users.map(u => u.toObject());
-      producers = await producersServices.getProducers();
+      producers = await producersServices.getProducers(true);
       producers = producers.map(p => p.toObject());
     });
 
@@ -1201,7 +1196,7 @@ describe('tests producers services', () => {
 
       users = await usersServices.getUsers();
       users = users.map(u => u.toObject());
-      producers = await producersServices.getProducers();
+      producers = await producersServices.getProducers(true);
       producers = producers.map(p => p.toObject());
     });
 

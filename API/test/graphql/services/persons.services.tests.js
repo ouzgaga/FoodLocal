@@ -19,7 +19,7 @@ const clearAndPopulateDB = async() => {
 
   users = await usersServices.getUsers();
   users = users.map(u => u.toObject());
-  producers = await producersServices.getProducers();
+  producers = await producersServices.getProducers(true);
   producers = producers.map(p => p.toObject());
 };
 
