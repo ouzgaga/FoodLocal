@@ -29,8 +29,8 @@ const personNotificationsSchema = new mongoose.Schema(
 );
 
 /**
- * Vérifie l'existence des personId et producerId entrés.
- * Lève une erreur si l'un des deux n'existe pas dans la base de données.
+ * Vérifie l'existence des personId et producerId entrés avant chaque save.
+ * Lève une erreur si l'un des deux n'existe pas dans la base de données et annule l'enregistrement.
  */
 personNotificationsSchema.pre('save', async function(next) {
   try {
