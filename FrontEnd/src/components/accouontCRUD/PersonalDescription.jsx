@@ -93,7 +93,7 @@ class PersonalDescription extends Component {
                         id="personal-description"
                         maxLenght={1024}
                         fullWidth
-                        defaultValue={(!datas.me.description && '')}
+                        defaultValue={!datas.me.description ? '' : datas.me.description}
                         onChange={e => (e)}
                       />
                       <BoxLeftRight
