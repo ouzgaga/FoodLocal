@@ -59,8 +59,8 @@ test-api:
   - npm install run-rs
   - npm rebuild bcrypt --build-from-source
   #- apk del builds-deps
-  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q
-  - sleep 10 && npm test
+  - node ./node_modules/run-rs/ -v 4.0.0 -h 127.0.0.1 -q &
+  - sleep 10; npm test
   only:
   - API
 test-api-full:
