@@ -13,8 +13,6 @@ import BoxLeftRight from './BoxLeftRight';
 import DropZone from '../items/DropZone';
 import SimpleImageDialog from '../items/SimpleImageDialog';
 
-
-
 const queryMe = gql`
   query($token: String!) {
     me(token: $token) {

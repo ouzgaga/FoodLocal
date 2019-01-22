@@ -75,7 +75,7 @@ class PagePersonalInformations extends React.Component {
         <BoxWithHeader
           header="Image de profil"
         >
-          <ChangeProfilImage />
+          <ChangeProfilImage  userId={userId} status={status} token={token}/>
         </BoxWithHeader>
         <BoxWithHeader
           header="Informations personnels"

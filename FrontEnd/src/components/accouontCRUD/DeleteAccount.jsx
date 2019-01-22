@@ -66,7 +66,7 @@ class DeleteAccount extends Component {
   };
 
   render() {
-    const { classes, fullScreen } = this.props;
+    const { classes } = this.props;
 
     return (
       <>
@@ -108,7 +108,7 @@ class DeleteAccount extends Component {
                   <AuthContext>
                     {({ signOut }) => (
                       <Dialog
-                        fullScreen={fullScreen}
+                        fullScreen
                         open={this.state.open}
                         onClose={this.handleClose}
                         aria-labelledby="responsive-dialog-title"
@@ -128,7 +128,7 @@ class DeleteAccount extends Component {
                               (e) => {
                                 e.preventDefault();
                                 updateTodo();
-                                signOut();
+                                //signOut();
                                 console.info("yoo");
                               }
                             }

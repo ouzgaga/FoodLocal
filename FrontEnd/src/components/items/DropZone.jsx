@@ -8,8 +8,6 @@ import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 
-
-
 const styles = theme => ({
   root: {
 
@@ -89,8 +87,10 @@ class DropZone extends React.Component {
       right: 0,
       bottom: 0,
       left: 0,
-      padding: '2.5em 0',
-      background: 'rgba(0,0,0,0.5)',
+      //padding: '2.5em 0',
+      height: 200,
+      width: 400,
+      background: 'rgba(0,0,0,0.2)',
       textAlign: 'center',
       color: '#fff'
     };
@@ -144,8 +144,6 @@ class DropZone extends React.Component {
                     </Grid>
                   </Grid>
                 </div>
-
-
               </div>
             )}
           </Dropzone>

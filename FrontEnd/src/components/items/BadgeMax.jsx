@@ -12,8 +12,12 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Composant qui affiche l'icone de notification avec un nombre à coté.
+ * Le nombre max est 99. Si le nombre == 0, il n'est pas affiché
+ */
 function NotificationBagde(props) {
-  const { classes, value } = props;
+  const { value } = props;
 
   return (
     <React.Fragment>

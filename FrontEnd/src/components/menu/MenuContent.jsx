@@ -106,7 +106,7 @@ function MenuContent(props) {
   const loggedMenu = (userStatus, isAdmin, signOut) => (
     <MenuList>
       <Link to="/myWall" className={classes.LinkButton}>
-        <MenuItem button>
+        <MenuItem button onClick={onClick}>
           <ListItemIcon>
             <BadgeMax value={0} />
             {/* TODO: icone */}
