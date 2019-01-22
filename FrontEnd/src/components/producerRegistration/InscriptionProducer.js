@@ -23,6 +23,9 @@ export const IncriptionProducerContext = React.createContext({});
 const queryMe = gql`
 query($userId: ID!) {
   producer(producerId: $userId){
+    website,
+    phoneNumber,
+    description,
     salespoint{
       name,
       address{
@@ -127,7 +130,7 @@ class InscriptionProducer extends Component {
     error: null,
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { client, userId } = this.props;
     client.query({ query: queryMe, variables: { userId } })
       .then(
@@ -150,10 +153,12 @@ class InscriptionProducer extends Component {
               error: null,
             });
           }
-
+          
           if (data.data.producer.description) {
+            console.info("desc", data.data.producer.description);
             this.setState({
               description: data.data.producer.description,
+              phoneNumber: "12345",
               error: null,
             });
           }

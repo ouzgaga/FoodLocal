@@ -87,6 +87,7 @@ class DetailsInscriptionProducerForm extends Component {
                     fieldNameToChange="description"
                     placeholder="Entrez une description de votre point de vente"
                     value={values.description}
+                    defaultValue={values.description}
                     multiline
                   />
                 </Grid>

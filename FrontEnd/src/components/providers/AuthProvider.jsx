@@ -66,10 +66,10 @@ class AuthProvider extends React.Component {
   }
 
 
-  componentDidMount() {
+  componentWillMount() {
     const token = window.localStorage.getItem('token');
     console.log(token);
-    //if(token) this.addState(token);
+    if(token) this.addState(token);
     if (token) {
       const { client } = this.props;
       client.mutate({ mutation: mutRelog })
