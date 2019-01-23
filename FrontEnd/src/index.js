@@ -30,7 +30,7 @@ const httpLink = createHttpLink({
   uri: 'https://api.foodlocal.ch/graphql',
 });
 
-// Create a WebSocket link:
+// Create a WebSocket link: Pour les sessions mais ça fonctionne pas
 const wsLink = new WebSocketLink({
   uri: `ws://api.foodlocal.ch/subscriptions`,
   options: {
@@ -38,7 +38,16 @@ const wsLink = new WebSocketLink({
   }
 });
 
-
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+};
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -56,16 +65,6 @@ const authLink = setContext((_, { headers }) => {
     });
 });
 
-const defaultOptions = {
-  watchQuery: {
-    fetchPolicy: 'network-only',
-    errorPolicy: 'ignore',
-  },
-  query: {
-    fetchPolicy: 'network-only',
-    errorPolicy: 'all',
-  },
-}
 
 const client = new ApolloClient({
   defaultOptions,
@@ -80,6 +79,41 @@ const client = new ApolloClient({
     ),
   cache: new InMemoryCache(), // No cash caus no update of it
 });
+
+/*
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+};
+
+const httpLink = createHttpLink({
+  uri: 'https://api.foodlocal.ch/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      "x-token": token ? token : "",
+    }
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  defaultOptions,
+  cache: new InMemoryCache()
+});
+*/
 
 ReactDOM.render(
   <ApolloProvider client={client}>

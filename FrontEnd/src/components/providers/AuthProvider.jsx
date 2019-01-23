@@ -197,7 +197,7 @@ class AuthProvider extends React.Component {
       error: null,
     });
   }
-
+/*
   subscribe = () => {
     // call the "subscribe" method on Apollo Client
     this.subscriptionObserver = this.props.client.subscribe({
@@ -211,7 +211,7 @@ class AuthProvider extends React.Component {
       error(err) { console.error('err', err); },
     });
   }
-
+*/
 
   signIn = async ({ userMail, password }) => {
     const { client } = this.props;
