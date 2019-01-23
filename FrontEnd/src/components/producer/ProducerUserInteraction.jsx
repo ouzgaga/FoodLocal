@@ -8,6 +8,9 @@ import { Hidden } from '@material-ui/core';
 import UserContext from '../UserContext';
 import RatingItem from '../items/RatingItem';
 import SimpleInfoDialog from '../items/SimpleInfoDialog';
+import { AuthContext } from '../providers/AuthProvider';
+import { Query, Mutation } from 'react-apollo';
+
 
 const styles = theme => ({
   root: {
@@ -115,63 +118,73 @@ class ProducerUserInteraction extends React.Component {
   render() {
     const { classes, followersCount } = this.props;
     const { infoDialogOpen, userRating, infoDialogText } = this.state;
-
+    
 
     // fromatage du text en français
     function displayFolowerCount(count) {
       if (count <= 1) {
-        return (`${count} abonnés`);
+        return (`${count} abonné`);
       }
       return (`${count} abonnés`);
     }
 
     return (
+
+
+
       <div className={classes.root}>
-        { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté */}
-        <SimpleInfoDialog
-          open={infoDialogOpen}
-          handleClose={this.handleClose.bind(this)}
-          text={infoDialogText}
-        />
+        <AuthContext>
+          {({ userId }) => userId && (
+            <>
+              { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté */}
+              <SimpleInfoDialog
+                open={infoDialogOpen}
+                handleClose={this.handleClose.bind(this)}
+                text={infoDialogText}
+              />
 
-        <Grid container spacing={16} justify="center">
-          <Grid container alignItems="center" className={classes.centerBox}>
-            <Grid item sm={6} xs={12}>
-              <Grid container alignItems="center" className={classes.centerBox}>
+              <Grid container spacing={16} justify="center">
+                <Grid container alignItems="center" className={classes.centerBox}>
+                  <Grid item sm={6} xs={12}>
+                    <Grid container alignItems="center" className={classes.centerBox}>
 
-                <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
-                  {this.displayIfUserFollow()}
-                </Button>
+                      <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
+                        {this.displayIfUserFollow()}
+                      </Button>
 
-                <Typography>
-                  {displayFolowerCount(followersCount)}
-                </Typography>
+                      <Typography>
+                        {displayFolowerCount(followersCount)}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Hidden smUp>
+                    <div style={{ height: 100 }} />
+                  </Hidden>
+
+
+                  <Grid item sm={6} xs={12}>
+
+                    <Grid container alignItems="center" className={classes.centerBox}>
+
+                      <RatingItem
+                        onChange={this.handleChangeUserRating}
+                        defaultValue={userRating}
+                      />
+                    </Grid>
+
+                    <Grid container alignItems="center" className={classes.centerBox}>
+                      <Typography>Notez ce producteur</Typography>
+                      <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>Vote</Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
-
-            <Hidden smUp>
-              <div style={{ height: 100 }} />
-            </Hidden>
-
-
-            <Grid item sm={6} xs={12}>
-
-              <Grid container alignItems="center" className={classes.centerBox}>
-
-                <RatingItem
-                  onChange={this.handleChangeUserRating}
-                  defaultValue={userRating}
-                />
-              </Grid>
-
-              <Grid container alignItems="center" className={classes.centerBox}>
-                <Typography>Notez ce producteur</Typography>
-                <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>Vote</Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+            </>
+          )}
+        </AuthContext>
       </div>
+
     );
   }
 }

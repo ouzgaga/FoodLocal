@@ -175,14 +175,17 @@ class InscriptionProducer extends Component {
           if (data.data.producer.salespoint.schedule) {
             this.setState({
               scheduleActive: true,
-              monday: data.data.producer.salespoint.schedule.monday,
-              tuesday: data.data.producer.salespoint.schedule.tuesday,
-              wednesday: data.data.producer.salespoint.schedule.wednesday,
-              thursday: data.data.producer.salespoint.schedule.thursday,
-              friday: data.data.producer.salespoint.schedule.friday,
-              saturday: data.data.producer.salespoint.schedule.saturday,
-              sunday: data.data.producer.salespoint.schedule.sunday,
+              monday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.monday),
+              tuesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.tuesday),
+              wednesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.wednesday),
+              thursday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.thursday),
+              friday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.friday),
+              saturday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.saturday),
+              sunday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.sunday),
             });
+            console.info("hoyoyoyo", data.data.producer.salespoint.schedule);
+            console.info("hoyoyoyo", this.state.monday);
+            console.info("hoyoyoyo", this.state.saturday);
           }
         }
         if (data.data.producer.description) {
@@ -197,8 +200,8 @@ class InscriptionProducer extends Component {
         console.log("Erreur", error);
         this.setState({ error: "Erreur, Veuillez essayer plus tard" })
       }
-    )
-    };
+    );
+  };
 
   // Proceed to next step
   nextStep = () => {
@@ -289,7 +292,24 @@ class InscriptionProducer extends Component {
     this.setState({ items: newItems });
   };
 
+  getDaySheldulObject = (arr) => {
+    if (arr.length !== 0) {
+      return (
+        arr.map(data => ({
+          openingHour: data.openingHour,
+          closingHour: data.closingHour,
+        }))
+      );
+    }
+
+    return [];
+  }
+
   getShedulPtObject = () => {
+
+    if (!scheduleActive)
+      return null;
+
     const {
       monday,
       tuesday,
@@ -300,17 +320,15 @@ class InscriptionProducer extends Component {
       sunday,
       scheduleActive
     } = this.state;
-    if (!scheduleActive)
-      return null;
-
+    
     return {
-        monday: monday,
-        tuesday: tuesday,
-        wednesday: wednesday,
-        thursday: thursday,
-        friday: friday,
-        saturday: saturday,
-        sunday: sunday,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
     };
   };
 

@@ -213,7 +213,6 @@ class DetailsInscriptionProducerForm extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              
               </div>
             </form>
           )}
