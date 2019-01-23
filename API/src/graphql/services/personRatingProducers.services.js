@@ -11,9 +11,9 @@ module.exports = {
 const PersonRatingProducersModel = require('../models/personRatingProducers.modelgql');
 
 /**
- * Retourne tous les ratings concernant le producteur correspondant à l'id reçu.
- *
- * @param {Integer} producerId, L'id du producteur dont on souhaite récupérer tous les ratings le concernant.
+ * Retourne tous les votes concernant le producteur correspondant à l'id producerId.
+ * @param producerId, l'id du producteur dont on souhaite récupérer tous les votes le concernant.
+ * @returns {*}
  */
 function getAllRatingsAboutProducerWithId(producerId) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!

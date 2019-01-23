@@ -1,5 +1,6 @@
 const { graphql } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
+const snapshot = require('snap-shot-it');
 const { resolvers, schema: typeDefs, connectionDirective } = require('../../../src/graphql/graphqlConfig');
 const { populateDB, getTabProducers, getTabProductTypes } = require('../../populateDatabase');
 
@@ -28,7 +29,7 @@ describe('Testing graphql request products', () => {
   describe('QUERY products', () => {
     // ----------------------products()-------------------------------------- //
     describe('Testing products()', () => {
-      it('should get all products', async(done) => {
+      it('should get all products', async() => {
         const { query } = {
           query: `
             query {
@@ -66,9 +67,8 @@ describe('Testing graphql request products', () => {
             }`
         };
         const result = await graphql(schema, query, null, {}, null);
-        expect.assertions(1);
-        expect(result).toMatchSnapshot();
-        done();
+
+        snapshot(result);
       });
     });
 
@@ -76,7 +76,7 @@ describe('Testing graphql request products', () => {
     describe('Testing product(productId: ID!)', () => {
       const { query } = {
         query:
-`query($productId: ID!) {
+          `query($productId: ID!) {
   product(productId: $productId) {
     description
     productType {
@@ -101,46 +101,39 @@ describe('Testing graphql request products', () => {
 `
       };
 
-      it('should get a product by id', async(done) => {
+      it('should get a product by id', async() => {
         const variables = { productId: tabProducers[2].productsIds[0].toString() };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(2);
-        expect(result.data.product).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.product).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail getting a product by id because invalid id received (too short)', async(done) => {
+      it('should fail getting a product by id because invalid id received (too short)', async() => {
         const variables = { productId: 'abcdef' };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdef" at path "_id" for model "products"'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Cast to ObjectId failed for value "abcdef" at path "_id" for model "products"');
       });
 
-      it('should fail getting a product by id because invalid id received (too long)', async(done) => {
+      it('should fail getting a product by id because invalid id received (too long)', async() => {
         const variables = { productId: 'abcdefabcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, query, null, {}, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
         expect(result.errors[0].message)
-          .toEqual(expect.stringContaining('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "products"'));
-        done();
+          .to.be.contains('Cast to ObjectId failed for value "abcdefabcdefabcdefabcdefabcdef" at path "_id" for model "products"');
       });
 
-      it('should fail getting a product by id because unknown id received', async(done) => {
+      it('should fail getting a product by id because unknown id received', async() => {
         const variables = { productId: 'abcdefabcdefabcdefabcdef' };
-        try {
-          await graphql(schema, query, null, {}, variables);
-        } catch (err) {
-          expect.assertions(2);
-          expect(err.errors).not.toBeNull();
-          expect(err).toMatchSnapshot();
-          done();
-        }
+        const result = await graphql(schema, query, null, {}, variables);
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
     });
   });
@@ -176,68 +169,63 @@ describe('Testing graphql request products', () => {
 
       const { mutation } = {
         mutation: `
-mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
-  addMultipleProducts(producerId: $producerId, products: $products) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    edges {
-      node {
-        id
-        description
-        productType {
-          id
-          name
-          image
-          category {
-            id
-            name
-            image
-          }
-          producers {
-            edges {
-              node {
-                firstname
-                lastname
-                email
+          mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
+            addMultipleProducts(producerId: $producerId, products: $products) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node {
+                  description
+                  productType {
+                    name
+                    image
+                    category {
+                      name
+                      image
+                    }
+                    producers {
+                      edges {
+                        node {
+                          firstname
+                          lastname
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+                cursor
               }
             }
-          }
-        }
-      }
-      cursor
-    }
-  }
-}`
+          }`
       };
 
-      it('should add multiple new products (with and without description)', async(done) => {
+      it('should add multiple new products (with and without description)', async() => {
         const variables = { producerId: tabProducers[0].id, products };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.addMultipleProducts).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.addMultipleProducts).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding multiple new products because one is missing productTypeId', async(done) => {
+      it('should fail adding multiple new products because one is missing productTypeId', async() => {
         products[0] = {
           description: 'Une Pomme monnnnstre bonne!'
         };
 
         const variables = { producerId: tabProducers[0].id, products };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value[0].productTypeId of required type ID! was not provided.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value[0].productTypeId of required type ID! was not provided.');
       });
 
-      it('should fail adding multiple new products because one has a field "rienAVoir" that is not defined in schema', async(done) => {
+      it('should fail adding multiple new products because one has a field "rienAVoir" that is not defined in schema', async() => {
         products[0] = {
           description: 'Une Pomme monnnnstre bonne!',
           productTypeId: tabProductTypes[18].id,
@@ -246,33 +234,30 @@ mutation($producerId: ID!, $products: [ProductInputAdd!]!) {
 
         const variables = { producerId: tabProducers[0].id, products };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field "rienAVoir" is not defined by type ProductInputAdd at value[0].'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field "rienAVoir" is not defined by type ProductInputAdd at value[0].');
       });
 
-      it('should fail adding a new product because not authenticated', async(done) => {
+      it('should fail adding a new product because not authenticated', async() => {
         const variables = { producerId: tabProducers[0].id, products };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(2);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a new product because not authenticated as yourself', async(done) => {
+      it('should fail adding a new product because not authenticated as yourself', async() => {
         const variables = { producerId: tabProducers[1].id, products };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
     });
 
@@ -309,7 +294,7 @@ mutation($producerId: ID!, $product: ProductInputAdd!) {
 }`
       };
 
-      it('should add a new product with a description', async(done) => {
+      it('should add a new product with a description', async() => {
         const pomme = {
           description: 'Une Pomme monnnnstre bonne!',
           productTypeId: tabProductTypes[18].id
@@ -317,40 +302,37 @@ mutation($producerId: ID!, $product: ProductInputAdd!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.addProduct).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.addProduct).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should add a new product without description', async(done) => {
+      it('should add a new product without description', async() => {
         const pomme = {
           productTypeId: tabProductTypes[18].id
         };
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.addProduct).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.addProduct).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new product because missing productTypeId', async(done) => {
+      it('should fail adding a new product because missing productTypeId', async() => {
         const pomme = {
           description: 'Une Pomme monnnnstre bonne!'
         };
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.productTypeId of required type ID! was not provided.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.productTypeId of required type ID! was not provided.');
       });
 
-      it('should fail adding a new product because given field "rienAVoir" is not defined in schema', async(done) => {
+      it('should fail adding a new product because given field "rienAVoir" is not defined in schema', async() => {
         const pomme = {
           description: 'Une Pomme monnnnstre bonne!',
           productTypeId: tabProductTypes[18].id,
@@ -359,14 +341,13 @@ mutation($producerId: ID!, $product: ProductInputAdd!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field "rienAVoir" is not defined by type ProductInputAdd.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field "rienAVoir" is not defined by type ProductInputAdd.');
       });
 
-      it('should fail adding a new product because not authenticated', async(done) => {
+      it('should fail adding a new product because not authenticated', async() => {
         const pomme = {
           description: 'Une Pomme monnnnstre bonne!',
           productTypeId: tabProductTypes[18].id
@@ -374,15 +355,14 @@ mutation($producerId: ID!, $product: ProductInputAdd!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a new product because not authenticated as yourself', async(done) => {
+      it('should fail adding a new product because not authenticated as yourself', async() => {
         const pomme = {
           description: 'Une Pomme monnnnstre bonne!',
           productTypeId: tabProductTypes[18].id
@@ -390,12 +370,11 @@ mutation($producerId: ID!, $product: ProductInputAdd!) {
 
         const variables = { producerId: tabProducers[1].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
     });
 
@@ -430,7 +409,7 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 }`
       };
 
-      it('should update a product', async(done) => {
+      it('should update a product', async() => {
         const pomme = {
           id: tabProducers[0].productsIds[0].toString(),
           description: 'Une Pomme monnnnstre bonne!',
@@ -439,13 +418,12 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.updateProduct).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.updateProduct).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail updating a product because missing productTypeId', async(done) => {
+      it('should fail updating a product because missing productTypeId', async() => {
         const pomme = {
           id: tabProducers[0].productsIds[0].toString(),
           description: 'Une Pomme monnnnstre bonne!'
@@ -453,14 +431,13 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field value.productTypeId of required type ID! was not provided.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field value.productTypeId of required type ID! was not provided.');
       });
 
-      it('should fail updating a product because given field "rienAVoir" is not defined in schema', async(done) => {
+      it('should fail updating a product because given field "rienAVoir" is not defined in schema', async() => {
         const pomme = {
           id: tabProducers[0].productsIds[0].toString(),
           description: 'Une Pomme monnnnstre bonne!',
@@ -470,14 +447,13 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(3);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Field "rienAVoir" is not defined by type ProductInputUpdate.'));
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Field "rienAVoir" is not defined by type ProductInputUpdate.');
       });
 
-      it('should fail updating a new product because not authenticated', async(done) => {
+      it('should fail updating a new product because not authenticated', async() => {
         const pomme = {
           id: tabProducers[0].productsIds[0].toString(),
           description: 'Une Pomme monnnnstre bonne!',
@@ -486,15 +462,14 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 
         const variables = { producerId: tabProducers[0].id, product: pomme };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail updating a new product because not authenticated as yourself', async(done) => {
+      it('should fail updating a new product because not authenticated as yourself', async() => {
         const pomme = {
           id: tabProducers[0].productsIds[0].toString(),
           description: 'Une Pomme monnnnstre bonne!',
@@ -503,12 +478,11 @@ mutation($producerId: ID!, $product: ProductInputUpdate!) {
 
         const variables = { producerId: tabProducers[1].id, product: pomme };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
     });
 
@@ -543,65 +517,58 @@ mutation($producerId: ID!, $productId: ID!) {
   }`
       };
 
-      it('should delete a product', async(done) => {
+      it('should delete a product', async() => {
         context = { id: tabProducers[2].id, email: tabProducers[2].email, isAdmin: tabProducers[2].isAdmin, kind: tabProducers[2].kind };
         const variables = { producerId: tabProducers[2].id, productId: tabProducers[2].productsIds[0].toString() };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.data.deleteProduct).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.data.deleteProduct).to.be.not.null;
       });
 
-      it('should fail deleting a product by id because invalid id received (too short)', async(done) => {
+      it('should fail deleting a product by id because invalid id received (too short)', async() => {
         context.id = 'abcdef';
         const variables = { producerId: tabProducers[0].id, productId: context.id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a product by id because invalid id received (too long)', async(done) => {
+      it('should fail deleting a product by id because invalid id received (too long)', async() => {
         context.id = 'abcdefabcdefabcdefabcdefabcdef';
         const variables = { producerId: tabProducers[0].id, productId: context.id };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail deleting a product by id because unknown id received', async(done) => {
+      it('should fail deleting a product by id because unknown id received', async() => {
         const variables = { producerId: tabProducers[0].id, productId: 'abcdefabcdefabcdefabcdef' };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(2);
-        expect(result.errors).not.toBeNull();
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        snapshot(result);
       });
 
-      it('should fail adding a new product because not authenticated', async(done) => {
+      it('should fail adding a new product because not authenticated', async() => {
         const variables = { producerId: tabProducers[0].id, productId: tabProducers[0].productsIds[0].toString() };
         const result = await graphql(schema, mutation, null, {}, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('Sorry, you need to be authenticated to do that.'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('Sorry, you need to be authenticated to do that.');
+        snapshot(result);
       });
 
-      it('should fail adding a new product because not authenticated as yourself', async(done) => {
+      it('should fail adding a new product because not authenticated as yourself', async() => {
         const variables = { producerId: tabProducers[1].id, productId: tabProducers[1].productsIds[0].toString() };
         const result = await graphql(schema, mutation, null, context, variables);
-        expect.assertions(4);
-        expect(result.errors).not.toBeNull();
-        expect(result.errors.length).toBe(1);
-        expect(result.errors[0].message).toEqual(expect.stringContaining('You can\'t modify information of another user than yourself!'));
-        expect(result).toMatchSnapshot();
-        done();
+
+        expect(result.errors).to.be.not.null;
+        expect(result.errors.length).to.be.equal(1);
+        expect(result.errors[0].message).to.be.contains('You can\'t modify information of another user than yourself!');
+        snapshot(result);
       });
     });
   });

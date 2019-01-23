@@ -27,15 +27,11 @@ const tokenValidationEmailServices = require('./tokenValidationEmail.services');
 const productTypesServices = require('./productTypes.services');
 
 /**
- * Retourne "limit" producteurs de la base de données, fitlrés
- * selon les tags "tags" reçus à partir de la page "page". Sans
- * paramètres, retourne tous les producteurs de la base de
- * données.
+ * Retourne tous les producteurs de la base de données triés par id si sortById vaut true (non triés sinon) et filtrés en fonction des tags reçus.
  *
- * @param {Array} tags, Tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ','.
- * @param {Integer} limit, Nombre maximum de producteurs à retourner.
- * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la 'page'ème page de 'limit'
- * producteurs. Par exemple, si 'limit' vaut 20 et 'page' vaut 3, on récupère la 3ème page de 20 producteurs, soit les producteurs 41 à 60.
+ * @param sortById, si true, trie les résultats retournés par id. Sinon, ne les trie pas.
+ * @param tags, objet contenant les tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ','.
+ * @returns tous les producteurs de la base de données triés par id si sortById vaut true (non triés sinon) et filtrés en fonction des tags reçus.
  */
 function getProducers(sortById, { tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
@@ -50,8 +46,8 @@ function getProducers(sortById, { tags = undefined } = {}) {
 /**
  * Retourne le producteur correspondant à l'id reçu.
  *
- * @param {String} id, L'id du producteur à récupérer.
- * @returns {*}
+ * @param id, l'id du producteur à récupérer.
+ * @returns le producteur correspondant à l'id reçu.
  */
 function getProducerById(id) {
   return ProducersModel.findById(id);
@@ -59,21 +55,25 @@ function getProducerById(id) {
 
 /**
  * Retourne tous les producteurs dont l'id se trouve dans la liste passée en paramètre.
- * @param listOfIdToGet, liste contenant les ids des producteurs que l'on cherche.
- * @returns {*}
+ * @param listOfIdToGet, la liste contenant les ids des producteurs que l'on souhaite récupérer.
+ * @returns un tableau contenant tous les producteurs dont l'id se trouve dans la liste reçue en paramètre.
  */
 function getAllProducersInReceivedIdList(listOfIdToGet) {
   return getProducers(true, { tags: { _id: { $in: listOfIdToGet } } });
 }
 
 /**
- * Retourne tous les producteurs qui n'ont pas encore été validés (isValidated = false)
- * @returns {*}
+ * Retourne tous les producteurs qui n'ont pas encore été validés par un administrateur (isValidated = false).
+ * @returns un tableau contenant tous les producteurs qui n'ont pas encore été validés par un administrateur.
  */
 function getAllProducerWaitingForValidation() {
   return getProducers(true, { tags: { isValidated: false } });
 }
 
+/**
+ * Retourne le nombre total de producteurs validés (isValidated === true) et non supprimés (deleted === false) enregistrés dans la base de données.
+ * @returns le nombre total de producteurs validés (isValidated === true) et non supprimés (deleted === false) enregistrés dans la base de données.
+ */
 function countProducersInDB() {
   return ProducersModel.countDocuments({ isValidated: true, deleted: false });
 }
@@ -81,25 +81,36 @@ function countProducersInDB() {
 /**
  * Filtre tous les producteurs en fonction des productTypeId reçus.
  * Seul les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu sont retournés.
- * Si aucun producteur ne produit ce type de produit, alors tous les producteurs sont retournés.
  *
- * @param byProductTypeIds, tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
- * @returns {Promise<*>}
+ * @param byProductTypeIds, un tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
+ * @returns un tableau contenant tous les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau reçu.
  */
 function filterProducers(byProductTypeIds) {
   if (byProductTypeIds == null) {
     throw new Error('Received parameter "byProductTypeIds" cannot be null!');
   }
 
-  if (byProductTypeIds.length !== 0) {
-    // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
-    return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
-  } else {
-    // pas de filtre --> on retourne tous les producteurs
-    return getProducers(true);
-  }
+  // on filtre les producteurs que l'on retourne avec les productTypeId contenus dans le tableau reçu
+  return productTypesServices.getProducersIdsProposingProductsOfAllReceivedProductsTypeIds(byProductTypeIds);
 }
 
+/**
+ * Filtre tous les producteurs en fonction :
+ *      - 1) de la localisation de de l'utilisateur
+ *      - 2) du tableau de productTypeId reçu
+ *      - 3) du rating de producteurs
+ *
+ * 1) retourne les producteurs les plus proche de l'utilsiateur d'abord.
+ * 2) retourne que les producteurs produisant un ou plusieurs produits du type correspondant à un des productTypeId du tableau productTypeIdsTab.
+ * 3) retourne que les producteurs ayant un rating d'au moins 'ratingMin' ou plus.
+ *
+ * Ces 3 filtres peuvent être combinés à volonté.
+ *
+ * @param locationClient, la localisation de l'utilsiateur.
+ * @param productTypeIdsTab, un tableau d'ids des productType dont on souhaite récupérer les producteurs qui produisent un produit de ce type.
+ * @param ratingMin, le rating minimal qu'un producteur doit avoir pour être retrouné au client.
+ * @returns tous les producteurs correspondants aux critères de recherche mentionnés ci-dessus.
+ */
 function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin = 1) {
   if (productTypeIdsTab == null || productTypeIdsTab.length === 0) {
     return salespointsServices.geoFilterProducersSalespoints(locationClient, ratingMin);
@@ -109,10 +120,17 @@ function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin = 1) {
 }
 
 /**
- * Ajoute un nouveau producteur dans la base de données.
- * Doublons autorisés!
+ * Ajoute un nouveau producteur dans la base de données si l'email reçu n'est pas déjà utilisé et si le password reçu est suffisemment robuste.
  *
- * @param {Integer} producer, Les informations du producteur à ajouter.
+ * @param firstname, le prénom du producteur.
+ * @param lastname, le nom de famille du producteur.
+ * @param email, l'email du producteur.
+ * @param password, le mot de passe du producteur.
+ * @param image, l'image du producteur (encodée en base64).
+ * @param phoneNumber, le numéro de téléphone du producteur.
+ * @param description
+ * @param website
+ * @returns {Promise<*>}
  */
 async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website }) {
   if (await personsServices.isEmailAvailable(email) && personsServices.checkIfPasswordIsValid(password)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur

@@ -7,8 +7,9 @@
 	"scripts": {
 		"start": "node ./src/server.js",
 		"dev": "nodemon ./src/server.js --watch src",
-		"test": "NODE_ENV=testMocha mocha --recursive test/graphql/services --exit",
-		"test-jest": "NODE_ENV=testJest jest --config=jest.config.js --forceExit --runInBand"
+		"test": "NODE_ENV=test mocha --recursive test/graphql --exit",
+		"test-services": "NODE_ENV=test mocha --recursive test/graphql/services --exit",
+		"test-integration": "NODE_ENV=test mocha --recursive test/graphql/integration --exit"
 	},
 	"dependencies": {
 		"@sendgrid/mail": "^6.3.1",
@@ -20,7 +21,7 @@
 		"cookie-parser": "^1.4.3",
 		"cors": "^2.8.5",
 		"crypto": "^1.0.1",
-		"dotenv": "^6.1.0",
+		"dotenv": "^6.2.0",
 		"express": "^4.16.4",
 		"graphql": "^14.0.2",
 		"graphql-iso-date": "^3.6.1",
@@ -50,8 +51,8 @@
 		"eslint-config-airbnb-base": "^13.1.0",
 		"eslint-plugin-import": "^2.14.0",
 		"faker": "^4.1.0",
-		"jest": "^23.6.0",
 		"mocha": "^5.2.0",
-		"nyc": "^13.1.0"
+		"nyc": "^13.1.0",
+		"snap-shot-it": "^6.2.8"
 	}
 }

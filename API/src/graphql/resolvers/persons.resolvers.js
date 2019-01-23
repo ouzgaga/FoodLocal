@@ -15,7 +15,12 @@ const personsResolvers = {
   Query: {
     checkIfEmailIsAvailable: (parent, args, context) => personsServices.isEmailAvailable(args.email),
 
-    me: (parent, args, context) => personsServices.getPersonByToken(args.token)
+    me: (parent, args, context) => personsServices.getPersonByToken(args.token),
+
+    checkIfPersonFollowProducer: async(parent, args, context) => {
+      await isAuthenticated(context.id);
+      return personsServices.checkIfPersonFollowProducer(context.id, args.producerId);
+    }
   },
 
   Mutation: {
