@@ -61,23 +61,24 @@ L'API offre de très nombreux endpoints. L'utilité de chaque endpoint est donn�
 Nous avons effectué deux types de tests de notre API.
 Tout d'abord, nous avons testé chaque fonction de chaque service afin de s'assurer de son bon fonctionnement et de pouvoir être certain que son comportement ne change pas tout au long du développement de l'API. Pour cela, nous avons créé des tests unitaires à l'aide de *Mocha* ainsi *Chai*.
 
-Dans un second temps, nous avons créé des tests d'intégration permettant de tester le comportement de l'API en se mettant à la place du client. Dans ces tests, nous faisons un appel non pas directement à un service comme c'est le cas dans les tests unitaires, mais en faisant un appel à GraphQL
+Dans un second temps, nous avons créé des tests d'intégration permettant de tester le comportement de l'API en se mettant à la place du client. Dans ces tests, nous faisons un appel non pas directement à un service comme c'est le cas dans les tests unitaires, mais en faisant un appel à GraphQL. Ainsi, on "traverse" toute l'API et on peut tester les données exactement comme le client les reçoit.
 
-Ces tests, en plus d'être fréquemment runnés 
+Nous avons tout d'abord implémenté les tests d'intégration à l'aide de Jest, mais suite à de nombreux problèmes de timer et à des tests extrêment lents (plus de 5 seconde par test, entre 25 et 30 minutes pur tous les exécuter...!), nous avons abandonné Jest pour revenir à des tests Mocha. Nous avons toutefois utilisé une librairie (snap-shot-it) permettant d'utiliser le même genre de snapshot que Jest propose, mais avec Mocha.
 
-Des tests unitaires qui teste les différents services et méthodes d'accès aux données et des tests d'intégration qui tests le fonctionnement de GraphQL.
+Pour lancer tous les tests (services et intégration) il faut exécuter la commande `npm run test`dans le dossier *API*. Pour lancer uniquement les tests d'intégration, utilisez la commande `npm run test-integration`et pour lancer uniquement les tests des services utilisez la commande `npm run test-services`.
 
-Pour lancer les tests il faut exécuté la commande `npm test`dans le dossier *API*
+
 
 ## Déploiement
-Toutes les informations concerant le deployment sont accéssible dans le [README.md](./Deployment/README.md) dans le dossier [/Deployment](./Deployment).
+Toutes les informations concernant le déploiement sont accessibles dans le fichier [README.md](./Deployment/README.md) du dossier [/Deployment](./Deployment).
 
 ## Utilisation
-L'application est accessible à l'adresse: https://foodlocal.ch.
-L'application est séparée en plusieurs onglets.
+L'application est accessible en ligne à l'adresse: https://foodlocal.ch/. L'API est accessible à l'adresse https://api.foodlocal.ch/.
+
+L'application est séparée en plusieurs onglets :
 
 ### L'acceuil
-L'acceuil permet de voir les informations concernant le projet, en descendant dans la page, on trouvera la liste des producteurs ce situant autour de soit.
+L'acceuil permet de voir des informations d'ordre générales concernant le projet. En descendant dans la page, on trouvera la liste des producteurs par ordre de proximité (du plus proche au plus éloigné par rapport à notre position si on a accepté que le navigateur la relève, par rapport à Lausanne sinon).
 ### La carte
 La carte permet de voir ou se situent les producteurs autour de nous. Il y a la possibilité de les filtrer et de gérer la distance maximum de recherche.
 
