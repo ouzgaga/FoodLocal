@@ -523,7 +523,6 @@ mutation($producerId: ID!, $productId: ID!) {
         const result = await graphql(schema, mutation, null, context, variables);
 
         expect(result.data.deleteProduct).to.be.not.null;
-        snapshot(result);
       });
 
       it('should fail deleting a product by id because invalid id received (too short)', async() => {

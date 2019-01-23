@@ -26,6 +26,11 @@ const postsSchema = new mongoose.Schema(
     address: {
       type: addressSchema,
       required: false
+    },
+    deleted: {
+      type: mongoose.Schema.Types.Boolean,
+      required: true,
+      default: false
     }
   }, options
 );

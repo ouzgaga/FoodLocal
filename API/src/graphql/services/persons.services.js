@@ -135,9 +135,9 @@ function addProducerToPersonsFollowingList(personId, producerId) {
 }
 
 /**
- *
- * @param personId
- * @param producerId
+ * Supprime le producteur correspondant à 'producerId' de la liste des personnes suivies par la personne 'personId'.
+ * @param personId, l'id de la personne à qui on souhaite supprimer un producteur dans la liste des personnes suivies.
+ * @param producerId, l'id du producteur que la personne ne veut désormais plus suivre.
  * @returns {Query}
  */
 function removeProducerToPersonsFollowingList(personId, producerId) {
@@ -148,6 +148,12 @@ function removeProducerToPersonsFollowingList(personId, producerId) {
   return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
+/**
+ * Retourne true si la personne corresopndante à 'personId' suit le producteur 'producerId', false sinon.
+ * @param personId, l'id de la personne dont on souhaite savoir si elle suite le producteur.
+ * @param producerId, l'id du producteur que l'on souhaite rechercher parmi les producteurs suivis par la personne.
+ * @returns true si 'personId' suit 'producerId', false sinon
+ */
 async function checkIfPersonFollowProducer(personId, producerId) {
   if (personId === producerId) {
     return false;
@@ -157,6 +163,14 @@ async function checkIfPersonFollowProducer(personId, producerId) {
   return res != null;
 }
 
+/**
+ * Permet de changer le mot de passe de la personne correspondant à 'personId' si le oldPassword correspond au mot de passe enregistré dans la base de
+ * données et si le newPassword est un mot de passe valide.
+ * @param newPassword, le nouveau mot de passe à attribuer à la personne.
+ * @param oldPassword, l'ancien mot de passe de la personne.
+ * @param personId, l'id de la personne dont on souhaite modifier le mot de passe.
+ * @returns true si le mot de passe a été changé avec succès. Lève une erreur dans le cas contraire (dépendante du problème rencontré)
+ */
 async function changePassword(newPassword, oldPassword, personId) {
   let person;
   try {
@@ -188,6 +202,12 @@ async function changePassword(newPassword, oldPassword, personId) {
   return updatedPerson != null;
 }
 
+/**
+ * Permet de réinitialiser le mot de passe de la personne correspondant à l'email reçu en paramètre. Le nouveau mot de passe est généré automatiquement et
+ * envoyé par email à l'adresse email reçue.
+ * @param email, l'email de la personne dont on souhaite réinitialiser le mot de passe.
+ * @returns true si le mot de passe a bien été réinitialisé. Lève une erreur dans le cas contraire.
+ */
 async function resetPassword(email) {
   const person = await PersonsModel.findOne({ email });
 
@@ -201,9 +221,17 @@ async function resetPassword(email) {
     // les mails ne sont réellement envoyés que si l'API tourne en production
     mail.sendMailResetPassword(email, updatedPerson.firstname, updatedPerson.lastname, password);
   }
-  return false;
+  return true;
 }
 
+/**
+ * Vérifie la validité du mot de passe reçu en paramètre. Pour être valide, un mot de passe doit:
+ *          - avoir une longueur d'au moins 6 caractères et au plus 30
+ *          - contenir au moins une lettre
+ *          - contenir au moins un chiffre
+ * @param password, le password dont on souhaite vérifier la validité
+ * @returns true si le mot de passe est valide. Lève une erreur dans le cas contraire.
+ */
 function checkIfPasswordIsValid(password) {
   if (password.length < 6) {
     throw new Error('New password must be at least 6 characters long.');
@@ -221,6 +249,12 @@ function checkIfPasswordIsValid(password) {
   return true;
 }
 
+/**
+ * Transforme un utilisateur ('users') en un producteur ('producers').
+ * @param idUserToUpgrade, l'id de l'utilisateur que l'on souhaite transformer en producteur.
+ * @param password, le mot de passe de l'utilisateur que l'on souhaite transformer en producteur.
+ * @returns {producer, newLoginToken}, un objet contenant le nouveau producteur ainsi que le nouveau login de connexion de ce producteur.
+ */
 async function upgradeUserToProducer(idUserToUpgrade, password) {
   const user = await usersServices.getUserById(idUserToUpgrade);
 
@@ -241,6 +275,11 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
   return { producer, newLoginToken: token };
 }
 
+/**
+ * Valide l'email contenu dans le token de validation d'email reçu. Lève une erreur si le token est invalide ou périmé.
+ * @param emailValidationToken, un token de validation d'email.
+ * @returns un token de connexion valide.
+ */
 async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
@@ -248,6 +287,12 @@ async function validateEmailUserByToken(emailValidationToken) {
   return connectionTokenServices.createConnectionToken(updatedPerson.id, updatedPerson.email, updatedPerson.isAdmin, updatedPerson.kind, updatedPerson.emailValidated);
 }
 
+/**
+ * Supprime le compte de la personne correspondante à l'id 'personId'.
+ * @param personId, l'id de la personne dont on souhaite supprimer le compte.
+ * @param kind, le type de la personne ('producers' ou 'users').
+ * @returns {*}
+ */
 function deletePersonAccount(personId, kind) {
   if (kind === 'producers') {
     return producersServices.deleteProducer(personId);
