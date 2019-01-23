@@ -8,16 +8,31 @@ module.exports = {
 const PostsModel = require('../models/posts.modelgql');
 const notificationsServices = require('./notifications.services');
 
+/**
+ * Retourne tous les posts du producteur correspondant à l'id reçu.
+ * @param producerId, l'id du producteur dont on souhaite récupérer tous les posts.
+ * @returns un tableau contenant tous les posts du producteur correspondant à l'id reçu.
+ */
 function getAllPostsOfProducer(producerId) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
-  return PostsModel.find({ producerId })
+  return PostsModel.find({ producerId, deleted: false })
     .sort({ publicationDate: -1 });
 }
 
+/**
+ * Retourne le nombre total de posts d'un producteur enregistrés dans la base de données.
+ * @param producerId, l'id du producteur dont on souhaite connaitre le nombre total de posts.
+ * @returns le nombre total de posts d'un producteur enregistrés dans la base de données
+ */
 function countNbPostsOfProducerInDB(producerId) {
-  return PostsModel.countDocuments({ producerId });
+  return PostsModel.countDocuments({ producerId, deleted: false });
 }
 
+/**
+ * Ajoute un nouveau post à la base de données et l'attribue au producteur correspondant à l'id 'producerId'.
+ * @param post, les informations du post que l'on souhaite créer.
+ * @returns le nouveau post.
+ */
 async function addPostOfProducer(post) {
   const postToAdd = {
     ...post,
@@ -49,7 +64,13 @@ async function addPostOfProducer(post) {
   return newPost;
 }
 
+/**
+ * "Supprime" le post correspondant à l'id reçu. En réalité, on ne supprime pas le post mais on fait passer le booléen 'deleted' à true. Les posts avec
+ * 'deleted' à true ne sont ensuite plus passés aux clients.
+ * @param id, l'id du post à "supprimer".
+ * @returns les informations du post supprimé.
+ */
 function deletePostOfProducer(id) {
-  // FIXME: il faut supprimer les notifications ou les rediriger sur un message type "ce post a été supprimé par son auteur"!
-  return PostsModel.findByIdAndRemove(id);
+  // FIXME: il faudrait supprimer les notifications ou les rediriger sur un message type "ce post a été supprimé par son auteur"!
+  return PostsModel.findByIdAndUpdate(id, { deleted: true });
 }

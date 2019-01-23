@@ -275,6 +275,11 @@ async function upgradeUserToProducer(idUserToUpgrade, password) {
   return { producer, newLoginToken: token };
 }
 
+/**
+ * Valide l'email contenu dans le token de validation d'email reçu. Lève une erreur si le token est invalide ou périmé.
+ * @param emailValidationToken, un token de validation d'email.
+ * @returns un token de connexion valide.
+ */
 async function validateEmailUserByToken(emailValidationToken) {
   const person = await tokenValidationEmailServices.validateToken(emailValidationToken);
 
@@ -282,6 +287,12 @@ async function validateEmailUserByToken(emailValidationToken) {
   return connectionTokenServices.createConnectionToken(updatedPerson.id, updatedPerson.email, updatedPerson.isAdmin, updatedPerson.kind, updatedPerson.emailValidated);
 }
 
+/**
+ * Supprime le compte de la personne correspondante à l'id 'personId'.
+ * @param personId, l'id de la personne dont on souhaite supprimer le compte.
+ * @param kind, le type de la personne ('producers' ou 'users').
+ * @returns {*}
+ */
 function deletePersonAccount(personId, kind) {
   if (kind === 'producers') {
     return producersServices.deleteProducer(personId);
