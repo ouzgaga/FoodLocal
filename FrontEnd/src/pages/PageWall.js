@@ -8,6 +8,7 @@ import ErrorLoading from '../components/ErrorLoading';
 import NewPost from '../components/mur/NewPost';
 import MurNotifications from '../components/mur/MurNotifications';
 import { AuthContext } from '../components/providers/AuthProvider';
+import { Mutation } from "react-apollo";
 
 const styles = ({
   root: {
@@ -46,11 +47,29 @@ query($personId: ID!, $after: String) {
             image
             salespoint {
               name
+              address {
+                number
+                street
+                city
+                postalCode
+                state
+                country
+                longitude
+                latitude
+              }
             }
           }
         }
       }
     }
+  }
+}
+`;
+
+const POST_A_NEW_POST = gql`
+  mutation($post : PostInputAdd!) {
+  addPostOfProducer(post: $post) {
+    id
   }
 }
 `;
@@ -63,9 +82,15 @@ class PageWall extends Component {
       <div className={classes.root}>
 
         <AuthContext>
-          {({ userId }) => (
+          {({ userId, userStatus }) => (
             <>
-              <NewPost maxLenght={160} />
+              {userStatus === 'producers' && (
+              <Mutation mutation={POST_A_NEW_POST}>
+                {addPostOfProducer => (
+                  <NewPost maxLenght={160} addPostOfProducer={addPostOfProducer} userId={userId} />
+                )}
+              </Mutation>
+              )}
 
               <Query
                 query={GET_POSTS}
@@ -76,7 +101,6 @@ class PageWall extends Component {
                 }) => {
                   if (error) return <ErrorLoading />;
                   if (loading) return <Loading />;
-console.log("lol", userId);
                   const { notificationsOfPerson } = data;
                   return (
                     <MurNotifications
@@ -106,6 +130,7 @@ console.log("lol", userId);
                   );
                 }}
               </Query>
+              
             </>
           )}
         </AuthContext>

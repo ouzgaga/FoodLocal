@@ -75,15 +75,15 @@ class NewPost extends React.Component {
 
   handleClickPost = (event) => {
     const post = event.target.value;
-    if(this.state.showMap) {
+    if (this.state.showMap) {
       //NRécupérere l'adresse de la map
     }
     // TODO: insertGraphql
   }
 
   render() {
-    const { classes, maxLenght } = this.props;   
-    const { showMap, charCount, body} = this.state;
+    const { classes, maxLenght, addPostOfProducer, userId } = this.props;
+    const { showMap, charCount, body } = this.state;
     return (
       <Paper className={classes.root}>
         <FormControl
@@ -101,11 +101,14 @@ class NewPost extends React.Component {
             onChange={this.handleChangeText}
           />
           <div>
-            { showMap ? <ResearchMap /> : <div />}
+            {showMap ? <ResearchMap /> : <div />}
             <Button variant="contained" className={classes.button} onClick={this.handleClickAddMap}>
-              { showMap ? 'Retirer la carte' : 'Ajouter une carte'}
+              {showMap ? 'Retirer la carte' : 'Ajouter une carte'}
             </Button>
-            <Button variant="contained" className={classes.button} onClick={this.handleClickPost}>
+            <Button variant="contained" className={classes.button} onClick={e => {
+              e.preventDefault();
+              addPostOfProducer({ variables: { post: { producerId: userId, text: body } } });
+            }}>
               Publier
             </Button>
           </div>

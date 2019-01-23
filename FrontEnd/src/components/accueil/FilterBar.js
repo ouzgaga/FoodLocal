@@ -11,7 +11,7 @@ class FilterBar extends Component {
     const { classes } = this.props;
   
     return (
-     <div>dd</div>
+     <div>Filtres  TODO</div>
     );
   }
 }

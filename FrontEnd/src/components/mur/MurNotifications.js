@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, LinearProgress } from '@material-ui/core';
+import { Typography, LinearProgress, Card, CardActionArea } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loading from '../Loading';
+import ProducerPost from '../producer/ProducerPost';
 
 const styles = ({
 
@@ -20,21 +21,45 @@ function MurNotifications(props) {
   return (
     <>
       <Typography className={classes.title} variant="h6" color="primary" gutterBottom>Actualités</Typography>
-{console.log(posts)}
       <InfiniteScroll
         pageStart={0}
         loadMore={() => onLoadMore()}
         hasMore={entries.pageInfo.hasNextPage}
-        loader={<LinearProgress />}
       >
         {posts.map(({ node }) => (
-          <Typography>{node.id}</Typography>
+          <>
+
+            <Card>
+              <CardActionArea href={`/producer/${node.notification.producer.id}`} target="_blank">
+                {node.notification.type === 'NEW_POST' && (
+                  <ProducerPost
+                    name={node.notification.producer.salespoint.name}
+                    date={node.notification.date}
+                    image={node.notification.producer.image}
+                    post="Le producteur a posté un nouveau post"
+                  />
+                )}
+
+                {node.notification.type === 'PRODUCER_UPDATE_INFO' && (
+                  <Typography>Le producteur a mis à jour ses informations</Typography>
+                )}
+
+                {node.notification.type === 'PRODUCER_UPDATE_PRODUCTS_LIST' && (
+                  <Typography>Le producteur a mis à jour la liste de ses produits</Typography>
+                )}
+
+                {node.notification.type === 'PRODUCER_UPDATE_SALESPOINT_INFO' && (
+                  <Typography>Le producteur a mis à jour les informations de son point de vente</Typography>
+                )}
+              </CardActionArea>
+            </Card>
+          </>
         ))
         }
 
       </InfiniteScroll>
 
-      {loading && <div>Chargement...</div>}
+      {loading && <LinearProgress />}
 
     </>
   );

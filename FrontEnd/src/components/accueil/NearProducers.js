@@ -7,7 +7,9 @@ import ProducerItem from './ProducerItem';
 import Loading from '../Loading';
 
 const styles = ({
-
+  title: {
+    marginLeft:'2%',
+  }
 });
 
 
@@ -18,7 +20,7 @@ function NearProducers(props) {
 
   if (!entries && loading) return <Loading />;
   const producers = entries.edges || [];
-  
+
   return (
     <>
       <Typography className={classes.title} variant="h6" color="primary" gutterBottom>Producteurs à proximité</Typography>
@@ -46,7 +48,7 @@ function NearProducers(props) {
 NearProducers.propTypes = {
   classes: PropTypes.shape().isRequired,
   userLocation: PropTypes.shape().isRequired,
-  loading: PropTypes.shape().isRequired,
+  loading: PropTypes.bool.isRequired,
   onLoadMore: PropTypes.func.isRequired,
 };
 
