@@ -3,7 +3,7 @@ type Query {
 	ratingsAboutProducer(producerId: ID!): PersonRatingProducerConnectionProducer! @connection
 
 	# Retourne le rating concernant le producteur correspondant à l'id 'producerId' fait par la personne (user ou producer) correspondant à l'id 'personId'
-	ratingAboutProducerMadeByPerson(personId: ID!, producerId: ID!): PersonRatingProducer!
+	ratingAboutProducerMadeByPerson(personId: ID!, producerId: ID!): PersonRatingProducer
 
 	# Retourne tous les ratings fait par la personne correspondant à l'id 'personId'
 	ratingsMadeByPerson(personId: ID!): PersonRatingProducerConnectionPerson! @connection
