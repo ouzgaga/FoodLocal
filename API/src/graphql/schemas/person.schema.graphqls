@@ -4,6 +4,9 @@ type Query {
 
 	# Retourne la personne correspondant au token reçu.
 	me(token: String!): Person
+
+	# Retourne true si la personne 'personId' suit le producteur 'producerId', false sinon.
+	checkIfPersonFollowProducer(producerId: ID!): Boolean!
 }
 
 type Mutation {

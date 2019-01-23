@@ -8,6 +8,7 @@ module.exports = {
   countNbPersonsInDB,
   addProducerToPersonsFollowingList,
   removeProducerToPersonsFollowingList,
+  checkIfPersonFollowProducer,
   changePassword,
   resetPassword,
   checkIfPasswordIsValid,
@@ -145,6 +146,15 @@ function removeProducerToPersonsFollowingList(personId, producerId) {
   }
 
   return PersonsModel.findByIdAndUpdate(personId, { $pull: { followingProducersIds: producerId } }, { new: true, runValidators: true }); // retourne l'objet modifié
+}
+
+async function checkIfPersonFollowProducer(personId, producerId) {
+  if (personId === producerId) {
+    return false;
+  }
+
+  const res = await PersonsModel.findOne({ _id: personId, followingProducersIds: producerId });
+  return res != null;
 }
 
 async function changePassword(newPassword, oldPassword, personId) {
