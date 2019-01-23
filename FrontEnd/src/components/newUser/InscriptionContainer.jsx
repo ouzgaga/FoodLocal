@@ -340,7 +340,7 @@ class InscriptionContainer extends React.Component {
             </form>
           </div>
         </main>
-      </React.Fragment >
+      </React.Fragment>
     );
   }
 }

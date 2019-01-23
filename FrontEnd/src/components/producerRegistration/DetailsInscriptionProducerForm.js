@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -58,65 +59,71 @@ class DetailsInscriptionProducerForm extends Component {
     handleChangeProperty(fieldNameToChange, event.target.checked);
   };
 
+  handleSubmit = prop => (event) => {
+    event.preventDefault();
+    prop();
+  };
+
   render() {
     const { classes } = this.props;
+
 
     return (
       <IncriptionProducerContext>
         {({
           values, nextStep, handleChangeProperty
         }) => (
+          <form id="form-detail-producer-form" onSubmit={this.handleSubmit(nextStep)}>
             <div className={classes.root}>
-
               <Grid container spacing={24}>
                 <Grid item xs={12}>
-                  <InputForm
-                    handleChangeProperty={handleChangeProperty}
-                    inputTitle="Nom du point de vente"
-                    fieldNameToChange="name"
-                    placeholder=""
-                    value={values.name}
-                    multiline={false}
-                  />
+                    <FormControl margin="normal" required fullWidth>
+                      <InputForm
+                        required
+                        type="text"
+                        handleChangeProperty={handleChangeProperty}
+                        inputTitle="Nom du point de vente"
+                        fieldNameToChange="name"
+                        placeholder=""
+                        value={values.name}
+                        multiline={false}
+                      />
+                    </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
                   <InputForm
+                    
+                    type="text"
                     handleChangeProperty={handleChangeProperty}
                     inputTitle="Description (facultatif)"
                     fieldNameToChange="description"
                     placeholder="Entrez une description de votre point de vente"
                     value={values.description}
-                    defaultValue={values.description}
                     multiline
                   />
                 </Grid>
 
-                <Grid item xs={12}>
-                  <InputForm
-                    handleChangeProperty={handleChangeProperty}
-                    inputTitle="Site Web (facultatif)"
-                    fieldNameToChange="website"
-                    placeholder=""
-                    value={values.website}
-                    multiline={false}
-                  />
-                </Grid>
-
                 <Grid item sm={5} xs={12} align="space-between">
-                  <InputForm
-                    handleChangeProperty={handleChangeProperty}
-                    inputTitle="Numéro de téléphone"
-                    fieldNameToChange="phoneNumber"
-                    placeholder=""
-                    value={values.phoneNumber}
-                    multiline={false}
-                  />
+                  <FormControl margin="normal" required>
+                    <InputForm
+                      
+                      handleChangeProperty={handleChangeProperty}
+                      type="text"
+                      inputTitle="Numéro de téléphone"
+                      fieldNameToChange="phoneNumber"
+                      placeholder=""
+                      value={values.phoneNumber}
+                      multiline={false}
+                    />
+                  </FormControl>
                 </Grid>
 
                 <Grid item sm={7} xs={12} align="space-between">
                   <InputForm
+                    
                     handleChangeProperty={handleChangeProperty}
+                    type="text"
                     inputTitle="Site Web (facultatif)"
                     fieldNameToChange="website"
                     placeholder="Entrez le lien de votre site Web"
@@ -195,13 +202,19 @@ class DetailsInscriptionProducerForm extends Component {
 
                     <Grid item xs={4}>
                       <div className={classes.paper}>
-                        <Button variant="contained" onClick={(e) => { e.preventDefault(); nextStep(); }} color="primary">SUIVANT</Button>
+                        <Button
+
+                          id="form-detail-producer-button"
+                          type="submit"
+                          variant="contained"
+                          color="primary">SUIVANT</Button>
                       </div>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </div>
+              </div>
+            </form>
           )}
       </IncriptionProducerContext>
     );

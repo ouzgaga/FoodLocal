@@ -13,7 +13,6 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
 import { IncriptionProducerContext } from './InscriptionProducer';
-import Loading from '../Loading';
 import ErrorLoading from '../ErrorLoading';
 
 const query = gql`
@@ -97,7 +96,7 @@ class AvailableProductsForm extends Component {
                 <Query query={query}>
                   {({ data, loading, error }) => {
                     if (error) return <ErrorLoading />;
-                    if (loading) return <Loading />;
+                    if (loading) return <p>Chargement...</p>;
                     const { productTypeCategories } = data;
 
                     return (
@@ -134,7 +133,7 @@ class AvailableProductsForm extends Component {
                   <Query query={query2} variables={{ productTypeCategoryId: value }}>
                     {({ data, loading, error }) => {
                       if (error) return <ErrorLoading />;
-                      if (loading) return <Loading />;
+                      if (loading) return <p>Chargement...</p>;
                       const { productTypesOfCategory } = data;
                       return (
                         productTypesOfCategory.edges.map(({ node }) => (
