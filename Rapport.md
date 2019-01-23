@@ -29,6 +29,23 @@ Nous avons souhaité utiliser React car c'est une technologie qui prend une plac
 
 Pour l'affichage de la carte, nous avons utilisé Leaflet car elle est disponible gratuitement et est open-source. De plus, elle s'intègre très bien avec React et nous étions secondés par un asistant expert en la matière qui nous l'a chaudement recommandé.
 
+Au niveau de la structure de notre code, nous avons réalisé la structure suivante:
+
+- Le fichiers du dossier *accouontCRUD* gèrent la modification d'un profil utilisateur.
+- Les fichiers du dossier *accueil* gèrent la page d'accueil.
+- Les fichiers du dossier *admin* gèrent l'interface administrateur.
+- Les fichiers du dossier *items* sont des composants utilisés un peu partout dans l'application.
+- Les fichiers du dossier *mapPageProducer* gèrent la page affichant la carte.
+- Les fichiers du dossier *menu* gèrent le menu affiché.
+- Les fichiers du dossier *mur* gèrent le mur de notification des utilisateurs.
+- Les fichiers du dossier *newUser* gèrent la création de nouveaux utilisateurs ou producteurs.
+- Les fichiers du dossier *producers* gèrent l'affichage de la page des informations détaillées d'un producteur.
+- Les fichiers du dossier *producerRegistration* permettent l'ajout d'un point de vente ainsi que de produits au producteur.
+- Le dossier *providers* contient les providers utilisés dans l'application.
+- Les fichiers du dossier *pages* contient les différentes pages de l'application.
+- Le fichier *app.js* gère le routing.
+- Le fichier *index.js* contient toute l'arborescence des providers.
+
 ### Choix technologiques pour l'infrastructure :
 Nous avons hébergé notre application sur Gitlab car, contrairement à certains de ses concurrents, il permet d'utiliser les fonctionnalités de Continuous Integration (CI) ce qui nous a permis de créer des pipelines de production automatisés qui se sont révélés extrêmement pratiques.
 En effet, cela nous a permis de mettre en place des tests de qualités ainsi qu'un pipeline de mise en production automatisée basée sur des commits effectués sur des branches spécifiques.
@@ -150,6 +167,10 @@ Pour terminer, nous implémenterions directement une base de données configuré
 Là encore, notre manque de connaissance nous a considérablement ralenti. Nous avons passé un temps non négligeable à apprendre le fonctionnement de React. Nous nous sommes lancés dans la conceptions sans vraiment maîtriser l'outil et avons plusieurs fois réalisé durant les cours de TWEB que nous n'avions pas fait les choses très proprement. Cela nous a souvent obligé de reprendre des choses terminées afin de les réaliser plus proprement et plus efficacement.
 
 Le frontend récupère par défaut les données sur l'API qui est en production. Ce choix est dû à des problèmes matériels du côté d'un de nos développeur. Pour changer l'adresse sur laquelle récupérer les données, il faut modifier l'adresse dans le fichier [index.js](./FrontEnd/src/index.js)...
+
+Nous n'avons pas totalement réussi à implémenter les notifications. En effet, lorsqu'un utilisateur se connecte, il reçoit bien les notifications reçues lors de son absence. En revanche, les notifications en direct ne fonctionnent pas tout à fait. En effet, elle ne sont pas reçues par l'utilisateur connecté malgré son inscription sur la subscription GraphQL. Nous pensons que cela est dû à la connexion sur le serveur webSocket mais n'avons pas eu le temps de résoudre le problème.
+
+Dû à la complexité et au manque de temps, nous n'avons pas pu implémenter les modifications des produits d'un producteur. Les fonctions sont disponibles au niveau de l'API mais n'ont pas pu être implémentées à temps du côté du frontend... Cependant, il est tout de même possible d'ajouter des produits. Il est également possible de faire un CRUD complet sur les points de vente.
 
 ### Infrastructure
 La grande difficulté de la mise en production sur Google Cloud fut l'apprentissage des différents outils proposés, notemment Kubernetes. L'apprentissage pour la mise en production de service et de deployment fut assez rapide mais la gestion des certificats pour l'HTTPS fut la première grosse étape compliquée. 
