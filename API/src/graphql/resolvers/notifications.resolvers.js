@@ -47,11 +47,11 @@ const notificationsResolvers = {
   PersonNotification: {
     person: (parent, args, context) => personsServices.getPersonById(parent.person),
 
-    notification: (parent, args, context) => notificationsServices.getNotificationById(parent.notification)
+    notification: async(parent, args, context) => notificationsServices.getNotificationById(parent.notificationId)
   },
 
   Notification: {
-    producer: (parent, args, context) => producersServices.getProducerById(parent.producer)
+    producer: (parent, args, context) => producersServices.getProducerById(parent.producerId)
   },
 
   PersonNotificationConnection: {
