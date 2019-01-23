@@ -9,10 +9,7 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MapIcone from '@material-ui/icons/Map';
-import HomeIcone from '@material-ui/icons/Home';
-import DescriptionIcone from '@material-ui/icons/DescriptionRounded';
-import AccountIcone from '@material-ui/icons/AccountBox';
+
 import RegisterIcone from '@material-ui/icons/HowToReg';
 import SettingsIcone from '@material-ui/icons/Settings';
 import BuildIcone from '@material-ui/icons/Build';
@@ -20,7 +17,6 @@ import BadgeMax from '../items/BadgeMax';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import MenuContent from './MenuContent';
 import { AuthContext } from '../providers/AuthProvider';
 
 const styles = {
@@ -58,7 +54,6 @@ class MenuEpantion extends React.Component {
   };
 
   handleClickMenu = prop => (event) => {
-    console.log(prop);
     this.setState({ anchorEl: event.currentTarget });
     return this.props.onClick(prop);
   };

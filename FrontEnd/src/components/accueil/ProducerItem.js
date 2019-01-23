@@ -98,7 +98,7 @@ function ProducerItem(props) {
                     <Grid container direction="row" alignItems="center">
 
                       <Typography variant="body1">
-                        {`Distance : ${(distance / 1000).toFixed(1)} km`}
+                        {distance && (`Distance : ${(distance / 1000).toFixed(1)} km`)}
                       </Typography>
                     </Grid>
                   </Grid>

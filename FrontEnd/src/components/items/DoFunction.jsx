@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 
 class DoFunction extends React.Component {
   componentDidMount() {

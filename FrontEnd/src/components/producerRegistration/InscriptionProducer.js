@@ -3,15 +3,15 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
+import { withApollo, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import DetailsInscriptionProducerForm from './DetailsInscriptionProducerForm';
 import AvailableProductsForm from './AvailableProductsForm';
 import ProductsDescriptionForm from './ProductsDescriptionForm';
 import ConfirmationForm from './ConfirmationForm';
 import FirstStep from './FirstStep';
-import Typography from '@material-ui/core/Typography';
-
-import { withApollo, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import DoFunction from '../items/DoFunction';
 
@@ -166,7 +166,6 @@ class InscriptionProducer extends Component {
     await client.query({ query: queryMe, variables: { userId } })
       .then(
         (data) => {
-          console.info(data.data.producer);
           if (data.data.producer.salespoint) {
             this.setState({
               isNewProd: false,
@@ -197,8 +196,6 @@ class InscriptionProducer extends Component {
               });
             }
             if (data.data.producer.products.edges) {
-              console.info("dudeee", data.data.producer.products.edges);
-              console.info("ArrayInput", this.getItemFromAppoloToArray(data.data.producer.products.edges));
               this.setState({
                 
               });
@@ -213,7 +210,6 @@ class InscriptionProducer extends Component {
         }
       ).catch(
         (error) => {
-          console.log("Erreur", error);
           this.setState({ error: "Erreur, Veuillez essayer plus tard" })
         }
       );
@@ -319,7 +315,6 @@ class InscriptionProducer extends Component {
 
   getItemFromAppoloToArray = (edge) => {
     const ret = [];
-    console.info("edge", edge[0].node.productType.id);
     if (edge.length !== 0) {
       edge.map(node => ret.push({
         description: node.node.description,
@@ -496,7 +491,7 @@ class InscriptionProducer extends Component {
               </Mutation>
             )}
 
-            <ConfirmationForm> {console.info("hoyyy", items, this.getItemArrayObject(items) )} </ConfirmationForm>
+            <ConfirmationForm> </ConfirmationForm>
           </>
         );
     }

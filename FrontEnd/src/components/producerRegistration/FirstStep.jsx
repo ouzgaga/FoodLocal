@@ -1,15 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
 import { IncriptionProducerContext } from './InscriptionProducer';
-import DaySchedule from './DaySchedule';
-import AddressForm from './AddressForm';
-import InputForm from './InputForm';
 
 const styles = theme => ({
   root: {

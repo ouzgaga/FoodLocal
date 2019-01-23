@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Typography, FormControl, Grid, TextField, InputLabel, Select, MenuItem
+  Typography, FormControl, Grid, TextField, Select, MenuItem
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import gql from 'graphql-tag';
