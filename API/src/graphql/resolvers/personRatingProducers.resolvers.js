@@ -1,4 +1,4 @@
-const { isAuthenticatedAsUserAndIsYourself, isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
+const { isAuthenticatedAndIsYourself } = require('./authorization.resolvers');
 const personRatingProducersServices = require('../services/personRatingProducers.services');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
@@ -12,12 +12,12 @@ const personRatingProducersResolvers = {
     ratingsAboutProducer: (parent, args, context) => personRatingProducersServices.getAllRatingsAboutProducerWithId(args.producerId),
 
     ratingAboutProducerMadeByPerson: async(parent, args, context) => {
-      await isAuthenticatedAsUserAndIsYourself(context.id, args.personId, context.kind);
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personRatingProducersServices.getRatingAboutProducerIdMadeByPersonId(args.personId, args.producerId);
     },
 
     ratingsMadeByPerson: async(parent, args, context) => {
-      await isAuthenticatedAsUserAndIsYourself(context.id, args.personId, context.kind);
+      await isAuthenticatedAndIsYourself(context.id, args.personId);
       return personRatingProducersServices.getAllRatingsMadeByPersonWithId(args.personId);
     }
   },
