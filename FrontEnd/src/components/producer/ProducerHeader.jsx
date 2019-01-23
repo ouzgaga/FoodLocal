@@ -38,7 +38,7 @@ const styles = theme => ({
 
 function ProducerHeader(props) {
   const {
-    classes, lastname, firstname, description, image, ratingValue, nbRating
+    classes, name, firstname, lastname, description, image, ratingValue, nbRating
   } = props;
 
   return (
@@ -61,11 +61,11 @@ function ProducerHeader(props) {
 
         </Grid>
 
-        <Grid item xs={10} sm container alignItems="justify">
+        <Grid item xs={10} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
               <Typography variant="h6" wrap="nowrap">
-                {`${lastname} ${firstname}` || 'Pas de noms'}
+                {`${name}` || 'Pas de nom de point de vente'}
               </Typography>
               <Paper elevation={1}>
                 <Typography gutterBottom variant="body1">

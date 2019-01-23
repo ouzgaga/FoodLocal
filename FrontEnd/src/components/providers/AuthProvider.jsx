@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
+import { withApollo, Subscription } from 'react-apollo';
 
 // Pour décoder le token
 let jwtDecode = require('jwt-decode');
@@ -30,6 +30,28 @@ const mutRelog = gql`
   }
   `;
 
+const subNotif = gql`
+subscription {
+  newNotificationReceived {
+    person {
+      firstname
+    }
+  }
+}
+`;
+
+const queryNotif = gql`
+  query{
+    numberOfUnSeenNotificationsOfPerson
+  }
+`;
+
+const mutClearNotifs = gql`
+  mutation{
+    setAllNotificationsAsSeen
+  }
+`;
+
 class AuthProvider extends React.Component {
   constructor(props) {
     super(props);
@@ -42,29 +64,50 @@ class AuthProvider extends React.Component {
       userEmailValidated: false,
       userToken: null,
 
+      notificationsCount: 0,
 
       error: null,
 
       signIn: this.signIn,
       signOut: this.signOut,
-      //renewToken: this.renewToken,
-      resetError: this.setState({error: null}),
+      //fetchNotifTotalCount: this.fetchNotifTotalCount, Test ultim pour les notifs
+      clearNotifs: this.clearNotifs,
+      clearError: this.clearError,
     };
   }
 
+  clearError = () => {
+    this.setState({ error: null });
+  }
 
-  componentWillMount() {
+
+  clearNotifs = () => {
     const token = window.localStorage.getItem('token');
-    console.log(token);
-    if(token) this.addState(token);
     if (token) {
       const { client } = this.props;
-      client.mutate({ mutation: mutRelog })
+      client.mutate({ mutation: mutClearNotifs })
         .then(
-          (data) => { 
-            this.addState(data.data.renewToken.token);
-            window.localStorage.setItem('token', data.data.renewToken.token);
-            //this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
+          (data) => {
+            this.setState({notificationsCount: 0});           
+          }
+        ).catch(
+          (error) => {
+            console.log("Error relog", error);
+          }
+        );
+      }
+  }
+
+  fetchNotifTotalCount = () => {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const { client } = this.props;
+      client.query({ query: queryNotif })
+        .then(
+          (data) => {
+            this.setState({
+              notificationsCount: data.data.numberOfUnSeenNotificationsOfPerson
+            });
           }
         ).catch(
           (error) => {
@@ -75,6 +118,64 @@ class AuthProvider extends React.Component {
     }
   }
 
+  componentWillMount() {
+    const token = window.localStorage.getItem('token');
+    if (token) this.addState(token);
+    if (token) {
+      const { client } = this.props;
+      client.mutate({ mutation: mutRelog })
+        .then(
+          (data) => {
+            this.addState(data.data.renewToken.token);
+            window.localStorage.setItem('token', data.data.renewToken.token);           
+          }
+        ).catch(
+          (error) => {
+            console.log("Error relog", error);
+            this.signOut();
+          }
+        );
+    }
+    this.fetchNotifTotalCount();
+  }
+
+  
+  /*
+    componentDidMount() {
+      const { client } = this.props;
+      const token = window.localStorage.getItem('token');
+      if (token) {
+        client.query({ query: queryNotif})
+          .then(
+            (data) => { 
+              this.setState({
+                notificationsCount: data.data.numberOfUnSeenNotificationsOfPerson
+              })
+            }
+          ).catch(
+            (error) => {
+              console.log("Error relog", error);
+              this.signOut();
+            }
+          );
+  
+        client.subscribe({query: subNotif}).then(
+          (data) => { 
+            this.setState(prevState => ({
+              notificationsCount: ++prevState.notificationsCount
+            }));
+          }
+        ).catch(
+          (error) => {
+            console.log("Error subscribe", error);
+          }
+        );
+        
+        }
+      }
+    }
+  */
+
   // Permet de mettre à jour le token
   renewToken = (token) => {
     window.localStorage.setItem('token', token);
@@ -84,8 +185,8 @@ class AuthProvider extends React.Component {
   // Décode le token et l'insère dans le state
   addState = (token) => {
     const decoded = jwtDecode(token);
-    console.info("token", token);
     this.setState({
+      notificationsCount: 0,
       userId: decoded.id,
       userMail: decoded.email,
       userStatus: decoded.kind,
@@ -96,15 +197,29 @@ class AuthProvider extends React.Component {
       error: null,
     });
   }
+/*
+  subscribe = () => {
+    // call the "subscribe" method on Apollo Client
+    this.subscriptionObserver = this.props.client.subscribe({
+      query: subNotif,
+    }).subscribe({
+      next(data) {
+        this.setState(prevState => ({
+          notificationsCount: ++prevState.notificationsCount
+        }));
+      },
+      error(err) { console.error('err', err); },
+    });
+  }
+*/
 
   signIn = async ({ userMail, password }) => {
     const { client } = this.props;
-
     return client.mutate({ mutation: mutLogin, variables: { email: userMail, password: password } }).then(
       (data) => {
-        console.log(data);
         this.addState(data.data.login.token);
         window.localStorage.setItem('token', data.data.login.token);
+        //this.subscribe();
         return true;
       }
     ).catch((error) => {
@@ -112,12 +227,13 @@ class AuthProvider extends React.Component {
       this.setState({ error: 'Email ou mot de passe faux' });
       return false;
     });
+    this.fetchNotifTotalCount();
   }
 
   signOut = () => {
     localStorage.removeItem('token');
     window.location.reload();
-  }
+  };
 
 
   render() {
@@ -125,7 +241,19 @@ class AuthProvider extends React.Component {
     return (
       <>
         <AuthContextProvider value={this.state}>
+          {/*
+            <Subscription
+              subscription={subNotif}
+              
+            >
+              {({ data: { person }, loading }) => (<> {!loading && this.setState(prevState => ({
+                  notificationsCount: ++prevState.notificationsCount
+              }))}</>)};
+              
+            </Subscription>
+            */}
           {children}
+
         </AuthContextProvider>
       </>
     );

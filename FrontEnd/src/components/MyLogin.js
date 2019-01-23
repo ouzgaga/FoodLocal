@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
@@ -53,6 +51,18 @@ const styles = theme => ({
   },
 });
 
+class Execute extends React.Component {
+
+  componentDidMount() {
+    const { clearError } = this.props;
+    clearError();
+  }
+
+  render() {
+    return null;
+  }
+}
+
 class MyLogin extends React.Component {
 
   constructor(props) {
@@ -65,10 +75,6 @@ class MyLogin extends React.Component {
     };
   }
 
-  componentDidMount(){
-    
-  } 
-
   handleChange = prop => (event) => {
     this.setState({ [prop]: event.target.value });
   }
@@ -78,7 +84,7 @@ class MyLogin extends React.Component {
     const { password } = this.state;
     return (
       <AuthContext>
-        {({ error, signIn }) => {
+        {({ error, signIn, clearError }) => {
           const onSubmit = (event) => {
             event.preventDefault();
             const { userMail, password } = this.state;
@@ -88,13 +94,13 @@ class MyLogin extends React.Component {
               if(data)
                 onClose();
             }).catch((error) => {
-              console.info(error);
             });
           };
 
 
           return (
             <>
+              <Execute clearError={clearError} />
               <CssBaseline />
               <main className={classes.layout}>
                 <Paper className={classes.paper}>
@@ -170,8 +176,6 @@ class MyLogin extends React.Component {
       </AuthContext>
     );
   }
-
-
 }
 
 MyLogin.propTypes = {

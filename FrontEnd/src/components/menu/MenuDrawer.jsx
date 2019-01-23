@@ -21,6 +21,7 @@ import SettingsIcone from '@material-ui/icons/Settings';
 import BuildIcone from '@material-ui/icons/Build';
 
 import { AuthContext } from '../providers/AuthProvider';
+import BadgeMax from '../items/BadgeMax';
 
 // Pour éviter des lags pour les supports ne supportant pas 60fps
 //https://material-ui.com/demos/drawers/
@@ -114,12 +115,12 @@ class MenuDrawer extends React.Component {
       </MenuList>
     );
 
-    const loggedMenu = (userStatus, isAdmin, signOut) => (
+    const loggedMenu = (userStatus, isAdmin, signOut, notificationsCount) => (
       <MenuList>
         <Link to="/myWall" className={classes.LinkButton}>
           <MenuItem button>
             <ListItemIcon>
-              {/* TODO: icone */}
+              <BadgeMax value={notificationsCount} />
             </ListItemIcon>
             <ListItemText primary="Mon mur" />
           </MenuItem>
@@ -191,11 +192,11 @@ class MenuDrawer extends React.Component {
     const personalMenu = (
       
       <AuthContext>
-        {({ userStatus, isAdmin, signOut }) => (
+        {({ userStatus, isAdmin, signOut, notificationsCount }) => (
           userStatus ? (
             <>
             
-              {loggedMenu(userStatus, isAdmin, signOut)}
+              {loggedMenu(userStatus, isAdmin, signOut, notificationsCount)}
             </>
           ) : (
             <>

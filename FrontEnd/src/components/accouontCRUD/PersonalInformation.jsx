@@ -69,7 +69,6 @@ class PersonalInformation extends Component {
     const { classes, userId, status, token } = this.props;
     return (
       <>
-        {console.info(status)}
         <Query
           query={queryMe}
           variables={{ token: token }}
@@ -93,7 +92,6 @@ class PersonalInformation extends Component {
                           firstname: document.getElementById('BorderedTextField-personal-information-name').value,
                           lastname: document.getElementById('BorderedTextField-personal-information-lastName').value
                         };
-                        console.info( "user");
                         updateTodo({
                           variables: { user: user }
                         })
@@ -139,7 +137,6 @@ class PersonalInformation extends Component {
                           {loading && <p>Chargement...</p>}
                           {error && (
                             <>
-                              {console.info(error)}
                               <Typography color="error">
                                 Un probème est survenu, veuillez essayer plus tard.
                               </Typography>
@@ -148,10 +145,7 @@ class PersonalInformation extends Component {
                           {data && <DoneOutline color="secondary" />}
                         </>
                       </BoxLeftRight>
-
-
                     </form>
-
                   )}
                 </Mutation>
               </>

@@ -14,8 +14,10 @@ import RatingItem from '../items/RatingItem';
 
 const styles = theme => ({
   paper: {
-    width: '100%',
+    width: '96%',
     marginBottom: theme.spacing.unit * 3,
+    marginLeft: '2%',
+    marginRight: '2%',
   },
   marginBottom: {
     marginBottom: 20,
@@ -80,7 +82,7 @@ function ProducerItem(props) {
                       <Grid item>
                         <RatingItem
                           readOnly
-                          defaultValue={Math.round(rating ? rating.rating : 0)}
+                          defaultValue={Math.round(rating ? rating.grade : 0)}
                         />
                       </Grid>
                       <Grid item>
@@ -96,7 +98,7 @@ function ProducerItem(props) {
                     <Grid container direction="row" alignItems="center">
 
                       <Typography variant="body1">
-                        {`Distance : ${(distance / 1000).toFixed(1)} km`}
+                        {distance && (`Distance : ${(distance / 1000).toFixed(1)} km`)}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -106,7 +108,7 @@ function ProducerItem(props) {
 
                 <GridList className={classes.gridList}>
                   {producer.products.edges.map(({ node }) => (
-                    <div className={classes.gridItem} key={node.productType.id}>
+                    <div className={classes.gridItem} key={`${producer.id}${node.productType.id}`}>
                       <GridListTile key={node.productType.name} className={classes.gridListTile} style={{ margin: '0 auto' }}>
                         <CardMedia className={classes.media} image={node.productType.image} title={node.productType.name} />
                         <Typography className={classes.typo} gutterBottom>

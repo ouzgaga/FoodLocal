@@ -13,22 +13,22 @@ const styles = ({
 });
 
 
-function NearProducers(props) {
+function MyProducers(props) {
   const {
     classes, userLocation, loading, entries, onLoadMore
   } = props;
 
   if (!entries && loading) return <Loading />;
-  const producers = entries.edges || [];
+  const producers = entries.followingProducers.edges || [];
 
   return (
     <>
-      <Typography className={classes.title} variant="h6" color="primary" gutterBottom>Producteurs à proximité</Typography>
+      <Typography className={classes.title} variant="h6" color="primary" gutterBottom>Mes producteurs</Typography>
 
       <InfiniteScroll
         pageStart={0}
         loadMore={() => onLoadMore()}
-        hasMore={entries.pageInfo.hasNextPage}
+        hasMore={entries.followingProducers.pageInfo.hasNextPage}
         loader={<LinearProgress />}
       >
         {producers.map(({ node }) => (
@@ -45,11 +45,11 @@ function NearProducers(props) {
 }
 
 
-NearProducers.propTypes = {
+MyProducers.propTypes = {
   classes: PropTypes.shape().isRequired,
   userLocation: PropTypes.shape().isRequired,
   loading: PropTypes.bool.isRequired,
   onLoadMore: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(NearProducers);
+export default withStyles(styles)(MyProducers);

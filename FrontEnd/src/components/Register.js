@@ -63,7 +63,6 @@ class MyLogin extends React.Component {
 
 
     handleLogin = () => {
-        console.info("OK men")
         UserContext.Provider.name = "UserIsLog"
     }
 
@@ -75,10 +74,6 @@ class MyLogin extends React.Component {
     render() {
 
         //this.setState(this.state.a + 1);
-
-
-
-        console.log('MyLogin:' + this.state.a);
 
         const { classes, onClose, ...other } = this.props;
         return (

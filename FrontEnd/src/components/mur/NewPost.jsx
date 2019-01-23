@@ -4,9 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-
-import ResearchMap from './ResearchMap';
 import BorderedCountField from '../items/fields/BorderedCountField';
+import SimpleInfoDialog from '../items/SimpleInfoDialog';
 
 
 const styles = theme => ({
@@ -14,6 +13,7 @@ const styles = theme => ({
     flexGrow: 1,
     display: 'flex',
     maxWidth: 1200,
+    minWidth:600,
     padding: theme.spacing.unit * 2,
     textAlign: 'justify',
   },
@@ -57,6 +57,7 @@ class NewPost extends React.Component {
       showMap: false,
       charCount: 0,
       body: '',
+      open: false,
     };
   }
 
@@ -73,17 +74,22 @@ class NewPost extends React.Component {
     });
   }
 
-  handleClickPost = (event) => {
-    const post = event.target.value;
-    if(this.state.showMap) {
-      //NRécupérere l'adresse de la map
-    }
-    // TODO: insertGraphql
+  handleNewPost = () => {
+    this.setState({
+      body: '',
+      open: true,
+    });
+  }
+
+  handleClose = () => {
+    this.setState({
+      open:false,
+    });
   }
 
   render() {
-    const { classes, maxLenght } = this.props;   
-    const { showMap, charCount, body} = this.state;
+    const { classes, maxLenght, addPostOfProducer, userId } = this.props;
+    const { body, open } = this.state;
     return (
       <Paper className={classes.root}>
         <FormControl
@@ -96,18 +102,23 @@ class NewPost extends React.Component {
           <BorderedCountField
             header="Publier un nouveau post."
             id="new-post-input"
-            maxLenght={1024}
+            maxLenght={maxLenght}
             fullWidth
             onChange={this.handleChangeText}
           />
           <div>
-            { showMap ? <ResearchMap /> : <div />}
-            <Button variant="contained" className={classes.button} onClick={this.handleClickAddMap}>
-              { showMap ? 'Retirer la carte' : 'Ajouter une carte'}
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={(e) => {
+                e.preventDefault();
+                addPostOfProducer({ variables: { post: { producerId: userId, text: body } } });
+                this.handleNewPost();
+              }}
+            >
+              {'Publier'}
             </Button>
-            <Button variant="contained" className={classes.button} onClick={this.handleClickPost}>
-              Post
-            </Button>
+            <SimpleInfoDialog open={open} handleClose={this.handleClose} title="Nouveau post" text="Votre post a bien été posté" />
           </div>
         </FormControl>
       </Paper>

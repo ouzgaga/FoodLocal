@@ -10,14 +10,10 @@ const styles = {
   },
 };
 
+// Permet d'afficher une erreur à l'utilisateur si les données n'ont pas été fetchées correctement
 class ErrorLoading extends Component {
-  constructor(props) {
-    super(props);
-    document.title = 'Error 404';
-  }
-
   render() {
-    const { classes, location } = this.props;
+    const { classes } = this.props;
     return (
       <CenteredPaper className={classes.paper}>
         <Typography align="center" variant="h3" color="secondary">Erreur de chargement des données</Typography>

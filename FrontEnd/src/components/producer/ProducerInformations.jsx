@@ -7,11 +7,11 @@ import MapLocator from './MapLocator';
 import AddressInfo from './AddressInfo';
 
 function ProducerInformations(props) {
-  const { classes, data } = props;
+  const { data } = props;
   const {
-    email, website, phoneNumber, salespoint
+    email, phoneNumber, salespoint
   } = data.producer;
-  const { name, address, schedule } = salespoint;
+  const { address, schedule } = salespoint;
   const {
     monday, tuesday, wednesday, thursday, friday, saturday, sunday
   } = schedule;
@@ -44,13 +44,23 @@ function ProducerInformations(props) {
           <Typography color="primary">
             {'Horaires'}
           </Typography>
-          <DayScheduleInfo dayName="Lundi" data={monday} />
-          <DayScheduleInfo dayName="Mardi" data={tuesday} />
-          <DayScheduleInfo dayName="Mercredi" data={wednesday} />
-          <DayScheduleInfo dayName="Jeudi" data={thursday} />
-          <DayScheduleInfo dayName="Vendredi" data={friday} />
-          <DayScheduleInfo dayName="Samedi" data={saturday} />
-          <DayScheduleInfo dayName="Dimanche" data={sunday} />
+          {schedule
+            ? (
+              <>
+                <DayScheduleInfo dayName="Lundi" data={monday} />
+                <DayScheduleInfo dayName="Mardi" data={tuesday} />
+                <DayScheduleInfo dayName="Mercredi" data={wednesday} />
+                <DayScheduleInfo dayName="Jeudi" data={thursday} />
+                <DayScheduleInfo dayName="Vendredi" data={friday} />
+                <DayScheduleInfo dayName="Samedi" data={saturday} />
+                <DayScheduleInfo dayName="Dimanche" data={sunday} />
+              </>
+            )
+            : (
+              <Typography>
+                {'Pas d\'horaire spécifié'}
+              </Typography>
+            )}
 
         </Grid>
       </Grid>

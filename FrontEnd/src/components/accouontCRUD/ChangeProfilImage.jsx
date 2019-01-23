@@ -1,34 +1,31 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-
-import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import DoneOutline from '@material-ui/icons/DoneOutline';
+import Grid from '@material-ui/core/Grid';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Mutation, Query } from 'react-apollo';
 
-import BorderedCountField from '../items/fields/BorderedCountField';
 import BoxLeftRight from './BoxLeftRight';
+import DropZone from '../items/DropZone';
+import SimpleImageDialog from '../items/SimpleImageDialog';
 
-// récupère les informations personnels de l'utilisateur
 const queryMe = gql`
   query($token: String!) {
     me(token: $token) {
-      ... on Producer {
-        description
-      }
+      image
     }
   }
   `;
 
 // mutation permettant la mise à jour de la description de l'utilisateur (nom, prénom sont des champs obligatoirs)
 const mutUpdateProd = gql`
-  mutation ($user: ProducerInputUpdate!){
+  mutation($user: ProducerInputUpdate!){
     updateProducer(producer: $user){
-      id,
-      description
+      image
     }
   }
   `;
@@ -36,7 +33,7 @@ const mutUpdateProd = gql`
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    width:'100%',
+    width: '100%',
     height: '100%',
     padding: theme.spacing.unit * 2,
     textAlign: 'justify',
@@ -49,53 +46,78 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
+  image: {
+    maxWidth: 256,
+    maxHeight: 256,
+  },
 });
 
 /**
  * Permet aux producteurs de mettre à jour leur description
  */
-class PersonalDescription extends Component {
+class ChangeProfilImage extends Component {
+
+  constructor(props) {
+    super(props);
+     this.state = {
+        image: null,
+        myImage: null,
+     };
+  }
+
+  updateImage = (img) => {
+    this.setState({image: img});
+  }
 
   render() {
     const { classes, userId, token } = this.props;
-
+    const { image } = this.state;
     return (
       <>
         <Query
           query={queryMe}
           variables={{ token: token }}
         >
-          {({ loading, error, data }) => {
+          {({ loading, error, data, refetch }) => {
             if (loading) return <p>Chargement...</p>;
-            if (error) return <p>Error :(</p>;
+            if (error) return <p><Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography></p>;
             // Le retour d'une mutation s'appelle aussi data
-            const datas = data;
+            let datas = data;
             return (
               <>
                 <Mutation
                   mutation={mutUpdateProd}
+                  onCompleted={() => refetch()}
                 >
                   {(updateTodo, { data, loading, error }) => (
                     <form
-                      id="form-description"
+                      id="form-profile-image"
                       onSubmit={(e) => {
                         e.preventDefault();
                         const user = {
                           id: userId,
-                          description: document.getElementById('BorderedTextField-personal-description').value,
+                          image: this.state.image,
                         };
+                       
                         updateTodo({
                           variables: { user: user }
                         });
+                        refetch();
                       }}
                     >
-                      <BorderedCountField
-                        id="personal-description"
-                        maxLenght={1024}
-                        fullWidth
-                        defaultValue={!datas.me.description ? '' : datas.me.description}
-                        onChange={e => (e)}
-                      />
+                      <Grid container spacing={16}>
+                        <Grid item xs={4} container alignItems="center" className={classes.leftBox}>
+                          <ButtonBase className={classes.image}>
+                            <SimpleImageDialog
+                              className={classes.image}
+                              image={datas.me.image}
+                            />
+                          </ButtonBase>
+                        </Grid>
+                        <Grid item xs={4} container alignItems="center" className={classes.rightBox}>
+                          <DropZone onChange={this.updateImage} />
+                        </Grid>
+                      </Grid>
                       <BoxLeftRight
                         title=""
                       >
@@ -105,14 +127,14 @@ class PersonalDescription extends Component {
                             variant="contained"
                             color="primary"
                             type="submit"
-                            id="change-description-button"
+                            id="change-porfil-image"
                           >
                             {`Valider`}
                           </Button>
                           {loading && <p>Chargement...</p>}
                           {error && (
                             <>
-                              
+                             
                               <Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography>
                             </>
                           )}
@@ -132,10 +154,10 @@ class PersonalDescription extends Component {
   }
 }
 
-PersonalDescription.propTypes = {
+ChangeProfilImage.propTypes = {
   classes: PropTypes.object.isRequired,
   userId: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(PersonalDescription);
+export default withStyles(styles)(ChangeProfilImage);

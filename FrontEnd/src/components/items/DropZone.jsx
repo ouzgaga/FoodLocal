@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Dropzone from 'react-dropzone';
 
 import IconeCloudUpload from '@material-ui/icons/CloudUpload';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-
-
 
 const styles = theme => ({
   root: {
@@ -16,10 +15,10 @@ const styles = theme => ({
   container: {
     height: 200,
     width: 400,
-    //borderStyle: 'solid',
+    borderStyle: 'solid',
     borderRadius: 10,
-    //borderWidth: 1,*/
-    //backgroundColor: '#EEEEEE',
+    borderWidth: 1,
+    backgroundColor: '#EEEEEE',
   },
   icon: {
     height: 100,
@@ -31,10 +30,13 @@ const styles = theme => ({
     height: '100%',
     width: '100%',
     paddingTop: 10,
-  }
+  },
+  image: {
+    maxWidth: 256,
+    maxHeight: 256,
+  },
 });
 
-const handleDropRejected = (...args) => console.log('reject', args);
 
 class DropZone extends React.Component {
   constructor() {
@@ -43,20 +45,28 @@ class DropZone extends React.Component {
       accept: '',
       files: [],
       imgSrc: null,
+      error: '',
     }
   }
 
-  onDrop = (files, rejectedFiles) => {
-    this.setState({ files: files });
+  onDrop = (files, rejected) => {
+    const { onChange } = this.props;
+
+    if (rejected.length === 0) {
+      this.setState({ files: files, error: '', });
 
 
-    const fr = new FileReader();
-    fr.addEventListener("load", () => {
-      console.log(fr.result)
-      this.setState({ imgSrc: fr.result });
-    }, false)
-    fr.readAsDataURL(files[0])
+      const fr = new FileReader();
+      fr.addEventListener("load", () => {
 
+        this.setState({ imgSrc: fr.result });
+        onChange(this.state.imgSrc);
+      }, false);
+      fr.readAsDataURL(files[0]);
+
+    } else {
+      this.setState({ error: <Typography color="error">Erreur, image non valide.</Typography> })
+    }
   }
 
   applyMimeTypes(event) {
@@ -67,7 +77,7 @@ class DropZone extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { imgSrc } = this.state;
+    const { imgSrc, error } = this.state;
 
     const previewStyle = {
       display: 'inline',
@@ -81,8 +91,10 @@ class DropZone extends React.Component {
       right: 0,
       bottom: 0,
       left: 0,
-      padding: '2.5em 0',
-      background: 'rgba(0,0,0,0.5)',
+      //padding: '2.5em 0',
+      height: 200,
+      width: 400,
+      background: 'rgba(0,0,0,0.2)',
       textAlign: 'center',
       color: '#fff'
     };
@@ -90,7 +102,7 @@ class DropZone extends React.Component {
 
     const previewStyle2 = {
 
-      
+
       top: 0,
       right: 0,
       bottom: 0,
@@ -100,42 +112,25 @@ class DropZone extends React.Component {
       textAlign: 'center',
     };
 
-    const files = this.state.files.map((file, index) => (
-      <li key={file.name}>
-        {file.name} - {file.size} bytes
-      </li>
-    ))
-
-    const filesOP = this.state.files.map((file) => (
-      <img
-        alt="Preview"
-        key={file.preview}
-        src={file.name}
-        style={previewStyle}
-      />
-    ))
-
     return (
       <section>
         <div
-          className="dropzone"
           className={classes.container}
-
         >
+
           <Dropzone
             accept="image/*"
             multiple={false}
-            onDrop={this.onDrop.bind(this)}
-
-            onDropRejected={handleDropRejected}
+            onDrop={this.onDrop}
+            maxSize={7340032}
             className={classes.container}
 
           >
-            {({ getRootProps, getInputProps, isDragActive }) => (
-              <div {...getRootProps()} style={{ position: "relative" }}>
+            {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
+              <div {...getRootProps()} style={{ position: 'relative' }}>
                 <input {...getInputProps()} />
                 {isDragActive && <div style={overlayStyle}>Drop files here</div>}
-                
+
 
                 <div style={previewStyle2}>
                   <Grid container direction={'column'} alignItems={'center'} alignContent={"center"}>
@@ -145,35 +140,28 @@ class DropZone extends React.Component {
                       </IconButton>
                     </Grid>
                     <Grid item>
-                      Selectionner une nouvelle image
+                      Selectionner une nouvelle image (max 0.7Mb)
+                      {isDragReject ?
+                        <Typography color="error">Erreur, image non valide.</Typography>
+                        : <Typography> </Typography>
+                      }
                     </Grid>
                   </Grid>
                 </div>
-
-
               </div>
             )}
           </Dropzone>
+
         </div>
         {imgSrc ?
           <div>
-            <img src={imgSrc} />
+            <img src={imgSrc} className={classes.image} alt="nouvelle image" />
           </div>
           : ''
         }
-        <aside>
-            
-          <ul>
-            {
-              //this.state.accepted.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-            }
-          </ul>
-          <h4>Rejected files</h4>
-          {console.info(this.state.files)}
-          <ul>{files}</ul>
+        {error}
 
-          <div>{filesOP}</div>
-        </aside>
+
       </section>
     );
   }

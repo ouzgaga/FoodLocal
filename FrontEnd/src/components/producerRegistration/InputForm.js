@@ -23,7 +23,7 @@ class InputForm extends Component {
 
   render() {
     const {
-      classes, handleChangeProperty, inputTitle, fieldNameToChange, value, multiline, placeholder
+      classes, required, handleChangeProperty, inputTitle, fieldNameToChange, value, multiline, placeholder
     } = this.props;
 
     return (
@@ -41,12 +41,12 @@ class InputForm extends Component {
           margin="normal"
           onChange={this.handleChange(handleChangeProperty, fieldNameToChange)}
           defaultValue={value}
+          required={required}
         />
       </Fragment>
     );
   }
 }
-
 
 InputForm.propTypes = {
   classes: PropTypes.shape().isRequired,
@@ -56,6 +56,11 @@ InputForm.propTypes = {
   value: PropTypes.shape().isRequired,
   multiline: PropTypes.bool.isRequired,
   placeholder: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 };
+
+InputForm.defaultProps = {
+  required: false,
+}
 
 export default withStyles(styles)(InputForm);

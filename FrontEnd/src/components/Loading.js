@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import logo from '../img/LogoCarrote.png';
 import { Dialog, DialogContent } from '@material-ui/core';
+import logo from '../img/LogoCarrote.png';
 
 const styles = theme => ({
   root: {
@@ -37,6 +37,7 @@ const styles = theme => ({
   },
 });
 
+// Permet de faire apparaitre le logo pour le loading
 function CircularIndeterminate(props) {
   const { classes } = props;
   return (
@@ -49,11 +50,7 @@ function CircularIndeterminate(props) {
           </div>
         </div>
       </DialogContent>
-
     </Dialog>
-
-
-
   );
 }
 

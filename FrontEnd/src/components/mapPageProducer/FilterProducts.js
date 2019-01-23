@@ -17,8 +17,10 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+
 import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
+import RatingItem from '../items/RatingItem';
 
 
 const GET_PRODUCTS_CATEGORIES = gql`
@@ -78,6 +80,12 @@ const styles = {
   button: {
     marginLeft: 10,
     backgroundColor: '#FFFFFF',
+  },
+  image: {
+    maxWidth: 40,
+    maxHeight: 40,
+    height: '100%',
+    width: '100%',
   }
 };
 
@@ -100,6 +108,7 @@ class FilerProducts extends React.Component {
     this.state = {
       openFiltresProducts: false,
       openFiltresDistance: false,
+      openFiltresRating: false,
       value: null,
       distance: props.maxDistance,
     };
@@ -139,6 +148,16 @@ class FilerProducts extends React.Component {
     });
   };
 
+  // ferme le pop-up des filtres
+  handleCloseFiltersRating = () => {
+    this.setState({ openFiltresRating: false });
+  };
+
+  // ouvre le pop-up pour les filtres de distance
+  openFiltresRating = () => {
+    this.setState({ openFiltresRating: true });
+  };
+
   onclick = id => (event) => {
     event.preventDefault();
     this.setState({ value: id });
@@ -146,11 +165,11 @@ class FilerProducts extends React.Component {
 
   render() {
     const {
-      classes, fullScreen, products, addProduct, removeProduct, maxDistance, changeMaxDistance
+      classes, fullScreen, products, addProduct, removeProduct, maxDistance, changeMaxDistance, ratingMin, changeRatingMin
     } = this.props;
 
     const {
-      value, distance, openFiltresDistance, openFiltresProducts
+      value, distance, openFiltresDistance, openFiltresProducts, openFiltresRating
     } = this.state;
 
     return (
@@ -172,6 +191,10 @@ class FilerProducts extends React.Component {
 
           <Button onClick={this.handleClickOpenFiltersDistance} variant="outlined" size="large" className={classes.button}>
             {`Distance : ${maxDistance === 100 ? 'Max' : `${maxDistance}km`} `}
+          </Button>
+
+          <Button onClick={this.openFiltresRating} variant="outlined" size="large" className={classes.button}>
+            {`Note : ${ratingMin || 0}`}
           </Button>
 
         </div>
@@ -240,7 +263,6 @@ class FilerProducts extends React.Component {
                               {has(products, node.id)
                                 ? (
                                   <CardActionArea onClick={removeProduct(node.id)}>
-
                                     <CardMedia className={classes.media2} image={node.image} title={node.name} />
                                   </CardActionArea>
                                 )
@@ -254,7 +276,7 @@ class FilerProducts extends React.Component {
                             </Card>
                             <div className={classes.paper}>
                               <Typography className={classes.typo} variant="body1" gutterBottom>
-                                {node.id}
+                                {node.name}
                               </Typography>
                             </div>
                           </Grid>
@@ -296,6 +318,25 @@ class FilerProducts extends React.Component {
           <DialogActions>
             <Button onClick={this.handleCloseFiltersProductsDistance} color="primary">Annuler</Button>
             <Button variant="contained" onClick={changeMaxDistance(distance)} color="primary">Voir les producteurs</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          fullScreen={fullScreen}
+          open={openFiltresRating}
+          onClose={this.handleCloseFiltersRating}
+        >
+          <DialogTitle>Note minimale :</DialogTitle>
+          <DialogContent>
+
+            <RatingItem
+              onChange={changeRatingMin}
+              defaultValue={ratingMin}
+            />
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseFiltersRating} color="primary">Annuler</Button>
           </DialogActions>
         </Dialog>
 

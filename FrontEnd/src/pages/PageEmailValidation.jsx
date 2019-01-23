@@ -39,7 +39,6 @@ class PageEmailValidation extends Component {
   render() {
     const { classes } = this.props;
     const { token } = this.props.match.params;
-    console.info("tok", token);
     return (
       <div>
         <CenteredPaper className={classes.paper}>
@@ -53,12 +52,8 @@ class PageEmailValidation extends Component {
                 {error && (
                   <>
                   {
-                    error[7]==="E"
-                    ? <Typography >Email déjà confirmé, vous pouvez vous connecter</Typography>
-                    : (
-                      
+                    (
                       <>
-                      {console.info(error.error)}
                       <br/>
                       <Typography  color="error">Le lien de validation n'est plus valide</Typography>
                       <br/>
