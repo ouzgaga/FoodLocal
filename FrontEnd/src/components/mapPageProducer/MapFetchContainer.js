@@ -102,7 +102,7 @@ class MapFetchContainer extends React.Component {
     });
   };
 
-  changeRatingMin = value => () => {
+  changeRatingMin = (value) => {
     this.setState({
       ratingMin: value
     });

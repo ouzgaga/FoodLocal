@@ -23,8 +23,7 @@ function ProducerMur(props) {
           {repos.map(({ node }) => (
             <ListItem key={node.id}>
               <ProducerPost
-                firstname={node.producer.firstname}
-                lastname={node.producer.lastname}
+                name={node.producer.salespoint.name}
                 date={node.publicationDate}
                 image={node.producer.image}
                 address={node.address}
@@ -45,7 +44,7 @@ function ProducerMur(props) {
 
 ProducerMur.propTypes = {
   entries: PropTypes.shape().isRequired,
-  loading: PropTypes.shape().isRequired,
+  loading: PropTypes.bool.isRequired,
   onLoadMore: PropTypes.func.isRequired,
 };
 

@@ -30,6 +30,8 @@ import {
   PagePersonalInformations,
   PageErrorLogin,
   PageErrorEmail,
+  PageWall,
+  PageMyProducers,
 } from './pages/Pages';
 
 
@@ -184,9 +186,11 @@ class App extends React.Component {
             <Route path="/" exact component={PageAccueil} classes={classes} />
             <Route default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-            <ProtectedProducerRoute path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
-            <ProtectedAdminRoute path="/admin" exct component={PageAdmin} classes={classes} />
+            <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
+            <ProtectedAdminRoute path="/adminSection" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
+            <ProtectedUserRoute default path="/myWall" exact component={PageWall} classes={classes} />
+            <ProtectedUserRoute default path="/myProducers" exact component={PageMyProducers} classes={classes} />
             <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />

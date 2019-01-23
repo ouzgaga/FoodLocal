@@ -37,6 +37,7 @@ const styles = theme => ({
   },
 });
 
+// Permet de faire apparaitre le logo pour le loading
 function CircularIndeterminate(props) {
   const { classes } = props;
   return (
@@ -49,11 +50,7 @@ function CircularIndeterminate(props) {
           </div>
         </div>
       </DialogContent>
-
     </Dialog>
-
-
-
   );
 }
 

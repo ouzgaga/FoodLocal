@@ -3,6 +3,17 @@ import PropTypes from 'prop-types';
 import {
   Typography, Button, CardActionArea, Grid, Card
 } from '@material-ui/core';
+import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
+
+const VALIDATE = gql`
+  mutation validate($producerId :ID!, $validationState: Boolean!) {
+  validateAProducer(producerId: $producerId, validationState: $validationState){
+    id
+  }
+}
+`;
+
 
 function TableProducerItem(props) {
   const {
@@ -24,22 +35,28 @@ function TableProducerItem(props) {
           <Typography variant="body1">{producer.isValidated ? 'validé' : 'non validé'}</Typography>
         </Grid>
 
-        <Grid item xs={4}>
-          {producer.isValidated
-            ? (
-              <Button variant="contained" color="primary">
-                {'Bloquer ce producteur'}
-              </Button>
-            )
-            : (
-              <Button variant="contained" color="primary">
-                {'Valider'}
-              </Button>
-            )
-          }
 
+        <Mutation mutation={VALIDATE}>
+          {validateAProducer => (
+            <Grid item xs={4}>
 
-        </Grid>
+              {producer.isValidated
+                ? (
+                  <Button variant="contained" color="primary" onClick={(e) => { e.preventDefault(); validateAProducer({ variables: { producerId: producer.id, validationState: false } }); window.location.reload(true); }}>
+                    {'Bloquer ce producteur'}
+                  </Button>
+                )
+                : (
+                  <Button variant="contained" color="primary" onClick={(e) => { e.preventDefault(); validateAProducer({ variables: { producerId: producer.id, validationState: true } }); window.location.reload(true); }}>
+                    {'Valider'}
+                  </Button>
+                )
+              }
+
+            </Grid>
+          )}
+        </Mutation>
+
       </Grid>
     </Card>
 

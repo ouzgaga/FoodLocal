@@ -5,11 +5,13 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Hidden } from '@material-ui/core';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import UserContext from '../UserContext';
 import RatingItem from '../items/RatingItem';
-import SimpleInfoDialog from '../items/SimpleInfoDialog';
 import { AuthContext } from '../providers/AuthProvider';
-import { Query, Mutation } from 'react-apollo';
+import ErrorLoading from '../ErrorLoading';
+import Loading from '../Loading';
 
 
 const styles = theme => ({
@@ -34,8 +36,47 @@ const styles = theme => ({
   },
 });
 
-const DIALOG_USER_NOT_LOG = "Vous devez être connecté pour pouvoir suivre ou juger un producteur.";
-const DIALOG_NO_RATING_VALUE = "Le producteur doit au moins avoir 1 carotte";
+const CHECK_IF_PERSON_FOLLOW_PRODUCER = gql`
+query($producerId : ID!) {
+  checkIfPersonFollowProducer(producerId: $producerId)
+}
+`;
+
+const ADD_FOLLOWER_TO_PRODUCER = gql`
+mutation($producerId : ID!, $followerId: ID!) {
+  addFollowerToProducer(producerId: $producerId, followerId:$followerId) {
+    id
+  }
+}
+`;
+
+const REMOVE_FOLLOWER_TO_PRODUCER = gql`
+mutation($producerId : ID!, $followerId: ID!) {
+  removeFollowerToProducer(producerId: $producerId, followerId:$followerId) {
+    id
+  }
+}
+`;
+
+const RATING_ABOUT_PRODUCER_MADE_BY_A_PERSON = gql`
+query($personId: ID!, $producerId: ID!) {
+  ratingAboutProducerMadeByPerson(personId: $personId, producerId: $producerId) {
+    rating
+  }
+}
+`;
+
+
+const ADD_OR_UPDATE_PRODUCER_RATING = gql`
+mutation($rating : PersonRatingProducerInput!) {
+  addOrUpdateProducerRating(rating : $rating) {
+    id
+  }
+}
+`;
+
+const DIALOG_USER_NOT_LOG = 'Vous devez être connecté pour pouvoir suivre ou juger un producteur.';
+const DIALOG_NO_RATING_VALUE = 'Le producteur doit au moins avoir 1 carotte';
 
 class ProducerUserInteraction extends React.Component {
   constructor(props) {
@@ -43,18 +84,18 @@ class ProducerUserInteraction extends React.Component {
 
     this.state = {
       infoDialogOpen: false,
-      infoDialogText: "",
+      infoDialogText: '',
       userRating: 0,
     };
   }
 
   componentWillMount() {
-    let userRating = 0;
+    const userRating = 0;
     if (UserContext.Provider.jsToken) {
       // Fetch data => rank of this producer from user
     }
     this.setState({
-      userRating: userRating,
+      userRating,
     });
   }
 
@@ -75,7 +116,6 @@ class ProducerUserInteraction extends React.Component {
   }
 
   handleClickRating = () => {
-
     if (!UserContext.Provider.jsToken) {
       this.setState({
         infoDialogText: DIALOG_USER_NOT_LOG,
@@ -101,10 +141,10 @@ class ProducerUserInteraction extends React.Component {
     // TODO: Insére les données dans la db.
   }
 
-  fetchUserFolowProducer = (user) => {
+  fetchUserFolowProducer = (user) =>
     // TODO: Recherchi si 'utilisateur suit ou pas
-    return true;
-  }
+    true
+
 
   displayIfUserFollow = () => {
     const user = UserContext.Provider.jsToken;
@@ -116,9 +156,9 @@ class ProducerUserInteraction extends React.Component {
 
 
   render() {
-    const { classes, followersCount } = this.props;
+    const { classes, followersCount, producerId, refetchParent } = this.props;
     const { infoDialogOpen, userRating, infoDialogText } = this.state;
-    
+
 
     // fromatage du text en français
     function displayFolowerCount(count) {
@@ -131,30 +171,46 @@ class ProducerUserInteraction extends React.Component {
     return (
 
 
-
       <div className={classes.root}>
         <AuthContext>
           {({ userId }) => userId && (
             <>
-              { /* Affiche une pop-up d'erreur si l'utiliateur n'es pas connecté */}
-              <SimpleInfoDialog
-                open={infoDialogOpen}
-                handleClose={this.handleClose.bind(this)}
-                text={infoDialogText}
-              />
-
               <Grid container spacing={16} justify="center">
                 <Grid container alignItems="center" className={classes.centerBox}>
                   <Grid item sm={6} xs={12}>
                     <Grid container alignItems="center" className={classes.centerBox}>
 
-                      <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>
-                        {this.displayIfUserFollow()}
-                      </Button>
 
-                      <Typography>
-                        {displayFolowerCount(followersCount)}
-                      </Typography>
+                      <Query
+                        query={CHECK_IF_PERSON_FOLLOW_PRODUCER}
+                        variables={{ producerId }}
+                      >
+                        {({
+                          data, loading, error, refetch
+                        }) => {
+                          if (error) return <ErrorLoading />;
+                          if (loading) return <Loading />;
+
+                          const { checkIfPersonFollowProducer } = data;
+                          return (
+                            <>
+                              <Mutation mutation={checkIfPersonFollowProducer ? REMOVE_FOLLOWER_TO_PRODUCER : ADD_FOLLOWER_TO_PRODUCER} onCompleted={() => { refetch(); refetchParent(); }}>
+                                {dow => (
+                                  <>
+                                    <Button variant="contained" className={classes.button} onClick={(e) => { e.preventDefault(); dow({ variables: { producerId, followerId: userId } }); }}>
+                                      {checkIfPersonFollowProducer ? 'Ne plus suivre' : 'suivre'}
+                                    </Button>
+                                    <Typography>
+                                      {displayFolowerCount(followersCount)}
+                                    </Typography>
+                                  </>
+                                )}
+                              </Mutation>
+                            </>
+                          );
+                        }}
+                      </Query>
+
                     </Grid>
                   </Grid>
 
@@ -162,22 +218,48 @@ class ProducerUserInteraction extends React.Component {
                     <div style={{ height: 100 }} />
                   </Hidden>
 
+                  <Query
+                    query={RATING_ABOUT_PRODUCER_MADE_BY_A_PERSON}
+                    variables={{ producerId, personId: userId }}
+                  >
+                    {({
+                      data, loading, error, refetch
+                    }) => {
+                      if (error) return <ErrorLoading />;
+                      if (loading) return <Loading />;
 
-                  <Grid item sm={6} xs={12}>
+                      const { ratingAboutProducerMadeByPerson } = data;
+                      return (
+                        <>
+                          <Grid item sm={6} xs={12}>
+                            <Grid container alignItems="center" className={classes.centerBox}>
+                              <RatingItem
+                                onChange={this.handleChangeUserRating}
+                                defaultValue={ratingAboutProducerMadeByPerson ? ratingAboutProducerMadeByPerson.rating : null}
+                              />
+                            </Grid>
 
-                    <Grid container alignItems="center" className={classes.centerBox}>
+                            <Grid container alignItems="center" className={classes.centerBox}>
+                              <Typography>Notez ce producteur</Typography>
+                              <Mutation mutation={ADD_OR_UPDATE_PRODUCER_RATING} onCompleted={() => { refetch(); refetchParent(); }}>
+                                {dow => (
+                                  <>
+                                    <Button variant="contained" className={classes.button} onClick={(e) => { e.preventDefault(); dow({ variables: { rating: { producerId, personId: userId, rating: userRating } } }); }}>Vote</Button>
+                                  </>
+                                )}
+                              </Mutation>
+                            </Grid>
+                          </Grid>
 
-                      <RatingItem
-                        onChange={this.handleChangeUserRating}
-                        defaultValue={userRating}
-                      />
-                    </Grid>
+                        </>
+                      );
+                    }}
+                  </Query>
 
-                    <Grid container alignItems="center" className={classes.centerBox}>
-                      <Typography>Notez ce producteur</Typography>
-                      <Button variant="contained" className={classes.button} onClick={this.handleClickRating}>Vote</Button>
-                    </Grid>
-                  </Grid>
+
+
+
+
                 </Grid>
               </Grid>
             </>

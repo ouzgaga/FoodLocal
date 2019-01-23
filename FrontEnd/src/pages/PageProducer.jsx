@@ -21,6 +21,12 @@ query($producer: ID!) {
       grade
       nbRatings
     }
+    salespoint{
+      name
+    }
+    followers {
+      totalCount
+    }
   }
 }
 `;
@@ -38,11 +44,10 @@ const styles = theme => ({
     flex: 1,
     alignItems: 'center',
   },
-
 });
 
+// Permet d'afficher les détails d'un producteur
 class PageProducer extends React.Component {
-
   constructor(props) {
     super(props);
     document.title = 'Détails Producteur';
@@ -59,13 +64,13 @@ class PageProducer extends React.Component {
           query={GET_PRODUCER_HEADER}
           variables={{ producer: producerId }}
         >
-          {({ data, loading, error }) => {
+          {({ data, loading, error, refetch }) => {
             if (error) return <ErrorLoading />;
             if (loading) return <Loading />;
 
             if (data.producer === null) return <PageError404 location={{ pathname: `/producer/${producerId}` }} />;
             const {
-              firstname, lastname, description, image, rating
+              firstname, lastname, description, image, rating, salespoint, followers
             } = data.producer;
 
             let ratingValue;
@@ -79,10 +84,20 @@ class PageProducer extends React.Component {
             }
             return (
               <>
-                <ProducerHeader lastname={lastname} firstname={firstname} description={description} image={image} ratingValue={ratingValue} nbRating={nbRatings} />
+                <ProducerHeader
+                  lastname={lastname}
+                  firstname={firstname}
+                  description={description}
+                  image={image}
+                  ratingValue={ratingValue}
+                  nbRating={nbRatings}
+                  name={salespoint ? salespoint.name : 'Pas de nom de point de vente'}
+                />
 
                 <ProducerUserInteraction
-                  followersCount={100}
+                  followersCount={followers.totalCount}
+                  producerId={producerId}
+                  refetchParent={refetch}
                 />
                 <ProducerContent producerId={producerId} />
               </>

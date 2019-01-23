@@ -24,7 +24,7 @@ import AuthProvider from './components/providers/AuthProvider';
 import './index.css';
 
 import 'leaflet/dist/leaflet.css';
-
+import 'moment/locale/fr';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

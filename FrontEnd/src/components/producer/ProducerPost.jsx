@@ -42,7 +42,7 @@ const styles = theme => ({
 
 function ProducerPost(props) {
   const {
-    classes, firstname, lastname, date, image, post, address
+    classes, name, date, image, post, address
   } = props;
 
   return (
@@ -57,10 +57,10 @@ function ProducerPost(props) {
 
         <Grid item xs={9} className={classes.postHeader}>
           <Typography className={classes.name} color="primary">
-            {`${firstname} ${lastname}`}
+            {name}
           </Typography>
           <Typography>
-            <Moment fromNow>{date}</Moment>
+            <Moment locale="fr" fromNow>{date}</Moment>
           </Typography>
 
         </Grid>
