@@ -125,7 +125,7 @@ const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
     render={params => (
       <AuthContext>
         {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
-          ? <Redirect to="/error/email" />
+          ? <Redirect to="/map" />
           : <Component {...params} />
         }
       </AuthContext>
@@ -160,8 +160,26 @@ const ProtectedErrorEmail = ({ component: Component, ...rest }) => (
     )
     }
   />
-)
+);
 
+const ProtectedUserRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={params => (
+      <AuthContext>
+        {({ userEmailValidated, userToken }) => {
+          if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
+            return (<Redirect to="/error/email" />);
+          }
+          if (userToken && userEmailValidated) { // Connecté et email validé
+            return <Component {...params} />;
+          }
+          return (<Redirect to="/error/notConnected" />);
+        }}
+      </AuthContext>
+    )}
+  />
+);
 
 class App extends React.Component {
   state = {
@@ -176,24 +194,7 @@ class App extends React.Component {
     const { classes } = this.props;
 
 
-    const ProtectedUserRoute = ({ component: Component, ...rest }) => (
-      <Route
-        {...rest}
-        render={params => (
-          <AuthContext>
-            {({ userEmailValidated, userToken }) => {
-              if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
-                return (<Redirect to="/error/email" />);
-              }
-              if (userToken && userEmailValidated) { // Connecté et email validé
-                return <Component {...params} />;
-              }
-              return (<Redirect to="/error/notConnected" />);
-            }}
-          </AuthContext>
-        )}
-      />
-    )
+    
 
     return (
       <div className={classes.root}>
@@ -201,16 +202,15 @@ class App extends React.Component {
         <div className={classes.page} center="xs">
           <Switch>
             <Route path="/" exact component={PageAccueil} classes={classes} />
-            <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
+            <Route default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-            <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
+            <ProtectedProducerRoute path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <ProtectedAdminRoute path="/admin" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
             <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
-            <Route path="/pageproducer" component={PageProducer} classes={classes} />
-            <Route path="/settings" component={PagePersonalInformations} classes={classes} />
-            <Route path="/error/email" component={PageErrorEmail} />
+            <ProtectedUserRoute path="/settings" component={PagePersonalInformations} classes={classes} />
+            <ProtectedErrorEmail path="/error/email" component={PageErrorEmail} />
             <ProtectedErrorConected path="/error/notConnected" component={PageErrorLogin} />
             <Route path="/error/page404" component={PageError404} classes={classes} />
             <Route path="*" component={PageError404} classes={classes} />

@@ -35,7 +35,7 @@ const httpLink = createHttpLink({
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `wss://api.foodlocal.ch/subscriptions`,
+  uri: `ws://api.foodlocal.ch/subscriptions`,
   options: {
     reconnect: true
   }
