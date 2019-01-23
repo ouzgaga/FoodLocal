@@ -44,7 +44,12 @@ const queryNotif = gql`
   query{
     numberOfUnSeenNotificationsOfPerson
   }
+`;
 
+const mutClearNotifs = gql`
+  mutation{
+    setAllNotificationsAsSeen
+  }
 `;
 
 class AuthProvider extends React.Component {
@@ -65,7 +70,8 @@ class AuthProvider extends React.Component {
 
       signIn: this.signIn,
       signOut: this.signOut,
-      //renewToken: this.renewToken,
+      //fetchNotifTotalCount: this.fetchNotifTotalCount, Test ultim pour les notifs
+      clearNotifs: this.clearNotifs,
       clearError: this.clearError,
     };
   }
@@ -75,27 +81,21 @@ class AuthProvider extends React.Component {
   }
 
 
-  componentWillMount() {
+  clearNotifs = () => {
     const token = window.localStorage.getItem('token');
-    if (token) this.addState(token);
     if (token) {
       const { client } = this.props;
-      client.mutate({ mutation: mutRelog })
+      client.mutate({ mutation: mutClearNotifs })
         .then(
           (data) => {
-            this.addState(data.data.renewToken.token);
-            window.localStorage.setItem('token', data.data.renewToken.token);
-            //this.subscribe();
-            //this.props.enqueueSnackbar('Connexion requise pour avoir accps', "info");
+            this.setState({notificationsCount: 0});           
           }
         ).catch(
           (error) => {
             console.log("Error relog", error);
-            this.signOut();
           }
         );
-    }
-    this.fetchNotifTotalCount();
+      }
   }
 
   fetchNotifTotalCount = () => {
@@ -107,7 +107,7 @@ class AuthProvider extends React.Component {
           (data) => {
             this.setState({
               notificationsCount: data.data.numberOfUnSeenNotificationsOfPerson
-            })
+            });
           }
         ).catch(
           (error) => {
@@ -117,6 +117,29 @@ class AuthProvider extends React.Component {
         );
     }
   }
+
+  componentWillMount() {
+    const token = window.localStorage.getItem('token');
+    if (token) this.addState(token);
+    if (token) {
+      const { client } = this.props;
+      client.mutate({ mutation: mutRelog })
+        .then(
+          (data) => {
+            this.addState(data.data.renewToken.token);
+            window.localStorage.setItem('token', data.data.renewToken.token);           
+          }
+        ).catch(
+          (error) => {
+            console.log("Error relog", error);
+            this.signOut();
+          }
+        );
+    }
+    this.fetchNotifTotalCount();
+  }
+
+  
   /*
     componentDidMount() {
       const { client } = this.props;

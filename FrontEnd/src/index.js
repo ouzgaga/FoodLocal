@@ -12,7 +12,6 @@ import { Client, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Button from '@material-ui/core/Button';
 
-
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';
@@ -24,7 +23,7 @@ import AuthProvider from './components/providers/AuthProvider';
 import './index.css';
 
 import 'leaflet/dist/leaflet.css';
-import 'moment/locale/fr';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
@@ -34,7 +33,7 @@ const httpLink = createHttpLink({
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://api.foodlocal.ch/subscriptions`,
+  uri: `wss://api.foodlocal.ch/subscriptions`,
   options: {
     reconnect: true
   }
@@ -87,7 +86,6 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <MuiThemeProvider theme={Theme}>
-        
           <AuthProvider>
             <App />
           </AuthProvider>

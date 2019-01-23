@@ -69,7 +69,6 @@ const styles = theme => ({
 
 
 // Les fonctions si dessous sont nos redirection. Nous avons décidé de faire une fonction par type de redirection pour simplifier
-
 const ProtectedProducerRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -97,19 +96,6 @@ const ProtectedAdminRoute = ({ component: Component, ...rest }) => (
         {({ isAdmin }) => isAdmin
           ? <Component {...params} />
           : <Redirect to="/" />}
-      </AuthContext>
-    )}
-  />
-);
-const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={params => (
-      <AuthContext>
-        {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
-          ? <Redirect to="/map" />
-          : <Component {...params} />
-        }
       </AuthContext>
     )}
   />
@@ -164,20 +150,29 @@ const ProtectedUserRoute = ({ component: Component, ...rest }) => (
 );
 
 class App extends React.Component {
-  state = {
-    mobileOpen: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false,
+    };
   };
+  
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+
+  /*
+  Essai ultime pour les notifs, mais ça fonctionne pas
+  componentDidUpdate() {
+    console.info(this.props.updateMe)
+    this.props.updateMe();
+  }
+  */
+
   render() {
     const { classes } = this.props;
-
-
-    
-
     return (
       <div className={classes.root}>
         <Header />
@@ -186,7 +181,7 @@ class App extends React.Component {
             <Route path="/" exact component={PageAccueil} classes={classes} />
             <Route default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
-            <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
+            <ProtectedProducerRoute path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
             <ProtectedAdminRoute path="/adminSection" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
             <ProtectedUserRoute default path="/myWall" exact component={PageWall} classes={classes} />
