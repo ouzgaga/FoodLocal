@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-
-import ResearchMap from './ResearchMap';
 import BorderedCountField from '../items/fields/BorderedCountField';
 import SimpleInfoDialog from '../items/SimpleInfoDialog';
 
@@ -91,7 +89,7 @@ class NewPost extends React.Component {
 
   render() {
     const { classes, maxLenght, addPostOfProducer, userId } = this.props;
-    const { showMap, charCount, body, open } = this.state;
+    const { body, open } = this.state;
     return (
       <Paper className={classes.root}>
         <FormControl

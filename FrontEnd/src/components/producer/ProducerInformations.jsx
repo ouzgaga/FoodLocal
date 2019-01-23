@@ -7,11 +7,11 @@ import MapLocator from './MapLocator';
 import AddressInfo from './AddressInfo';
 
 function ProducerInformations(props) {
-  const { classes, data } = props;
+  const { data } = props;
   const {
-    email, website, phoneNumber, salespoint
+    email, phoneNumber, salespoint
   } = data.producer;
-  const { name, address, schedule } = salespoint;
+  const { address, schedule } = salespoint;
   const {
     monday, tuesday, wednesday, thursday, friday, saturday, sunday
   } = schedule;

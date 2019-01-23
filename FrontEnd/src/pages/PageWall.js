@@ -8,6 +8,7 @@ import ErrorLoading from '../components/ErrorLoading';
 import NewPost from '../components/mur/NewPost';
 import MurNotifications from '../components/mur/MurNotifications';
 import { AuthContext } from '../components/providers/AuthProvider';
+import DoFunction from '../components/items/DoFunction';
 
 const styles = ({
   root: {
@@ -85,9 +86,10 @@ class PageWall extends Component {
       <div className={classes.root}>
 
         <AuthContext>
-          {({ userId, userStatus }) => (
+          {({ userId, userStatus, clearNotifs}) => (
             <>
-
+              {/* Reset le nombre de notifs */}
+              <DoFunction func={clearNotifs} />
               {/* Affiche la possibilité d'ajouter un nouveau post que si on est un producteur */}
               {userStatus === 'producers' && (
               <Mutation mutation={POST_A_NEW_POST}>
@@ -107,7 +109,6 @@ class PageWall extends Component {
                   if (error) return <ErrorLoading />;
                   if (loading) return <Loading />;
                   const { notificationsOfPerson } = data;
-                  console.log(data)
                   return (
                     <MurNotifications
                       loading={loading}
