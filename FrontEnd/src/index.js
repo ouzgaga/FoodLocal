@@ -10,8 +10,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { Client, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Button from '@material-ui/core/Button';
-
 
 import {
   BrowserRouter as Router,
@@ -24,7 +22,7 @@ import AuthProvider from './components/providers/AuthProvider';
 import './index.css';
 
 import 'leaflet/dist/leaflet.css';
-import 'moment/locale/fr';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
@@ -87,7 +85,6 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <MuiThemeProvider theme={Theme}>
-        
           <AuthProvider>
             <App />
           </AuthProvider>

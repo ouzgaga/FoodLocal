@@ -61,7 +61,7 @@ function ProducerHeader(props) {
 
         </Grid>
 
-        <Grid item xs={10} sm container alignItems="justify">
+        <Grid item xs={10} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
               <Typography variant="h6" wrap="nowrap">

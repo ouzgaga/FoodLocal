@@ -139,7 +139,6 @@ class ProducerVue extends Component {
 
   fetchData() {
     const api = `http://api.foodlocal.ch/producers/${this.state.userId}`;
-    console.log(api);
     fetch(api)
       .then(results => {
         this.setState({status: results.status})
@@ -154,13 +153,11 @@ class ProducerVue extends Component {
         this.setProducerData(data);
       })
       .catch(erreur => {
-        console.log("Erreur: " + erreur);
         this.setState({status: 404});
       });
   };
 
   setProducerData(data){
-    console.log(data);
     this.setState({userName: data.name, userDescription: data.description});
 
   }

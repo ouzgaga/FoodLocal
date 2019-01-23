@@ -80,7 +80,7 @@ class ChangeProfilImage extends Component {
         >
           {({ loading, error, data, refetch }) => {
             if (loading) return <p>Chargement...</p>;
-            if (error) return <p>{console.info(error)}<Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography></p>;
+            if (error) return <p><Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography></p>;
             // Le retour d'une mutation s'appelle aussi data
             let datas = data;
             return (
@@ -98,7 +98,7 @@ class ChangeProfilImage extends Component {
                           id: userId,
                           image: this.state.image,
                         };
-                        console.info({user});
+                       
                         updateTodo({
                           variables: { user: user }
                         });
@@ -134,7 +134,7 @@ class ChangeProfilImage extends Component {
                           {loading && <p>Chargement...</p>}
                           {error && (
                             <>
-                              {console.info(error)}
+                             
                               <Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography>
                             </>
                           )}

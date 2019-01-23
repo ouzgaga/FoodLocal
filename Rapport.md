@@ -25,9 +25,26 @@ Pour développer notre frontend, nous avons utilisé les technologies suivantes:
 - Apollo-client
 - Leaflet
 
-Nous avons souhaité utiliser React car c'est une technologie qui prend une place majeur sur le marché des technologies web. De plus, nous l'avons étudié durant le semestre dans le cours de TWEB et avions deux experts (bon d'accord, surtout un) à dispositions pour nous débloquer lorsque nous rencontrions des problèmes insumontables pour les pauvres novices que nous sommes. Le fait de l'utiliser dans ce projet nous a permis de le prendre bien en main et de bien intégrer son fonctionnement, ses possibilités et ses limites. De plus, nous voulions une technologie capable de s'adapter sur mobile et React, couplé à des librairies comme Material-UI le fait très bien.
+Nous avons souhaité utiliser React car c'est une technologie qui prend une place majeur sur le marché des technologies web. De plus, nous l'avons étudié durant le semestre dans le cours de TWEB et avions deux experts (bon d'accord, surtout un) à dispositions pour nous débloquer lorsque nous rencontrions des problèmes insumontables pour les pauvres novices que nous sommes. Le fait de l'utiliser dans ce projet nous a permis de le prendre bien en main et de bien intégrer son fonctionnement, ses possibilités et ses limites. De plus, nous voulions une technologie capable de s'adapter sur mobile et React, couplé à des librairies comme Material-UI le fait très bien. Nous avons passé passablement de temps à faire en sorte que notre site soit le plus responsive possible et qu'il soit aussi agréable sur desktop que sur mobile.
 
 Pour l'affichage de la carte, nous avons utilisé Leaflet car elle est disponible gratuitement et est open-source. De plus, elle s'intègre très bien avec React et nous étions secondés par un asistant expert en la matière qui nous l'a chaudement recommandé.
+
+Au niveau de la structure de notre code, nous avons réalisé la structure suivante:
+
+- Le fichiers du dossier *accouontCRUD* gèrent la modification d'un profil utilisateur.
+- Les fichiers du dossier *accueil* gèrent la page d'accueil.
+- Les fichiers du dossier *admin* gèrent l'interface administrateur.
+- Les fichiers du dossier *items* sont des composants utilisés un peu partout dans l'application.
+- Les fichiers du dossier *mapPageProducer* gèrent la page affichant la carte.
+- Les fichiers du dossier *menu* gèrent le menu affiché.
+- Les fichiers du dossier *mur* gèrent le mur de notification des utilisateurs.
+- Les fichiers du dossier *newUser* gèrent la création de nouveaux utilisateurs ou producteurs.
+- Les fichiers du dossier *producers* gèrent l'affichage de la page des informations détaillées d'un producteur.
+- Les fichiers du dossier *producerRegistration* permettent l'ajout d'un point de vente ainsi que de produits au producteur.
+- Le dossier *providers* contient les providers utilisés dans l'application.
+- Les fichiers du dossier *pages* contient les différentes pages de l'application.
+- Le fichier *app.js* gère le routing.
+- Le fichier *index.js* contient toute l'arborescence des providers.
 
 ### Choix technologiques pour l'infrastructure :
 Nous avons hébergé notre application sur Gitlab car, contrairement à certains de ses concurrents, il permet d'utiliser les fonctionnalités de Continuous Integration (CI) ce qui nous a permis de créer des pipelines de production automatisés qui se sont révélés extrêmement pratiques.
@@ -67,7 +84,11 @@ Nous avons tout d'abord implémenté les tests d'intégration à l'aide de Jest,
 
 Pour lancer tous les tests (services et intégration) il faut exécuter la commande `npm run test`dans le dossier *API*. Pour lancer uniquement les tests d'intégration, utilisez la commande `npm run test-integration`et pour lancer uniquement les tests des services utilisez la commande `npm run test-services`.
 
+Pour terminer, nous avons réalisé quelques tests de charge à l'aide de JMeter. Malheureusement, nous n'avons pas eu le temps de tester pleinement la résistance à la charge de l'API... Nous sommes également avertit de certains problèmes que nous n'avons eu le temps de répondre. Le premier gros problème dont souffre l'API est le fait que nous n'utilisions pas de transactions. Le second gros problème est que nous n'avons pas eu le temps d'implémenter la pagination entre le serveur et la base de données...!
 
+
+
+Au niveau du frontend, nous avons effectué les tests de l'interface graphique à l'aide d'un *storybook* testant une bonne partie des composants utilisés. Ce dernier peut être consulté en lançant la commande `npm run storybook` et est consultable à l'adresse http://localhost:9009.
 
 ## Déploiement
 Toutes les informations concernant le déploiement sont accessibles dans le fichier [README.md](./Deployment/README.md) du dossier [/Deployment](./Deployment).
@@ -80,63 +101,87 @@ L'application est séparée en plusieurs onglets :
 ### L'acceuil
 L'acceuil permet de voir des informations d'ordre générales concernant le projet. En descendant dans la page, on trouvera la liste des producteurs par ordre de proximité (du plus proche au plus éloigné par rapport à notre position si on a accepté que le navigateur la relève, par rapport à Lausanne sinon).
 ### La carte
-La carte permet de voir ou se situent les producteurs autour de nous. Il y a la possibilité de les filtrer et de gérer la distance maximum de recherche.
+La carte permet de voir ou se situent les producteurs autour de nous. L'utilisateur a la possibilité de filtrer les producteurs par types de produits qu'ils proposent. Il peut également les filtrer par distance maximale par rapport à sa position ainsi que par rating.
 
-En cliquant sur un marqueur sur la carte, on peut avoir un aperçu des information du point de vente. Il est possible d'accéder au informations complète en recliquant dessus. 
+En cliquant sur un marqueur sur la carte, un aperçu des informations du point de vente du producteur sélectionné s'affiche. Il est possible d'accéder au informations complètes du producteur en cliquant dessus. 
 
-### Partie réseau sociale
-Les utilisateurs connectés peuvent noter un producteur et suivre son actualité par le biais de notification.
+### Partie réseau social
+Les utilisateurs connectés peuvent noter les producteurs et les suivre. Lorsqu'ils suivent un producteur, ils seront notifiés de toute les nouvelles actualités du producteur, soit lorsque le producteur publie un nouveau post ou lorsqu'il met à jour ses informations, celles de ses produits ou encore celles de son point de vente.
+Les utilisateurs connectés peuvent afficher toutes leurs notifications sous la forme d'un "mur de notifications". S'ils cliquent sur l'une d'elles, ils seront renvoyé sur la page du producteur ayant produit la notification.
 
 ### Producteurs
 
-Les producteurs pourront gérer leur point de vente et leur produits lorsqu'ils sont connectés. Ils pourront aussi posté des actualités sur leur "mur".
+Les producteurs peuvent gérer leur point de vente, leurs informations personnelles ainsi que leurs produits lorsqu'ils sont connectés. Ils peuvent aussi publier des actualités sur leur mur. 
 
-### Lancer l'application en local
+## Démarrer l'application en local
 
-### Pour lancer un replica set MongoDB en local
+### 1) Démarrer un replica set MongoDB en local
 
-Utiliser `run-rs` , pour ce faire aller dans un dossier temporaire et lancer les commandes.
+Utiliser la commande `run-rs`. Pour se faire, créez un dossier temporaire et lancez les commandes suivantes :
 
 ```sh
 npm install run-rs
 run-rs -v 4.0.0
 ```
 
-### Pour lancer l'api
+### 2) Démarrer l'API
 
-- Aller dans le dossier [API](./API/) 
-- Créé un fichier *.env* contenant les mêmes variables que le fichier [.env.default](./API/.env.default) avec vos données. Faites attentions de bien mettre les informations pour vous connectez au replica set de *run-rs*
-- Lancer un terminal dans le dossier API
-- Lancer la commande `npm install` pour installer les dépendances du projet
-- Lancer la commande `npm start` pour lancer l'API
-- Vous pourrez accéder à l'api à l'adresse: http://locahost:<portDu.env>
+- Rendez-vous dans le dossier [API](./API/) 
+- À partir du fichier [.env.default](./API/.env.default), créez un fichier *.env* et remplacez les valeurs des variables d'environnement par celles que vous souhaitez. Faîtes attention à bien entrer les informations pour vous connecter au replica set créé avec la commande `run-rs`à l'étape 1.
+- Lancez un terminal et rendez-vous dans le dossier [API](./API/).
+- Lancez la commande `npm install` pour télécharger et installer toutes les dépendances du projet.
+- Lancez la commande `npm start` pour démarrer l'API.
+- Vous pourrez accéder à l'API à l'adresse suivante : http://locahost:<port-choisi-dans-votre-fichier-.env>/graphql
 
-### Pour lancer le frontend
+### 3) Démarrer le frontend
 
-- Aller dans le dossier [FrontEnd](./FrontEnd) 
-- Lancer un terminal dan sle dossier FrontEnd
-- Lancer la commande `npm install`
-- Lancer la commande `npm start`
+- Rendez-vous dans le dossier [FrontEnd](./FrontEnd) 
+- Lancez un terminal dans le dossier [FrontEnd](./FrontEnd)
+- Lancez la commande `npm install` pour télécharger et installer toutes les dépendances du projet.
+- Lancer la commande `npm start` pour démarrer le frontend.
 - Vous pourrez accéder au frontend à l'addresse http://localhost:3000
 
 ## Problèmes rencontrés
 ### Connaissances
-Le plus gros problème qu'on a rencontré c'est le fait de partir des technologies que l'on ne connaissait pas. Au fur et à mesure du semestre, nous découvrions des nouvelles technologies en MAC et TWEB et nous nous rendions compte qu'elle était beaucoup plus adpaté à notre problème.
-Nous avons régulièrement pris le choix de refaire des parties en utilisant une nouvelle technologie par curiosité et pour l'évolutivité du projet dans le futur.
-### Organisation
-Nous avons pris le risque de regrouper les projets de MAC, TWEB et PDG ensemble. Cela nous a permis de nous concentrer sur un projet qui nous porte à coeur mais nous a posé des problèmes concernant la charge de travail que l'on c'est imposé. Il était difficile de respécter le demande de tous les cours sans augmenter le nombre de fonctionnalités et la complexité du projet.
+Le plus gros problème qu'on a rencontré est le fait d'avoir utilisé des technologies que nous ne connaissions et ne maitrisions pas!
+Au fur et à mesure du semestre, nous découvrions des nouvelles technologies en MAC et en TWEB et au fur et à mesure de ces découvertes, nous nous rendions compte de nos erreurs. Nous avons perdu de nombreuses heures à refaire au propre certaines choses déjà faites car nous venions d'apprendre / comprendre comment les faire proprement!
+Cela nous a permis d'apprendre énormément, mais cela nous a également fait perdre un temps considérable, comme par exemple tout le premier mois de cours où nous avons fait une API REST avant de passer à GraphQL...!
 
-### Pagination
+### Organisation
+Au début du semestre, nous avons pris le risque de regrouper les projets de MAC, TWEB et de PDG en un seul énorme projet. Cela nous a permis de nous concentrer sur un projet qui nous portait à coeur en profitant de l'occasion pour voir gros!
+Nous nous sommes dit dès le début du semestre que nous allions avoir de nombreuses heures de labos sur ce projet et l'avons donc dimensionné en conséquence. Sauf qu'au final, le temps de labo de MAC et TWEB dévolu à ce projet n'a pas du tout été aussi important que nous ne l'imaginions! Nous avons souffert la première partie du semestre avec un projet très conséquent à réaliser et, en plus, des laboratoires de MAC et de TWEB à côté! C'était dur et intense, mais nous avons survécus! :D
+Nous avons vu gros et nous sommes posés un défi avec ce gros projet. Nous avons eu de la peine à tenir nos délais fixés pour ce projet en plus du travail requis pour tous les cours...
+
+### API
+
+Notre manque de connaissance nous a fait faire plusieurs mauvais choix tactique durant la conception de notre API. Le plus notable est le fait d'être parti sur une API REST avant de basculer sur une API GraphQL, mais il y en a eu d'autres. 
+
+Par exemple, si nous devions recommencer un tel projet, nous commencerions par définir tous ensemble un schéma GraphQL aussi précis que possible afin d'éviter les nombreuses modifications que nous avons dû faire à l'API suite à des imcompréhensions entre le front et le back. 
+
+Nous implémenterions également immédiatement et tout au long du projet la gestion de la pagination, ainsi que les tests d'intégration. En effet, nous avons dès le début implémenté des tests unitaires (pour les services) mais avons trop tardé à nous lancer dans les tests d'intégration, ce qui s'est révélé long et rébarbatif. De plus, ne pas avoir ces tests nous a obfusqué de nombreux bugs au niveau de GraphQL qui ne sont apparus que lorsque le front-developpeurs nous les ont signalés...!
+Quant à la pagination, nous l'avons implémentée à la toute fin, ce qui nous a contraint à revoir et adapter tous nos tests...!
+Pour terminer, nous implémenterions directement une base de données configurée en réplication set. En effet, nous avons franchi cette étape tardivement dans le déroulement du projet. Résultat, lorsque nous avons implémenté les fonctionnalités de l'API, nous n'avons pas pu utiliser les transcations (disponibles uniquement sur les replicaset) et lorsque nous sommes enfin passés sur un replicaset, nous étions débordés et n'avons finalement pas pu implémenter les transactions à temps...
+
+### FrontEnd
+
+Là encore, notre manque de connaissance nous a considérablement ralenti. Nous avons passé un temps non négligeable à apprendre le fonctionnement de React. Nous nous sommes lancés dans la conceptions sans vraiment maîtriser l'outil et avons plusieurs fois réalisé durant les cours de TWEB que nous n'avions pas fait les choses très proprement. Cela nous a souvent obligé de reprendre des choses terminées afin de les réaliser plus proprement et plus efficacement.
+
+Le frontend récupère par défaut les données sur l'API qui est en production. Ce choix est dû à des problèmes matériels du côté d'un de nos développeur. Pour changer l'adresse sur laquelle récupérer les données, il faut modifier l'adresse dans le fichier [index.js](./FrontEnd/src/index.js)...
+
+Nous n'avons pas totalement réussi à implémenter les notifications. En effet, lorsqu'un utilisateur se connecte, il reçoit bien les notifications reçues lors de son absence. En revanche, les notifications en direct ne fonctionnent pas tout à fait. En effet, elle ne sont pas reçues par l'utilisateur connecté malgré son inscription sur la subscription GraphQL. Nous pensons que cela est dû à la connexion sur le serveur webSocket mais n'avons pas eu le temps de résoudre le problème.
+
+Dû à la complexité et au manque de temps, nous n'avons pas pu implémenter les modifications des produits d'un producteur. Les fonctions sont disponibles au niveau de l'API mais n'ont pas pu être implémentées à temps du côté du frontend... Cependant, il est tout de même possible d'ajouter des produits. Il est également possible de faire un CRUD complet sur les points de vente.
 
 ### Infrastructure
-La grande difficulté de la mise en production sur Google Cloud fut l'apprentissage de Kubernetes. L'apprentissage pour la mise en production de service et de deployment fut assez rapide mais la gestion des certificats pour l'HTTPS fut la première étape compliquée. 
+La grande difficulté de la mise en production sur Google Cloud fut l'apprentissage des différents outils proposés, notemment Kubernetes. L'apprentissage pour la mise en production de service et de deployment fut assez rapide mais la gestion des certificats pour l'HTTPS fut la première grosse étape compliquée. 
 
-Nous avons pris le choix de tous héberger sur Google Cloud et donc nous avons du mettre notre base de données mongo. Nous avons voulu rendre la base de donnée plsu robuste en la transformant en un replica set. Ceci à nécessiter beaucoup d'essaie mais grâce à la découverte de l'outils Helm, de nombreuses heures de configuration on pu être sauvé. Malgrés une réussite, je pense que Mongo Atlas est plus adapter à l'hébergement d'une telle base de données. Mais engendrerais des frais supplémentaires.
+Nous avons choisi d'héberger l'ensemble de notre application sur Google Cloud. Ceci a engendré des diffucultés au niveau de l'hébergement de la base de donnée. L'implémentation d'un replica set sur Google Cloud est assez complexe et nécessite des connaissances en la matière, ce qui n'était de loin pas notre cas... Si c'était à refaire, nous choisirions une option plus facilement à mettre en place tel qu'un hébergement comme Mongo Atlas. Cela faciliterait la tâche au niveau du scaling et de la mise en place, mais engendrerait un coût un peu plus important...
 
 ## Conclusion
 
-Nous sommes très fière de notre idée et avons appris une quantité démesuré de chose en une durée de temps très réduite. Ce fut une super expérience et nous espérons pouvoir continuer ce projet pour pouvoir le mener à bien.
+En conclusion, nous sommes vraiment fiers du travail que nous avons accompli durant ce semestre. Nous nous étions fixé un gros projet, ambitieux et complexe, mais estimons vraiment l'avoir mené à bon port! 
+
+De plus, nous avons appris une quantité hallucinante de choses en une durée de temps très réduite! Ce fut une super expérience et nous serions tous prêts à recommencer! Nous souhaitons maintenant pouvoir trouver le temps de terminer ce projet et parvenir à réellement le rendre public.
 
 ## Remerciements
-Un grand merci à Paul, Miguel et Olivier pour leur aide durant des heures sombres de debugging et de nous avoir mener sur le droit chemin.
-
+Un grand merci à Paul, Miguel et Olivier pour leur aide très précieuse! à tout heure du jour ou de la nuit, pendant les weekend et même pendant les vacances, ils ont été réactifs et nous ont donnés de nombreux coups de main afin de nous sortir d'impasses ou nous épargner de longues et pénibles heures de debugging obscure! Grâce à eux, on a appris énormément de choses et avons pu rendre un projet que nous estimons relativement bien abouti et dont nous sommes fiers! Merci!  :-* 

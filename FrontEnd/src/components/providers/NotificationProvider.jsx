@@ -22,7 +22,10 @@ const subNotif = gql`
   }
   `;
 
-
+/**
+ * Fait pour les notification, mais on a pas réussi à faire fonctionner les subscriptions
+ * Ne fonctionne pas
+ */
 class NotificationProvider extends React.Component {
   constructor(props) {
     super(props);

@@ -60,7 +60,6 @@ class DropZone extends React.Component {
       fr.addEventListener("load", () => {
 
         this.setState({ imgSrc: fr.result });
-        console.info(fr.result);
         onChange(this.state.imgSrc);
       }, false);
       fr.readAsDataURL(files[0]);

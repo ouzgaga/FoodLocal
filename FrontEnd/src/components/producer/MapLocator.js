@@ -40,7 +40,6 @@ MapLocator.propTypes = {
   longitude: PropTypes.number.isRequired,
   latitude: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  userLocation: PropTypes.shape().isRequired,
 };
 
 export default (MapLocator);

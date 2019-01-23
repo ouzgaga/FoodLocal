@@ -75,12 +75,10 @@ class NewValidationEmail extends React.Component {
   render() {
     const { classes } = this.props;
     const { email, password } = this.state;
-    console.log('RENDER !!!!')
     return (
       <>
         <Mutation mutation={mutvalidateAnEmailToken}>
           {(updateTodo, { data, loading, error }) => {
-            console.log({ error });
             return (
             <Paper className={classes.paper}>
               <Typography>

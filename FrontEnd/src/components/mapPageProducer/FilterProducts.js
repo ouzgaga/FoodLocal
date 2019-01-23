@@ -18,10 +18,6 @@ import Divider from '@material-ui/core/Divider';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-import Rating from 'react-rating';
-
-import MarkerCarotteEmpty from '../../img/MarkerCarotteEmpty.png';
-import MarkerCarotteFull from '../../img/MarkerCarotteFull.png';
 import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
 import RatingItem from '../items/RatingItem';
@@ -333,7 +329,6 @@ class FilerProducts extends React.Component {
           <DialogTitle>Note minimale :</DialogTitle>
           <DialogContent>
 
-            {console.log(changeRatingMin)}
             <RatingItem
               onChange={changeRatingMin}
               defaultValue={ratingMin}

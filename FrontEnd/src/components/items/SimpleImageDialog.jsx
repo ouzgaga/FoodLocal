@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 import DefaultUserLogo from '../../img/DefaultUserLogo.jpg';
@@ -42,7 +41,6 @@ class SimpleImageDialog extends React.Component {
     if (!image) displayImage = DefaultUserLogo;
     return (
       <div>
-        {console.info(image)}
         <Button onClick={this.handleClickOpen}><img className={classes.img} alt="complex" src={displayImage} /></Button>
         <Dialog
           open={this.state.open}

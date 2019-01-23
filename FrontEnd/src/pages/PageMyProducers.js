@@ -83,8 +83,6 @@ query($token: String!) {
 
 class PageMyProducers extends Component {
   render() {
-    const { classes } = this.props;
-
     return (
       <div>
 

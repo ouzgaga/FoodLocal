@@ -92,7 +92,7 @@ render() {
               let newPassword = document.getElementById('BorderedPasswordField-personal-information-newPassword').value;
               let oldPassword = document.getElementById('BorderedPasswordField-personal-information-oldPassword').value;
               let confPassword = document.getElementById('BorderedPasswordField-personal-information-confPassword').value;
-              console.info(newPassword, oldPassword, confPassword);
+
               if (this.checkPassword(newPassword, oldPassword, confPassword)) {
                 updateTodo({
                   variables: { newPassword: newPassword, oldPassword: oldPassword, id: userId }
@@ -146,7 +146,6 @@ render() {
                 {loading && <p>Chargement...</p>}
                 {error && (
                   <>
-                    {console.info(error)}
                     <Typography color="error">
                       Mot de passe incorrecte.
                       </Typography>
