@@ -30,6 +30,7 @@ import {
   PagePersonalInformations,
   PageErrorLogin,
   PageErrorEmail,
+  PageWall
 } from './pages/Pages';
 
 
@@ -204,8 +205,9 @@ class App extends React.Component {
             <ProtectedUserRoute default path="/about" exact component={PageAbout} classes={classes} />
             <Route path="/newAccount" exct component={PageNewAccount} classes={classes} />
             <Route path="/producerRegistration" exct component={PageProducerRegistration} classes={classes} />
-            <ProtectedAdminRoute path="/admin" exct component={PageAdmin} classes={classes} />
+            <ProtectedAdminRoute path="/adminSection" exct component={PageAdmin} classes={classes} />
             <Route path="/map" exact component={PageMap} classes={classes} />
+            <ProtectedUserRoute default path="/myWall" exact component={PageWall} classes={classes} />
             <Route path="/producer/:producerId" component={PageProducer} />
             <Route path="/validationEmail/:token" component={PageEmailValidation} />
             <Route path="/pageproducer" component={PageProducer} classes={classes} />

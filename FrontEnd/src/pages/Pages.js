@@ -10,6 +10,7 @@ import PageAdmin from './PageAdmin';
 import PagePersonalInformations from './PagePersonalInformations';
 import PageErrorLogin from './PageErrorLogin';
 import PageErrorEmail from './PageErrorEmail';
+import PageWall from './PageWall';
 
 export {
   PageAbout,
@@ -24,4 +25,5 @@ export {
   PagePersonalInformations,
   PageErrorLogin,
   PageErrorEmail,
+  PageWall,
 };

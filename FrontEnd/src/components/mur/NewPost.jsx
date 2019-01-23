@@ -96,7 +96,7 @@ class NewPost extends React.Component {
           <BorderedCountField
             header="Publier un nouveau post."
             id="new-post-input"
-            maxLenght={1024}
+            maxLenght={maxLenght}
             fullWidth
             onChange={this.handleChangeText}
           />
@@ -106,7 +106,7 @@ class NewPost extends React.Component {
               { showMap ? 'Retirer la carte' : 'Ajouter une carte'}
             </Button>
             <Button variant="contained" className={classes.button} onClick={this.handleClickPost}>
-              Post
+              Publier
             </Button>
           </div>
         </FormControl>

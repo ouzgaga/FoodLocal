@@ -16,6 +16,7 @@ const styles = ({
     width: '100wh',
   },
   title: {
+    paddingLeft: '10%',
     backgroundColor: '#FFFFFF',
     padding: 20,
   },
@@ -167,7 +168,7 @@ class PageAccueil extends Component {
               data, loading, error, fetchMore
             }) => {
               if (error) return <ErrorLoading />;
-              if (loading && !data.geoFilterProducers) return <Loading />;
+              if (loading) return <Loading />;
 
               const { geoFilterProducers } = data;
               return (
