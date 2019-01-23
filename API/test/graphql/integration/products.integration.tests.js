@@ -106,7 +106,6 @@ describe('Testing graphql request products', () => {
         const result = await graphql(schema, query, null, {}, variables);
 
         expect(result.data.product).to.be.not.null;
-        snapshot(result);
       });
 
       it('should fail getting a product by id because invalid id received (too short)', async() => {
