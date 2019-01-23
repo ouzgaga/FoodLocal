@@ -28,6 +28,11 @@ const notificationsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'producers',
       required: true
+    },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'posts',
+      required: false
     }
   }, options
 );

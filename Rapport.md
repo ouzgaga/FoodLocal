@@ -1,10 +1,16 @@
 # Rapport projet Localfood
 ## Choix des technologies
-### Choix technologique pour le backend
-Pour développer notre backend, nous avons utilisé trois technologie
+### Choix technologique pour le backend :
+Pour développer notre backend, nous avons utilisé les technologies suivantes :
+- NodeJs
 - Express
-- Graphql
+- REST ( au début de notre projet. A été abandonné après la 1ère démo de PDG)
+- Graphql (apollo-server-express)
 - MongoDB
+
+Nous avons commencé le développement en partant sur une API REST car nous ne connaissions pas GraphQL. Lorsqu'il nous a été présenté durant le cours de TWEB, nous avons rapidement décidé de passer à cette technologie. Ce choix fût prit tant par curiosité pour cette technologie que pour les avantages qu'elle procure. Ce qui nous a réellement décidé est le fait que GraphQL permette de réellement séparer le développement front-end et back-end
+
+
 
 Le choix des technologies à fortement été influencé par le cours de TWEB et les exigences du projet de MAC. De plus, ces technologie nous interessaient énormément et nous trouvions intéressant de les apprendre et les mettre en pratique dans le cadre d'un gros projet.
 Le choix d'utiliser graphql à la place d'une API REST fut prise du à la taille des données que nous traitons. Nous avons peut de type de données différentes mais nous avons besoin de les récupérer sous différentes forme avec des paramètres différents. Je prends l'exemple des producteurs qui est objet complexe que nous récupérons dans diverse page mais toujours avec un niveau de détail différent.
