@@ -53,10 +53,7 @@ class PageEmailValidation extends Component {
                 {error && (
                   <>
                   {
-                    error[7]==="E"
-                    ? <Typography >Email déjà confirmé, vous pouvez vous connecter</Typography>
-                    : (
-                      
+                    (
                       <>
                       {console.info(error.error)}
                       <br/>

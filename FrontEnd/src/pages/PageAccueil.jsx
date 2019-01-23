@@ -7,7 +7,6 @@ import { Typography, Grid } from '@material-ui/core';
 import Loading from '../components/Loading';
 import ErrorLoading from '../components/ErrorLoading';
 import NearProducers from '../components/accueil/NearProducers';
-import FilterBar from '../components/accueil/FilterBar';
 import logo from '../img/LogoCarrote.png';
 
 const styles = ({
@@ -16,12 +15,12 @@ const styles = ({
     width: '100wh',
   },
   title: {
+    paddingLeft: '10%',
     backgroundColor: '#FFFFFF',
     padding: 20,
   },
   description:{
     marginTop: 400,
-    height:500,
     backgroundColor: '#FFFFFF',
   },
   nearProducers: {
@@ -73,7 +72,7 @@ query($locationClient : ClientLocation!, $byProductTypeIds : [ID!], $cursor: Str
           }
         }
         rating {
-          rating
+          grade
           nbRatings
         }
       }
@@ -158,7 +157,6 @@ class PageAccueil extends Component {
       </div>
 
         <div className={classes.nearProducers}>
-          <FilterBar />
 
           <Query
             query={GET_PRODUCERS_BY_LOCATION}
@@ -168,7 +166,7 @@ class PageAccueil extends Component {
               data, loading, error, fetchMore
             }) => {
               if (error) return <ErrorLoading />;
-              if (loading && !data.geoFilterProducers) return <Loading />;
+              if (loading) return <Loading />;
 
               const { geoFilterProducers } = data;
               return (

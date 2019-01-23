@@ -9,7 +9,6 @@ import ProducerUserInteraction from '../src/components/producer/ProducerUserInte
 import NewPost from '../src/components/mur/NewPost';
 import AdressContainer from '../src/components/items/AdressContainer';
 import CenteredPaper from '../src/components/items/CenteredPaper';
-import InscriptionContainer from '../src/components/newUser/InscriptionContainer';
 import StatusForm from '../src/components/newUser/StatusForm';
 import InformationsForm from '../src/components/newUser/InformationsForm';
 import GeneralsConditionForm from '../src/components/newUser/GeneralsConditionForm';
@@ -17,14 +16,12 @@ import InputPassword from '../src/components/items/InputPassword';
 import BoxWithHeader from '../src/components/items/BoxWithHeader';
 import BorderedTextField from '../src/components/items/fields/BorderedTextField';
 import BorderedPasswordField from '../src/components/items/fields/BorderedPasswordField';
-import PersonalInformation from '../src/components/accouontCRUD/PersonalInformation';
-import ChangePassword from '../src/components/accouontCRUD/ChangePassword';
 import BoxLeftRight from '../src/components/accouontCRUD/BoxLeftRight';
-import PersonalDescription from '../src/components/accouontCRUD/PersonalDescription';
 import TableProducerItem from '../src/components/admin/TableProducerItem';
 import BorderedCountField from '../src/components/items/fields/BorderedCountField';
 import DropZone from '../src/components/items/DropZone';
 import BadgeMax from '../src/components/items/BadgeMax';
+
 
 storiesOf('RatingItem', module)
   .add('Default value', () => (
@@ -122,70 +119,53 @@ storiesOf('CenteredPaper', module)
     </CenteredPaper>
   ));
 
-storiesOf('InscriptionContainer', module)
-  .add('InscriptionContainer', () => (
-    <InscriptionContainer />
-  ));
+
 
 storiesOf('InformationsForm', module)
   .add('InformationsForm', () => (
     <InformationsForm
-      onChange={onChange}
+      onChange={e => e}
     />
   ));
 
 storiesOf('StatusForm', module)
   .add('StatusForm', () => (
     <StatusForm
-      onChange={onChange} />
+      onChange={e => e}
+    />
   ));
 
 storiesOf('InputPassword', module)
   .add('Default', () => (
     <InputPassword
-      onChange={onChange}
+      onChange={e => e}
     />
   ))
   .add('label + required', () => (
     <InputPassword
       label='Mot de passe'
       required
-      onChange={onChange}
+      onChange={e => e}
     />
   ));
 
 storiesOf('GeneralsConditionForm', module)
   .add('GeneralsConditionForm', () => (
     <GeneralsConditionForm
-      onChange={onChange} />
+      onChange={e => e}
+    />
   ));
 
 storiesOf('BoxWithHeader', module)
   .add('empty', () => (
     <BoxWithHeader />
   )).add('no header', () => (
-    <BoxWithHeader>
-      hello word
-    </BoxWithHeader>
-  )).add('PersonalInformation', () => (
+    <BoxWithHeader>hello word</BoxWithHeader>
+  )).add('header + body', () => (
     <BoxWithHeader
       header="Informations personnels"
     >
-      <PersonalInformation />
-    </BoxWithHeader>
-  ))
-  .add('ChangePassword', () => (
-    <BoxWithHeader
-      header="Changer de mot de passe"
-    >
-      <ChangePassword />
-    </BoxWithHeader>
-  ))
-  .add('PersonalDescription', () => (
-    <BoxWithHeader
-      header="Changer votre description"
-    >
-      <PersonalDescription />
+      Ceci est un test.
     </BoxWithHeader>
   ));
 
@@ -240,11 +220,6 @@ storiesOf('BoxLeftRight', module)
   ));
 
 
-storiesOf('PersonalInformation', module)
-  .add('PersonalInformation', () => (
-    <PersonalInformation />
-  ));
-
 storiesOf('TableProducerItem', module)
   .add('producer item', () => (
     <TableProducerItem id={1234} name="La Ferme Du Bois" />
@@ -260,7 +235,7 @@ storiesOf('NotificationBagde', module)
   <BadgeMax value={0} />
 ))
 .add('10 notifications', () => (
-  <BadgeMax value={0} />
+  <BadgeMax value={10} />
 ))
 .add('> max value (99)', () => (
   <BadgeMax value={100} />

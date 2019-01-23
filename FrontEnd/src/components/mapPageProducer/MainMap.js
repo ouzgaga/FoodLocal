@@ -23,7 +23,7 @@ const styles = ({
 
 function MainMap(props) {
   const {
-    classes, products, addProduct, removeProduct, userLocation, maxDistance, changeMaxDistance, entries, onLoadMore,
+    classes, products, addProduct, removeProduct, userLocation, maxDistance, changeMaxDistance, entries, onLoadMore, ratingMin, changeRatingMin
   } = props;
 
   return (
@@ -36,6 +36,8 @@ function MainMap(props) {
           removeProduct={removeProduct}
           maxDistance={maxDistance}
           changeMaxDistance={changeMaxDistance}
+          ratingMin={ratingMin}
+          changeRatingMin={changeRatingMin}
         />
 
         <MyMap

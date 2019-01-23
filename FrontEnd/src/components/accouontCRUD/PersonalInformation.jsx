@@ -148,10 +148,7 @@ class PersonalInformation extends Component {
                           {data && <DoneOutline color="secondary" />}
                         </>
                       </BoxLeftRight>
-
-
                     </form>
-
                   )}
                 </Mutation>
               </>

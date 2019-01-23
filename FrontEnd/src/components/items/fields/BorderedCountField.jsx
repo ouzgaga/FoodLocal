@@ -31,7 +31,7 @@ class BorderedCountField extends Component {
     super(props);
 
     this.state = {
-      data: this.props.defaultValue,
+      data: props.defaultValue,
     };
   }
 
@@ -48,7 +48,7 @@ class BorderedCountField extends Component {
 
 
   render() {
-    const { classes, defaultValue, id, fullWidth, maxLenght, header } = this.props;
+    const { classes, id, fullWidth, maxLenght, header } = this.props;
     const { data } = this.state;
 
     return (
@@ -87,7 +87,7 @@ BorderedCountField.propTypes = {
   defaultValue: PropTypes.string,
   fullWidth: PropTypes.bool,
   maxLenght: PropTypes.number,
-  
+  header: PropTypes.objectOf(PropTypes.node, PropTypes.string),
 };
 
 BorderedCountField.defaultProps = {

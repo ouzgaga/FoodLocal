@@ -14,6 +14,7 @@ import TableProducerItem from './TableProducerItem';
 const GET_ALL_PRODUCERS = gql`
   query($after : String) {
   producers(first : 20, after : $after) {
+    totalCount
     pageInfo{
       hasNextPage
       hasPreviousPage
@@ -103,7 +104,6 @@ class Admin extends Component {
           <Grid>
             <form className={classes.root} autoComplete="off">
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-simple">Age</InputLabel>
                 <Select
                   value={recherche}
                   onChange={this.handleChange}
@@ -112,7 +112,7 @@ class Admin extends Component {
                     id: 'age-simple',
                   }}
                 >
-                  <MenuItem value={0}>Tous</MenuItem>
+                  <MenuItem value={0}>Validés</MenuItem>
                   <MenuItem value={1}>Non Validés</MenuItem>
                   <MenuItem value={2}>Par ID</MenuItem>
                 </Select>
@@ -171,24 +171,24 @@ class Admin extends Component {
                 data, loading, error, fetchMore
               }) => {
                 if (error) return <ErrorLoading />;
-                const { producers } = data;
+                const producersWaitingForValidation = data.producersWaitingForValidation;
 
                 return (
                   <TableProducers
                     loading={loading}
-                    entries={producers}
+                    entries={producersWaitingForValidation}
                     onLoadMore={() => fetchMore({
                       variables: {
-                        after: producers.pageInfo.endCursor
+                        after: producersWaitingForValidation.pageInfo.endCursor
                       },
                       updateQuery: (prevResult, { fetchMoreResult }) => {
-                        const newEdges = fetchMoreResult.producers.edges;
-                        const { pageInfo } = fetchMoreResult.producers;
+                        const newEdges = fetchMoreResult.producersWaitingForValidation.edges;
+                        const { pageInfo } = fetchMoreResult.producersWaitingForValidation;
                         return newEdges.length
                           ? {
-                            producers: {
-                              __typename: prevResult.producers.__typename,
-                              edges: [...prevResult.producers.edges, ...newEdges],
+                            producersWaitingForValidation: {
+                              __typename: prevResult.producersWaitingForValidation.__typename,
+                              edges: [...prevResult.producersWaitingForValidation.edges, ...newEdges],
                               pageInfo
                             }
                           }

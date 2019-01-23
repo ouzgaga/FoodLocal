@@ -128,6 +128,8 @@ class AddressForm extends Component {
                     <Grid item xs={8}>
                       <Typography variant="body1" className={classes.typo} gutterBottom> Nom de la rue</Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="street"
                         margin="normal"
@@ -141,6 +143,8 @@ class AddressForm extends Component {
 
                       <Typography className={classes.typo} variant="body1" gutterBottom> Numéro </Typography>
                       <TextField
+                        type="number"
+                        required
                         className={classes.textField}
                         id="number"
                         margin="normal"
@@ -153,6 +157,8 @@ class AddressForm extends Component {
                     <Grid item xs={12} sm={4}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> Code postal </Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="postalCode"
                         margin="normal"
@@ -165,6 +171,8 @@ class AddressForm extends Component {
                     <Grid item xs={12} sm={8}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> Ville </Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="city"
                         margin="normal"
@@ -177,6 +185,8 @@ class AddressForm extends Component {
                     <Grid item xs={12} sm={6}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> État </Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="countryState"
                         margin="normal"
@@ -189,6 +199,8 @@ class AddressForm extends Component {
                     <Grid item xs={12} sm={6}>
                       <Typography className={classes.typo} variant="body1" gutterBottom> Pays </Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="country"
                         margin="normal"
@@ -228,6 +240,8 @@ class AddressForm extends Component {
                         {'Adresse'}
                       </Typography>
                       <TextField
+                        type="text"
+                        required
                         className={classes.textField}
                         id="fullAddress"
                         margin="normal"
