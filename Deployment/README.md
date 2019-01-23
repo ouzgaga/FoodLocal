@@ -2,6 +2,8 @@
 
 We choose to deploy our application across continuous integration with Gitlab.  All the processus is defined in the file: [.gitlab-ci.yml](../.gitlab-ci.yml). 
 
+
+
 ## Continuous Integration (CI)
 
 The CI are split in different stages.
@@ -18,58 +20,63 @@ The CI are split in different stages.
 - deploy
   - Deploy the apps on Google Cloud Kubernetes
 
-## CD
+
+
+## Continuous Deployment (CD)
 
 ### Google Cloud with Kubernetes
 
 We choose to use Google Cloud with Kubernetes to host our applications. 
 
-The procedure to redeploy the application on a same infrastructure is to:
+The procedure to follow to be able to redeploy the application on a same infrastructure is :
 
-- Create your a Google account on:  [Google SignUp](https://accounts.google.com/signup/v2/webcreateaccount?flowName=GlifWebSignIn&flowEntry=SignUp)
-- You will need to create a project.
-  - In the console interface (web page) click on select project -> new project
-  - Insert the name and the zone (not necessary) you want for the project
-- You will need to create a [account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console)
-  - In the search bar of Google Cloud, search for IAM and administration
-    - Choose in the subMenu on the left, service account
-    - Create or select the account you want to generate the access key
-      - If you create it, choose the role: owner of the project
-      - They will ask you if you want to generate a key -> click on the button to do so. Select json format.
-      - You will need to put it in to place:
-        - in the [Deployment/DB/script](./DB/script) folder (Not necessary but usefull script to deploy a db)
-        - you will need to add a env var into gitlab: `GC_KEY` with the content of the json file
-        - if you use the Google Cloud sdk in local, you will need this file to connect in a more easier way
-        - everytime you will create a docker container, insert this file inside of the docker image. 
-- You will need to create a [Kubernetes cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster) (please read officiel doc for more information or how to do it by the terminal)
-  - from the web interface, search for `Kubernetes Engine`
-  - You will need to subscribe to the trial version of google cloud (with 300$ and one year)
-  - Click on create new cluster
+- Create a Google account on :  [Google SignUp](https://accounts.google.com/signup/v2/webcreateaccount?flowName=GlifWebSignIn&flowEntry=SignUp)
+- Create a new project :
+  - In the console interface (web page), click on *select project* , then on *new project*.
+  - Enter your project name and select the zone (not necessary) that you want for the project.
+- Create a [account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console) :
+  - In the search bar of Google Cloud, search for *IAM and administration*
+    - Click on the *service account*  subMenu.
+    - Create or select the account for which you want to generate the access key.
+      - If you create it, select the role *owner of the project*
+      - They will ask you if you want to generate a new key. Click on the button to do so and then select the JSON format.
+      - Then, save it at the right place :
+        - In the [Deployment/DB/script](./DB/script) folder (Not necessary but usefull script to deploy a db)
+        - You will need to add a environment variable into Gitlab.
+          - Name it `GC_KEY` and give it the content of the json file as value.
+        - If you use the Google Cloud SDK in local, you will need this file to connect in a easier way.
+        - Everytime you will create a docker container, insert this file inside of the docker image. 
+- Create a [Kubernetes cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster) (please read officiel doc for more information or how to do it by the terminal)
+  - From the web interface, search for `Kubernetes Engine`
+  - You will need to subscribe to the trial version of Google Cloud (with 300$ and one year free)
+  - Click on *create new cluster*
     - You will need to choose the name, zone etc
       - We will need this informations to connect to the cluster via the terminal
-        - In the folder: [Deployment/DB/script](./DB/script/) create a .env file with the same structure as the .env.default and insert the correct information into it
-        - Same for the folder [Deployment/GCE](./GCE/)
-        - And add the var env into gitlab to use the CI
-      - *Tips*: If you click on `login` (`se connecter`in french) you will see the line to connect by the terminal.
-- Connect to the Kluster with kubectl
+        - In the folder : [Deployment/DB/script](./DB/script/), create a .env file with the same structure as the .env.default and insert the correct informations into it.
+        - Do the same for the folder [Deployment/GCE](./GCE/)
+        - Add the environment variable into Gitlab to use the CI.
+      - *Tips*: If you click on `login` (`se connecter` in french), you will see the line to use to connect from the terminal.
+- Connect to the Kluster with Kubectl
 - Install [Helm/Tiller](#helmtiller)
 - Install the [nginx-ingress loadbalancer](#install-nginx-ingress)
 - Install the [cert-manager](#install-cert-manager)
 - Install the [database](#install-mongodb-database)
 - Deploy the different [services and deployment](#install-services-and-deployment)
 
+
+
 ## Install
 
 ### Kubectl and Google Cloud SDK
 
-You have to choices: Install the Google Cloud sdk and kubectl in local or using a docker container.
+You have to choices : Install the Google Cloud SDK and Kubectl in local or use a docker container.
 
 To install it in local please follow the official documentation:
 
 - [SDK](https://cloud.google.com/sdk/install)
 - [Kubectl](https://cloud.google.com/kubernetes-engine/docs/quickstart)
 
-The image to use to have the sdk installed: `google/cloud-sdk:alpine`. In this image you will need to install kubectl with the following command: 
+The image to use to have the SDK installed is `google/cloud-sdk:alpine`. In this image, you will need to install Kubectl. You can do so with the following command : 
 
 ```sh
 gcloud components install kubectl
@@ -81,13 +88,15 @@ To authentificate to your project, use the following command with the account ke
 gcloud auth activate-service-account --key-file=./gc-key.json
 ```
 
-To define in witch kubernetes cluster you will work use this command:
+To define in witch kubernetes cluster you will work use this command :
 
 ```sh
 gcloud container clusters get-credentials $GC_CLUSTER_ID --zone $GC_ZONE --project $GC_PROJECT_ID
 ```
 
-by replacing the `GC_CLUSTER_ID`, `GCE_ZONE` and `GCE_PROJECT_ID` by your own values.
+Don't forget to replace the `GC_CLUSTER_ID`, `GCE_ZONE` and `GCE_PROJECT_ID` with your own values!
+
+
 
 ### Helm/Tiller
 
@@ -104,10 +113,11 @@ To install them, please follow the official documentation: https://docs.helm.sh/
 ### Reason
 
 We have to deploy a `nginx-ingress` loadbalancer to handle the http to https redirection. `GCE loadbalancer` do not handle this.
-Source: https://medium.com/google-cloud/google-cloud-platform-redirecting-http-traffic-to-https-f63c1d7dbc6d
+Source : https://medium.com/google-cloud/google-cloud-platform-redirecting-http-traffic-to-https-f63c1d7dbc6d
+
 ### Install
 
-To install `nginx-ingress` we used helm.
+To install `nginx-ingress`, we used helm.
 
 ```bash
 helm install --name nginx-ingress --set \ controller.service.loadBalancerIP="<staticIP>" stable/nginx-ingress
@@ -115,17 +125,19 @@ helm install --name nginx-ingress --set \ controller.service.loadBalancerIP="<st
 
 Where `staticIP` is a static IP address reserved on the same region of the cluster.
 
-To reserve an staticIP in the web interface in the search bar search, `IP` -> `extern IP address`-> `Reserve an static address ip`.
+To reserve an staticIP in the web interface, search for `IP` -> `extern IP address`-> `Reserve an static address ip` in the search bar.
 
-Install your `ingress configuration`:
+Install your `ingress configuration `:
 
 ```bash
 kubectl apply -f ingress.yml
 ```
 
+
+
 ## Install Cert-Manager
 
-The scripts for the cert-manager are in this [folder](./cert-manager/script/)
+All the scripts for the cert-manager are in this folder [./cert-manager/script/](./cert-manager/script/)
 
 - Create a `service-account` (good practice)
 
@@ -165,7 +177,7 @@ The scripts for the cert-manager are in this [folder](./cert-manager/script/)
 
   - Need to install a ClusterIssuer and not a Issuer because we are not in the same namespace as our ingress.
 
-- Deploying `ClusterIssuer` and `Certificate`
+- Deploy `ClusterIssuer` and `Certificate`
 
   `deploy-cert-manager.sh`
 
@@ -181,43 +193,43 @@ The scripts for the cert-manager are in this [folder](./cert-manager/script/)
 
 We choose to install a replica set for ensure the accessibility of our data.
 
-To do so, we used Helm and a configuration file: [values-production.yaml](./DB/values-production.yaml)
+To do so, we used Helm and a configuration file : [values-production.yaml](./DB/values-production.yaml)
 
-- You can run the script [deployDB.sh](./deployDB.sh) or go into the [Deployment/DB](./DB) folder and run:
+- To deploy a DB, you can run the docker script [deployDB.sh](./deployDB.sh) or go into the [Deployment/DB](./DB) folder and run :
 
   ```sh
   helm install --name foodlocal-db -f ./values-production.yaml stable/mongodb-replicaset
   ```
 
-- To test if the replica set work correctly, there is a [script](./DB/testReplicaset.sh) in the DB folder
+- To test if the replica set work correctly, there is a test [script](./DB/testReplicaset.sh) in the DB folder.
 
 ### Install services and deployment
 
-The easiest way is to run the [deployAllServicesAndDeployment.sh](.deployAllServicesAndDeployment.sh) script.
+The easiest way to install services and deployment is to run the [deployAllServicesAndDeployment.sh](.deployAllServicesAndDeployment.sh) script.
 
-The order to deploy is:
+The services are deployed in the following order :
 
 - Ingress
   - [ingress.yml](./Ingress/ingress.yml)
     - Loadbalancer and rules of redirection
 - API
   - [API Secret](./API/api-secret.yml.default)
-    - Create a new file api-secret.yml with your own env var
+    - Create a new file *api-secret.yml* with your own environment variables.
   - [API Service](./API/api-service.yml)
-    - Managing the api deployments
+    - Manage the api deployments.
   - [API Deployment](./API/api-deployment.yml)
-    - The specification of the api deployment
-    - You need to have the image of your api into google cloud image registery.
-      - Best way to do so is to pass by the gitlab-ci or using docker login
-        - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image` section
+    - Set the specification of the api deployment.
+    - You will need to have the image of your api into Google Cloud Image Registery.
+      - Best way to do so is to pass by the *gitlab-ci* or using *docker login.*
+        - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image` section.
 - Frontend
   - [Frontend Service](./Frontend/frontend-service.yml)
-    - Managing the frontend deployments
+    - Manage the frontend deployments.
   - [Frontend Deployment](./Frontend/frontend-deploy.yml)
-    - The specification of the frontend deployment
-    - You need to have the image of your api into google cloud image registery.
-      - Best way to do so is to pass by the gitlab-ci or using docker login
-        - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image` 
+    - Set the specification of the frontend deployment.
+    - You will need to have the image of your frontend into Google Cloud Image Registery.
+      - Best way to do so is to pass by the *gitlab-ci* or using *docker login.*
+        - To see an example for docker login please read the [.gitlab-ci.yml](../.gitlab-ci.yml) in the `release image`  section.
 
 ### Auto-scale of deployments
 
@@ -231,7 +243,7 @@ kubectl autoscale deployment frontend-deploy --max <max> --min <min> --cpu-perce
 
 ### Remove deployments
 
-To remove all deployments use the script: [deleteAllServicesAndDeployment.sh](./deleteAllServicesAndDeployment.sh)
+To remove all deployments use the script : [deleteAllServicesAndDeployment.sh](./deleteAllServicesAndDeployment.sh)
 
 ## Tips
 
@@ -253,10 +265,10 @@ kubectl logs <pod-name>
 kubectl get <resource>
 ```
 
-Resources can be:
+Resources can be :
 
 - pods
-- deployment
+- deployments
 - services
 - etc...
 
@@ -268,8 +280,8 @@ kubectl describe <ressource> <ressource-name>
 
 ## Source
 
-- Authorization: https://cloud.google.com/sdk/docs/authorizing
-- Create Project: https://cloud.google.com/sdk/gcloud/reference/projects/create
-- Getting google cloud account key: https://cloud.google.com/iam/docs/creating-managing-service-account-keys
-- MongoDB replica set: https://github.com/helm/charts/tree/master/stable/mongodb-replicaset
+- Authorization : https://cloud.google.com/sdk/docs/authorizing
+- Create Project : https://cloud.google.com/sdk/gcloud/reference/projects/create
+- Getting Google Cloud Account Key: https://cloud.google.com/iam/docs/creating-managing-service-account-keys
+- MongoDB replica set : https://github.com/helm/charts/tree/master/stable/mongodb-replicaset
 
