@@ -44,11 +44,10 @@ const styles = theme => ({
     flex: 1,
     alignItems: 'center',
   },
-
 });
 
+// Permet d'afficher les détails d'un producteur
 class PageProducer extends React.Component {
-
   constructor(props) {
     super(props);
     document.title = 'Détails Producteur';
@@ -65,7 +64,7 @@ class PageProducer extends React.Component {
           query={GET_PRODUCER_HEADER}
           variables={{ producer: producerId }}
         >
-          {({ data, loading, error }) => {
+          {({ data, loading, error, refetch }) => {
             if (error) return <ErrorLoading />;
             if (loading) return <Loading />;
 
@@ -97,6 +96,8 @@ class PageProducer extends React.Component {
 
                 <ProducerUserInteraction
                   followersCount={followers.totalCount}
+                  producerId={producerId}
+                  refetchParent={refetch}
                 />
                 <ProducerContent producerId={producerId} />
               </>

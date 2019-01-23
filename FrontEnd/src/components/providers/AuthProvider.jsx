@@ -51,7 +51,6 @@ class AuthProvider extends React.Component {
       userEmailValidated: false,
       userToken: null,
 
-
       error: null,
 
       signIn: this.signIn,

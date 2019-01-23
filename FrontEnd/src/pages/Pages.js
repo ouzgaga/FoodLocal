@@ -11,6 +11,7 @@ import PagePersonalInformations from './PagePersonalInformations';
 import PageErrorLogin from './PageErrorLogin';
 import PageErrorEmail from './PageErrorEmail';
 import PageWall from './PageWall';
+import PageMyProducers from './PageMyProducers';
 
 export {
   PageAbout,
@@ -26,4 +27,5 @@ export {
   PageErrorLogin,
   PageErrorEmail,
   PageWall,
+  PageMyProducers,
 };

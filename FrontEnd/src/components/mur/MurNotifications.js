@@ -36,7 +36,8 @@ function MurNotifications(props) {
                     name={node.notification.producer.salespoint.name}
                     date={node.notification.date}
                     image={node.notification.producer.image}
-                    post="Le producteur a posté un nouveau post"
+                    post={node.notification.post.text}
+                    address={node.notification.post.address}
                   />
                 )}
 

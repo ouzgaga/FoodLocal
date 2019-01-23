@@ -7,7 +7,6 @@ import { Typography, Grid } from '@material-ui/core';
 import Loading from '../components/Loading';
 import ErrorLoading from '../components/ErrorLoading';
 import NearProducers from '../components/accueil/NearProducers';
-import FilterBar from '../components/accueil/FilterBar';
 import logo from '../img/LogoCarrote.png';
 
 const styles = ({
@@ -158,7 +157,6 @@ class PageAccueil extends Component {
       </div>
 
         <div className={classes.nearProducers}>
-          <FilterBar />
 
           <Query
             query={GET_PRODUCERS_BY_LOCATION}
