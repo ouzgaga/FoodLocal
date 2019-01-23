@@ -6,7 +6,7 @@ import PersonalDescription from '../components/accouontCRUD/PersonalDescription'
 import ChangePassword from '../components/accouontCRUD/ChangePassword';
 import BoxWithHeader from '../components/items/BoxWithHeader';
 import DeleteAccount from '../components/accouontCRUD/DeleteAccount';
-import DropZone from '../components/items/DropZone'
+import ChangeProfilImage from '../components/accouontCRUD/ChangeProfilImage';
 import { AuthContext } from '../components/providers/AuthProvider';
 
 
@@ -45,12 +45,6 @@ class PagePersonalInformations extends React.Component {
     const userSettings = (userId, status, token) => (
       <>
         <BoxWithHeader
-          header="Image de profil"
-        >
-          <DropZone />
-        </BoxWithHeader>
-      
-        <BoxWithHeader
           header="Informations personnels"
         >
           <PersonalInformation userId={userId} status={status} token={token} />
@@ -58,9 +52,9 @@ class PagePersonalInformations extends React.Component {
         <BoxWithHeader
           header="Changer de mot de passe"
         >
-          <ChangePassword userId={userId} status={status} token={token} />
+          <ChangePassword />
         </BoxWithHeader>
-        
+
         <BoxWithHeader
           header="Supprimer votre compte"
         >
@@ -71,11 +65,11 @@ class PagePersonalInformations extends React.Component {
 
     const producerSettings = (userId, status, token) => (
       <>
-      
+
         <BoxWithHeader
           header="Image de profil"
         >
-          <DropZone />
+          <ChangeProfilImage userId={userId} status={status} token={token} />
         </BoxWithHeader>
         <BoxWithHeader
           header="Informations personnels"
@@ -92,7 +86,7 @@ class PagePersonalInformations extends React.Component {
         >
           <PersonalDescription userId={userId} status={status} token={token} />
         </BoxWithHeader>
-    
+
         <BoxWithHeader
           header="Supprimer votre compte"
         >
@@ -105,15 +99,11 @@ class PagePersonalInformations extends React.Component {
     return (
       <div className={classes.root}>
         <AuthContext>
-          {({ userId, userStatus, userToken }) => {
-            return (userStatus === 'producers' 
-              ? producerSettings(userId, userStatus, userToken)
-              : userSettings(userId, userStatus, userToken));
-          }
-          }
+          {({ userId, userStatus, userToken }) => (userStatus === 'producers'
+            ? producerSettings(userId, userStatus, userToken)
+            : userSettings(userId, userStatus, userToken)
+          )}
         </AuthContext>
-
-
       </div>
     );
   }

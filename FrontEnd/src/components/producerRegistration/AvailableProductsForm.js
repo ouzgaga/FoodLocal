@@ -13,27 +13,35 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
 import { IncriptionProducerContext } from './InscriptionProducer';
-import Loading from '../Loading';
 import ErrorLoading from '../ErrorLoading';
 
 const query = gql`
-{
+  query {
   productTypeCategories {
-    id
-    name
-    image
+    edges {
+      node {
+        id
+        name
+        image
+      }
+    }
   }
 }
 `;
 
 const query2 = gql`
-  query ($productTypeCategoryId: ID!) {
-    productTypesOfCategory(productTypeCategoryId : $productTypeCategoryId) {
-      id
-      name
-      image
+ query($productTypeCategoryId: ID!) {
+  productTypesOfCategory(productTypeCategoryId: $productTypeCategoryId) {
+    edges {
+      node {
+        id
+        name
+        image
+      }
     }
   }
+}
+
 `;
 
 const styles = ({
@@ -88,27 +96,27 @@ class AvailableProductsForm extends Component {
                 <Query query={query}>
                   {({ data, loading, error }) => {
                     if (error) return <ErrorLoading />;
-                    if (loading) return <Loading />;
+                    if (loading) return <p>Chargement...</p>;
                     const { productTypeCategories } = data;
 
                     return (
-                      productTypeCategories.map(product => (
-                        <Grid item xs={4} sm={2} key={product.id}>
+                      productTypeCategories.edges.map(({ node }) => (
+                        <Grid item xs={4} sm={2} key={node.id}>
                           <div className={classes.paper}>
                             <Card className={classes.media} style={{ margin: '0 auto' }}>
-                              <CardActionArea onClick={this.onclick(product.id)}>
-                                {value === product.id
+                              <CardActionArea onClick={this.onclick(node.id)}>
+                                {value === node.id
                                   ? (
-                                    <CardMedia className={classes.media2} image={product.image} title={product.name} />
+                                    <CardMedia className={classes.media2} image={node.image} title={node.name} />
                                   ) : (
-                                    <CardMedia className={classes.media} image={product.image} title={product.name} />
+                                    <CardMedia className={classes.media} image={node.image} title={node.name} />
                                   )}
                               </CardActionArea>
                             </Card>
 
                             <div className={classes.paper}>
                               <Typography align="center" className={classes.typo} variant="body1" gutterBottom>
-                                {product.name}
+                                {node.name}
                               </Typography>
                             </div>
                           </div>
@@ -125,25 +133,25 @@ class AvailableProductsForm extends Component {
                   <Query query={query2} variables={{ productTypeCategoryId: value }}>
                     {({ data, loading, error }) => {
                       if (error) return <ErrorLoading />;
-                      if (loading) return <Loading />;
+                      if (loading) return <p>Chargement...</p>;
                       const { productTypesOfCategory } = data;
                       return (
-                        productTypesOfCategory.map(product => (
+                        productTypesOfCategory.edges.map(({ node }) => (
                           <Grid item xs={4} sm={2}>
 
                             <Card className={classes.media} style={{ margin: '0 auto' }}>
 
-                              {has(values.items, product)
+                              {has(values.items, node)
                                 ? (
-                                  <CardActionArea onClick={removeItem(product)}>
+                                  <CardActionArea onClick={removeItem(node)}>
 
-                                    <CardMedia className={classes.media2} image={product.image} title={product.name} />
+                                    <CardMedia className={classes.media2} image={node.image} title={node.name} />
                                   </CardActionArea>
 
                                 )
                                 : (
-                                  <CardActionArea onClick={addItem(product)}>
-                                    <CardMedia className={classes.media} image={product.image} title={product.name} />
+                                  <CardActionArea onClick={addItem(node)}>
+                                    <CardMedia className={classes.media} image={node.image} title={node.name} />
                                   </CardActionArea>
                                 )
                               }
@@ -151,7 +159,7 @@ class AvailableProductsForm extends Component {
                             </Card>
                             <div className={classes.paper}>
                               <Typography className={classes.typo} variant="body1" gutterBottom>
-                                {product.name}
+                                {node.name}
                               </Typography>
                             </div>
                           </Grid>
@@ -177,7 +185,7 @@ class AvailableProductsForm extends Component {
                 </Grid>
               </Grid>
             </div>
-        )}
+          )}
       </IncriptionProducerContext>
     );
   }

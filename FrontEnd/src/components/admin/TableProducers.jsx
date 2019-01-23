@@ -39,7 +39,7 @@ function TableProducers(props) {
 
 TableProducers.propTypes = {
   entries: PropTypes.shape().isRequired,
-  loading: PropTypes.shape().isRequired,
+  loading: PropTypes.bool.isRequired,
   onLoadMore: PropTypes.func.isRequired,
 };
 

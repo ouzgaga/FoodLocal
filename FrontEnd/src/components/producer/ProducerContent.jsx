@@ -124,6 +124,9 @@ const GET_POSTS_OF_PRODUCER = gql`
           firstname
           lastname
           image
+          salespoint {
+            name
+          }
         }
         text
         publicationDate
