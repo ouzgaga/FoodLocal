@@ -66,46 +66,27 @@ const styles = theme => ({
 });
 
 
-/*
+// Les fonctions si dessous sont nos redirection. Nous avons décidé de faire une fonction par type de redirection pour simplifier
 
-const ProtectedUserRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userStatus, userToken }) => {
-            //console.info("123", userEmailValidated);
-            console.info("daym", userToken);
-            if (userStatus === 'producers') { // Connecté mais pas d'email validé
-              return <Component {...params} />;
-            } 
-            // pas connecté
-            return (<Redirect to="/error/page404" />);
-          }}
-        </AuthContext>
-      )}
-  />
-)
-*/
 const ProtectedProducerRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={params => (
       <AuthContext>
-        {({ userStatus, userToken }) => {
-          console.info("daym", userToken);
+        {({ userStatus, userToken, userEmailValidated }) => {
+          if (userToken && !userEmailValidated) { // Connecté mais pas d'email validé
+            return (<Redirect to="/error/email" />);
+          }
           if (userStatus === 'producers') { // Connecté mais pas d'email validé
             return <Component {...params} />;
           }
           // pas connecté
-          return (<Redirect to="/error/page404" />);
+          return (<Redirect to="/error/notConnected" />);
         }}
       </AuthContext>
     )}
   />
-)
-
+);
 const ProtectedAdminRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -117,8 +98,7 @@ const ProtectedAdminRoute = ({ component: Component, ...rest }) => (
       </AuthContext>
     )}
   />
-)
-
+);
 const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -131,7 +111,7 @@ const ProtectedValidateEmail = ({ component: Component, ...rest }) => (
       </AuthContext>
     )}
   />
-)
+);
 
 const ProtectedErrorConected = ({ component: Component, ...rest }) => (
   <Route
@@ -145,7 +125,7 @@ const ProtectedErrorConected = ({ component: Component, ...rest }) => (
       </AuthContext>
     )}
   />
-)
+);
 
 const ProtectedErrorEmail = ({ component: Component, ...rest }) => (
   <Route

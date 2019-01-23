@@ -12,7 +12,6 @@ import { Client, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Button from '@material-ui/core/Button';
 
-import { SnackbarProvider } from 'notistack';
 
 import {
   BrowserRouter as Router,
@@ -88,13 +87,10 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <MuiThemeProvider theme={Theme}>
-        <SnackbarProvider
-          maxSnack={3}
-        >
+        
           <AuthProvider>
             <App />
           </AuthProvider>
-        </SnackbarProvider>
       </MuiThemeProvider>
     </Router>
   </ApolloProvider>,
