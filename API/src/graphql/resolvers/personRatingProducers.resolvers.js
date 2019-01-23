@@ -13,7 +13,7 @@ const personRatingProducersResolvers = {
 
     ratingAboutProducerMadeByPerson: async(parent, args, context) => {
       await isAuthenticatedAndIsYourself(context.id, args.personId);
-      return personRatingProducersServices.getRatingAboutProducerIdMadeByPersonId(args.personId, args.producerId);
+      return personRatingProducersServices.getRatingAboutProducerIdMadeByPersonId(args.producerId, args.personId);
     },
 
     ratingsMadeByPerson: async(parent, args, context) => {

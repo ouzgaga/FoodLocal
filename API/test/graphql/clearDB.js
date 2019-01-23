@@ -8,7 +8,6 @@ const ProductsModel = require('../../src/graphql/models/products.modelgql');
 const ProductTypeCategoriesModel = require('../../src/graphql/models/productTypeCategories.modelgql');
 const ProductTypesModel = require('../../src/graphql/models/productTypes.modelgql');
 const { SalespointsModel } = require('../../src/graphql/models/salespoints.modelgql');
-const TokensValidationEmailModel = require('../../src/graphql/models/tokenValidationEmail.modelgql');
 const UserModel = require('../../src/graphql/models/users.modelgql');
 
 const clearDB = async() => {
@@ -22,7 +21,6 @@ const clearDB = async() => {
   await ProductTypeCategoriesModel.deleteMany();
   await ProductTypesModel.deleteMany();
   await SalespointsModel.deleteMany();
-  await TokensValidationEmailModel.deleteMany();
   await UserModel.deleteMany();
 };
 

@@ -29,8 +29,7 @@ function getAllRatingsAboutProducerWithId(producerId) {
  * @returns {*}
  */
 function getRatingAboutProducerIdMadeByPersonId(producerId, personId) {
-  return PersonRatingProducersModel.findOne({ producerId, personId })
-    .sort({ _id: 1 });
+  return PersonRatingProducersModel.findOne({ producerId, personId });
 }
 
 /**

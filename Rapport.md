@@ -44,17 +44,32 @@ L'API est structurée de la façon suivante:
 - Les fichiers situés dans le dossier *API/src/graphql/schemas* constituent le schéma GraphQL. Ces fichiers définissent les appels que peut faire le client sur l'API ainsi que toutes les communications (paramètres requis, contenu des objets etc...).
 - Chaque endpoint du schéma nécessite un resolver. Ces resolvers se trouvent dans le dossier *API/src/graphql/resolvers*. Les resolvers sont appelés automatiquement par GraphQL en fonction du endpoint appelé. Nous avons fait en sorte que le code des resolvers soit toujours le plus concis possible. En général, les resolvers se content de vérifier l'authentification du client ainsi que son autorisation (s'il possède les droits d'appeler cet endpoint ou non), puis ils appellent une fonction dans l'un des services de l'API.
 - Les services se trouvent dans le dossier *API/src/graphql/services*. Les services effectuent tout le traitement des resolvers. C'est eux qui manipulent les données et qui font les appels à la base de données en se basant sur les modèles mongoose.
-- Les modèles mongoose sont situés dans le dossier *API/src/graphql/models* 
+- Les modèles mongoose sont situés dans le dossier *API/src/graphql/models*. Chaque fichier décrit une collection de la base de données.
+- Dans le dossier *API/src/graphql/schemaDirective* se trouve une directive GraphQL. Cette directive (créée par notre très cher PaulNta *__\*) est utilisée dans le schéma GraphQL grâce à l'annotation *@connection*. Lorsqu'un élément du schéma contient cette annotation cela signifie que l'élément est paginé. Ainsi, le résultat retourné par le resolver d'un élément du schéma GraphQL possèdant cette annotation sera automatiquement passé à la directive. La directive se charge d'ajouter les paramètres de pagination (first, before, last, after) à l'élément du schéma et passe le retour du resolver dans une fonction *connectionFromArray()* qui transforme le tableau reçu en une connection (un tableau paginé) valide.
+- Le fichier API/src/graphql/graphqlConfig.js contient la configuration de GraphQL. C'est lui qui merge tous les resolvers en une constante *resolvers* ainsi que tous les fichiers de schémas GraphQL en une constante *schema*. Ces constante (ainsi que la directive) sont ensuite exportées afin de pouvoir être utilisées facilement dans le reste de l'API.
+- Dans le dossier *API/src/utils* se trouvent quelques fichiers contenant diverses fonctions utilitaires appelées par d'autres services.
+- Dans le fichier *API/src/config* se trouvent 1 fichier d'importance capitale. En effet, le fichier *config.js* contient tous les paramètres de l'API tels que le numéro de port, la string de connection à la base de données, le secret jwt, etc. Cette configuration est disposée dans un objet contenant 3 configurations distinctes (*development*, *test* et *production*). La configuration appropriée est sélectionnée à l'aide de la variable d'environnement *NODE_ENV*. Par défaut, c'est la configuration *development* qui est sélectionnée.
+- Les 2 derniers fichiers importants sont *app.js* et *server.js* situés dans le dossier *API/src/*. 
+  *app.js* configure effectue la connexion à la base de données et lance le serveur express et le serveur apollo.
+  *server.js* se contente d'appeler *app.js* puis fait le listen afin d'écouter un port et de mettre l'API réellement à disposition de clients distants.
 
 ### Requêtes et données
 
-L'API offre de très nombreux endpoints. L'utilité de chaque endpoint est donnée en commentaires dans les fichiers du schéma GraphQL (dossier *API/src/graphql/schemas*).
+L'API offre de très nombreux endpoints. L'utilité de chaque endpoint est donnée en commentaires dans les fichiers du schéma GraphQL (dossier *API/src/graphql/schemas*). De plus, chaque fonction des services sont commentées et documentées.
+
 ### Tests
-Nous avons effectué deux type de tests. Des tests unitaires qui teste les différents services et méthodes d'accès aux données et des tests d'intégration qui tests le fonctionnement de GraphQL.
+Nous avons effectué deux types de tests de notre API.
+Tout d'abord, nous avons testé chaque fonction de chaque service afin de s'assurer de son bon fonctionnement et de pouvoir être certain que son comportement ne change pas tout au long du développement de l'API. Pour cela, nous avons créé des tests unitaires à l'aide de *Mocha* ainsi *Chai*.
+
+Dans un second temps, nous avons créé des tests d'intégration permettant de tester le comportement de l'API en se mettant à la place du client. Dans ces tests, nous faisons un appel non pas directement à un service comme c'est le cas dans les tests unitaires, mais en faisant un appel à GraphQL
+
+Ces tests, en plus d'être fréquemment runnés 
+
+Des tests unitaires qui teste les différents services et méthodes d'accès aux données et des tests d'intégration qui tests le fonctionnement de GraphQL.
 
 Pour lancer les tests il faut exécuté la commande `npm test`dans le dossier *API*
 
-## Deployment
+## Déploiement
 Toutes les informations concerant le deployment sont accéssible dans le [README.md](./Deployment/README.md) dans le dossier [/Deployment](./Deployment).
 
 ## Utilisation
