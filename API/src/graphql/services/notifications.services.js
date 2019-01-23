@@ -24,9 +24,10 @@ function getNotificationById(notificationId) {
  *    PRODUCER_UPDATE_PRODUCTS_LIST -> notification crée lorsqu'un producteur met à jour sa liste de produits.
  *    PRODUCER_UPDATE_SALESPOINT_INFO) -> notification crée lorsqu'un producteur met à jour les informations de son point de vente.
  * @param producerId, l'id du producteur ayant produit la notification.
+ * @param postId, l'id du post qui a généré la notification (présent que si le type est NEW_POST, null sinon).
  * @returns la nouvelle notification.
  */
-async function addNotification(type, producerId) {
+async function addNotification(type, producerId, postId) {
   const producer = await producersServices.getProducerById(producerId);
   if (producer == null) {
     throw new Error(`The given producerId (with id: ${producerId}) doesn’t exist in the database!\``);
@@ -35,7 +36,7 @@ async function addNotification(type, producerId) {
   const notificationToAdd = {
     type,
     producerId: producer.id,
-    // date: Date.now()
+    postId
   };
   // on enregistre le nouveau post dans la base de données
   const notification = await new NotificationsModel(notificationToAdd).save();
