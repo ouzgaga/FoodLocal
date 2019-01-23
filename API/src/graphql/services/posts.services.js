@@ -1,5 +1,6 @@
 module.exports = {
   getAllPostsOfProducer,
+  getPostById,
   countNbPostsOfProducerInDB,
   addPostOfProducer,
   deletePostOfProducer
@@ -17,6 +18,15 @@ function getAllPostsOfProducer(producerId) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
   return PostsModel.find({ producerId, deleted: false })
     .sort({ publicationDate: -1 });
+}
+
+/**
+ * Retourne le post correspondant à l'id reçu.
+ * @param postId, l'id du post que l'on souhaite récupérer.
+ * @returns le post correspondant à l'id reçu.
+ */
+function getPostById(postId) {
+  return PostsModel.findById(postId);
 }
 
 /**
@@ -59,7 +69,7 @@ async function addPostOfProducer(post) {
   // on enregistre le nouveau post dans la base de données
   const newPost = await new PostsModel(postToAdd).save();
 
-  await notificationsServices.addNotification('NEW_POST', newPost.producerId);
+  await notificationsServices.addNotification('NEW_POST', newPost.producerId, newPost.id);
 
   return newPost;
 }

@@ -14,15 +14,10 @@ const producersServices = require('./producers.services');
 const notificationsServices = require('./notifications.services');
 
 /**
- * Retourne "limit" produits de la base de données, fitlrés
- * selon les tags "tags" reçus à partir de la page "page". Sans
- * paramètres, retourne tous les produits de la base de
- * données.
+ * Retourne tous les produits de la base de données, filtrés en fonction des tags reçus.
  *
- * @param {Array} tags, Tags à utiliser pour filtrer les résultats.
- * @param {Integer} limit, Nombre maximum de produits à retourner.
- * @param {Integer} page, Numéro de la page à retourner. Permet par exemple de récupérer la "page"ème page de "limit" produits. Par exemple, si
- *   "limit" vaut 20 et "page" vaut 3, on récupère la 3ème page de 20 produits, soit les produits 41 à 60.
+ * @param tags, objet contenant les tags à utiliser pour filtrer les résultats. Séparer plusieurs tags à l'aide de ','.
+ * @returns tous les produits de la base de données triés par id et filtrés en fonction des tags reçus.
  */
 function getProducts({ tags = undefined } = {}) {
   // FIXME: Il faut ajouter la pagination entre la DB et le serveur !!!
@@ -32,8 +27,8 @@ function getProducts({ tags = undefined } = {}) {
 
 /**
  * Retourne tous les produits dont l'id se trouve dans la liste passée en paramètre.
- * @param listOfIdToGet, liste contenant les ids des produits que l'on cherche.
- * @returns {*}
+ * @param listOfIdToGet, un tableau contenant les ids des produits que l'on cherche.
+ * @returns un tableau contenant tous les produits dont l'id se trouve dans le tableau listOfIdToGet reçu.
  */
 function getAllProductsInReceivedIdList(listOfIdToGet) {
   return getProducts({ tags: { _id: { $in: listOfIdToGet } } });
@@ -42,18 +37,18 @@ function getAllProductsInReceivedIdList(listOfIdToGet) {
 /**
  * Retourne le produit correspondant à l'id reçu.
  *
- * @param {Integer} id, L'id du produit à récupérer.
+ * @param id, l'id du produit à récupérer.
+ * @returns retourne le produit correspondant à l'id reçu.
  */
 function getProductById(id) {
   return ProductsModel.findById(id);
 }
 
 /**
- * Ajoute un nouveau produit dans la base de données.
- * Attention, doublons autorisés!
+ * Ajoute un nouveau produit dans la base de données et le lie au producteur correspondant à l'id 'producerId'.
  *
- * @param {Integer} product, Les informations du produit à ajouter.
- * @param producerId, L'id du producteur produisant le produit à ajouter.
+ * @param product, les informations du produit à ajouter.
+ * @param producerId, l'id du producteur produisant le produit à ajouter.
  */
 async function addProduct(product, producerId) {
   if (product.productTypeId == null) {
@@ -74,6 +69,12 @@ async function addProduct(product, producerId) {
   return addedProduct;
 }
 
+/**
+ * Ajoute tous les produits du tableau 'productArray' et les attribue au producteur correspondant à l'id 'producerId'.
+ * @param productsArray, un tableau contenant tous les produits à ajouter.
+ * @param producerId, l'id du producteur à qui lier les produits ajoutés.
+ * @returns un tableau contenant tous les produits ajoutés.
+ */
 async function addAllProductsInArray(productsArray, producerId) {
   if (productsArray != null && productsArray.length !== 0) {
     const promisesAddProducts = productsArray.map(product => addProduct(product, producerId));
@@ -84,12 +85,11 @@ async function addAllProductsInArray(productsArray, producerId) {
 }
 
 /**
- * Met à jour le produit possédant l'id reçu avec les données
- * reçues. Remplace toutes les données du produit dans la base
- * de données par celles reçues!
- * Ne modifie pas les informations du productType (car elles ne peuvent pas être modifiées par un producteur!)
- *
- * @param product, Les informations du produit à mettre à jour.
+ * Met à jour le produit correspondant à l'id reçu avec le reste des informations reçues.
+ * @param id, l'id du produit à mettre à jour.
+ * @param description, la decription du produit.
+ * @param productTypeId, l'id du productType du produit.
+ * @returns le produit mis à jour.
  */
 async function updateProduct({ id, description, productTypeId }) {
   const updatedProduct = {
@@ -110,7 +110,9 @@ async function updateProduct({ id, description, productTypeId }) {
 /**
  * Supprime le produit correspondant à l'id reçu. Ne supprime pas le type du produit ni sa catégorie.
  *
- * @param product, Les informations du produit à supprimer.
+ * @param id, l'id du produit à supprimer.
+ * @param producerId, l'id du producteur possédant le produit.
+ * @returns le produit supprimé.
  */
 async function deleteProduct(id, producerId) {
   const product = await ProductsModel.findByIdAndRemove(id);

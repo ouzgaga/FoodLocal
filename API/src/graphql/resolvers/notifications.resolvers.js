@@ -4,6 +4,7 @@ const notificationsServices = require('../services/notifications.services');
 const personNotificationsServices = require('../services/personNotifications.services');
 const personsServices = require('../services/persons.services');
 const producersServices = require('../services/producers.services');
+const postsServices = require('../services/posts.services');
 const pubSub = require('../utils/pubSub');
 
 /**
@@ -47,11 +48,13 @@ const notificationsResolvers = {
   PersonNotification: {
     person: (parent, args, context) => personsServices.getPersonById(parent.person),
 
-    notification: async(parent, args, context) => notificationsServices.getNotificationById(parent.notificationId)
+    notification: (parent, args, context) => notificationsServices.getNotificationById(parent.notificationId)
   },
 
   Notification: {
-    producer: (parent, args, context) => producersServices.getProducerById(parent.producerId)
+    producer: (parent, args, context) => producersServices.getProducerById(parent.producerId),
+
+    post: (parent, args, context) => postsServices.getPostById(args.postId)
   },
 
   PersonNotificationConnection: {

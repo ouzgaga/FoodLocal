@@ -128,9 +128,9 @@ function geoFilterProducers(locationClient, productTypeIdsTab, ratingMin = 1) {
  * @param password, le mot de passe du producteur.
  * @param image, l'image du producteur (encodée en base64).
  * @param phoneNumber, le numéro de téléphone du producteur.
- * @param description
- * @param website
- * @returns {Promise<*>}
+ * @param description, la description du producteur.
+ * @param website, le site internet du producteur.
+ * @returns le nouveau producteur ou une erreur en cas de problème.
  */
 async function addProducer({ firstname, lastname, email, password, image, phoneNumber, description, website }) {
   if (await personsServices.isEmailAvailable(email) && personsServices.checkIfPasswordIsValid(password)) { // si l'email n'est pas encore utilisé, on peut ajouter le producteur
@@ -163,20 +163,39 @@ async function addProducer({ firstname, lastname, email, password, image, phoneN
   }
 }
 
+/**
+ * Ajoute le produit correspondant à l'id 'productId' au producteur correspondant à l'id 'producerId'.
+ * @param productId, l'id du produit à ajouter au producteur
+ * @param producerId, l'id du producteur à qui ajouter le produit.
+ * @returns le producteur mis à jour.
+ */
 function addProductToProducer(productId, producerId) {
   // retourne l'objet modifié
   return ProducersModel.findByIdAndUpdate(producerId, { $addToSet: { productsIds: productId } }, { new: true, runValidators: true });
 }
 
+/**
+ * Supprime le produit correspondant à l'id 'productId' du producteur correspondant à l'id 'producerId'.
+ * @param productId, l'id du produit à supprimer du producteur
+ * @param producerId, l'id du producteur à qui supprimer le produit.
+ * @returns le producteur mis à jour.
+ */
 function removeProductFromProducer(productId, producerId) {
   return ProducersModel.findByIdAndUpdate(producerId, { $pull: { productsIds: productId } }, { new: true, runValidators: true }); // retourne l'objet modifié
 }
 
 /**
- * Met à jour le producteur possédant l'id reçu avec les données reçues. Remplace toutes les données du producteur
- * dans la base de données par celles reçues!
+ * Met à jour le producteur possédant l'id reçu avec les données reçues.
  *
- * @param {Integer} producer, Les informations du producteur à mettre à jour.
+ * @param id, l'id du producteur à mettre à jour.
+ * @param firstname, le prénom du producteur.
+ * @param lastname, le nom de famille du producteur.
+ * @param email, l'email du producteur.
+ * @param image, l'image du producteur (encodée en base64).
+ * @param phoneNumber, le numéro de téléphone du producteur.
+ * @param description, la description du producteur.
+ * @param website, le site internet du producteur.
+ * @returns le nouveau producteur ou une erreur en cas de problème.
  */
 async function updateProducer({ id, firstname, lastname, image, phoneNumber, description, website }) {
 
@@ -223,10 +242,10 @@ async function updateProducer({ id, firstname, lastname, image, phoneNumber, des
 }
 
 /**
- * Ajoute le salespointId reçu au producteur possédant l'id reçu.
+ * Ajoute un nouveau salespoint à la base de données et l'attribue au producteur possédant l'id 'producerId'.
  *
- * @param producerId, L'id du producteur auquel on souhaite ajouter le salespoint reçu.
- * @param salespoint, Les informations du salespoint que l'on souhaite ajouter au producteur.
+ * @param producerId, l'id du producteur auquel on souhaite ajouter le salespoint.
+ * @param salespoint, les informations du salespoint que l'on souhaite ajouter au producteur.
  */
 async function addSalespointToProducer(producerId, salespoint) {
   const producer = await getProducerById(producerId);
@@ -245,9 +264,9 @@ async function addSalespointToProducer(producerId, salespoint) {
 }
 
 /**
- * Supprime le salespointId reçu au producteur possédant l'id reçu.
+ * Supprime de la base de données le salespoint attribué au producteur possédant l'id 'producerId'.
  *
- * @param {Integer} producerId, L'id du producteur dont on souhaite supprimer le salespoint.
+ * @param producerId, l'id du producteur dont on souhaite supprimer le salespoint.
  */
 async function removeSalespointToProducer(producerId) {
   // on supprime le salespointId contenu dans les informations du producteur
@@ -264,15 +283,21 @@ async function removeSalespointToProducer(producerId) {
   return producer;
 }
 
+/**
+ * Permet de valider ou bloquer le producteur correspondant à l'id 'producerId'.
+ * @param producerId, l'id du producteur.
+ * @param validationState, valide le producteur si vaut true, le bloque si vaut false.
+ * @returns le producteur mis à jour.
+ */
 async function validateAProducer(producerId, validationState) {
   // retourne l'objet modifié
   return ProducersModel.findByIdAndUpdate(producerId, { $set: { isValidated: validationState } }, { new: true, runValidators: true });
 }
 
 /**
- * Supprime le producteur correspondant à l'id reçu.
- *
- * @param {Integer} id, L'id du producteur à supprimer.
+ * "Supprime" le producteur correspondant à l'id reçu. En réalité, met toutes ses informations personnelles à null et passe le booléen "deleted" à true.
+ * Tous les producteurs dont le booléen 'deleted' vaut true sont ignorés et ne sont plus retournés aux clients.
+ * @param id, l'id du producteur à "supprimer".
  */
 async function deleteProducer(id) {
   const producer = await ProducersModel.findByIdAndUpdate(id, {
@@ -301,6 +326,12 @@ async function deleteProducer(id) {
   return producer;
 }
 
+/**
+ * Ajoute le follower correspondant à l'id 'followerId' au producteur correspondant à l'id 'producerId'.
+ * @param producerId, l'id du producer auquel on souhaite ajouter un follower.
+ * @param followerId, l'id du follwer que l'on souhaite ajouter au producteur.
+ * @returns les informations du follower mises à jour.
+ */
 async function addFollowerToProducer(producerId, followerId) {
   if (producerId === followerId) {
     throw new Error('You can\'t follow yourself!');
@@ -325,6 +356,12 @@ async function addFollowerToProducer(producerId, followerId) {
   return personsServices.addProducerToPersonsFollowingList(followerId, updatedProducer.id);
 }
 
+/**
+ * Supprime le follower correspondant à l'id 'followerId' adu producteur correspondant à l'id 'producerId'.
+ * @param producerId, l'id du producer auquel on souhaite supprimer un follower.
+ * @param followerId, l'id du follwer que l'on souhaite supprimer du producteur.
+ * @returns les informations du follower mises à jour.
+ */
 async function removeFollowerToProducer(producerId, followerId) {
   if (producerId === followerId) {
     throw new Error('You can\'t follow yourself!');

@@ -47,6 +47,8 @@ type Notification {
 	date: Date!
 	# Le producteur dont l'action a entrainé la création de la notification
 	producer: Producer!
+	# Le post du producteur ayant généré la notification. Présent dans la notification que si elle est de type NEW_POST.
+	post: Post!
 }
 
 type PersonNotificationConnection {
