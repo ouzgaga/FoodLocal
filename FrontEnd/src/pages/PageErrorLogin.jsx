@@ -24,23 +24,6 @@ class PageErrorLogin extends Component {
     document.title = 'EmailConfirmation';
   }
 
-  
- RedirectIfLog = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(params) =>
-      (
-        <AuthContext>
-          {({ userToken, userEmailValidated }) => userToken && !userEmailValidated
-            ? <Redirect to="/error/email" />
-            : <Component {...params} />
-          }
-        </AuthContext>
-      )}
-  />
-)
-
-
   render() {
     const { classes } = this.props;
     return (

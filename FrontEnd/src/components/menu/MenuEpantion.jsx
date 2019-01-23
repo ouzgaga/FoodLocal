@@ -68,17 +68,17 @@ class MenuEpantion extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  
+
   render() {
     const { classes, onClick } = this.props;
     const { anchorEl } = this.state;
 
-    const loggedMenu = (userStatus, isAdmin, signOut) => (
+    const loggedMenu = (userStatus, isAdmin, signOut, notificationsCount) => (
       <MenuList>
         <Link to="/myWall" className={classes.LinkButton}>
           <MenuItem button onClick={this.handleClose}>
             <ListItemIcon>
-              <BadgeMax value={0} />
+              <BadgeMax value={notificationsCount} />
               {/* TODO: icone */}
             </ListItemIcon>
             <ListItemText primary="Mon mur" />
@@ -92,7 +92,7 @@ class MenuEpantion extends React.Component {
             <ListItemText primary="Mes producteurs" />
           </MenuItem>
         </Link>
-    
+
         {userStatus &&
           (
             <Link to="/producerRegistration" className={classes.LinkButton}>
@@ -108,7 +108,7 @@ class MenuEpantion extends React.Component {
             </Link>
           )
         }
-    
+
         <Link to="/settings" className={classes.LinkButton}>
           <MenuItem button>
             <ListItemIcon>
@@ -117,7 +117,7 @@ class MenuEpantion extends React.Component {
             <ListItemText primary="Paramètres" />
           </MenuItem>
         </Link>
-    
+
         {isAdmin &&
           (
             <Link to="/adminSection" className={classes.LinkButton}>
@@ -130,7 +130,7 @@ class MenuEpantion extends React.Component {
             </Link>
           )
         }
-    
+
         <MenuItem
           button
           onClick={
@@ -148,7 +148,7 @@ class MenuEpantion extends React.Component {
         </MenuItem>
       </MenuList>
     );
-  
+
     return (
       <>
         <Button
@@ -165,12 +165,12 @@ class MenuEpantion extends React.Component {
           onClose={this.handleClose}
         >
           <AuthContext>
-      {({ userStatus, isAdmin, signOut }) => (
-  
-            loggedMenu(userStatus, isAdmin, signOut)
+            {({ userStatus, isAdmin, signOut, notificationsCount }) => (
 
-      )}
-    </AuthContext>
+              loggedMenu(userStatus, isAdmin, signOut, notificationsCount)
+
+            )}
+          </AuthContext>
         </Menu>
       </>
     );
