@@ -94,7 +94,7 @@ class DeleteAccount extends Component {
                   {loading && <p>Chargement...</p>}
                   {error && (
                     <>
-                      {console.info(error)}
+                     
                       <Typography color="error">
                         Une erreur est survenur
                       </Typography>
@@ -129,7 +129,7 @@ class DeleteAccount extends Component {
                                 e.preventDefault();
                                 updateTodo();
                                 //signOut();
-                                console.info("yoo");
+                              
                               }
                             }
                           >

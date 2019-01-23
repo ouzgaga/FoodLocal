@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
@@ -57,7 +55,6 @@ class Execute extends React.Component {
 
   componentDidMount() {
     const { clearError } = this.props;
-    console.info({clearError})
     clearError();
   }
 
@@ -97,7 +94,6 @@ class MyLogin extends React.Component {
               if(data)
                 onClose();
             }).catch((error) => {
-              console.info(error);
             });
           };
 

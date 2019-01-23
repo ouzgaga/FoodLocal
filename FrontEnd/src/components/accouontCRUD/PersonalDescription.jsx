@@ -112,7 +112,7 @@ class PersonalDescription extends Component {
                           {loading && <p>Chargement...</p>}
                           {error && (
                             <>
-                              {console.info(error)}
+                              
                               <Typography color="error">Un probème est survenu, veuillez essayer plus tard.</Typography>
                             </>
                           )}

@@ -10,7 +10,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { Client, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Button from '@material-ui/core/Button';
 
 import {
   BrowserRouter as Router,

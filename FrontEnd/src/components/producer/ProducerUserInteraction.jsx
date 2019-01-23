@@ -12,6 +12,7 @@ import RatingItem from '../items/RatingItem';
 import { AuthContext } from '../providers/AuthProvider';
 import ErrorLoading from '../ErrorLoading';
 import Loading from '../Loading';
+import SimpleInfoDialog from '../items/SimpleInfoDialog';
 
 
 const styles = theme => ({
@@ -86,6 +87,7 @@ class ProducerUserInteraction extends React.Component {
       infoDialogOpen: false,
       infoDialogText: '',
       userRating: 0,
+      open: false,
     };
   }
 
@@ -99,8 +101,12 @@ class ProducerUserInteraction extends React.Component {
     });
   }
 
+  handleOpen = () => {
+    this.setState({ open: true });
+  }
+
   handleClose = () => {
-    this.setState({ infoDialogOpen: false });
+    this.setState({ open: false });
   }
 
   handleChangeUserRating = (value) => {
@@ -157,7 +163,7 @@ class ProducerUserInteraction extends React.Component {
 
   render() {
     const { classes, followersCount, producerId, refetchParent } = this.props;
-    const { infoDialogOpen, userRating, infoDialogText } = this.state;
+    const { userRating, open } = this.state;
 
 
     // fromatage du text en français
@@ -237,6 +243,7 @@ class ProducerUserInteraction extends React.Component {
                                 onChange={this.handleChangeUserRating}
                                 defaultValue={ratingAboutProducerMadeByPerson ? ratingAboutProducerMadeByPerson.rating : null}
                               />
+
                             </Grid>
 
                             <Grid container alignItems="center" className={classes.centerBox}>
@@ -244,7 +251,9 @@ class ProducerUserInteraction extends React.Component {
                               <Mutation mutation={ADD_OR_UPDATE_PRODUCER_RATING} onCompleted={() => { refetch(); refetchParent(); }}>
                                 {dow => (
                                   <>
-                                    <Button variant="contained" className={classes.button} onClick={(e) => { e.preventDefault(); dow({ variables: { rating: { producerId, personId: userId, rating: userRating } } }); }}>Vote</Button>
+                                    <Button variant="contained" className={classes.button} onClick={(e) => { e.preventDefault(); dow({ variables: { rating: { producerId, personId: userId, rating: userRating } } }); this.handleOpen(); }}>Vote</Button>
+                                    <SimpleInfoDialog open={open} handleClose={this.handleClose} title="Vote" text="Votre vote à bien été pris en compte" />
+
                                   </>
                                 )}
                               </Mutation>

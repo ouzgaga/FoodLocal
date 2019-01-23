@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom';
 
 import Header from './components/Header';
-import ProducerVue from './components/ProducerVue';
 
 import { AuthContext } from './components/providers/AuthProvider';
 

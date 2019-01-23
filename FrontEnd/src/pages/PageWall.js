@@ -109,7 +109,6 @@ class PageWall extends Component {
                   if (error) return <ErrorLoading />;
                   if (loading) return <Loading />;
                   const { notificationsOfPerson } = data;
-                  console.log(data)
                   return (
                     <MurNotifications
                       loading={loading}

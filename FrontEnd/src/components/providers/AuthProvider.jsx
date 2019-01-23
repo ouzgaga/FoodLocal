@@ -185,7 +185,6 @@ class AuthProvider extends React.Component {
   // Décode le token et l'insère dans le state
   addState = (token) => {
     const decoded = jwtDecode(token);
-    console.info("token", token, decoded.isAdmin);
     this.setState({
       notificationsCount: 0,
       userId: decoded.id,
@@ -205,7 +204,6 @@ class AuthProvider extends React.Component {
       query: subNotif,
     }).subscribe({
       next(data) {
-        console.info("GET NOTIFFSSS");
         this.setState(prevState => ({
           notificationsCount: ++prevState.notificationsCount
         }));
@@ -217,10 +215,8 @@ class AuthProvider extends React.Component {
 
   signIn = async ({ userMail, password }) => {
     const { client } = this.props;
-    console.log({ userMail, password });
     return client.mutate({ mutation: mutLogin, variables: { email: userMail, password: password } }).then(
       (data) => {
-        console.log(data);
         this.addState(data.data.login.token);
         window.localStorage.setItem('token', data.data.login.token);
         //this.subscribe();
