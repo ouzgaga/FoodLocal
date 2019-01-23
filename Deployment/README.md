@@ -1,26 +1,26 @@
 # Deployment
 
-We choose to deploy our application across continuous integration with gitlab.  All the processus is define in the file: [.gitlab-ci.yml](../.gitlab-ci.yml). 
+We choose to deploy our application across continuous integration with Gitlab.  All the processus is defined in the file: [.gitlab-ci.yml](../.gitlab-ci.yml). 
 
-## CI
+## Continuous Integration (CI)
 
-The CI is split in different stages
+The CI are split in different stages.
 
 ### Stages
 
 - build
-  - Building the apps into a Docker container
-  - This stage is made to be sure that the apps can be build
+  - Build the apps into a Docker container
+  - This stage is made to be sure that the apps can be built
 - test
-  - Running the test of the apps
+  - Run the tests of the apps
 - release
-  - Create and push an image of the app on google cloud image registery
+  - Create and push an image of the app on Google Cloud Image Registery
 - deploy
-  - Deploying the apps on google cloud Kubernetest
+  - Deploy the apps on Google Cloud Kubernetes
 
 ## CD
 
-### Google cloud with Kubernetes
+### Google Cloud with Kubernetes
 
 We choose to use Google Cloud with Kubernetes to host our applications. 
 
