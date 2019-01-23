@@ -54,7 +54,7 @@ const notificationsResolvers = {
   Notification: {
     producer: (parent, args, context) => producersServices.getProducerById(parent.producerId),
 
-    post: (parent, args, context) => postsServices.getPostById(args.postId)
+    post: (parent, args, context) => postsServices.getPostById(parent.postId)
   },
 
   PersonNotificationConnection: {
