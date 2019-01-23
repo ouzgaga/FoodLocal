@@ -32,7 +32,7 @@ const httpLink = createHttpLink({
 
 // Create a WebSocket link: Pour les sessions mais ça fonctionne pas
 const wsLink = new WebSocketLink({
-  uri: `ws://api.foodlocal.ch/subscriptions`,
+  uri: `wss://api.foodlocal.ch/subscriptions`,
   options: {
     reconnect: true
   }
