@@ -69,12 +69,15 @@ query($userId: ID!) {
           closingHour
         }
       }
-    }
+    },
     products{
       edges{
         node{
           id,
           description,
+          productType{
+            id
+          }
         }
       }
     }
@@ -109,6 +112,14 @@ const mutUpdateProd = gql`
   }
   `;
 
+const mutAddNewProductArray = gql`
+  mutation($userId: ID!, $products: [ProductInputAdd!]! ){
+    addMultipleProducts(producerId: $userId, products: $products){
+      totalCount
+    }
+  }
+  `;
+
 class InscriptionProducer extends Component {
   state = {
     step: 0,
@@ -139,68 +150,73 @@ class InscriptionProducer extends Component {
     scheduleActive: false,
     items: [],
 
+    newItems: [],    
+
     error: null,
   }
 
 
   componentWillMount() {
-    const { client, userId } = this.props;
     this.execute();
   }
 
-  
+
   execute = async () => {
     const { client, userId } = this.props;
     await client.query({ query: queryMe, variables: { userId } })
-    .then(
-      (data) => {
-        console.info(data.data.producer);
-        if (data.data.producer.salespoint) {
-          this.setState({
-            isNewProd: false,
-            showCompleteAddress: true,
-            phoneNumber: data.data.producer.phoneNumber ? data.data.producer.phoneNumber : '',
-            website: data.data.producer.website ? data.data.producer.website : '',
-            name: data.data.producer.salespoint.name,
-            number: data.data.producer.salespoint.address.number,
-            street: data.data.producer.salespoint.address.street,
-            city: data.data.producer.salespoint.address.city,
-            postalCode: data.data.producer.salespoint.address.postalCode,
-            state: data.data.producer.salespoint.address.state,
-            country: data.data.producer.salespoint.address.country,
-            longitude: data.data.producer.salespoint.address.longitude,
-            latitude: data.data.producer.salespoint.address.latitude,
-            error: null,
-          });
-          if (data.data.producer.salespoint.schedule) {
+      .then(
+        (data) => {
+          console.info(data.data.producer);
+          if (data.data.producer.salespoint) {
             this.setState({
-              scheduleActive: true,
-              monday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.monday),
-              tuesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.tuesday),
-              wednesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.wednesday),
-              thursday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.thursday),
-              friday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.friday),
-              saturday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.saturday),
-              sunday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.sunday),
+              isNewProd: false,
+              showCompleteAddress: true,
+              phoneNumber: data.data.producer.phoneNumber ? data.data.producer.phoneNumber : '',
+              website: data.data.producer.website ? data.data.producer.website : '',
+              name: data.data.producer.salespoint.name,
+              number: data.data.producer.salespoint.address.number,
+              street: data.data.producer.salespoint.address.street,
+              city: data.data.producer.salespoint.address.city,
+              postalCode: data.data.producer.salespoint.address.postalCode,
+              state: data.data.producer.salespoint.address.state,
+              country: data.data.producer.salespoint.address.country,
+              longitude: data.data.producer.salespoint.address.longitude,
+              latitude: data.data.producer.salespoint.address.latitude,
+              error: null,
             });
-            console.info("hoyoyoyo", data.data.producer.salespoint.schedule);
-            console.info("hoyoyoyo", this.state.monday);
-            console.info("hoyoyoyo", this.state.saturday);
+            if (data.data.producer.salespoint.schedule) {
+              this.setState({
+                scheduleActive: true,
+                monday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.monday),
+                tuesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.tuesday),
+                wednesday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.wednesday),
+                thursday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.thursday),
+                friday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.friday),
+                saturday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.saturday),
+                sunday: this.getDaySheldulObject(data.data.producer.salespoint.schedule.sunday),
+              });
+            }
+            if (data.data.producer.products.edges) {
+              console.info("dudeee", data.data.producer.products.edges);
+              console.info("ArrayInput", this.getItemFromAppoloToArray(data.data.producer.products.edges));
+              this.setState({
+                
+              });
+            }
+          }
+          if (data.data.producer.description) {
+            this.setState({
+              description: data.data.producer.description ? data.data.producer.description : '',
+              error: null,
+            });
           }
         }
-        if (data.data.producer.description) {
-          this.setState({
-            description: data.data.producer.description ? data.data.producer.description : '',
-            error: null,
-          });
-        } 
-      }
-    ).catch(
-      (error) => {
-        console.log("Erreur", error);
-        this.setState({ error: "Erreur, Veuillez essayer plus tard" })
-      }
-    );
+      ).catch(
+        (error) => {
+          console.log("Erreur", error);
+          this.setState({ error: "Erreur, Veuillez essayer plus tard" })
+        }
+      );
   };
 
   // Proceed to next step
@@ -292,17 +308,38 @@ class InscriptionProducer extends Component {
     this.setState({ items: newItems });
   };
 
-  getDaySheldulObject = (arr) => {
-    if (arr.length !== 0) {
-      return (
-        arr.map(data => ({
-          openingHour: data.openingHour,
-          closingHour: data.closingHour,
-        }))
-      );
+  getItemArrayObject = (array) => {
+    return (
+      array.map(data => ({
+        productTypeId: data.item.id,
+        description: data.description,
+      }))
+    );
+  }
+
+  getItemFromAppoloToArray = (edge) => {
+    const ret = [];
+    console.info("edge", edge[0].node.productType.id);
+    if (edge.length !== 0) {
+      edge.map(node => ret.push({
+        description: node.node.description,
+        personalId: node.node.id,
+        productTypeId: node.node.productType.id,
+      }));
     }
 
-    return [];
+    return ret;
+  }
+
+  getDaySheldulObject = (arr) => {
+    const ret = [];
+    if (arr.length !== 0) {
+      arr.map(data => ret.push({
+        openingHour: data.openingHour,
+        closingHour: data.closingHour,
+      }));
+    }
+    return ret;
   }
 
   getShedulPtObject = () => {
@@ -320,7 +357,7 @@ class InscriptionProducer extends Component {
       sunday,
       scheduleActive
     } = this.state;
-    
+
     return {
       monday: monday,
       tuesday: tuesday,
@@ -332,10 +369,9 @@ class InscriptionProducer extends Component {
     };
   };
 
-  
+
 
   pageContext = () => {
-    
     const { step } = this.state;
     const { userId } = this.props;
     switch (step) {
@@ -380,7 +416,9 @@ class InscriptionProducer extends Component {
           phoneNumber,
           website,
           description,
+
           items,
+
           error,
         } = this.state;
         return (
@@ -414,31 +452,51 @@ class InscriptionProducer extends Component {
                   <DoFunction func={updateTodo} />
                   {data && <Typography> Point de vente ok </Typography>}
                   {loading && <Typography> Chargement </Typography>}
-                  {error &&  <Typography color="error"> Une erreur est survenue. Le point de vente n'est pas ok. </Typography>}
+                  {error && <Typography color="error"> Une erreur est survenue. Le point de vente n'est pas ok. </Typography>}
                 </>
               )}
             </Mutation>
             <Mutation
               mutation={mutUpdateProd}
-              variables={{ 
+              variables={{
                 user: {
                   id: userId,
                   website: website,
                   phoneNumber: phoneNumber,
                   description: description,
-              }}}
+                }
+              }}
             >
               {(updateTodo, { data, loading, error }) => (
                 <>
                   <DoFunction func={updateTodo} />
                   {data && <Typography> Point de vente ok </Typography>}
                   {loading && <Typography> Chargement </Typography>}
-                  {error &&  <Typography color="error"> Une erreur est survenue. Le point de vente n'est pas ok. </Typography>}
+                  {error && <Typography color="error"> Une erreur est survenue. Le point de vente n'est pas ok. </Typography>}
                 </>
               )}
             </Mutation>
+          {/* TODO isNewPord */}
+            {items.length !== 0 && isNewProd && (
+              <Mutation
+                mutation={mutAddNewProductArray}
+                variables={{
+                  userId: userId,
+                  products: this.getItemArrayObject(items),
+                }}
+              >
+                {(updateTodo, { data, loading, error }) => (
+                  <>
+                    <DoFunction func={updateTodo} />
+                    {data && <Typography> Point de vente ok </Typography>}
+                    {loading && <Typography> Chargement </Typography>}
+                    {error && <Typography color="error"> Une erreur est survenue. Les produits ne sont pas ok. </Typography>}
+                  </>
+                )}
+              </Mutation>
+            )}
 
-            <ConfirmationForm> {console.info(this.state.monday)} </ConfirmationForm>
+            <ConfirmationForm> {console.info("hoyyy", items, this.getItemArrayObject(items) )} </ConfirmationForm>
           </>
         );
     }
