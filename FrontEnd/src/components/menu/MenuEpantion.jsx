@@ -8,8 +8,9 @@ import { Link } from 'react-router-dom';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import IconButton from '@material-ui/core/IconButton';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import MenuIcon from '@material-ui/icons/Menu';
 import RegisterIcone from '@material-ui/icons/HowToReg';
 import SettingsIcone from '@material-ui/icons/Settings';
 import BuildIcone from '@material-ui/icons/Build';
@@ -80,7 +81,7 @@ class MenuEpantion extends React.Component {
           </MenuItem>
         </Link>
         <Link to="/myProducers" className={classes.LinkButton}>
-          <MenuItem button>
+          <MenuItem button onClick={this.handleClose}>
             <ListItemIcon>
               {/* TODO: icone */}
             </ListItemIcon>
@@ -91,7 +92,7 @@ class MenuEpantion extends React.Component {
         {userStatus &&
           (
             <Link to="/producerRegistration" className={classes.LinkButton}>
-              <MenuItem button>
+              <MenuItem button onClick={this.handleClose}>
                 { /* TODO: addicone
                 <ListItemIcon>
                   <BuildIcone color="primary" />
@@ -105,7 +106,7 @@ class MenuEpantion extends React.Component {
         }
 
         <Link to="/settings" className={classes.LinkButton}>
-          <MenuItem button>
+          <MenuItem button onClick={this.handleClose}>
             <ListItemIcon>
               <SettingsIcone color="primary" />
             </ListItemIcon>
@@ -116,7 +117,7 @@ class MenuEpantion extends React.Component {
         {isAdmin &&
           (
             <Link to="/adminSection" className={classes.LinkButton}>
-              <MenuItem button>
+              <MenuItem button onClick={this.handleClose}>
                 <ListItemIcon>
                   <BuildIcone color="primary" />
                 </ListItemIcon>
@@ -146,13 +147,14 @@ class MenuEpantion extends React.Component {
 
     return (
       <>
-        <Button
-          aria-owns={anchorEl ? 'simple-menu' : undefined}
+
+        <IconButton
+          caria-owns={anchorEl ? 'simple-menu' : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
         >
-          Open
-        </Button>
+          <MenuIcon />
+        </IconButton>
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}
